@@ -25,11 +25,12 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
     #installing behave and pexpect
     yum -y install wireshark teamd bash-completion
-    git clone git://github.com/roignac/behave
-    cd behave
-    git checkout html_formatter
-    python setup.py install
-    cd ..
+    #git clone git://github.com/roignac/behave
+    #cd behave
+    #git checkout html_formatter
+    #python setup.py install
+    #cd ..
+    yum -y localinstall http://kojipkgs.fedoraproject.org//packages/python-parse/1.6.2/4.fc19/noarch/python-parse-1.6.2-4.fc19.noarch.rpm http://kojipkgs.fedoraproject.org//packages/python-behave/1.2.3/8.fc19/noarch/python-behave-1.2.3-8.fc19.noarch.rpm
     easy_install pip
     pip install pexpect
 
