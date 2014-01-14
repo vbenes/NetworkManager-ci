@@ -46,11 +46,11 @@ if [ ! -e /tmp/nmcli_testing_configured ]; then
 
     #installing packages needed for wifi and behave (no outside-world connectivity in lab)
 
-    yum -y install install/iw*rpm
-    yum -y install install/pexpect*rpm
-    yum -y install install/behave*rpm
-    yum -y install install/python-parse*rpm
-    yum -y install install/net-tools*rpm
+    #yum -y install install/iw*rpm
+    #yum -y install install/pexpect*rpm
+    #yum -y install install/behave*rpm
+    #yum -y install install/python-parse*rpm
+    #yum -y install install/net-tools*rpm
 
     cp -r certs/ /tmp/ #certificates needed for wifi-sec tests
 
