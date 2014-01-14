@@ -24,6 +24,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     echo "ulimit -c unlimited" >> /home/test/.bashrc
 
     #installing behave and pexpect
+    yum -y install install/*.rpm
     #yum -y install wireshark teamd bash-completion
     #git clone git://github.com/roignac/behave
     #cd behave
