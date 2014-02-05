@@ -41,7 +41,7 @@ def set_property_in_editor(context, name, value):
 
 @step(u'Check value saved message showed in editor')
 def check_saved_in_editor(context):
-    context.prompt.expect('successfully saved')
+    context.prompt.expect('successfully')
 
 
 @step(u'Save in editor')
