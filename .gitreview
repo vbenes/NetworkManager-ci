@@ -1,5 +1,5 @@
 [gerrit]
-host=desktopqe-gerrit.bos.redhat.com
+host=gerrit.dqe.lab.eng.bos.redhat.com
 port=29418
 project=NetworkManager
 defaultbranch=rhel-7
