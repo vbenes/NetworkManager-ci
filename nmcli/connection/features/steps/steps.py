@@ -47,7 +47,7 @@ def delete_connection_with_enter(context, name):
 
 @step(u'Autoconnect warning is shown')
 def autoconnect_warning(context):
-    r = context.prompt.expect(["Saving the connection with \'autoconnect=yes\'. That might result in an immediate activation of the connection.\s+Do you still want to save?", "successfully saved"])
+    r = context.prompt.expect(["Saving the connection with \'autoconnect=yes\'. That might result in an immediate activation of the connection.\s+Do you still want to save?", "successfully"])
     if r != 0:
         raise Exception('Autoconnect warning was not shown')
 
@@ -199,7 +199,7 @@ def value_printed(context, item, value):
 
 @step(u'Value saved message showed in editor')
 def check_saved_in_editor(context):
-    context.prompt.expect('successfully saved')
+    context.prompt.expect('successfully')
 
 
 @step(u'Error type "{type}" shown in editor')

@@ -172,7 +172,7 @@ def prompt_is_not_running(context):
 
 @step(u'Value saved message showed in editor')
 def check_saved_in_editor(context):
-    context.prompt.expect('successfully saved')
+    context.prompt.expect('successfully')
 
 
 @step(u'Mode missing message shown in editor')
