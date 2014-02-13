@@ -26,11 +26,9 @@
      * Expect "Connection type"
      * Submit "bond" in editor
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
-     * Submit "no" in editor 
+     * Submit "no" in editor
      * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
-     * Submit "no" in editor 
-     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
-     * Bring "up" connection "bond"
+     * Submit "no" in editor
     Then Check bond "nm-bond" state is "up"
 
 
@@ -44,17 +42,17 @@
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
      * Enter in editor
      * Expect "Bonding mode"
-     * Submit "0" in editor 
+     * Submit "0" in editor
      * Expect "Bonding monitoring mode \(miimon or arp\) \[miimon\]"
      * Enter in editor
      * Expect "Bonding miimon \[100\]"
-     * Submit "100" in editor 
+     * Submit "100" in editor
      * Expect "Bonding downdelay \[0\]"
-     * Submit "200" in editor 
+     * Submit "200" in editor
      * Expect "Bonding updelay \[0\]"
      * Submit "400" in editor
      * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
-     * Submit "no" in editor 
+     * Submit "no" in editor
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Bring "up" connection "bond"
     Then Check bond "nm-bond" state is "up"
@@ -73,13 +71,13 @@
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
      * Enter in editor
      * Expect "Bonding mode"
-     * Submit "1" in editor 
+     * Submit "1" in editor
      * Expect "Bonding primary interface \[none\]"
      * Enter in editor
      * Expect "Bonding monitoring mode \(miimon or arp\) \[miimon\]"
-     * Submit "arp" in editor 
+     * Submit "arp" in editor
      * Expect "Bonding arp-interval \[0\]"
-     * Submit "100" in editor 
+     * Submit "100" in editor
      * Expect "Bonding arp-ip-target \[none\]"
      * Submit "10.11.5.19" in editor
      * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
@@ -110,7 +108,7 @@
      * Submit "nm-bond" in editor
     * Bring "up" connection "bond-slave-eth1"
     Then Check bond "nm-bond" state is "up"
-    Then Check slave "eth1" in bond "nm-bond" in proc 
+    Then Check slave "eth1" in bond "nm-bond" in proc
 
 
     @testcase_280563
@@ -123,8 +121,8 @@
      * Bring "up" connection "bond0"
 #     * Bring "up" connection "bond0.0"
 #     * Bring "up" connection "bond0.1"
-     Then Check slave "eth1" in bond "nm-bond" in proc 
-     Then Check slave "eth2" in bond "nm-bond" in proc 
+     Then Check slave "eth1" in bond "nm-bond" in proc
+     Then Check slave "eth2" in bond "nm-bond" in proc
 
 
     @testcase_280567
@@ -150,7 +148,7 @@
 #     * Bring "up" connection "bond0.1"
      * Delete connection "bond0.1"
      Then Check bond "nm-bond" state is "up"
-     Then Check slave "eth1" in bond "nm-bond" in proc 
+     Then Check slave "eth1" in bond "nm-bond" in proc
 
 
     @testcase_301107
@@ -167,7 +165,7 @@
 #     * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0"
      Then Check bond "nm-bond" state is "up"
-     Then Check slave "eth1" in bond "nm-bond" in proc 
+     Then Check slave "eth1" in bond "nm-bond" in proc
 
 
 
@@ -190,7 +188,7 @@
     #  * Bring "up" connection "bond0.0"
     #  #* Bring "up" connection "bond0"
     #  Then Check bond "nm-bond" state is "up"
-    #  Then Check slave "eth1" in bond "nm-bond" in proc 
+    #  Then Check slave "eth1" in bond "nm-bond" in proc
 
 
 
@@ -219,7 +217,7 @@
      * Disconnect device "nm-bond"
      Then Check bond "nm-bond" state is "down"
 
- 
+
 
     @testcase_281356
     @slaves
@@ -228,15 +226,15 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
-     * Disconnect device "nm-bond"   
+     * Disconnect device "nm-bond"
      * Bring "down" connection "bond0.0"
      * Bring "down" connection "bond0.1"
      Then Check bond "nm-bond" state is "down"
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then Check bond "nm-bond" state is "up"
-     Then Check slave "eth1" in bond "nm-bond" in proc 
-     Then Check slave "eth2" in bond "nm-bond" in proc 
+     Then Check slave "eth1" in bond "nm-bond" in proc
+     Then Check slave "eth2" in bond "nm-bond" in proc
 
 
     @bond_start_by_hand_no_slaves
@@ -246,14 +244,14 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
-     * Disconnect device "nm-bond"   
+     * Disconnect device "nm-bond"
      * Bring "down" connection "bond0.0"
      * Bring "down" connection "bond0.1"
      Then Check bond "nm-bond" state is "down"
-     * Bring up connection "bond0" ignoring error 
+     * Bring up connection "bond0" ignoring error
      Then Check bond "nm-bond" state is "up"
-     Then Check slave "eth1" not in bond "nm-bond" in proc 
-     Then Check slave "eth2" not in bond "nm-bond" in proc 
+     Then Check slave "eth1" not in bond "nm-bond" in proc
+     Then Check slave "eth2" not in bond "nm-bond" in proc
 
 
     @bond_activate
@@ -263,14 +261,14 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
-     * Disconnect device "nm-bond"   
+     * Disconnect device "nm-bond"
      * Bring "down" connection "bond0.0"
      * Bring "down" connection "bond0.1"
      Then Check bond "nm-bond" state is "down"
      * Open editor for connection "bond0.0"
      * Submit "activate" in editor
-     * Enter in editor 
-     * Quit editor    
+     * Enter in editor
+     * Quit editor
      #* Bring "up" connection "bond0"
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
@@ -287,13 +285,13 @@
      * Open editor for connection "bond0.0"
      * Submit "set connection.autoconnect no" in editor
      * Save in editor
-     * Quit editor    
+     * Quit editor
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      * Bring "up" connection "bond0"
      Then Check bond "nm-bond" state is "up"
-     Then Check slave "eth1" not in bond "nm-bond" in proc 
-     Then Check slave "eth2" in bond "nm-bond" in proc 
+     Then Check slave "eth1" not in bond "nm-bond" in proc
+     Then Check slave "eth2" in bond "nm-bond" in proc
 
 
     @testcase_281361
@@ -311,7 +309,7 @@
      * Submit "set connection.autoconnect yes" in editor
      * Save in editor
      * Quit editor
-     * Bring "up" connection "bond0"     
+     * Bring "up" connection "bond0"
      * Reboot
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
@@ -366,9 +364,9 @@
      * Submit "set connection.autoconnect no" in editor
      * Save in editor
      * Quit editor
-     * Bring "up" connection "bond0"     
+     * Bring "up" connection "bond0"
     # * Bring "up" connection "bond0.0"
-    # * Bring "up" connection "bond0.1"   
+    # * Bring "up" connection "bond0.1"
      #* Disconnect device "nm-bond"
      # Check bond "nm-bond" state is "down"
      * Reboot
@@ -399,7 +397,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      * Bring "up" connection "bond0.0"
-     * Bring "up" connection "bond0.1"   
+     * Bring "up" connection "bond0.1"
      #* Disconnect device "nm-bond"
      #When Check bond "nm-bond" state is "down"
      * Reboot
@@ -419,11 +417,11 @@
      * Open editor for connection "bond0"
      * Set a property named "bond.options" to "mode=0, miimon=100, downdelay=100, updelay=100" in editor
      * Save in editor
-     Then Value saved message showed in editor 
+     Then Value saved message showed in editor
      * Quit editor
 #     * Bring "up" connection "bond0.0"
 #     * Bring "up" connection "bond0.1"
-     * Bring "up" connection "bond0"     
+     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "MII Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -446,7 +444,7 @@
      * Quit editor
 #     * Bring "up" connection "bond0.0"
 #     * Bring "up" connection "bond0.1"
-     * Bring "up" connection "bond0"     
+     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "MII Polling Interval \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -502,12 +500,12 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Open editor for connection "bond0"
-     * Submit "goto bond" in editor 
+     * Submit "goto bond" in editor
      * Submit "goto options" in editor
      * Submit "add miimon=100" in editor
      * Submit "add updelay=200" in editor
-     * Submit "back" in editor 
-     * Submit "back" in editor 
+     * Submit "back" in editor
+     * Submit "back" in editor
      * Save in editor
      When Value saved message showed in editor
      * Quit editor
@@ -524,13 +522,13 @@
     Scenario: nmcli - bond - options - add incorrect value
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Open editor for connection "bond0"
-     * Submit "goto bond" in editor 
+     * Submit "goto bond" in editor
      * Submit "goto options" in editor
      * Submit "add modem=2" in editor
      Then Wrong bond options message shown in editor
      * Enter in editor
-     * Submit "back" in editor 
-     * Submit "back" in editor 
+     * Submit "back" in editor
+     * Submit "back" in editor
      * Quit editor
 
 
@@ -542,19 +540,19 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Open editor for connection "bond0"
-     * Submit "goto bond" in editor 
+     * Submit "goto bond" in editor
      * Submit "goto options" in editor
      * Submit "change" in editor
      * Submit ", miimon=100, updelay=100" in editor
-     * Submit "back" in editor 
-     * Submit "back" in editor 
+     * Submit "back" in editor
+     * Submit "back" in editor
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
 #     * Bring "up" connection "bond0.0"
 #     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"     
+#     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -570,23 +568,23 @@
      * Open editor for connection "bond0"
      * Set a property named "bond.options" to "mode=0, miimon=100, downdelay=100, updelay=100" in editor
      * Save in editor
-     Then Value saved message showed in editor 
+     Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
 #     * Bring "up" connection "bond0.0"
 #     * Bring "up" connection "bond0.1"
- #    * Bring "up" connection "bond0"     
+ #    * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "MII Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      * Open editor for connection "bond0"
-     * Submit "goto bond" in editor 
+     * Submit "goto bond" in editor
      * Submit "goto options" in editor
      * Submit "remove downdelay" in editor
-     * Submit "back" in editor 
-     * Submit "back" in editor 
+     * Submit "back" in editor
+     * Submit "back" in editor
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
@@ -707,7 +705,7 @@
 #     * Bring "up" connection "bond0.0"
 #     * Bring "up" connection "bond0.1"
 #     * Bring "up" connection "bond0"
-     Then "Bonding Mode: fault-tolerance \(broadcast\)" is visible with command "cat /proc/net/bonding/nm-bond"        
+     Then "Bonding Mode: fault-tolerance \(broadcast\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
 
@@ -771,7 +769,7 @@
      Then Check bond "nm-bond" state is "up"
 
 
-#FIXME: more tests with arp and conflicts with load balancing can be written 
+#FIXME: more tests with arp and conflicts with load balancing can be written
 
 
     @testcase_281154
@@ -782,7 +780,7 @@
      Then Check "NM property description|nmcli specific description|mode, miimon, downdelay, updelay, arp_interval, arp_ip_target|balance-rr    = 0\s+active-backup = 1\s+balance-xor   = 2\s+broadcast     = 3\s+802.3ad       = 4\s+balance-tlb   = 5\s+balance-alb   = 6" are present in describe output for object "bond.options"
      Then Check "=== \[interface-name\] ===|\[NM property description\]|The name of the virtual in-kernel bonding network interface" are present in describe output for object "bond.interface-name"
       * Submit "g b" in editor
-     Then Check "NM property description|nmcli specific description|mode, miimon, downdelay, updelay, arp_interval, arp_ip_target|balance-rr    = 0\s+active-backup = 1\s+balance-xor   = 2\s+broadcast     = 3\s+802.3ad       = 4\s+balance-tlb   = 5\s+balance-alb   = 6" are present in describe output for object "options" 
+     Then Check "NM property description|nmcli specific description|mode, miimon, downdelay, updelay, arp_interval, arp_ip_target|balance-rr    = 0\s+active-backup = 1\s+balance-xor   = 2\s+broadcast     = 3\s+802.3ad       = 4\s+balance-tlb   = 5\s+balance-alb   = 6" are present in describe output for object "options"
      Then Check "\[interface-name\]|\[NM property description\]|The name of the virtual in-kernel bonding network interface" are present in describe output for object "interface-name"
       * Submit "g o" in editor
      Then Check "NM property description|nmcli specific description|mode, miimon, downdelay, updelay, arp_interval, arp_ip_target|balance-rr    = 0\s+active-backup = 1\s+balance-xor   = 2\s+broadcast     = 3\s+802.3ad       = 4\s+balance-tlb   = 5\s+balance-alb   = 6" are present in describe output for object " "
