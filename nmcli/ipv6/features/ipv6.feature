@@ -56,7 +56,7 @@ Feature: nmcli: ipv6
     @ipv6_addresses_yes_when_static_switch_asked
     @ipv6
     Scenario: nmcli - ipv6 - addresses - IP and yes to manual question
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.addresses dead:beaf::1" in editor
      * Submit "yes" in editor
@@ -77,7 +77,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-     Then "inet6 dead:beaf" is visible with command "ip a s eth10"
+     Then "inet6 dead:beaf" is not visible with command "ip a s eth10"
      Then "inet6 2001" is visible with command "ip a s eth10"
 
     @ipv6_addresses_invalid_netmask
@@ -133,7 +133,7 @@ Feature: nmcli: ipv6
     @ipv6_addresses_delete_IP_moving_method_back_to_auto
     @ipv6
     Scenario: nmcli - ipv6 - addresses - delete IP and set method back to auto
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.method static" in editor
@@ -148,9 +148,9 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "fc01::1:5/68" is not visible with command "ip a s eth1"
+    Then "fc01::1:5/68" is not visible with command "ip a s eth10"
     Then "default via fc01::1:1 dev eth1" is not visible with command "ip -6 route"
-    Then "2001:db8:1:0:5054" is visible with command "ip a s eth1"
+    Then "2001:db8:1:0:5054" is visible with command "ip a s eth10"
 
 
     @ipv6_routes_set_basic_route
@@ -236,7 +236,7 @@ Feature: nmcli: ipv6
     Then "default via 4000::1 dev eth1  proto static  metric 1024 " is visible with command "ip -6 route"
     Then "3030::1 via 2001::2 dev eth1  proto static  metric 1 " is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
-    Then "1010::1 dev eth1  proto static  metric 1" is visible with command "ip -6 route"
+    Then "1010::1 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
 
 
     @ipv6_routes_invalid_IP
