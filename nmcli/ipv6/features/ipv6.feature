@@ -70,15 +70,15 @@ Feature: nmcli: ipv6
     @ipv6_addresses_no_when_static_switch_asked
     @ipv6
     Scenario: nmcli - ipv6 - addresses - IP and no to manual question
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.addresses dead:beaf::1" in editor
      * Submit "no" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-     Then "inet6 dead:beaf" is visible with command "ip a s eth1"
-     Then "inet6 2001" is visible with command "ip a s eth1"
+     Then "inet6 dead:beaf" is visible with command "ip a s eth10"
+     Then "inet6 2001" is visible with command "ip a s eth10"
 
     @ipv6_addresses_invalid_netmask
     @eth0
@@ -155,7 +155,7 @@ Feature: nmcli: ipv6
 
     @ipv6_routes_set_basic_route
     @eth0
-    @ipv6_2 
+    @ipv6_2
     Scenario: nmcli - ipv6 - routes - set basic route
      * Add connection for a type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
@@ -199,7 +199,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
      * Bring "up" connection "ethie2"
-     * Open editor for connection "ethie"    
+     * Open editor for connection "ethie"
      * Submit "set ipv6.routes" in editor
      * Enter in editor
      * Save in editor
@@ -275,7 +275,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
     Then "nameserver 4000::1\s+nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
 
 #FIXME: this need some tuning as there may be some auto obtained ipv6 dns VVVV
 
@@ -291,7 +291,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
 
 
     @ipv6_dns_ignore-auto-dns_with_manually_set_dns
@@ -394,7 +394,7 @@ Feature: nmcli: ipv6
     @eth0
     @ipv6
     Scenario: nmcli - ipv6 - ignore auto obtained dns
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.ignore-auto-dns yes" in editor
@@ -491,7 +491,7 @@ Feature: nmcli: ipv6
     * Quit editor
     * Run child "sudo tshark -i eth1 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
     * Bring "up" connection "profie"
-    * Run child "sudo kill -9 $(pidof tshark)"   
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is visible with command "grep walderon /tmp/ipv6-hostname.log"
 
 
@@ -512,7 +512,7 @@ Feature: nmcli: ipv6
     * Quit editor
     * Run child "sudo tshark -i eth1 -f 'port 546' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)" 
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "Host Name: walderon" is not visible with command "cat /tmp/tshark.log"
 
 

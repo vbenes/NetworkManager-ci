@@ -278,7 +278,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     Then "nameserver 8.8.8.8\s+nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is not visible with command "cat /etc/resolv.conf"
 
 
     @testcase_303662
@@ -293,7 +293,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
 
 
     @testcase_303663
@@ -309,7 +309,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is not visible with command "cat /etc/resolv.conf"
 
 
     @testcase_303664
@@ -331,7 +331,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is not visible with command "cat /etc/resolv.conf"
 
 
     @testcase_303665
@@ -352,14 +352,14 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     Then "nameserver 8.8.8.8" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
 
 
     @testcase_303666
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - dns-search - add dns-search
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns-search redhat.com" in editor
     * Save in editor
@@ -374,7 +374,7 @@ Feature: nmcli: ipv4
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - dns-search - remove dns-search
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns-search redhat.com" in editor
     * Save in editor
@@ -473,7 +473,7 @@ Feature: nmcli: ipv4
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns-search redhat.com" in editor
     * Submit "set ipv4.ignore-auto-dns yes" in editor
@@ -573,7 +573,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 10." is not visible with command "ip route"
+    Then "default via 192.168.100.1" is not visible with command "ip route"
 
 
     @testcase_304240
@@ -592,7 +592,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 10." is visible with command "ip route"
+    Then "default via 192.168.100.1" is visible with command "ip route"
 
 
     @testcase_304241

@@ -91,7 +91,7 @@
      Then "Up Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "ARP Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then "ARP IP target/s \(n.n.n.n form\): 10.11.5.19" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then "ARP IP target/s \(n.n.n.n form\): 192.168.100.1" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
     @nmcli_novice_mode_create_bond-slave_with_default_options
@@ -451,7 +451,7 @@
      Then "Up Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "ARP Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then "ARP IP target/s \(n.n.n.n form\): 10.11.5.19" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then "ARP IP target/s \(n.n.n.n form\): 192.168.100.1" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -464,7 +464,7 @@
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Open editor for connection "bond0"
-     * Set a property named "bond.options" to "mode=0,miimon=100,arp_interval=1000,arp_ip_target=10.11.5.19" in editor
+     * Set a property named "bond.options" to "mode=0,miimon=100,arp_interval=1000,arp_ip_target=192.168.100.1" in editor
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
