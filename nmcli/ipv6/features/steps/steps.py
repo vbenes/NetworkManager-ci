@@ -128,7 +128,7 @@ def value_printed(context, item, value):
 
 @step(u'Value saved message showed in editor')
 def check_saved_in_editor(context):
-    context.prompt.expect('sucessfully')
+    context.prompt.expect('successfully')
 
 
 #@step(u'Error type "{type}" shown in editor')

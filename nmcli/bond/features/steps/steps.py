@@ -141,7 +141,7 @@ def reboot(context):
     sleep(2)
     os.system("sudo service NetworkManager restart")
     sleep(10)
-    
+
 
 @step(u'Restart NM')
 def restart_NM(context):

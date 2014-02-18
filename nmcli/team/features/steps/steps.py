@@ -147,10 +147,10 @@ def reboot(context):
     #    os.system("nmcli con up team0")
     #if os.system("nmcli connection show configured team0.1 |grep autoconnect |grep yes ") == 0:
     #    os.system("nmcli con up team0")
-    #    os.system("nmcli con up team0.1")    
+    #    os.system("nmcli con up team0.1")
     #    if os.system("nmcli connection show configured team0.2 |grep autoconnect |grep yes ") == 0:
-    #        os.system("nmcli con up team0.1")    
-    sleep(2)    
+    #        os.system("nmcli con up team0.1")
+    sleep(2)
 
 
 @step(u'Check "{options}" are present in describe output for object "{obj}"')
@@ -176,7 +176,7 @@ def team_is_down(context, team):
     cmd = pexpect.spawn('teamdctl %s state dump' %team, logfile=context.log)
     print os.system('teamdctl %s state dump' %team)
     assert os.system('teamdctl %s state dump' %team) != 0, 'team "%s" exists' % (team)
-    
+
 @step(u'Prompt is not running')
 def prompt_is_not_running(context):
     sleep(1)
@@ -185,7 +185,7 @@ def prompt_is_not_running(context):
 
 @step(u'Value saved message showed in editor')
 def check_saved_in_editor(context):
-    context.prompt.expect('sucessfully')
+    context.prompt.expect('successfully')
 
 
 @step(u'Mode missing message shown in editor')
@@ -206,13 +206,13 @@ def check_slave_in_team_is_up(context, slave, team, state):
         r = child.expect([found, 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
         if r != 0:
             raise Exception('Device %s was not found in dump of team %s' % (slave, team))
-        
+
         r = child.expect(['"up"\: true', '"ifname"', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-        if r != 0:   
+        if r != 0:
             raise Exception('Got an Error while %sing connection %s' % (action, name))
-    if state == "down":      
+    if state == "down":
         r = child.expect([slave, 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
         if r == 0:
             raise Exception('Device %s was found in dump of team %s' % (slave, team))
-        
+
 
