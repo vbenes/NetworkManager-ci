@@ -14,7 +14,7 @@ def before_scenario(context, scenario):
 def after_scenario(context, scenario):
     """
     """
-    if os.system(" nmcli c sh a |grep eth0") != 0:
+    if os.system(" nmcli c sh -a |grep eth0") != 0:
         os.system("nmcli connection up id eth0")
         sleep(4)
 

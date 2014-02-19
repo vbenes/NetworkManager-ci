@@ -23,13 +23,13 @@ def after_scenario(context, scenario):
     """
     try:
         # Attach journalctl logs
-        if os.system("nmcli c sh a |grep eth0") != 0:
+        if os.system("nmcli c sh -a |grep eth0") != 0:
             os.system("nmcli connection up id eth0")
             sleep(4)
 
         if hasattr(context, "embed"):
             context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
-            
+
             os.system("sudo journalctl -u NetworkManager --no-pager -o cat --since='%s' > /tmp/journal-nm.log" % context.log_start_time)
             data = open("/tmp/journal-nm.log", 'r').read()
             if data:
@@ -58,9 +58,9 @@ def after_tag(context, tag):
             #os.system('nmcli device disconnect eth2')
             #sleep(TIMER)
 
-            #if os.system("nmcli c|grep team0.0 -q") == 0:  
+            #if os.system("nmcli c|grep team0.0 -q") == 0:
             os.system('nmcli connection delete id team0.0 team0.1 team-slave-eth2 team-slave-eth1')
-            #if os.system("nmcli c|grep team0.1 -q") == 0:  
+            #if os.system("nmcli c|grep team0.1 -q") == 0:
             #os.system('nmcli connection delete id team0.1')
             #if os.system("nmcli c|grep team-slave-eth1 -q") == 0:
             #os.system('nmcli connection delete id team-slave-eth1')

@@ -28,8 +28,8 @@ def after_scenario(context, scenario):
         data = open("/tmp/journal-nm.log", 'r').read()
         if data:
             context.embed('text/plain', data)
-        
-        if os.system(" nmcli c sh a |grep eth0") != 0:
+
+        if os.system(" nmcli c sh -a |grep eth0") != 0:
             os.system("nmcli connection up id eth0")
             sleep(4)
         if hasattr(context, "embed"):
@@ -58,7 +58,7 @@ def after_tag(context, tag):
         if tag == "eth0":
             os.system("nmcli connection up id eth0")
             sleep(3*TIMER)
-            
+
         if tag == "ipv6" or tag == "ipv6_2":
             if tag == "ipv6_2":
                 os.system("nmcli connection delete id ethie2")

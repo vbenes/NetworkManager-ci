@@ -63,8 +63,8 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-     Then "inet6 dead:beaf" is visible with command "ip a s eth1"
-     Then "inet6 2001" is not visible with command "ip a s eth1"
+     Then "inet6 dead:beaf" is visible with command "ip a s eth10"
+     Then "inet6 2001" is not visible with command "ip a s eth10"
 
 
     @ipv6_addresses_no_when_static_switch_asked

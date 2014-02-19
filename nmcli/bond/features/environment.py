@@ -30,13 +30,13 @@ def after_scenario(context, scenario):
         if data:
             context.embed('text/plain', data)
 
-        if os.system(" nmcli c sh a |grep eth0") != 0:
+        if os.system(" nmcli c sh -a |grep eth0") != 0:
             os.system("nmcli connection up id eth0")
             sleep(4)
 
         if hasattr(context, "embed"):
             context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
-    
+
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
 
@@ -70,7 +70,7 @@ def after_tag(context, tag):
             #if os.system("nmcli connection | grep bond0.1 -q") == 0:
      #       print "** deleting second slave profile"
      #       os.system('nmcli connection delete id ')
-            
+
             sleep(TIMER)
 
         if tag == "bond":
@@ -81,7 +81,7 @@ def after_tag(context, tag):
             #if os.system('nmcli connection | grep "bond " -q') == 0:
             #print "** deleting bond profile"
             #os.system('nmcli connection delete id bond')
-                
+
             sleep(TIMER)
 
 
@@ -125,7 +125,6 @@ def after_tag(context, tag):
     #            sleep(2*TIMER)
     #
             print os.system('ls /proc/net/bonding')
- 
+
     except Exception as e:
         print("Error in after_tag: %s" % e.message)
-        
