@@ -79,7 +79,7 @@
      * Expect "Bonding arp-interval \[0\]"
      * Submit "100" in editor
      * Expect "Bonding arp-ip-target \[none\]"
-     * Submit "10.11.5.19" in editor
+     * Submit "192.168.100.1" in editor
      * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
      * Submit "no" in editor
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -438,7 +438,7 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Open editor for connection "bond0"
-     * Set a property named "bond.options" to "mode=0, arp_interval=1000, arp_ip_target=10.11.5.19" in editor
+     * Set a property named "bond.options" to "mode=0, arp_interval=1000, arp_ip_target=192.168.100.1" in editor
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
