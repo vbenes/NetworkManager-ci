@@ -77,7 +77,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-     Then "inet6 dead:beaf" is not visible with command "ip a s eth10"
+     Then "inet6 dead:beaf" is visible with command "ip a s eth10"
      Then "inet6 2001" is visible with command "ip a s eth10"
 
     @ipv6_addresses_invalid_netmask
@@ -236,7 +236,7 @@ Feature: nmcli: ipv6
     Then "default via 4000::1 dev eth1  proto static  metric 1024" is visible with command "ip -6 route"
     Then "3030::1 via 2001::2 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
-    Then "1010::1 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
+    Then "1010::1 dev eth1  proto static  metric 3" is visible with command "ip -6 route"
 
 
     @ipv6_routes_invalid_IP
@@ -266,7 +266,7 @@ Feature: nmcli: ipv6
     @eth0
     @ipv6
     Scenario: nmcli - ipv6 - dns - method static + IP + dns
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
@@ -275,7 +275,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
     Then "nameserver 4000::1\s+nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
 
 #FIXME: this need some tuning as there may be some auto obtained ipv6 dns VVVV
 
