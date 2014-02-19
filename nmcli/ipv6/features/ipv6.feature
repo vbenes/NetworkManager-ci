@@ -233,8 +233,8 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "default via 4000::1 dev eth1  proto static  metric 1024 " is visible with command "ip -6 route"
-    Then "3030::1 via 2001::2 dev eth1  proto static  metric 1 " is visible with command "ip -6 route"
+    Then "default via 4000::1 dev eth1  proto static  metric 1024" is visible with command "ip -6 route"
+    Then "3030::1 via 2001::2 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "1010::1 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
 

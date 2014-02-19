@@ -567,20 +567,20 @@ Feature: nmcli: ipv4
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - never-default - set
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.never-default yes " in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 192.168.100.1" is not visible with command "ip route"
+    Then "default via 10." is not visible with command "ip route"
 
 
     @testcase_304240
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - never-default - remove
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.never-default yes" in editor
     * Save in editor
@@ -592,7 +592,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 192.168.100.1" is visible with command "ip route"
+    Then "default via 10." is visible with command "ip route"
 
 
     @testcase_304241
