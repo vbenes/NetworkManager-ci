@@ -494,8 +494,8 @@ Feature: nmcli: ipv6
     * Quit editor
     * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
     * Bring "up" connection "profie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient-eth10.conf"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
     Then "walderon" is visible with command "grep walderon /tmp/ipv6-hostname.log"
 
 
@@ -516,7 +516,7 @@ Feature: nmcli: ipv6
     * Quit editor
     * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
     Then "walderon" is not visible with command "cat /tmp/tshark.log"
 
 

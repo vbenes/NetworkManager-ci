@@ -44,6 +44,7 @@ def before_tag(context, tag):
     try:
         if tag == "eth0":
             os.system("nmcli device disconnect eth0")
+            os.system("nmcli device disconnect eth10")
             sleep(TIMER)
 
     except Exception as e:

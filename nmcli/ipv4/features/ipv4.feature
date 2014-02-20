@@ -397,14 +397,14 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - set dhcp-hostname
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-hostname lulin" in editor
+    * Submit "set ipv4.dhcp-hostname walderon" in editor
     #* Submit "set ipv4.send-hostname yes" in editor
     * Save in editor
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "Host Name: lulin" is visible with command "cat /tmp/tshark.log"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    Then "walderon" is visible with command "cat /tmp/tshark.log"
 
 
     @testcase_303669
@@ -412,7 +412,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - remove dhcp-hostname
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-hostname lulin" in editor
+    * Submit "set ipv4.dhcp-hostname walderon" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -423,8 +423,8 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-   Then "Host Name: lulin" is not visible with command "cat /tmp/tshark.log"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+   Then "walderon" is not visible with command "cat /tmp/tshark.log"
 
 
     @testcase_303670
@@ -432,14 +432,14 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - don't send
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-hostname lulin" in editor
+    * Submit "set ipv4.dhcp-hostname walderon" in editor
     * Submit "set ipv4.dhcp-send-hostname no" in editor
     * Save in editor
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "lulin" is not visible with command "grep lulin /tmp/hostname.log"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    Then "walderon" is not visible with command "grep lulin /tmp/hostname.log"
 
 
     @testcase_303671
@@ -451,8 +451,8 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "Host Name: qe-dell" is visible with command "cat /tmp/tshark.log"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    Then "qe-dell" is visible with command "cat /tmp/tshark.log"
 
 
     @testcase_304232
@@ -465,7 +465,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/real.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
     Then "Host Name" is not visible with command "grep qe-dell-ovs5-vm /tmp/real.log"
 
 
@@ -475,6 +475,8 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
+    * Submit "set ipv6.method ignore" in editor
+    * Submit "set ipv6.ignore-auto-dns yes" in editor
     * Submit "set ipv4.dns-search redhat.com" in editor
     * Submit "set ipv4.ignore-auto-dns yes" in editor
     * Save in editor
@@ -500,15 +502,15 @@ Feature: nmcli: ipv4
     @testcase_304235
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - set client id
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-client-id karel" in editor
+    * Submit "set ipv4.dhcp-client-id XXX" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth1 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
+    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "kare" is visible with command "cat /tmp/tshark.log"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    Then "XXX" is visible with command "cat /tmp/tshark.log"
     Then "Option: \(61\) Client identifier\s+Length: 5" is visible with command "cat /tmp/tshark.log"
     #VVV verify bug 999503
     Then "karel" is visible with command "cat /var/lib/NetworkManager/dhclient-eth1.conf"
@@ -518,9 +520,9 @@ Feature: nmcli: ipv4
     @testcase_304236
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - remove client id
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-client-id karel" in editor
+    * Submit "set ipv4.dhcp-client-id XXX" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -529,10 +531,10 @@ Feature: nmcli: ipv4
     * Enter in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth1 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
+    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "kare" is not visible with command "cat /tmp/tshark.log"
+    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    Then "XXX" is not visible with command "cat /tmp/tshark.log"
     Then "Option: \(61\) Client identifier\s+Length: 5" is not visible with command "cat /tmp/tshark.log"
 
 
