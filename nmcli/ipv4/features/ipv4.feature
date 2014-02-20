@@ -218,13 +218,13 @@ Feature: nmcli: ipv4
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
-    * Submit "set ipv4.routes 192.168.1.0/24 0.0.0.0, 192.168.2.0/24 192.168.1.5 " in editor
+    * Submit "set ipv4.routes 192.168.1.0/24 0.0.0.0, 192.168.2.0/24 192.168.122.5" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
     Then "default via 192.168.122.1 dev eth10  proto static  metric 1024" is visible with command "ip route"
     Then "192.168.1.0/24 dev eth10  proto static  scope link  metric" is visible with command "ip route"
-    Then "192.168.2.0/24 via 192.168.1.5 dev eth10  proto static  metric" is visible with command "ip route"
+    Then "192.168.2.0/24 via 192.168.122.5 dev eth10  proto static  metric" is visible with command "ip route"
     Then "192.168.122.0/24 dev eth10  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
 
 
@@ -403,7 +403,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "Host Name: lulin" is visible with command "cat /tmp/tshark.log"
 
 
@@ -423,7 +423,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
    Then "Host Name: lulin" is not visible with command "cat /tmp/tshark.log"
 
 
@@ -438,7 +438,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "lulin" is not visible with command "grep lulin /tmp/hostname.log"
 
 
@@ -451,7 +451,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "Host Name: qe-dell" is visible with command "cat /tmp/tshark.log"
 
 
@@ -465,7 +465,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/real.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "Host Name" is not visible with command "grep qe-dell-ovs5-vm /tmp/real.log"
 
 
@@ -507,7 +507,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -i eth1 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "kare" is visible with command "cat /tmp/tshark.log"
     Then "Option: \(61\) Client identifier\s+Length: 5" is visible with command "cat /tmp/tshark.log"
     #VVV verify bug 999503
@@ -531,7 +531,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Run child "sudo tshark -i eth1 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "kare" is not visible with command "cat /tmp/tshark.log"
     Then "Option: \(61\) Client identifier\s+Length: 5" is not visible with command "cat /tmp/tshark.log"
 

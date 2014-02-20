@@ -143,7 +143,6 @@ def spawn_process(context, command):
 
 @step(u'Run child "{command}"')
 def run_child_process(context, command):
-    Popen("sleep 1", shell=True).wait()
     Popen(command, shell=True)
     Popen("sleep 2", shell=True).wait()
 

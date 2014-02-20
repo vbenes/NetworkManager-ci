@@ -36,9 +36,18 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     #pip install pexpect
 
     #profiles tuning
+    nmcli connection modify eth0 ipv6.method auto
     nmcli connection modify eth1 connection.autoconnect no
     nmcli connection modify eth2 connection.autoconnect no
-    nmcli connection modify eth0 ipv6.method auto
+    nmcli connection modify eth3 connection.autoconnect no
+    nmcli connection modify eth4 connection.autoconnect no
+    nmcli connection modify eth5 connection.autoconnect no
+    nmcli connection modify eth6 connection.autoconnect no
+    nmcli connection modify eth7 connection.autoconnect no
+    nmcli connection modify eth8 connection.autoconnect no
+    nmcli connection modify eth9 connection.autoconnect no
+    nmcli connection modify eth10 connection.autoconnect no
+    service NetworkManager restart
 
     service NetworkManager restart
 

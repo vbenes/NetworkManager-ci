@@ -43,13 +43,13 @@ def start_stop_connection(context, action, name):
             return
     cli = pexpect.spawn('nmcli connection %s id %s' % (action, name), logfile=context.log,  timeout=180)
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
+    sleep(5)
     if r == 0:
         raise Exception('Got an Error while %sing connection %s' % (action, name))
     elif r == 1:
         raise Exception('nmcli connection %s %s timed out (90s)' % (action, name))
     elif r == 2:
         raise Exception('nmcli connection %s %s timed out (180s)' % (action, name))
-    sleep(2)
 
 
 @step(u'Bring up connection "{connection}" ignoring error')
