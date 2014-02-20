@@ -439,7 +439,7 @@ Feature: nmcli: ipv4
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Bring "up" connection "ethie"
     * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
-    Then "walderon" is not visible with command "grep lulin /tmp/hostname.log"
+    Then "walderon" is not visible with command " /tmp/hostname.log"
 
 
     @testcase_303671
@@ -473,7 +473,7 @@ Feature: nmcli: ipv4
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv6.method ignore" in editor
     * Submit "set ipv6.ignore-auto-dns yes" in editor
@@ -483,7 +483,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     Then " redhat.com" is visible with command "cat /etc/resolv.conf"
-    Then "eng.bos.redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then "virtual" is not visible with command "cat /etc/resolv.conf"
 
 
     @testcase_304234
@@ -511,9 +511,8 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
     Then "XXX" is visible with command "cat /tmp/tshark.log"
-    Then "Option: \(61\) Client identifier\s+Length: 5" is visible with command "cat /tmp/tshark.log"
     #VVV verify bug 999503
-    Then "karel" is visible with command "cat /var/lib/NetworkManager/dhclient-eth1.conf"
+    Then "XXX" is visible with command "cat /var/lib/NetworkManager/dhclient-eth10.conf"
     Then "exceeds max \(255\) for precision" is not visible with command "grep exceeds max /var/log/messages"
 
 
@@ -535,7 +534,6 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
     Then "XXX" is not visible with command "cat /tmp/tshark.log"
-    Then "Option: \(61\) Client identifier\s+Length: 5" is not visible with command "cat /tmp/tshark.log"
 
 
     @testcase_304237
