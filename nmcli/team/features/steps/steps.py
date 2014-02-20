@@ -140,17 +140,18 @@ def restart_NM(context):
 def reboot(context):
     os.system("ip link set dev eth1 down")
     os.system("ip link set dev eth2 down")
+    os.system("ip link set dev eth3 down")
+    os.system("ip link set dev eth4 down")
+    os.system("ip link set dev eth5 down")
+    os.system("ip link set dev eth6 down")
+    os.system("ip link set dev eth7 down")
+    os.system("ip link set dev eth8 down")
+    os.system("ip link set dev eth9 down")
+    os.system("ip link set dev eth10 down")
     os.system("nmcli device disconnect nm-team")
     sleep(2)
     os.system("sudo service NetworkManager restart")
-    #if os.system("nmcli connection show configured team0 |grep autoconnect |grep yes ") == 0:
-    #    os.system("nmcli con up team0")
-    #if os.system("nmcli connection show configured team0.1 |grep autoconnect |grep yes ") == 0:
-    #    os.system("nmcli con up team0")
-    #    os.system("nmcli con up team0.1")
-    #    if os.system("nmcli connection show configured team0.2 |grep autoconnect |grep yes ") == 0:
-    #        os.system("nmcli con up team0.1")
-    sleep(2)
+    sleep(10)
 
 
 @step(u'Check "{options}" are present in describe output for object "{obj}"')

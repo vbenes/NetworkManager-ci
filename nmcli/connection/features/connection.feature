@@ -92,7 +92,7 @@ Feature: nmcli: connection
      * Save in editor
      * Quit editor
      * Bring "up" connection "connie"
-     * Bring "down" connection "connie"
+     * Reboot
      Then Check if "connie" is active connection
 
 
@@ -117,7 +117,7 @@ Feature: nmcli: connection
      * Save in editor
      * Quit editor
      * Bring "up" connection "connie"
-     * Bring "down" connection "connie"
+     * Reboot
      Then Check if "connie" is not active connection
 
 

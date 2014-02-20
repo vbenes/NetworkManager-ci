@@ -562,8 +562,8 @@ Feature: nmcli: ipv4
     * Quit editor
     Then Bring "up" connection "ethie"
 
-testcase_304239
-    @
+
+    @testcase_304239
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - never-default - set

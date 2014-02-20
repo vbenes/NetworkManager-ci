@@ -61,6 +61,23 @@ def add_connection(context, typ, name, ifname):
     sleep(1)
 
 
+@step(u'Reboot')
+def reboot(context):
+    os.system("ip link set dev eth1 down")
+    os.system("ip link set dev eth2 down")
+    os.system("ip link set dev eth3 down")
+    os.system("ip link set dev eth4 down")
+    os.system("ip link set dev eth5 down")
+    os.system("ip link set dev eth6 down")
+    os.system("ip link set dev eth7 down")
+    os.system("ip link set dev eth8 down")
+    os.system("ip link set dev eth9 down")
+    os.system("ip link set dev eth10 down")
+    sleep(2)
+    os.system("sudo service NetworkManager restart")
+    sleep(10)
+
+
 @step(u'Disconnect device "{name}"')
 def disconnect_connection(context, name):
     cli = pexpect.spawn('nmcli device disconnect %s' % name, logfile=context.log,  timeout=180)

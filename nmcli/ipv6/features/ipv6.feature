@@ -526,7 +526,7 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth1/use_tempaddr"
+    Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
 
 
     @ipv6_ip6-privacy_1
@@ -539,7 +539,7 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth1/use_tempaddr"
+    Then "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
 
 
     @ipv6_ip6-privacy_2
@@ -552,7 +552,7 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "2" is visible with command "cat /proc/sys/net/ipv6/conf/eth1/use_tempaddr"
+    Then "2" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
 
 
     @ipv6_ip6-privacy_incorrect_value
