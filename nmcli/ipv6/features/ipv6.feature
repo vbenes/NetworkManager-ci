@@ -356,7 +356,7 @@ Feature: nmcli: ipv6
     @eth0
     @ipv6
     Scenario: nmcli - ipv6 - dns-search - add dns-search
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.dns-search redhat.com" in editor
@@ -372,7 +372,7 @@ Feature: nmcli: ipv6
     @eth0
     @ipv6
     Scenario: nmcli - ipv6 - dns-search - remove dns-search
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.dns-search redhat.com" in editor
@@ -481,7 +481,7 @@ Feature: nmcli: ipv6
     @ipv6_dhcp-hostname_set
     @profie
     Scenario: nmcli - ipv6 - dhcp-hostname - set dhcp-hostname
-    * Add connection for a type "ethernet" named "profie" for device "eth1"
+    * Add connection for a type "ethernet" named "profie" for device "eth10"
     * Open editor for connection "profie"
 #    * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.may-fail true" in editor
@@ -489,7 +489,7 @@ Feature: nmcli: ipv6
     * Submit "set ipv6.dhcp-hostname walderon" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth1 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
+    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
     * Bring "up" connection "profie"
     * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is visible with command "grep walderon /tmp/ipv6-hostname.log"
@@ -498,7 +498,7 @@ Feature: nmcli: ipv6
     @ipv6_dhcp-hostname_remove
     @ipv4
     Scenario: nmcli - ipv6 - dhcp-hostname - remove dhcp-hostname
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.dhcp-hostname walderon" in editor
@@ -510,7 +510,7 @@ Feature: nmcli: ipv6
     * Enter in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth1 -f 'port 546' -V -x > /tmp/tshark.log"
+    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
     * Run child "sudo kill -9 $(pidof tshark)"
     Then "Host Name: walderon" is not visible with command "cat /tmp/tshark.log"
@@ -519,7 +519,7 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_0
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 0
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 0" in editor
@@ -532,7 +532,7 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_1
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 1
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 1" in editor
@@ -545,7 +545,7 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_2
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 2
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 2" in editor

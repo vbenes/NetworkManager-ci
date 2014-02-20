@@ -212,7 +212,7 @@ def check_error_while_saving_in_editor(context, type):
 
 @step(u'Check if "{name}" is active connection')
 def is_active_connection(context, name):
-    cli = pexpect.spawn('nmcli -t -f NAME connection show active', logfile=context.log)
+    cli = pexpect.spawn('nmcli -t -f NAME connection show --active', logfile=context.log)
     r = cli.expect([name,pexpect.EOF])
     if r == 1:
         raise Exception('Connection %s is not active' % name)
@@ -220,7 +220,7 @@ def is_active_connection(context, name):
 
 @step(u'Check if "{name}" is not active connection')
 def is_nonactive_connection(context, name):
-    cli = pexpect.spawn('nmcli -t -f NAME connection show active', logfile=context.log)
+    cli = pexpect.spawn('nmcli -t -f NAME connection show --active', logfile=context.log)
     r = cli.expect([name,pexpect.EOF])
     if r == 0:
         raise Exception('Connection %s is active' % name)
