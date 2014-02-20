@@ -144,7 +144,7 @@ def spawn_process(context, command):
 @step(u'Run child "{command}"')
 def run_child_process(context, command):
     Popen(command, shell=True)
-    Popen("sleep 2", shell=True).wait()
+    #Popen("sleep 2", shell=True).wait()
 
 @step(u'Note the output of "{command}" as value "{index}"')
 def note_the_output_as(context, command, index):
@@ -183,14 +183,14 @@ def is_active_connection(context, name):
 @step(u'"{pattern}" is visible with command "{command}"')
 def check_pattern_visible_with_command(context, pattern, command):
     sleep(1) # time for all to get set
-    ifconfig = pexpect.spawn(command, logfile=context.log)
+    ifconfig = pexpect.spawn(command, maxread=20000, logfile=context.log)
     assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
 
 
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
     sleep(1) # time for all to get set
-    ifconfig = pexpect.spawn(command, logfile=context.log)
+    ifconfig = pexpect.spawn(command, maxread=20000, logfile=context.log)
     assert ifconfig.expect([pattern, pexpect.EOF]) != 0, 'pattern %s still visible with %s' % (pattern, command)
 
 

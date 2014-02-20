@@ -3,8 +3,8 @@ Feature: nmcli: connection
 
     @connection_help
     Scenario: nmcli - connection - help and autocompletion
-    Then "COMMAND :=  { show | up | down | add | modify | edit | delete | reload | load }\s+show configured\s+show active\s+up\s+down\s+add\s+modify\s+edit\s+delete\s+reload\s+load" is visible with command "nmcli connection help"
-    Then "active\s+configured" is visible with tab after "nmcli connection show "
+    Then "COMMAND :=  { show | up | down | add | modify | edit | delete | reload | load }\s+show\s+up\s+down\s+add\s+modify\s+edit\s+edit\s+delete\s+reload\s+load" is visible with command "nmcli connection help"
+    Then "--active" is visible with tab after "nmcli connection show "
     Then "autoconnect\s+con\-name\s+help\s+ifname\s+type" is visible with tab after "nmcli connection add "
     Then "add\s+delete\s+down\s+edit\s+help\s+modify\s+load\s+reload\s+show\s+up" is visible with tab after "nmcli connection "
     Then "Usage: nmcli connection add { OPTIONS | help }\s+OPTIONS \:= COMMON_OPTIONS TYPE_SPECIFIC_OPTIONS IP_OPTIONS\s+COMMON_OPTIONS:\s+type <type>\s+ifname <interface name> |\s+ethernet\:\s+wifi:\s+ssid <SSID>\s+gsm:\s+apn <APN>\s+cdma:\s+infiniband:\s+bluetooth:\s+vlan:\s+dev <parent device \(connection  UUID, ifname, or MAC\)>\s+bond:\s+bond-slave:\s+master <master \(ifname or connection UUID\)>\s+team:\s+team-slave:\s+master <master \(ifname or connection UUID\)>\s+bridge:\s+bridge-slave:\s+master <master \(ifname or connection UUID\)>\svpn:\s+vpn-type vpnc|openvpn|pptp|openconnect|openswan\s+olpc-mesh:\s+ssid" is visible with command "nmcli connection add help"
