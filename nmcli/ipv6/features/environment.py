@@ -81,7 +81,7 @@ def after_tag(context, tag):
             print "---------------------------"
             print "starting eth0"
             os.system("nmcli connection up id eth0")
-            sleep(3*TIMER)
+            sleep(6*TIMER)
             print "---------------------------"
 
     except Exception as e:

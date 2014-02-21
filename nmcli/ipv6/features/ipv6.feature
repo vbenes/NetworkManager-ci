@@ -108,8 +108,8 @@ Feature: nmcli: ipv6
 
 
     @ipv6_addresses_set_several_IPv6s_with_masks_and_gws
-    @eth0
     @ipv6
+    @eth0
     Scenario: nmcli - ipv6 - addresses - several IPs slash netmask and gw
      * Add connection for a type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
@@ -122,11 +122,9 @@ Feature: nmcli: ipv6
     Then "fc02::1:21/96" is visible with command "ip a s eth1"
     Then "fc01::1:5/68" is visible with command "ip a s eth1"
     Then "fb01::1:6/112" is visible with command "ip a s eth1"
-
     Then "fc01::/68 dev eth1" is visible with command "ip -6 route"
     Then "fc02::/96 dev eth1" is visible with command "ip -6 route"
     Then "fb01::1:0/112 dev eth1" is visible with command "ip -6 route"
-
     Then "default via fc01::1:1 dev eth1" is visible with command "ip -6 route"
 
 
@@ -295,7 +293,6 @@ Feature: nmcli: ipv6
 
 
     @ipv6_dns_ignore-auto-dns_with_manually_set_dns
-    @eth0
     @ipv6
     Scenario: nmcli - ipv6 - dns - method auto + dns + ignore automaticaly obtained
      * Add connection for a type "ethernet" named "ethie" for device "eth1"
