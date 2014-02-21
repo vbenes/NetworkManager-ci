@@ -5,11 +5,17 @@ import os
 from time import sleep
 
 def before_scenario(context, scenario):
+    try:
+        context.log = file('/tmp/log_%s.log' % scenario.name,'w')
+        #os.system("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done")
+        #if os.system("nmcli device status |grep -v eth0 |grep -v lo|grep -e ' connected'") != 1:
+        #    os.system("for dev in $(nmcli device status |grep -v eth0 |grep -v lo|grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done")
+        os.system("nmcli connection delete id ethie")
 
-    context.log = file('/tmp/log_%s.log' % scenario.name,'w')
-    #os.system("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do nmcli device disconnect $dev; done")
-    #if os.system("nmcli device status |grep -v eth0 |grep -v lo|grep -e ' connected'") != 1:
-    #    os.system("for dev in $(nmcli device status |grep -v eth0 |grep -v lo|grep -e ' connected' |awk {'print $1'}); do nmcli device disconnect $dev; done")
+        context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
+
+    except Exception as e:
+        print("Error in before_scenario: %s" % e.message)
 
 def after_scenario(context, scenario):
     """
