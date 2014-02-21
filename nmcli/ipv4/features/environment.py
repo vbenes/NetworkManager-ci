@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
+import pexpect
 
 from time import sleep, localtime, strftime
 
@@ -48,8 +49,8 @@ def before_tag(context, tag):
         if tag == "eth0":
             print "---------------------------"
             print "eth0 and eth10 disconnect"
-            os.system("nmcli device disconnect eth0")
-            os.system("nmcli device disconnect eth10")
+            pexpect.spawn("nmcli device disconnect eth0",  logfile=context.log)
+            pexpect.spawn("nmcli device disconnect eth10",  logfile=context.log)
             sleep(TIMER)
             print "---------------------------"
 
