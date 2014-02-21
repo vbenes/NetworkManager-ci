@@ -62,6 +62,8 @@ if [ $rc -eq 0 ]; then
 else
     nmcli con
     ip a s
+    cp -f "/var/log/messages" /tmp/$TEST-messages
+    rhts-submit-log -l "/tmp/$TEST-messages"
 fi
 
 rhts-report-result $TEST $RESULT "/tmp/report_$TEST.html"
