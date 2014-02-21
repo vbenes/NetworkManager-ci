@@ -31,8 +31,11 @@ def after_scenario(context, scenario):
             context.embed('text/plain', data)
 
         if os.system(" nmcli c sh -a |grep eth0") != 0:
+            print "---------------------------"
+            print "starting eth0 as it was down"
             os.system("nmcli connection up id eth0")
             sleep(4)
+            print "---------------------------"
 
         if hasattr(context, "embed"):
             context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
@@ -43,9 +46,12 @@ def after_scenario(context, scenario):
 def before_tag(context, tag):
     try:
         if tag == "eth0":
+            print "---------------------------"
+            print "eth0 and eth10 disconnect"
             os.system("nmcli device disconnect eth0")
             os.system("nmcli device disconnect eth10")
             sleep(TIMER)
+            print "---------------------------"
 
     except Exception as e:
         print("Error in before_tag: %s" % e.message)
@@ -55,16 +61,20 @@ def after_tag(context, tag):
     """
     try:
         if tag == "ipv4" or tag == "ipv4_2":
+            print "---------------------------"
+            print "deleting connections"
             if tag == "ipv4_2":
                 os.system("nmcli connection delete id ethie2")
             os.system("nmcli connection delete id ethie")
     #        os.system("sudo service NetworkManager restart")
             sleep(TIMER)
-
+            print "---------------------------"
         if tag == "eth0":
+            print "---------------------------"
+            print "starting eth0"
             os.system("nmcli connection up id eth0")
             sleep(3*TIMER)
-
+            print "---------------------------"
 
     except Exception as e:
         print("Error in after_tag: %s" % e.message)

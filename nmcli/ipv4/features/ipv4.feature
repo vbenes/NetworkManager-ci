@@ -439,7 +439,7 @@ Feature: nmcli: ipv4
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Bring "up" connection "ethie"
     * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
-    Then "walderon" is not visible with command " /tmp/hostname.log"
+    Then "walderon" is not visible with command "cat /tmp/hostname.log"
 
 
     @testcase_303671
@@ -473,7 +473,7 @@ Feature: nmcli: ipv4
     @eth0
     @ipv4
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv6.method ignore" in editor
     * Submit "set ipv6.ignore-auto-dns yes" in editor

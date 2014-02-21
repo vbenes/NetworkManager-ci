@@ -405,7 +405,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
     Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
-    Then "eng.bos.redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then "virtual" is not visible with command "cat /etc/resolv.conf"
     Then "No nameservers found" is visible with command "cat /etc/resolv.conf"
 
 
