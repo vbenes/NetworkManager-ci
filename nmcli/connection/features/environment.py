@@ -20,25 +20,47 @@ def before_scenario(context, scenario):
 def after_scenario(context, scenario):
     """
     """
-    if os.system(" nmcli c sh -a |grep eth0") != 0:
-        os.system("nmcli connection up id eth0")
-        sleep(4)
+    try:
+        # Attach journalctl logs
+        os.system("sudo journalctl -u NetworkManager --no-pager -o cat --since='%s' > /tmp/journal-nm.log" % context.log_start_time)
+        data = open("/tmp/journal-nm.log", 'r').read()
+        if data:
+            context.embed('text/plain', data)
 
-    if hasattr(context, "embed"):
-        context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
+        if os.system(" nmcli c sh -a |grep eth0") != 0:
+            print "---------------------------"
+            print "starting eth0 as it was down"
+            os.system("nmcli connection up id eth0")
+            sleep(4)
+            print "---------------------------"
+
+        if hasattr(context, "embed"):
+            context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
+
+    except Exception as e:
+        print("Error in after_scenario: %s" % e.message)
+
 
 def before_tag(context, tag):
     """
     """
-    if tag == "firewall":
-        #os.system("nmcli device disconnect eth0")
-        os.system("sudo systemctl unmask firewalld")
-        os.system("sudo service firewalld start")
-        os.system("sleep 2")
+    try:
+        if tag == "firewall":
+            print "---------------------------"
+            print "starting firewall"
+            os.system("sudo systemctl unmask firewalld")
+            os.system("sudo service firewalld start")
+            os.system("sleep 2")
+            print "---------------------------"
 
-    if tag == "eth0":
-        os.system("nmcli device disconnect eth0")
-        sleep(TIMER)
+        if tag == "eth0":
+            print "---------------------------"
+            print "eth0 and eth10 disconnect"
+            os.system("nmcli device disconnect eth0")
+            os.system("nmcli device disconnect eth10")
+            sleep(TIMER)
+            print "---------------------------"
+
 
 def after_step(context, step):
     """
@@ -50,19 +72,31 @@ def after_tag(context, tag):
     """
     """
     if tag == "eth":
+        print "---------------------------"
+        print "deleting cronnie"
         os.system("nmcli connection delete id connie")
 #        os.system("sudo service NetworkManager restart")
         os.system("sleep 1")
+        print "---------------------------"
 
     if tag == "firewall":
+        print "---------------------------"
+        print "stoppping firewall"
         #os.system("nmcli connection up id eth0")
         os.system("sudo service firewalld stop")
         os.system("sleep 1")
+        print "---------------------------"
 
     if tag == "eth0":
+        print "---------------------------"
+        print "upping eth0"
         os.system("nmcli connection up id eth0")
         sleep(2*TIMER)
+        print "---------------------------"
 
     if tag == "time":
+        print "---------------------------"
+        print "time connection delete"
         os.system("nmcli connection delete id time")
+        print "---------------------------"
 
