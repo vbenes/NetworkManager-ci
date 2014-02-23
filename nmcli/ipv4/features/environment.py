@@ -45,17 +45,17 @@ def after_scenario(context, scenario):
         print("Error in after_scenario: %s" % e.message)
 
 def before_tag(context, tag):
-    try:
-        if tag == "eth0":
-            print "---------------------------"
-            print "eth0 and eth10 disconnect"
-            pexpect.spawn("sudo nmcli --wait 30 device disconnect eth0",  logfile=context.log)
-            pexpect.spawn("sudo nmcli --wait 30 device disconnect eth10",  logfile=context.log)
-            sleep(TIMER)
-            print "---------------------------"
+    #try:
+    if tag == "eth0":
+        print "---------------------------"
+        print "eth0 and eth10 disconnect"
+        pexpect.spawn("sudo nmcli --wait 30 device disconnect eth0",  logfile=context.log)
+        pexpect.spawn("sudo nmcli --wait 30 device disconnect eth10",  logfile=context.log)
+        sleep(TIMER)
+        print "---------------------------"
 
-    except Exception as e:
-        print("Error in before_tag: %s" % e.message)
+#    except Exception as e:
+ #       print("Error in before_tag: %s" % e.message)
 
 def after_tag(context, tag):
     """

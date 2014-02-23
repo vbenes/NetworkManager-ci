@@ -61,7 +61,7 @@ if [ $rc -eq 0 ]; then
   RESULT="PASS"
 else
     nmcli con
-    ip a s
+    #ip a s
     cp -f "/var/log/messages" /tmp/$TEST-messages
     rhts-submit-log -l "/tmp/$TEST-messages"
 fi

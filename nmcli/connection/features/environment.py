@@ -44,22 +44,21 @@ def after_scenario(context, scenario):
 def before_tag(context, tag):
     """
     """
-    try:
-        if tag == "firewall":
-            print "---------------------------"
-            print "starting firewall"
-            os.system("sudo systemctl unmask firewalld")
-            os.system("sudo service firewalld start")
-            os.system("sleep 2")
-            print "---------------------------"
+    if tag == "firewall":
+        print "---------------------------"
+        print "starting firewall"
+        os.system("sudo systemctl unmask firewalld")
+        os.system("sudo service firewalld start")
+        os.system("sleep 2")
+        print "---------------------------"
 
-        if tag == "eth0":
-            print "---------------------------"
-            print "eth0 and eth10 disconnect"
-            os.system("nmcli device disconnect eth0")
-            os.system("nmcli device disconnect eth10")
-            sleep(TIMER)
-            print "---------------------------"
+    if tag == "eth0":
+        print "---------------------------"
+        print "eth0 and eth10 disconnect"
+        os.system("nmcli device disconnect eth0")
+        os.system("nmcli device disconnect eth10")
+        sleep(TIMER)
+        print "---------------------------"
 
 
 def after_step(context, step):
