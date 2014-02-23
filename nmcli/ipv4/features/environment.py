@@ -49,9 +49,10 @@ def before_tag(context, tag):
     if tag == "eth0":
         print "---------------------------"
         print "eth0 and eth10 disconnect"
-        pexpect.spawn("sudo nmcli --wait 30 device disconnect eth0",  logfile=context.log)
-        pexpect.spawn("sudo nmcli --wait 30 device disconnect eth10",  logfile=context.log)
-        sleep(TIMER)
+        from subprocess import Popen
+        Popen("nmcli --wait 30 device disconnect eth0", shell=True).wait()
+        Popen("nmcli --wait 30 device disconnect eth10", shell=True).wait()
+        sleep(5*TIMER)
         print "---------------------------"
 
 #    except Exception as e:
