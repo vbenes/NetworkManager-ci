@@ -31,7 +31,7 @@ def after_scenario(context, scenario):
         if data:
             context.embed('text/plain', data)
 
-        if os.system(" nmcli c sh -a |grep eth0") != 0:
+        if os.system("nmcli c sh -a |grep eth0") != 0:
             print "---------------------------"
             print "starting eth0 as it was down"
             os.system("nmcli connection up id eth0")
@@ -49,10 +49,13 @@ def before_tag(context, tag):
     if tag == "eth0":
         print "---------------------------"
         print "eth0 and eth10 disconnect"
-        from subprocess import Popen
-        Popen("nmcli --wait 30 device disconnect eth0", shell=True).wait()
-        Popen("nmcli --wait 30 device disconnect eth10", shell=True).wait()
-        sleep(5*TIMER)
+        from subprocess import call
+        call("nmcli --wait 30 device disconnect eth0", shell=True)
+        call("nmcli --wait 30 device disconnect eth10", shell=True)
+        sleep(10*TIMER)
+        if os.system("nmcli c sh -a |grep eth0") != 0:
+            print "shutting down eth0 once more as it is not down"
+            call("nmcli --wait 30 device disconnect eth0", shell=True)
         print "---------------------------"
 
 #    except Exception as e:

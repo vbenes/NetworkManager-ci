@@ -482,8 +482,8 @@ Feature: nmcli: ipv6
     @profie
     Scenario: nmcli - ipv6 - dhcp-hostname - set dhcp-hostname
     * Add connection for a type "ethernet" named "profie" for device "eth10"
-    * Open editor for connection "profie"
     * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
+    * Open editor for connection "profie"
 #    * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.may-fail true" in editor
     * Submit "set ipv6.method dhcp" in editor
