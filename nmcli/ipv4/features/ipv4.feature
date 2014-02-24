@@ -396,14 +396,14 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - set dhcp-hostname
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname walderon" in editor
     #* Submit "set ipv4.send-hostname yes" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is visible with command "cat /tmp/tshark.log"
 
 
@@ -416,14 +416,14 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
+    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname" in editor
     * Enter in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
    Then "walderon" is not visible with command "cat /tmp/tshark.log"
 
 
@@ -431,14 +431,14 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - don't send
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname walderon" in editor
     * Submit "set ipv4.dhcp-send-hostname no" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is not visible with command "cat /tmp/hostname.log"
 
 
@@ -446,12 +446,12 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "qe-dell" is visible with command "cat /tmp/tshark.log"
 
 
@@ -459,13 +459,13 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - ignore sending real hostname
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Run child "sudo tshark -O bootp -i eth10 > /tmp/real.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-send-hostname no" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/real.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "Host Name" is not visible with command "grep qe-dell-ovs5-vm /tmp/real.log"
 
 
@@ -503,13 +503,13 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - set client id
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id XXX" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "XXX" is visible with command "cat /tmp/tshark.log"
     #VVV verify bug 999503
     Then "XXX" is visible with command "cat /var/lib/NetworkManager/dhclient-eth10.conf"
@@ -525,14 +525,14 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
+    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id" in editor
     * Enter in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "XXX" is not visible with command "cat /tmp/tshark.log"
 
 

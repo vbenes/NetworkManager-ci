@@ -483,15 +483,15 @@ Feature: nmcli: ipv6
     Scenario: nmcli - ipv6 - dhcp-hostname - set dhcp-hostname
     * Add connection for a type "ethernet" named "profie" for device "eth10"
     * Open editor for connection "profie"
+    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
 #    * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.may-fail true" in editor
     * Submit "set ipv6.method dhcp" in editor
     * Submit "set ipv6.dhcp-hostname walderon" in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
     * Bring "up" connection "profie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
     Then "walderon" is visible with command "grep walderon /tmp/ipv6-hostname.log"
 
@@ -506,14 +506,14 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
+    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv6.dhcp-hostname" in editor
     * Enter in editor
     * Save in editor
     * Quit editor
-    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/tshark.log"
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is not visible with command "cat /tmp/tshark.log"
 
 
