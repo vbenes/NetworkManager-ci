@@ -2,5 +2,5 @@
 host=code.engineering.redhat.com
 port=29418
 project=desktopqe/NetworkManager
-defaultbranch=rhel-7
+defaultbranch=master
 
