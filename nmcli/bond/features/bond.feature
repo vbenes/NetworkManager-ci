@@ -41,7 +41,7 @@
      * Enter in editor
      * Expect "Bonding mode"
      * Submit "0" in editor
-     * Expect "Bonding monitoring mode \(miimon or arp\) \[miimon\]"
+     * Expect "Bonding monitoring mode \(miimon\/arp\) \[miimon\]"
      * Enter in editor
      * Expect "Bonding miimon \[100\]"
      * Submit "100" in editor
@@ -72,7 +72,7 @@
      * Submit "1" in editor
      * Expect "Bonding primary interface \[none\]"
      * Enter in editor
-     * Expect "Bonding monitoring mode \(miimon or arp\) \[miimon\]"
+     * Expect "Bonding monitoring mode \(miimon\/arp\) \[miimon\]"
      * Submit "arp" in editor
      * Expect "Bonding arp-interval \[0\]"
      * Submit "100" in editor
