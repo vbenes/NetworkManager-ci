@@ -288,6 +288,7 @@ Feature: nmcli: ipv4
 
     @testcase_303660
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - routes - set invalid route - missing gw
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -297,9 +298,9 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 192.168.122.1 dev eth10  proto static  metric 1024" is visible with command "ip route"
-    Then "192.168.1.0/24 dev eth10  proto static  scope link  metric 0" is visible with command "ip route"
-    Then "192.168.122.0/24 dev eth10  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
+    Then "default via 192.168.122.1 dev eth1  proto static  metric 1024" is visible with command "ip route"
+    Then "192.168.1.0/24 dev eth1  proto static  scope link  metric 0" is visible with command "ip route"
+    Then "192.168.122.0/24 dev eth1  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
 
 
     @ipv4_routes_not_reachable
