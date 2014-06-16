@@ -30,13 +30,37 @@ Feature: nmcli - ethernet
 
 
     @ethernet
+    @ethernet_create_ifname_generic_connection
+    Scenario: nmcli - ethernet - create ifname generic connection
+    * Add a new connection of type "ethernet" and options "ifname * con-name ethos autoconnect no"
+    * Check ifcfg-name file created for connection "ethos"
+    * Bring up connection "ethos"
+    Then "eth\S+\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
+
+
+    @ethernet
+    @ethernet_reactivate_generic_connection_on_different_device
+    # currenlty NM, does not allow you to re-activate a connection on a different device
+    # This behavior should to change: https://bugzilla.gnome.org/show_bug.cgi?id=730492
+    Scenario: nmcli - ethernet - reactivate generic connection on different device
+    * Add a new connection of type "ethernet" and options "ifname * con-name ethos autoconnect no"
+    * Check ifcfg-name file created for connection "ethos"
+    * Bring up connection "ethos" for "eth1" device
+    Then "eth1\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
+    Then "Error: Connection activation failed: Connection 'ethos' is already active on eth1" is visible with command "nmcli connection up id ethos"
+    Then "Error: Connection activation failed: Connection 'ethos' is already active on eth1" is visible with command "nmcli connection up id ethos ifname eth2"
+    Then "Connection successfully activated" is visible with command "nmcli connection up id ethos ifname eth1"
+    Then "eth1\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
+
+
+    @ethernet
     @testcase_286579
     Scenario: nmcli - ethernet - up
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Check ifcfg-name file created for connection "ethernet"
-    * "inet 10." is not visible with command "ifconfig eth1"
+    * "inet 192." is not visible with command "ifconfig eth1"
     * Bring up connection "ethernet"
-    Then "inet 10." is visible with command "ifconfig eth1"
+    Then "inet 192." is visible with command "ifconfig eth1"
 
 
     @ethernet
@@ -45,9 +69,9 @@ Feature: nmcli - ethernet
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect yes"
     * Check ifcfg-name file created for connection "ethernet"
     * Bring up connection "ethernet"
-    * "inet 10." is visible with command "ifconfig eth1"
+    * "inet 192." is visible with command "ifconfig eth1"
     * Disconnect device "eth1"
-    Then "inet 10." is not visible with command "ifconfig eth1"
+    Then "inet 192." is not visible with command "ifconfig eth1"
 
 
     @ethernet
@@ -85,7 +109,7 @@ Feature: nmcli - ethernet
     * Check value saved message showed in editor
     * Quit editor
     * Bring up connection "ethernet"
-    Then "inet 10." is visible with command "ifconfig eth1"
+    Then "inet 192." is visible with command "ifconfig eth1"
 
 
     @ethernet
@@ -137,7 +161,7 @@ Feature: nmcli - ethernet
     * Quit editor
     * Bring up connection "ethernet"
     Then "MTU=64" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
-    Then "inet 10." is visible with command "ifconfig eth1"
+    Then "inet 192." is visible with command "ifconfig eth1"
 
 
     @ethernet
@@ -185,3 +209,71 @@ Feature: nmcli - ethernet
     * Bring up connection "ethernet"
     Then "inet 192.168.1.10\s+netmask 255.255.255.0" is visible with command "ifconfig eth1"
     Then "inet6 2607:f0d0:1002:51::4\s+prefixlen 64" is visible with command "ifconfig eth1"
+
+
+    @openvswitch_interface_recognized
+    Scenario: nmcli - ethernet - openvswitch interface recognized
+    * Execute "modprobe openvswitch"
+    * "openvswitch" is visible with command "lsmod"
+    * Execute "yum -y install ./install/openvswitch-*"
+    * Execute "service openvswitch start"
+    * Execute "ovs-vsctl add-br ovsbr0"
+    * "ovsbr0" is visible with command "ip a"
+    Then "ovsbr0\s+openvswitch\s+unmanaged" is visible with command "nmcli device"
+
+
+    @ethernet
+    @openvswitch_ignore_ovs_network_setup
+    Scenario: nmcli - ethernet - openvswitch ignore ovs network setup
+    * Execute "modprobe openvswitch"
+    * "openvswitch" is visible with command "lsmod"
+    * Execute "yum -y install ./install/openvswitch-*"
+    * Execute "service openvswitch start"
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name eth1 autoconnect no"
+    * Check ifcfg-name file created for connection "eth1"
+    * Execute "cat /etc/sysconfig/network-scripts/ifcfg-eth1 | grep UUID > /tmp/eth1tmp"
+    * Execute "mv -f /tmp/eth1tmp /etc/sysconfig/network-scripts/ifcfg-eth1"
+    * Execute "echo -e 'DEVICE=eth1\nONBOOT=yes\nDEVICETYPE=ovs\nTYPE=OVSPort\nOVS_BRIDGE=ovsbridge0\nBOOTPROTO=none\nHOTPLUG=no' >> /etc/sysconfig/network-scripts/ifcfg-eth1"
+    * Execute "echo -e 'DEVICE=ovsbridge0\nONBOOT=yes\nDEVICETYPE=ovs\nTYPE=OVSBridge\nBOOTPROTO=static\nIPADDR=192.168.14.5\nNETMASK=255.255.255.0\nHOTPLUG=no' > /etc/sysconfig/network-scripts/ifcfg-ovsbridge0"
+    * Execute "ifup eth1"
+    Then "ovsbridge0" is visible with command "ip a"
+    Then "inet 192.168.14.5" is visible with command "ip a"
+    Then "eth1:.*ovs-system.*eth2" is visible with command "ip a"
+    Then "ovsbridge0\s+openvswitch\s+unmanaged" is visible with command "nmcli device"
+    Then "eth1\s+ethernet\s+(unavailable|disconnected)" is visible with command "nmcli device"
+
+
+    @ethernet
+    @openvswitch_ignore_ovs_vlan_network_setup
+    Scenario: nmcli - ethernet - openvswitch ignore ovs network setup
+    * Execute "modprobe openvswitch"
+    * "openvswitch" is visible with command "lsmod"
+    * Execute "yum -y install ./install/openvswitch-*"
+    * Execute "service openvswitch start"
+    * Execute "echo -e 'DEVICE=intbr0\nONBOOT=yes\nDEVICETYPE=ovs\nTYPE=OVSIntPort\nOVS_BRIDGE=ovsbridge0\nHOTPLUG=no' >> /etc/sysconfig/network-scripts/ifcfg-intbr0"
+    * Execute "echo -e 'DEVICE=ovsbridge0\nONBOOT=yes\nDEVICETYPE=ovs\nTYPE=OVSBridge\nBOOTPROTO=static\nIPADDR=192.168.14.5\nNETMASK=255.255.255.0\nHOTPLUG=no' > /etc/sysconfig/network-scripts/ifcfg-ovsbridge0"
+    * Execute "ifup intbr0"
+    Then "ovsbridge0" is visible with command "ip a"
+    Then "inet 192.168.14.5" is visible with command "ip a"
+    Then "intbr0" is visible with command "ip a"
+    Then "ovsbridge0\s+openvswitch\s+unmanaged" is visible with command "nmcli device"
+    Then "intbr0\s+openvswitch\s+unmanaged" is visible with command "nmcli device"
+
+
+    @ethernet
+    @openvswitch_ignore_ovs_bond_network_setup
+    Scenario: nmcli - ethernet - openvswitch ignore ovs network setup
+    * Execute "modprobe openvswitch"
+    * "openvswitch" is visible with command "lsmod"
+    * Execute "yum -y install ./install/openvswitch-*"
+    * Execute "service openvswitch start"
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name eth1 autoconnect no"
+    * Add a new connection of type "ethernet" and options "ifname eth2 con-name eth2 autoconnect no"
+    * Execute """echo -e 'DEVICE=bond0\nONBOOT=yes\nDEVICETYPE=ovs\nTYPE=OVSBond\nOVS_BRIDGE=ovsbridge0\nBOOTPROTO=none\nBOND_IFACES="eth1 eth2"\nOVS_OPTIONS="bond_mode=balance-tcp lacp=active"\nHOTPLUG=no' >> /etc/sysconfig/network-scripts/ifcfg-bond0"""
+    * Execute "echo -e 'DEVICE=ovsbridge0\nONBOOT=yes\nDEVICETYPE=ovs\nTYPE=OVSBridge\nBOOTPROTO=static\nIPADDR=192.168.14.5\nNETMASK=255.255.255.0\nHOTPLUG=no' > /etc/sysconfig/network-scripts/ifcfg-ovsbridge0"
+    * Execute "ifup bond0"
+    Then "ovsbridge0" is visible with command "ip a"
+    Then "inet 192.168.14.5" is visible with command "ip a"
+    Then "bond0" is visible with command "ip a"
+    Then "ovsbridge0\s+openvswitch\s+unmanaged" is visible with command "nmcli device"
+    Then "bond0\s+openvswitch\s+unmanaged" is visible with command "nmcli device"

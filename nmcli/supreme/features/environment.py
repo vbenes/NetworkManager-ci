@@ -3,6 +3,7 @@
 import os
 
 from time import sleep
+from subprocess import check_output, call
 
 def before_all(context):
     """Setup evolution stuff
@@ -15,13 +16,24 @@ def before_tag(context, tag):
     If tag contains 'goa', then setup a goa account:
     google_goa will setup Google account etc.
     """
-    if ('ethernet' in tag) or ('bridge' in tag):
-        os.system("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done")
-        if os.system("nmcli device status |grep -v eth0 |grep -e ' connected'") != 1:
-            os.system("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done")
-    if 'bridge' in tag:
-        os.system("nmcli connection up eth1")
-
+    call('sudo service NetworkManager start', shell=True)
+    if (tag == 'ethernet') or (tag == 'bridge') or (tag == 'vlan'):
+        call("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done", shell=True)
+        if call("nmcli device status |grep -v eth0 |grep -e ' connected'", shell=True) != 1:
+            call("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done", shell=True)
+        call('sudo nmcli con del eth1 eth2', shell=True)
+        call('sudo nmcli con add type ethernet ifname eth1 con-name eth1 autoconnect no', shell=True)
+        call('sudo ifup eth1', shell=True)
+        call('sudo nmcli con add type ethernet ifname eth2 con-name eth2 autoconnect no', shell=True)
+        call('sudo ifup eth2', shell=True)
+        call('sudo nmcli con down eth1', shell=True)
+        call('sudo nmcli con down eth2', shell=True)
+    if tag == 'bridge':
+        call("nmcli device connect eth1", shell=True)
+    if tag == 'hostname_change':
+        context.original_hostname = check_output('cat /etc/hostname', shell=True).strip()
+    if 'openvswitch' in tag:
+        call('sudo nmcli con del eth1 eth2', shell=True) # delete these profile, we'll work with other ones
     # try:
     #     if 'goa' in tag:
     #         context.execute_steps(
@@ -31,43 +43,78 @@ def before_tag(context, tag):
     #     raise RuntimeError
 
 def after_tag(context, tag):
-    #try:
-    if 'ethernet' in tag:
-        os.system("sudo nmcli connection delete id ethernet")
-        os.system('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-ethernet*') #ideally should do nothing
-    if ('vlan' in tag) or ('bridge' in tag):
-        os.system('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-eth0.* /etc/sysconfig/network-scripts/ifcfg-vlan*')
-        os.system('sudo modprobe -r  8021q ; sudo modprobe 8021q')
-        os.system('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-br* /etc/sysconfig/network-scripts/ifcfg-nm-bridge*')
-        os.system('sudo modprobe -r bridge ; sudo modprobe bridge')
-        os.system('sudo service NetworkManager restart')
-    if 'wifi' in tag:
-        os.system('sudo nmcli device disconnect wlan0')
-        os.system('sudo rm -rf /etc/sysconfig/network-scripts/keys-*')
-        os.system('find /etc/sysconfig/network-scripts/ -type f | xargs grep -l "TYPE=Wireless" | xargs sudo rm -rf')
-        os.system('sudo service NetworkManager restart')
-    if 'ifcfg-rh' in tag:
-        os.system("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ")
-    if 'waitforip' in tag:
-        import pexpect
-        while True:
-            sleep(5)
-            cfg = pexpect.spawn('ifconfig')
-            if cfg.expect(['inet 10', pexpect.EOF]) == 0:
-                break
-    if 'restart' in tag:
-        os.system('sudo service NetworkManager restart')
-    #except Exception as e:
-    #    print("error in after_tag(%s): %s" % (tag, e.message))
-    #    raise RuntimeError
-    # time for NM to update based on deleted configs
-    sleep(5)
+    try:
+        if tag == 'ethernet':
+            call("sudo nmcli connection delete id ethernet ethos", shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-ethernet*', shell=True) #ideally should do nothing
+        if (tag == 'vlan') or (tag == 'bridge'):
+            call('sudo nmcli con del vlan eth1.99 eth1.299 eth1.399 eth1.65 eth1.165 eth1.265 eth1.499 eth1.80 eth1.90 bridge-slave-eth1.80', shell=True)
+            call('sudo nmcli con del bridge-slave-eth1 bridge-slave-eth2 bridge-slave-eth3', shell=True)
+            call('sudo nmcli con del bridge0 bridge bridge.15 nm-bridge br88 br11 br12 br15 bridge-slave br15-slave br15-slave1 br15-slave2 br10 br10-slave', shell=True)
+        if tag == 'wifi':
+            call('sudo nmcli device disconnect wlan0', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/keys-*', shell=True)
+            call('find /etc/sysconfig/network-scripts/ -type f | xargs grep -l "TYPE=Wireless" | xargs sudo rm -rf', shell=True)
+            call('sudo service NetworkManager restart', shell=True)
+        if 'ifcfg-rh' in tag:
+            call("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ", shell=True)
+        if 'waitforip' in tag:
+            import pexpect
+            while True:
+                sleep(5)
+                cfg = pexpect.spawn('ifconfig')
+                if cfg.expect(['inet 10', pexpect.EOF]) == 0:
+                    break
+        if tag == 'restart':
+            call('sudo service NetworkManager restart', shell=True)
+        if tag == 'bridge_server_ingore_carrier_with_dhcp':
+            call('sudo yum -y remove NetworkManager-config-server', shell=True)
+        if tag == 'openvswitch_ignore_ovs_network_setup':
+            call('sudo ifdown eth1', shell=True)
+            call('sudo ifdown ovsbridge0', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-eth1', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-ovsbridge0', shell=True)
+            call('sudo nmcli con reload', shell=True)
+            call('sudo nmcli con del eth1', shell=True) # to be sure
+        if tag == 'openvswitch_ignore_ovs_vlan_network_setup':
+            call('sudo ifdown intbr0', shell=True)
+            call('sudo ifdown ovsbridge0', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-intbr0', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-ovsbridge0', shell=True)
+        if tag == 'openvswitch_ignore_ovs_bond_network_setup':
+            call('sudo ifdown bond0', shell=True)
+            call('sudo ifdown ovsbridge0', shell=True)
+            call('sudo ifdown eth1', shell=True)
+            call('sudo ifdown eth2', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-bond0', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-ovsbridge0', shell=True)
+            call('sudo nmcli con del eth1 eth2', shell=True)
+            # well we might not have to do this, but since these profiles have been openswitch'ed
+            # this is to make sure
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-eth1', shell=True)
+            call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-eth2', shell=True)
+            call('sudo nmcli con reload', shell=True)
+        if 'openvswitch' in tag:
+            call('service openvswitch stop', shell=True)
+            sleep(2)
+            call('modprobe -r openvswitch', shell=True)
+            # restore these default profiles
+            call('sudo nmcli con add type ethernet ifname eth1 con-name eth1 autoconnect no', shell=True)
+            call('sudo nmcli con add type ethernet ifname eth2 con-name eth2 autoconnect no', shell=True)
+        if tag == 'hostname_change':
+            call('sudo nmcli gen host %s' % context.original_hostname, shell=True)
+    except Exception as e:
+        print("error in after_tag(%s): %s" % (tag, e.message))
+        raise RuntimeError
+    #time for NM to update based on deleted configs
+    sleep(0.5)
 
 def after_step(context, step):
     """Teardown after each step.
     Here we make screenshot and embed it (if one of formatters supports it)
     """
-    sleep(1)
+    pass
+    sleep(0.2)
     # try:
     #     # Make screnshot if step has failed
     #     if hasattr(context, "embed"):
@@ -104,3 +151,9 @@ def after_scenario(context, scenario):
     # except Exception as e:
     #     # Stupid behave simply crashes in case exception has occurred
     #     pass
+
+def after_all(context):
+    if os.system("nmcli -f NAME c sh -a |grep eth0") != 0:
+        call("nmcli connection up id eth0", shell=True)
+        call('sudo service beah-beaker-backend restart', shell=True)
+        sleep(5)

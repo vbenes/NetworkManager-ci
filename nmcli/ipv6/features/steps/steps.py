@@ -3,7 +3,7 @@ from behave import step
 from time import sleep, time
 import pexpect
 import os
-from subprocess import check_output, Popen
+from subprocess import check_output, Popen, PIPE
 
 
 @step(u'Open editor for connection "{con_name}"')
@@ -50,7 +50,7 @@ def start_stop_connection(context, action, name):
         raise Exception('nmcli connection %s %s timed out (90s)' % (action, name))
     elif r == 2:
         raise Exception('nmcli connection %s %s timed out (180s)' % (action, name))
-    sleep(2)
+    sleep(3)
 
 
 @step(u'Delete connection "{name}"')
@@ -61,10 +61,10 @@ def delete_connection(context, name):
     sleep(2)
 
 
-#@step(u'Open editor for a type "{typ}"')
-#def open_editor_for_a_type(context, typ):
-#    prompt = pexpect.spawn('nmcli connection edit type %s' % (typ), logfile=context.log)
-#    context.prompt = prompt
+@step('Append "{line}" to ifcfg file "{name}"')
+def append_to_ifcfg(context, line, name):
+    cmd = 'sudo echo "%s" >> /etc/sysconfig/network-scripts/ifcfg-%s' % (line, name)
+    os.system(cmd)
 
 
 @step(u'Set a property named "{name}" to "{value}" in editor')
@@ -94,8 +94,8 @@ def quit_editor(context):
 
 @step(u'Restart NM')
 def restart_NM(context):
-    os.system("service NetworkManager restart")
-    sleep(10)
+    Popen("service NetworkManager restart", shell=True).wait()
+    sleep(5)
 
 
 @step(u'Check "{options}" are present in describe output for object "{obj}"')
@@ -146,6 +146,10 @@ def run_child_process(context, command):
     Popen(command, shell=True)
     #Popen("sleep 2", shell=True).wait()
 
+@step(u'Finish "{command}"')
+def wait_for_process(context, command):
+    Popen(command, shell=True).wait()
+
 @step(u'Note the output of "{command}" as value "{index}"')
 def note_the_output_as(context, command, index):
     if not hasattr(context, 'noted'):
@@ -179,6 +183,87 @@ def is_active_connection(context, name):
     r = cli.expect([name,pexpect.EOF])
     if r == 1:
         raise Exception('Connection %s is not active' % name)
+
+
+@step(u'Check solicitation for "{dev}" in "{file}"')
+def check_solicitation(context, dev, file):
+    #file = '/tmp/solicitation.txt'
+    #dev = 'enp0s25'
+    cmd = "ip a s %s |grep ff:ff|awk {'print $2'}" %dev
+    proc = Popen(cmd, shell=True, stdout=PIPE)
+    proc.wait()
+    mac = ""
+    for line in proc.stdout:
+        if line.find(':') != -1:
+            mac = line.strip()
+
+    mac_last_4bits = mac.split(':')[-2]+mac.split(':')[-1]
+    dump = open(file, 'r')
+
+    assert mac_last_4bits not in dump.readlines(), "Route solicitation from %s was found in tshark dump" % mac
+
+
+@step(u'Check device route and prefix for "{dev}"')
+def check_slaac_setup(context, dev):
+    cmd = "sudo radvdump > /tmp/radvdump.txt"
+    proc = Popen(cmd, shell=True)
+    sleep(104)
+    cmd = "sudo pkill radvdump"
+    Popen(cmd, shell=True).wait()
+    dump = open("/tmp/radvdump.txt", "r")
+    prefix = ""
+    for line in dump.readlines():
+        if line.find('prefix 2') != -1:
+            prefix = line.split(' ')[1].strip()
+            break
+
+    cmd = "ip -6 route |grep %s" %prefix
+    grep = Popen(cmd, shell=True, stdout=PIPE)
+    grep.wait()
+    search = ""
+    for line in grep.stdout:
+        if line.find(dev) != -1:
+            search = line
+            break
+
+    device_route = "%s dev %s" %(prefix, dev)
+
+    assert search.find(device_route) != -1, "Device route %s wasn't found. Just this was found %s" %(device_route, search)
+
+    device_prefix = prefix.split('::')[1]
+    cmd = 'ip a s %s |grep inet6| grep "scope global"' %dev
+    ip = Popen(cmd, shell=True, stdout=PIPE)
+    ip.wait()
+    ipv6_line = ""
+    for line in ip.stdout:
+        if line.find('inet6'):
+            ipv6_line = line
+            break
+
+    assert line.find(device_prefix) != -1, "Prefix %s wasn't found in %s" %(device_prefix, line)
+
+@step(u'Global temporary ip is not based on mac of device "{dev}"')
+def global_tem_address_check(context, dev):
+    cmd = "ip a s %s" %dev
+    pexpect.spawn(cmd, maxread=20000, logfile=context.log)
+    proc = Popen(cmd, shell=True, stdout=PIPE)
+    mac = ""
+    temp_ipv6 = ""
+    ipv6 = ""
+    for line in proc.stdout:
+        if line.find('brd ff:ff:ff:ff:ff:ff') != -1:
+            mac = line.split()[1]
+        if line.find('scope global temporary dynamic') != -1:
+            temp_ipv6 = line.split()[1]
+        if line.find('scope global dynamic') != -1:
+            ipv6 = line.split()[1]
+
+    proc.wait()
+    assert temp_ipv6 != ipv6, 'IPV6 Address are similar!'
+    temp_ipv6_end = temp_ipv6.split('/')[0].split(':')[-1]
+    mac_end = mac.split(':')[-2]+mac.split(':')[-1]
+    assert temp_ipv6_end != mac_end, 'Mac and tmp Ipv6 are similar in the end %s..%s'
+
 
 @step(u'"{pattern}" is visible with command "{command}"')
 def check_pattern_visible_with_command(context, pattern, command):

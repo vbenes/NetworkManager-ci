@@ -83,7 +83,7 @@ def start_stop_connection(context, action, name):
         raise Exception('nmcli connection %s %s timed out (90s)' % (action, name))
     elif r == 2:
         raise Exception('nmcli connection %s %s timed out (180s)' % (action, name))
-    sleep(2)
+    sleep(8)
 
 
 @step(u'Delete connection "{name}"')
@@ -97,6 +97,7 @@ def delete_connection(context, name):
 @step(u'Open editor for a type "{typ}"')
 def open_editor_for_a_type(context, typ):
     prompt = pexpect.spawn('nmcli connection edit type %s con-name %s0' % (typ, typ), logfile=context.log)
+    sleep(1)
     context.prompt = prompt
 
 
@@ -201,7 +202,8 @@ def wrong_bond_options_in_editor(context):
 
 @step(u'Check slave "{slave}" in team "{team}" is "{state}"')
 def check_slave_in_team_is_up(context, slave, team, state):
-    child = pexpect.spawn('sudo teamdctl %s state dump' % (team), logfile=context.log )
+    sleep(2)
+    child = pexpect.spawn('sudo teamdctl %s state dump' % (team),  maxread=10000, logfile=context.log )
     if state == "up":
         found = '"ifname"\: "%s"' % slave
         r = child.expect([found, 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
@@ -211,9 +213,9 @@ def check_slave_in_team_is_up(context, slave, team, state):
         r = child.expect(['"up"\: true', '"ifname"', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
         if r != 0:
             raise Exception('Got an Error while %sing connection %s' % (action, name))
+
     if state == "down":
         r = child.expect([slave, 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
         if r == 0:
             raise Exception('Device %s was found in dump of team %s' % (slave, team))
-
 

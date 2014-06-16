@@ -8,7 +8,7 @@ Feature: nmcli: ipv4
      * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Save in editor
-    Then Error type "connection verification failed: ipv4.addresses: property is missing" while saving in editor
+    Then Error type "connection verification failed: ipv4.addresses:" while saving in editor
 
 
     @testcase_303648
@@ -22,6 +22,8 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     Then "192.168.122.253/32" is visible with command "ip a s eth1"
+    #VVV coverage for https://bugzilla.redhat.com/show_bug.cgi?id=979288
+    Then "dhclient-eth1.pid" is not visible with command "ps aux|grep dhclient"
 
 
     @testcase_303649
@@ -56,11 +58,37 @@ Feature: nmcli: ipv4
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.253/8" in editor
+    * Submit "set ipv4.addresses 192.168.122.253/24" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "192.168.122.253/8" is visible with command "ip a s eth1"
+    #reproducer for 1034900
+    Then "192.168.122.253/24 brd 192.168.122.255" is visible with command "ip a s eth1"
+
+
+    @ipv4_change_in_address
+    @ipv4
+    @eth0
+    Scenario: nmcli - ipv4 - addresses - change in address
+    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.method manual" in editor
+    * Submit "set ipv4.addresses 1.1.1.99/24 1.1.1.1" in editor
+    * Save in editor
+    * Submit "goto ipv4" in editor
+    * Submit "goto addresses" in editor
+    * Submit "change" in editor
+    * Backspace in editor
+    * Submit "4" in editor
+    * Submit "back" in editor
+    * Submit "back" in editor
+    * Save in editor
+    * Submit "print" in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    Then "1.1.1.99/24 brd 1.1.1.255" is visible with command "ip a s eth1"
+    Then "default via 1.1.1.4" is visible with command "ip route"
+    Then "default via 1.1.1.1" is not visible with command "ip route"
 
 
 #    @testcase_hash
@@ -86,6 +114,25 @@ Feature: nmcli: ipv4
     Then Error type "failed to set 'addresses' property: invalid prefix '192.168.122.1'; <1-32> allowed" while saving in editor
 
 
+    @ipv4_take_manually_created_ifcfg_with_ip
+    @ipv4
+    # covering https://bugzilla.redhat.com/show_bug.cgi?id=1073824
+    Scenario: nmcli - ipv4 - use manually created ipv4 profile
+    * Append "DEVICE='eth10'" to ifcfg file "ethie"
+    * Append "ONBOOT=yes" to ifcfg file "ethie"
+    * Append "NETBOOT=yes" to ifcfg file "ethie"
+    * Append "UUID='aa17d688-a38d-481d-888d-6d69cca781b8'" to ifcfg file "ethie"
+    * Append "BOOTPROTO=none" to ifcfg file "ethie"
+    #* Append "HWADDR='52:54:00:32:77:59'" to ifcfg file "ethie"
+    * Append "TYPE=Ethernet" to ifcfg file "ethie"
+    * Append "NAME='ethie'" to ifcfg file "ethie"
+    * Append "IPADDR='10.0.0.2'" to ifcfg file "ethie"
+    * Append "PREFIX='24'" to ifcfg file "ethie"
+    * Append "GATEWAY='10.0.0.1'" to ifcfg file "ethie"
+    * Restart NM
+    Then "aa17d688-a38d-481d-888d-6d69cca781b8" is visible with command "nmcli -f UUID connection show -a"
+
+
     @testcase_303653
     @ipv4
     Scenario: nmcli - ipv4 - addresses - IP slash netmask and route
@@ -102,8 +149,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303654
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - addresses - several IPs slash netmask and route
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -145,8 +192,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303656
-    @eth0
     @ipv4_2
+    @eth0
     Scenario: nmcli - ipv4 - routes - set basic route
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -174,8 +221,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303657
-    @eth0
     @ipv4_2
+    @eth0
     Scenario: nmcli - ipv4 - routes - remove basic route
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -211,8 +258,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303658
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - routes - set device route
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
@@ -251,8 +298,8 @@ Feature: nmcli: ipv4
 
 
     @ipv4_routes_not_reachable
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - routes - set unreachable route
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -266,8 +313,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303661
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns - method static + IP + dns
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -282,8 +329,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303662
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns - method auto + dns
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -297,8 +344,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303663
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns - method auto + dns + ignore automaticaly obtained
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -313,8 +360,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303664
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns - add dns when one already set
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -335,8 +382,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303665
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns - method auto then delete all dns
     * Add connection for a type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -356,8 +403,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303666
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns-search - add dns-search
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
@@ -371,8 +418,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_303667
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns-search - remove dns-search
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
@@ -403,7 +450,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "walderon" is visible with command "cat /tmp/tshark.log"
 
 
@@ -451,7 +498,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "qe-dell" is visible with command "cat /tmp/tshark.log"
 
 
@@ -470,8 +517,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_304233
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
@@ -509,7 +556,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Run child "sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
     Then "XXX" is visible with command "cat /tmp/tshark.log"
     #VVV verify bug 999503
     Then "XXX" is visible with command "cat /var/lib/NetworkManager/dhclient-eth10.conf"
@@ -564,8 +611,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_304239
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - never-default - set
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
@@ -577,8 +624,8 @@ Feature: nmcli: ipv4
 
 
     @testcase_304240
-    @eth0
     @ipv4
+    @eth0
     Scenario: nmcli - ipv4 - never-default - remove
     * Add connection for a type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"

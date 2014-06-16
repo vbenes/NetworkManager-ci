@@ -1,6 +1,6 @@
 [gerrit]
-host=gerrit.dqe.lab.eng.bos.redhat.com
+host=code.engineering.redhat.com
 port=29418
-project=NetworkManager
+project=desktopqe/NetworkManager
 defaultbranch=rhel-7
 

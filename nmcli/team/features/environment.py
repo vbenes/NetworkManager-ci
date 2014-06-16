@@ -4,15 +4,11 @@ import os
 
 from time import sleep, localtime, strftime
 
-TIMER = 1
+TIMER = 0.5
 
 def before_scenario(context, scenario):
     try:
         context.log = file('/tmp/log_%s.log' % scenario.name,'w')
-
-        os.system("ip link set dev eth1 up")
-        os.system("ip link set dev eth2 up")
-
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
 
     except Exception as e:
@@ -23,9 +19,6 @@ def after_scenario(context, scenario):
     """
     try:
         # Attach journalctl logs
-        if os.system("nmcli c sh -a |grep eth0") != 0:
-            os.system("nmcli connection up id eth0")
-            sleep(4)
 
         if hasattr(context, "embed"):
             context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
@@ -120,3 +113,9 @@ def after_tag(context, tag):
 
     except Exception as e:
         print("Error in after_tag: %s" % e.message)
+
+
+def after_all(context):
+    if os.system("nmcli c sh -a |grep eth0") != 0:
+        Popen("nmcli connection up id eth0", shell=True).wait()
+        sleep(2*TIMER)

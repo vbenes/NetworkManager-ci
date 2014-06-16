@@ -6,6 +6,16 @@ if [ ! -e /tmp/nmcli_testing_configured ]; then
     echo "Setting root password to 'redhat'"
     echo "redhat" | passwd root --stdin
 
+    #adding ntp and syncing time
+    yum -y install ntp
+    service ntpd restart
+    sleep 10
+
+    #removing rate limit for systemd journaling
+    sed -i 's/^#\?\(RateLimitInterval *= *\).*/\10/' /etc/systemd/journald.conf
+    sed -i 's/^#\?\(RateLimitBurst *= *\).*/\10/' /etc/systemd/journald.conf
+    systemctl restart systemd-journald.service
+
     #fake console
     echo "Faking a console session..."
     touch /run/console/test
@@ -55,6 +65,7 @@ if [ ! -e /tmp/nmcli_testing_configured ]; then
     cp -r certs/ /tmp/ #certificates needed for wifi-sec tests
 
     touch /tmp/nmcli_testing_configured
+    nmcli connection down id eth0
     service NetworkManager restart
     sleep 10
 fi
@@ -74,6 +85,6 @@ fi
 
 NAME=$(find . -name *.feature | xargs cat | awk "/$TEST/{getline; print}" | sed -E "s/.*Scenario:\s?(.*).*/\\1/" | tr " " _)
 
-rhts-report-result $TEST $RESULT "/tmp/report_$TEST.log" 
+rhts-report-result $TEST $RESULT "/tmp/report_$TEST.log"
 echo "------------ Test result: $RESULT ------------"
 exit $rc

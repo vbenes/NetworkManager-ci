@@ -10,10 +10,8 @@
      * Enter in editor
      Then Value saved message showed in editor
      * Quit editor
-#     * Enter in editor
      Then Prompt is not running
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
-     #* Bring up connection "bond" ignoring error
      * Bring "up" connection "bond0.0"
      Then Check bond "nm-bond" in proc
 
@@ -85,7 +83,6 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Bring "up" connection "bond"
-     #Then Check bond "nm-bond" state is "up"
      Then "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "MII Polling Interval \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Up Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -119,10 +116,19 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
+
+
+    @add_bond_master_via_uuid
+    @slaves
+    @bond
+    # bug verification for 1057494
+    Scenario: nmcli - bond - master via uuid
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "bond0" on device "eth1" named "bond0.0"
+     * Bring "up" connection "bond0.0"
+    Then Check slave "eth1" in bond "nm-bond" in proc
 
 
     @testcase_280567
@@ -144,8 +150,6 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
      * Delete connection "bond0.1"
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
@@ -162,7 +166,6 @@
      * Set a property named "connection.master" to "nm-bond" in editor
      * Save in editor
      * Quit editor
-#     * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0"
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
@@ -269,7 +272,6 @@
      * Submit "activate" in editor
      * Enter in editor
      * Quit editor
-     #* Bring "up" connection "bond0"
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" not in bond "nm-bond" in proc
@@ -337,7 +339,6 @@
      * Save in editor
      * Quit editor
      * Disconnect device "nm-bond"
-     #When Check bond "nm-bond" state is "down"
      * Reboot
      Then Check bond "nm-bond" state is "down"
      Then Check slave "eth1" not in bond "nm-bond" in proc
@@ -365,10 +366,6 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "bond0"
-    # * Bring "up" connection "bond0.0"
-    # * Bring "up" connection "bond0.1"
-     #* Disconnect device "nm-bond"
-     # Check bond "nm-bond" state is "down"
      * Reboot
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
@@ -398,8 +395,6 @@
      * Bring "up" connection "bond0"
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
-     #* Disconnect device "nm-bond"
-     #When Check bond "nm-bond" state is "down"
      * Reboot
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
@@ -419,8 +414,6 @@
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
@@ -442,8 +435,6 @@
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
@@ -452,8 +443,8 @@
      Then "Down Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "ARP Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "ARP IP target/s \(n.n.n.n form\): 192.168.100.1" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check slave "eth1" in bond "nm-bond" in proc
-     Then Check slave "eth2" in bond "nm-bond" in proc
+     Then Check "nm-bond" has "eth1" in proc
+     Then Check "nm-bond" has "eth2" in proc
 
 
 
@@ -463,18 +454,19 @@
     Scenario: nmcli - bond - options - set conflicting values between miimon and arp
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Open editor for connection "bond0"
      * Set a property named "bond.options" to "mode=0,miimon=100,arp_interval=1000,arp_ip_target=192.168.100.1" in editor
      * Save in editor
      Then Value saved message showed in editor
      * Quit editor
-#     * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "MII Polling Interval \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "ARP Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check slave "eth1" in bond "nm-bond" in proc
+     Then Check "nm-bond" has "eth1" in proc
+     Then Check "nm-bond" has "eth2" in proc
 
 
 
@@ -509,8 +501,6 @@
      * Save in editor
      When Value saved message showed in editor
      * Quit editor
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
@@ -550,9 +540,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -571,9 +558,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
- #    * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "MII Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -589,8 +573,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -610,9 +592,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#    * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      Then "MII Polling Interval \(ms\): 999" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -631,9 +610,6 @@
      When Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#    * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(xor\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
      * Open editor for connection "bond0"
@@ -642,9 +618,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
@@ -662,10 +635,24 @@
      When Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
- #    * Bring "up" connection "bond0"
      Then "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then Check bond "nm-bond" state is "up"
+
+
+    @bond_active-backup_primary_set
+    @slaves
+    @bond
+    Scenario: nmcli - bond - options - mode set to active backup with primary device
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Open editor for connection "bond0"
+     * Set a property named "bond.options" to "mode=active-backup,primary=eth1,miimon=100,fail_over_mac=2" in editor
+     * Save in editor
+     When Value saved message showed in editor
+     * Quit editor
+     * Bring "up" connection "bond0"
+     Then "Bonding Mode: fault-tolerance \(active-backup\) \(fail_over_mac follow\)\s+Primary Slave: eth1 \(primary_reselect always\)\s+Currently Active Slave: eth1" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
 
@@ -682,9 +669,6 @@
      When Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(xor\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
@@ -702,9 +686,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: fault-tolerance \(broadcast\)" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
@@ -722,9 +703,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: IEEE 802.3ad Dynamic link aggregation" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
@@ -742,9 +720,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
-#     * Bring "up" connection "bond0"
      Then "Bonding Mode: transmit load balancing" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 
@@ -762,9 +737,6 @@
      Then Value saved message showed in editor
      * Quit editor
      * Bring "up" connection "bond0"
-#     * Bring "up" connection "bond0.0"
-#     * Bring "up" connection "bond0.1"
- #    * Bring "up" connection "bond0"
      Then "Bonding Mode: adaptive load balancing" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check bond "nm-bond" state is "up"
 

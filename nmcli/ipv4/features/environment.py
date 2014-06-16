@@ -2,84 +2,91 @@
 
 import os
 import pexpect
-
+from subprocess import call, Popen
 from time import sleep, localtime, strftime
 
 
-TIMER = 1
+TIMER = 0.5
+
+# the order of these steps is as follows
+# 1. before scenario
+# 2. before tag
+# 3. after scenario
+# 4. after tag
 
 def before_scenario(context, scenario):
     try:
         context.log = file('/tmp/log_%s.log' % scenario.name,'w')
-        #os.system("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done")
-        #if os.system("nmcli device status |grep -v eth0 |grep -v lo|grep -e ' connected'") != 1:
-        #    os.system("for dev in $(nmcli device status |grep -v eth0 |grep -v lo|grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done")
-        os.system("nmcli connection delete id ethie")
-
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
 
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
 
-def after_scenario(context, scenario):
-    """
-    """
-    try:
-        # Attach journalctl logs
-        os.system("sudo journalctl -u NetworkManager --no-pager -o cat --since='%s' > /tmp/journal-nm.log" % context.log_start_time)
-        data = open("/tmp/journal-nm.log", 'r').read()
-        if data:
-            context.embed('text/plain', data)
-
-        if os.system("nmcli c sh -a |grep eth0") != 0:
-            print "---------------------------"
-            print "starting eth0 as it was down"
-            os.system("nmcli connection up id eth0")
-            sleep(4)
-            print "---------------------------"
-
-        if hasattr(context, "embed"):
-            context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
-
-    except Exception as e:
-        print("Error in after_scenario: %s" % e.message)
-
 def before_tag(context, tag):
     #try:
-    if tag == "eth0":
+    if tag == 'eth0':
         print "---------------------------"
-        print "eth0 and eth10 disconnect"
-        from subprocess import call
-        call("nmcli --wait 30 device disconnect eth0", shell=True)
-        call("nmcli --wait 30 device disconnect eth10", shell=True)
-        sleep(10*TIMER)
-        if os.system("nmcli c sh -a |grep eth0") != 0:
+        print "eth0"# and eth10 disconnect"
+        Popen("nmcli connection down id eth0", shell=True).wait()
+        sleep(TIMER)
+        if os.system("nmcli -f NAME c sh -a |grep eth0") == 0:
             print "shutting down eth0 once more as it is not down"
-            call("nmcli --wait 30 device disconnect eth0", shell=True)
+            Popen("nmcli device disconnect eth0", shell=True).wait()
+            sleep(TIMER)
         print "---------------------------"
 
 #    except Exception as e:
  #       print("Error in before_tag: %s" % e.message)
 
+
+def after_scenario(context, scenario):
+    """
+    """
+#    try:
+    # Attach journalctl logs
+    call("sudo journalctl -u NetworkManager --no-pager -o cat --since='%s' > /tmp/journal-nm.log" % context.log_start_time, shell=True)
+    data = open("/tmp/journal-nm.log", 'r').read()
+
+    if data:
+        context.embed('text/plain', data)
+
+    if hasattr(context, "embed"):
+        context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
+
+#    except Exception as e:
+#        print("Error in after_scenario: %s" % e.message)
+
+
 def after_tag(context, tag):
     """
     """
-    try:
-        if tag == "ipv4" or tag == "ipv4_2":
-            print "---------------------------"
-            print "deleting connections"
-            if tag == "ipv4_2":
-                os.system("nmcli connection delete id ethie2")
-            os.system("nmcli connection delete id ethie")
-    #        os.system("sudo service NetworkManager restart")
-            sleep(TIMER)
-            print "---------------------------"
-        if tag == "eth0":
-            print "---------------------------"
-            print "starting eth0"
-            os.system("nmcli connection up id eth0")
-            sleep(3*TIMER)
-            print "---------------------------"
+    if tag == 'ipv4':
+        print "---------------------------"
+        print "deleting connection ethie"
+        Popen("nmcli connection delete id ethie", shell=True).wait()
+        sleep(TIMER)
+        print "---------------------------"
 
-    except Exception as e:
-        print("Error in after_tag: %s" % e.message)
+    if tag == 'ipv4_2':
+        print "---------------------------"
+        print "deleting connections ethie and ethie2"
+        Popen("nmcli connection delete id ethie2", shell=True).wait()
+        #sleep(2*TIMER)
+        Popen("nmcli connection delete id ethie", shell=True).wait()
+        sleep(TIMER)
+        print "---------------------------"
+
+    if tag == 'eth0':
+        print "---------------------------"
+        print "starting eth0"
+        Popen("nmcli connection up id eth0", shell=True).wait()
+        os.system('sudo service beah-beaker-backend restart')
+        sleep(TIMER)
+
+def after_all(context):
+    if os.system("nmcli -f NAME c sh -a |grep eth0") != 0:
+        Popen("nmcli connection up id eth0", shell=True).wait()
+        os.system('sudo service beah-beaker-backend restart')
+        sleep(5*TIMER)
+        print "---------------------------"
+

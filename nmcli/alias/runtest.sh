@@ -37,36 +37,19 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     #installing behave and pexpect
     yum -y install install/*.rpm
 
-    #profiles tuning
-    nmcli connection modify eth0 ipv6.method auto
-    nmcli connection down id eth0
-    nmcli connection modify eth1 connection.autoconnect no
-    nmcli connection modify eth2 connection.autoconnect no
-    nmcli connection modify eth3 connection.autoconnect no
-    nmcli connection modify eth4 connection.autoconnect no
-    nmcli connection modify eth5 connection.autoconnect no
-    nmcli connection modify eth6 connection.autoconnect no
-    nmcli connection modify eth7 connection.autoconnect no
-    nmcli connection modify eth8 connection.autoconnect no
-    nmcli connection modify eth9 connection.autoconnect no
-    nmcli connection modify eth10 connection.autoconnect no
-    service NetworkManager restart
-
     touch /tmp/nm_eth_configured
-fi
 
-#rhts-run-simple-test "$TEST" "behave ipv4/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain"; rc=$?
-behave nmcli/ipv4/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
-#pkill -u test -f dbus-daemon
-#rhts-submit-log -l "/tmp/report_$TEST.html"
+fi
+nmcli connection delete eth7
+
+behave nmcli/alias/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
+
 RESULT=FAIL
 if [ $rc -eq 0 ]; then
   RESULT="PASS"
 else
     nmcli con
-    #ip a s
-    cp -f "/var/log/messages" /tmp/$TEST-messages
-    rhts-submit-log -l "/tmp/$TEST-messages"
+    ip a s
 fi
 
 rhts-report-result $TEST $RESULT "/tmp/report_$TEST.html"

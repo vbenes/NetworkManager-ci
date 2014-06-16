@@ -130,6 +130,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285537
     Scenario: nmcli - bridge - add slave
+    * Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15 autoconnect no"
     * Check ifcfg-name file created for connection "br15"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"
@@ -140,6 +141,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285538
     Scenario: nmcli - bridge - remove slave
+    * Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15 autoconnect no"
     * Check ifcfg-name file created for connection "br15"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"
@@ -153,6 +155,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285539
     Scenario: nmcli - bridge - up with slaves
+    * Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15"
     * Check ifcfg-name file created for connection "br15"
     * Open editor for connection "br15"
@@ -177,6 +180,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285540
     Scenario: nmcli - bridge - up slave
+    * Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br10 ifname br10"
     * Check ifcfg-name file created for connection "br10"
     * Open editor for connection "br10"
@@ -192,3 +196,72 @@ Feature: nmcli - bridge
     * Bring up connection "br10-slave"
     Then  "br10.*eth1" is visible with command "brctl show"
     Then Disconnect device "br10"
+
+
+    @bridge
+    @bridge_dhcp_config_with_ethernet_port
+    Scenario: nmcli - bridge - dhcp config with ethernet port
+    * Disconnect device "eth1"
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
+    * Check ifcfg-name file created for connection "bridge0"
+    * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
+    * Bring up connection "bridge-slave-eth1"
+    Then "bridge0.*eth1" is visible with command "brctl show" in "10" seconds
+    Then "eth1.*master bridge0.*eth2" is visible with command "ip a"
+    Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
+
+
+    @bridge
+    @bridge_dhcp_config_with_multiple_ethernet_ports
+    Scenario: nmcli - bridge - dhcp config with multiple ethernet ports
+    * Disconnect device "eth1"
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
+    * Check ifcfg-name file created for connection "bridge0"
+    * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
+    * Bring up connection "bridge-slave-eth1"
+    * Add a new connection of type "bridge-slave" and options "ifname eth2 con-name bridge-slave-eth2 master bridge0"
+    * Bring up connection "bridge-slave-eth2"
+    * Add a new connection of type "bridge-slave" and options "ifname eth3 con-name bridge-slave-eth3 master bridge0"
+    * Bring up connection "bridge-slave-eth3"
+    Then "bridge0.*eth1.*eth2.*eth3" is visible with command "brctl show" in "10" seconds
+    Then "eth1.*master bridge0.*eth2.*master bridge0.*eth3.*master bridge0" is visible with command "ip a"
+    Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
+
+
+    @bridge
+    @bridge_static_config_with_multiple_ethernet_ports
+    Scenario: nmcli - bridge - dhcp config with multiple ethernet ports
+    * Disconnect device "eth1"
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0 autoconnect no"
+    * Open editor for connection "bridge0"
+    * Set a property named "ipv4.method" to "manual" in editor
+    * Set a property named "ipv4.addresses" to "192.168.1.19/24" in editor
+    * Set a property named "ipv6.method" to "ignore" in editor
+    * Save in editor
+    * Check value saved message showed in editor
+    * Quit editor
+    * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
+    * Bring up connection "bridge-slave-eth1"
+    * Add a new connection of type "bridge-slave" and options "ifname eth2 con-name bridge-slave-eth2 master bridge0"
+    * Bring up connection "bridge-slave-eth2"
+    * Add a new connection of type "bridge-slave" and options "ifname eth3 con-name bridge-slave-eth3 master bridge0"
+    * Bring up connection "bridge-slave-eth3"
+    Then "bridge0.*eth1.*eth2.*eth3" is visible with command "brctl show" in "10" seconds
+    Then "eth1.*master bridge0.*eth2.*master bridge0.*eth3.*master bridge0" is visible with command "ip a"
+    Then "bridge0:.*192.168.1.19" is visible with command "ip a" in "30" seconds
+
+
+    @bridge
+    @bridge_server_ingore_carrier_with_dhcp
+    Scenario: nmcli - bridge - server ingore carrier with_dhcp
+    * Execute "sudo yum -y install NetworkManager-config-server"
+    * Execute "service NetworkManager restart"
+    * Disconnect device "eth1"
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
+    * Check ifcfg-name file created for connection "bridge0"
+    * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
+    * Bring up connection "bridge-slave-eth1"
+    Then "bridge0.*eth1" is visible with command "brctl show" in "10" seconds
+    Then "eth1.*master bridge0.*eth2" is visible with command "ip a"
+    Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
+

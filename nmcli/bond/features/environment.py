@@ -4,7 +4,7 @@ import os
 
 from time import sleep, localtime, strftime
 
-TIMER = 1
+TIMER = 0.5
 
 def before_scenario(context, scenario):
     try:
@@ -43,7 +43,8 @@ def after_scenario(context, scenario):
 def after_step(context, step):
     """
     """
-    sleep(0.5)
+    pass
+    #sleep(0.2)
 
 def after_tag(context, tag):
     """

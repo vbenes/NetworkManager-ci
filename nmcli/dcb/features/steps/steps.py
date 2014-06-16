@@ -14,6 +14,38 @@ def open_editor_for_connection(context, con_name):
         raise Exception('Got an Error while opening profile %s' % (con_name))
 
 
+@step(u'Prepare connection')
+def prepare_connection(context):
+    context.execute_steps(u"""
+        * Submit "set ipv4.method manual" in editor
+        * Submit "set ipv4.addresses 1.2.3.4/24 1.1.1.1" in editor
+        * Submit "set ipv4.never-default yes" in editor
+        * Submit "set ipv6.method ignore" in editor
+    """)
+
+
+
+@step(u'Set default DCB options')
+def set_default_dcb(context):
+    context.execute_steps(u"""
+        * Submit "set dcb.app-fcoe-flags 7" in editor
+        * Submit "set dcb.app-fcoe-priority 7" in editor
+        * Submit "set dcb.app-fcoe-mode vn2vn" in editor
+        * Submit "set dcb.app-iscsi-flags 7" in editor
+        * Submit "set dcb.app-iscsi-priority 6" in editor
+        * Submit "set dcb.app-fip-flags 7" in editor
+        * Submit "set dcb.app-fip-priority 2" in editor
+
+        * Submit "set dcb.priority-flow-control-flags 7" in editor
+        * Submit "set dcb.priority-flow-control 1,0,0,1,1,0,1,0" in editor
+        * Submit "set dcb.priority-group-flags 7" in editor
+        * Submit "set dcb.priority-group-id 0,0,0,0,1,1,1,1" in editor
+        * Submit "set dcb.priority-group-bandwidth 13,13,13,13,12,12,12,12" in editor
+        * Submit "set dcb.priority-bandwidth 100,100,100,100,100,100,100,100" in editor
+        * Submit "set dcb.priority-traffic-class 7,6,5,4,3,2,1,0" in editor
+    """)
+
+
 @step(u'Open editor for new connection "{con_name}" type "{type}"')
 def open_editor_for_connection_type(context, con_name, type):
     prompt = pexpect.spawn('nmcli connection ed type %s con-name %s' % (type, con_name), logfile=context.log, maxread=6000)
@@ -39,6 +71,7 @@ def delete_connection_with_enter(context, name):
 
     os.system('nmcli connection delete id %s' %name)
     sleep(5)
+
     context.prompt.sendline('\n')
     sleep(2)
 
@@ -60,23 +93,6 @@ def add_connection(context, typ, name, ifname):
     sleep(1)
 
 
-@step(u'Reboot')
-def reboot(context):
-    os.system("sudo ip link set dev eth1 down")
-    os.system("sudo ip link set dev eth2 down")
-    os.system("sudo ip link set dev eth3 down")
-    os.system("sudo ip link set dev eth4 down")
-    os.system("sudo ip link set dev eth5 down")
-    os.system("sudo ip link set dev eth6 down")
-    os.system("sudo ip link set dev eth7 down")
-    os.system("sudo ip link set dev eth8 down")
-    os.system("sudo ip link set dev eth9 down")
-    os.system("sudo ip link set dev eth10 down")
-    sleep(2)
-    os.system("sudo service NetworkManager restart")
-    sleep(10)
-
-
 @step(u'Disconnect device "{name}"')
 def disconnect_connection(context, name):
     cli = pexpect.spawn('nmcli device disconnect %s' % name, logfile=context.log,  timeout=180)
@@ -85,7 +101,7 @@ def disconnect_connection(context, name):
         raise Exception('Got an Error while disconnecting device %s' % name)
     elif r == 1:
         raise Exception('nmcli disconnect %s timed out (180s)' % name)
-    sleep(1)
+    sleep(2)
 
 
 @step(u'Bring "{action}" connection "{name}"')
@@ -98,29 +114,7 @@ def start_stop_connection(context, action, name):
         raise Exception('nmcli connection %s %s timed out (90s)' % (action, name))
     elif r == 2:
         raise Exception('nmcli connection %s %s timed out (180s)' % (action, name))
-    sleep(1)
-
-
-@step(u'Bring up connection "{name}" for "{device}"')
-def start_connection_for_device(context, name, device):
-    cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
-    r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-    if r == 0:
-        raise Exception('Got an Error while uping connection %s on %s' % (name, device))
-    elif r == 1:
-        raise Exception('nmcli connection up %s timed out (90s)' % (name))
-    elif r == 2:
-        raise Exception('nmcli connection up %s timed out (180s)' % (name))
-    sleep(1)
-
-
-@step(u'Fail up connection "{name}" for "{device}"')
-def fail_up_connection_for_device(context, name, device):
-    cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
-    r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-    if r == 3:
-        raise Exception('nmcli connection up %s for device %s was succesfull. this should not happen' % (name, device))
-    sleep(1)
+    sleep(10)
 
 
 @step(u'Delete connection "{name}"')
@@ -128,7 +122,7 @@ def delete_connection(context, name):
     cli = pexpect.spawn('nmcli connection delete %s' % name, logfile=context.log)
     if cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF]) == 0:
         raise Exception('Got an Error while deleting connection %s' % name)
-    sleep(1)
+    sleep(2)
 
 
 @step(u'"{user}" is able to see connection "{name}"')
@@ -207,18 +201,6 @@ def check_pattern_visible_with_tab_after_command(context, pattern, command):
     assert exp.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with "%s"' % (pattern, command)
 
 
-@step(u'"{pattern}" is not visible with tab after "{command}"')
-def check_pattern_not_visible_with_tab_after_command(context, pattern, command):
-    exp = pexpect.spawn('/bin/bash', logfile=context.log)
-    exp.send(command)
-    exp.sendcontrol('i')
-    exp.sendcontrol('i')
-    exp.sendcontrol('i')
-    exp.sendeof()
-
-    assert exp.expect([pattern, pexpect.EOF, pexpect.TIMEOUT]) != 0, 'pattern %s is visible with "%s"' % (pattern, command)
-
-
 @step(u'Run child "{command}"')
 def run_child_process(context, command):
     command = "sudo "+ command
@@ -282,6 +264,12 @@ def network_dropped(context, state, device):
     if state == "is not":
         assert os.system('ping -c 2 -I %s -W 1 10.11.5.19' % device) == 0
 
-@step(u'Finish "{command}"')
-def wait_for_process(context, command):
-    Popen(command, shell=True).wait()
+
+@step(u'Reboot')
+def reboot(context):
+    os.system("sudo ip link set dev enp4s0f0 down")
+    os.system("sudo systemctl restart fcoe")
+    os.system("systemctl restart lldpad")
+    sleep(2)
+    os.system("sudo service NetworkManager restart")
+    sleep(10)

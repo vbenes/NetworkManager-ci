@@ -5,6 +5,16 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     echo "Setting root password to 'redhat'"
     echo "redhat" | passwd root --stdin
 
+    #adding ntp and syncing time
+    yum -y install ntp
+    service ntpd restart
+    sleep 10
+
+    #removing rate limit for systemd journaling
+    sed -i 's/^#\?\(RateLimitInterval *= *\).*/\10/' /etc/systemd/journald.conf
+    sed -i 's/^#\?\(RateLimitBurst *= *\).*/\10/' /etc/systemd/journald.conf
+    systemctl restart systemd-journald.service
+
     #fake console
     echo "Faking a console session..."
     touch /run/console/test
@@ -25,18 +35,10 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
     #installing behave and pexpect
     yum -y install install/*.rpm
-    #yum -y install wireshark teamd bash-completion
-    #git clone git://github.com/roignac/behave
-    #cd behave
-    #git checkout html_formatter
-    #python setup.py install
-    #cd ..
-    #yum -y localinstall http://kojipkgs.fedoraproject.org//packages/python-parse/1.6.2/4.fc19/noarch/python-parse-1.6.2-4.fc19.noarch.rpm http://kojipkgs.fedoraproject.org//packages/python-behave/1.2.3/8.fc19/noarch/python-behave-1.2.3-8.fc19.noarch.rpm
-    #easy_install pip
-    #pip install pexpect
 
     #profiles tuning
     nmcli connection modify eth0 ipv6.method auto
+    nmcli connection down id eth0
     nmcli connection modify eth1 connection.autoconnect no
     nmcli connection modify eth2 connection.autoconnect no
     nmcli connection modify eth3 connection.autoconnect no
@@ -47,8 +49,6 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     nmcli connection modify eth8 connection.autoconnect no
     nmcli connection modify eth9 connection.autoconnect no
     nmcli connection modify eth10 connection.autoconnect no
-    service NetworkManager restart
-
     service NetworkManager restart
 
     touch /tmp/nm_eth_configured
@@ -67,3 +67,5 @@ else
     ip a s
 fi
 rhts-report-result $TEST $RESULT "/tmp/report_$TEST.html"
+echo "------------ Test result: $RESULT ------------"
+exit $rc

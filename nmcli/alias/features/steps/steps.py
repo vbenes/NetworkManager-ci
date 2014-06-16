@@ -3,7 +3,24 @@ from behave import step
 from time import sleep, time
 import pexpect
 import os
-from subprocess import Popen
+from subprocess import check_output, Popen, PIPE
+
+@step(u'Open wizard for adding new connection')
+def add_novice_connection(context):
+    prompt = pexpect.spawn("nmcli -a connection add", logfile=context.log)
+    context.prompt = prompt
+
+
+@step('Append "{line}" to ifcfg file "{name}"')
+def append_to_ifcfg(context, line, name):
+    cmd = 'sudo echo "%s" >> /etc/sysconfig/network-scripts/ifcfg-%s' % (line, name)
+    os.system(cmd)
+
+
+@step(u'Expect "{what}"')
+def expect(context, what):
+    context.prompt.expect(what)
+
 
 @step(u'Open editor for connection "{con_name}"')
 def open_editor_for_connection(context, con_name):
@@ -12,6 +29,16 @@ def open_editor_for_connection(context, con_name):
     r = prompt.expect(['Error', con_name])
     if r == 0:
         raise Exception('Got an Error while opening profile %s' % (con_name))
+
+
+@step(u'Prepare connection')
+def prepare_connection(context):
+    context.execute_steps(u"""
+        * Submit "set ipv4.method manual" in editor
+        * Submit "set ipv4.addresses 1.2.3.4/24 1.1.1.1" in editor
+        * Submit "set ipv4.never-default yes" in editor
+        * Submit "set ipv6.method ignore" in editor
+    """)
 
 
 @step(u'Open editor for new connection "{con_name}" type "{type}"')
@@ -39,6 +66,7 @@ def delete_connection_with_enter(context, name):
 
     os.system('nmcli connection delete id %s' %name)
     sleep(5)
+
     context.prompt.sendline('\n')
     sleep(2)
 
@@ -51,6 +79,11 @@ def autoconnect_warning(context):
         raise Exception('Autoconnect warning was not shown')
 
 
+@step(u'Finish "{command}"')
+def wait_for_process(context, command):
+    Popen(command, shell=True).wait()
+
+
 @step(u'Add connection for a type "{typ}" named "{name}" for device "{ifname}"')
 def add_connection(context, typ, name, ifname):
     cli = pexpect.spawn('nmcli connection add type %s con-name %s ifname %s' % (typ, name, ifname), logfile=context.log)
@@ -59,22 +92,13 @@ def add_connection(context, typ, name, ifname):
         raise Exception('Got an Error while adding %s connection %s for device %s' % (typ, name, ifname))
     sleep(1)
 
-
-@step(u'Reboot')
-def reboot(context):
-    os.system("sudo ip link set dev eth1 down")
-    os.system("sudo ip link set dev eth2 down")
-    os.system("sudo ip link set dev eth3 down")
-    os.system("sudo ip link set dev eth4 down")
-    os.system("sudo ip link set dev eth5 down")
-    os.system("sudo ip link set dev eth6 down")
-    os.system("sudo ip link set dev eth7 down")
-    os.system("sudo ip link set dev eth8 down")
-    os.system("sudo ip link set dev eth9 down")
-    os.system("sudo ip link set dev eth10 down")
-    sleep(2)
-    os.system("sudo service NetworkManager restart")
-    sleep(10)
+@step(u'Add infiniband port named "{name}" for device "{ifname}" with parent "{parent}" and p-key "{pkey}"')
+def add_port(context, name, ifname, parent, pkey):
+    cli = pexpect.spawn('nmcli connection add type infiniband con-name %s ifname %s parent %s p-key %s' % (name, ifname, parent, pkey), logfile=context.log)
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while adding %s connection %s for device %s' % (typ, name, ifname))
+    sleep(1)
 
 
 @step(u'Disconnect device "{name}"')
@@ -85,7 +109,7 @@ def disconnect_connection(context, name):
         raise Exception('Got an Error while disconnecting device %s' % name)
     elif r == 1:
         raise Exception('nmcli disconnect %s timed out (180s)' % name)
-    sleep(1)
+    sleep(2)
 
 
 @step(u'Bring "{action}" connection "{name}"')
@@ -98,29 +122,7 @@ def start_stop_connection(context, action, name):
         raise Exception('nmcli connection %s %s timed out (90s)' % (action, name))
     elif r == 2:
         raise Exception('nmcli connection %s %s timed out (180s)' % (action, name))
-    sleep(1)
-
-
-@step(u'Bring up connection "{name}" for "{device}"')
-def start_connection_for_device(context, name, device):
-    cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
-    r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-    if r == 0:
-        raise Exception('Got an Error while uping connection %s on %s' % (name, device))
-    elif r == 1:
-        raise Exception('nmcli connection up %s timed out (90s)' % (name))
-    elif r == 2:
-        raise Exception('nmcli connection up %s timed out (180s)' % (name))
-    sleep(1)
-
-
-@step(u'Fail up connection "{name}" for "{device}"')
-def fail_up_connection_for_device(context, name, device):
-    cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
-    r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-    if r == 3:
-        raise Exception('nmcli connection up %s for device %s was succesfull. this should not happen' % (name, device))
-    sleep(1)
+    sleep(5)
 
 
 @step(u'Delete connection "{name}"')
@@ -128,7 +130,7 @@ def delete_connection(context, name):
     cli = pexpect.spawn('nmcli connection delete %s' % name, logfile=context.log)
     if cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF]) == 0:
         raise Exception('Got an Error while deleting connection %s' % name)
-    sleep(1)
+    sleep(2)
 
 
 @step(u'"{user}" is able to see connection "{name}"')
@@ -160,7 +162,7 @@ def submit_in_editor(context, command):
 
 @step(u'Enter in editor')
 def enter_in_editor(context):
-    context.prompt.sendline('\n')
+    context.prompt.send('\n')
 
 
 @step(u'Quit editor')
@@ -171,7 +173,7 @@ def quit_editor(context):
 
 @step(u'Restart NM')
 def restart_NM(context):
-    os.system("service NetworkManager restart")
+    os.system("sudo service NetworkManager restart")
     sleep(10)
 
 
@@ -205,18 +207,6 @@ def check_pattern_visible_with_tab_after_command(context, pattern, command):
     exp.sendeof()
 
     assert exp.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with "%s"' % (pattern, command)
-
-
-@step(u'"{pattern}" is not visible with tab after "{command}"')
-def check_pattern_not_visible_with_tab_after_command(context, pattern, command):
-    exp = pexpect.spawn('/bin/bash', logfile=context.log)
-    exp.send(command)
-    exp.sendcontrol('i')
-    exp.sendcontrol('i')
-    exp.sendcontrol('i')
-    exp.sendeof()
-
-    assert exp.expect([pattern, pexpect.EOF, pexpect.TIMEOUT]) != 0, 'pattern %s is visible with "%s"' % (pattern, command)
 
 
 @step(u'Run child "{command}"')
@@ -282,6 +272,10 @@ def network_dropped(context, state, device):
     if state == "is not":
         assert os.system('ping -c 2 -I %s -W 1 10.11.5.19' % device) == 0
 
-@step(u'Finish "{command}"')
-def wait_for_process(context, command):
-    Popen(command, shell=True).wait()
+
+@step(u'Reboot')
+def reboot(context):
+    os.system("sudo ip link set dev eth7 down")
+    sleep(2)
+    os.system("sudo service NetworkManager restart")
+    sleep(10)

@@ -10,8 +10,16 @@
      * Save in editor
      * Enter in editor
      * Quit editor
-    Then Prompt is not running
+    #Then Prompt is not running
     Then 'nm-team' is visible with command 'sudo teamdctl nm-team state dump'
+
+
+    @ifcfg_team_slave_device_type
+    @team
+    Scenario: nmcli - team - slave ifcfg devicetype
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+    Then 'DEVICETYPE=TeamPort' is visible with command 'grep "TYPE" /etc/sysconfig/network-scripts/ifcfg-team0.0'
 
 
     @nmcli_novice_mode_create_team
@@ -56,6 +64,17 @@
      * Bring "up" connection "team0.1"
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
+
+
+    @add_team_master_via_uuid
+    @slaves
+    @team
+    # bug verification for 1057494
+    Scenario: nmcli - team - master via uuid
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Add slave connection for master "team0" on device "eth1" named "team0.0"
+     * Bring "up" connection "team0.0"
+    Then Check slave "eth1" in team "nm-team" is "up"
 
 
     @remove_all_slaves
@@ -120,8 +139,6 @@
      * Add connection type "team" named "team0" for device "nm-team"
      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
      * Bring "up" connection "team0"
      * Disconnect device "nm-team"
     Then Team "nm-team" is down
@@ -204,8 +221,6 @@
      * Add connection type "team" named "team0" for device "nm-team"
      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
      * Open editor for connection "team0"
      * Submit 'set connection.autoconnect yes' in editor
      * Save in editor
@@ -219,8 +234,6 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
      * Reboot
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
@@ -233,8 +246,6 @@
      * Add connection type "team" named "team0" for device "nm-team"
      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
      * Open editor for connection "team0.0"
      * Submit 'set connection.autoconnect no' in editor
      * Save in editor
@@ -263,8 +274,6 @@
      * Add connection type "team" named "team0" for device "nm-team"
      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
      * Open editor for connection "team0.0"
      * Submit 'set connection.autoconnect no' in editor
      * Save in editor
@@ -278,8 +287,6 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
-    # * Bring "up" connection "team0.0"
-    # * Bring "up" connection "team0.1"
      * Reboot
     Then Check slave "eth2" in team "nm-team" is "up"
     Then Check slave "eth1" in team "nm-team" is "down"
@@ -292,8 +299,6 @@
      * Add connection type "team" named "team0" for device "nm-team"
      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
      * Open editor for connection "team0.0"
      * Submit 'set connection.autoconnect no' in editor
      * Save in editor
@@ -307,9 +312,6 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
-    # * Bring "up" connection "team0.0"
-    # * Bring "up" connection "team0.1"
-     #* Disconnect device "nm-team"
      * Reboot
     Then Check slave "eth2" in team "nm-team" is "up"
     Then Check slave "eth1" in team "nm-team" is "down"
@@ -327,8 +329,6 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
     Then '"kernel_team_mode_name": "loadbalance"' is visible with command 'sudo teamdctl nm-team state dump'
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
@@ -365,8 +365,6 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
     Then '"kernel_team_mode_name": "broadcast"' is visible with command 'sudo teamdctl nm-team state dump'
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
@@ -385,7 +383,6 @@
      * Submit 'set team.config {blah blah blah}' in editor
      * Save in editor
      * Quit editor
-     #* Bring "down" connection "team0"
      * Bring up connection "team0" ignoring error
     Then Team "nm-team" is down
 
@@ -406,21 +403,18 @@
      * Bring "up" connection "team0"
      * Bring "up" connection "team0.0"
      * Bring "up" connection "team0.1"
-    When '"kernel_team_mode_name": "loadbalance"' is visible with command 'sudo teamdctl nm-team state dump'
-    When Check slave "eth1" in team "nm-team" is "up"
-    When Check slave "eth2" in team "nm-team" is "up"
+    Then '"kernel_team_mode_name": "loadbalance"' is visible with command 'sudo teamdctl nm-team state dump'
+    Then Check slave "eth1" in team "nm-team" is "up"
+    Then Check slave "eth2" in team "nm-team" is "up"
      * Open editor for connection "team0"
      * Submit 'set team.config' in editor
      * Enter in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
-     #* Bring up connection "team0" ignoring error
-     #* Bring "up" connection "team0.0"
-     #* Bring "up" connection "team0.1"
-    When '"kernel_team_mode_name": "loadbalance"' is not visible with command 'sudo teamdctl nm-team state dump'
-    When Check slave "eth1" in team "nm-team" is "up"
-    When Check slave "eth2" in team "nm-team" is "up"
+    Then '"kernel_team_mode_name": "loadbalance"' is not visible with command 'sudo teamdctl nm-team state dump'
+    Then Check slave "eth1" in team "nm-team" is "up"
+    Then Check slave "eth2" in team "nm-team" is "up"
 
 
     @describe

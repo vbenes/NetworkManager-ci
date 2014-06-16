@@ -205,6 +205,15 @@ def check_slave_in_bond_in_proc(context, slave, bond):
     assert child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) == 0, "Slave %s is not in %s" % (slave, bond)
 
 
+@step(u'Check "{bond}" has "{slave}" in proc')
+def check_slave_present_in_bond_in_proc(context, slave, bond):
+    # DON'T USE THIS STEP UNLESS YOU HAVE A GOOD REASON!!
+    # this is not looking for up state as arp connections are sometimes down.
+    # it's always better to check whether slave is up
+    child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond), logfile=context.log )
+    assert child.expect(["Slave Interface: %s\s+MII Status:" % slave, pexpect.EOF]) == 0, "Slave %s is not in %s" % (slave, bond)
+
+
 @step(u'Check slave "{slave}" not in bond "{bond}" in proc')
 def check_slave_not_in_bond_in_proc(context, slave, bond):
     child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond), logfile=context.log )

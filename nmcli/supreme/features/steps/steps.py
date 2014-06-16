@@ -136,6 +136,18 @@ def check_pattern_visible_with_command(context, pattern, command):
     assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
 
 
+@step(u'"{pattern}" is visible with command "{command}" in "{seconds}" seconds')
+def check_pattern_visible_with_command_in_time(context, pattern, command, seconds):
+    seconds = int(seconds)
+    while seconds > 0:
+        ifconfig = pexpect.spawn(command, timeout = 180, logfile=context.log)
+        if ifconfig.expect([pattern, pexpect.EOF]) == 0:
+            return True
+        seconds = seconds - 1
+        sleep(1)
+    raise Exception('Did not see the pattern %s in %d seconds' % (pattern, seconds))
+
+
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
     sleep(3) # time for all to get set
@@ -159,12 +171,26 @@ def bring_up_connection(context, connection):
         raise Exception('nmcli connection up %s timed out (180s)' % connection)
 
 
+@step(u'Bring up connection "{name}" for "{device}" device')
+def start_connection_for_device(context, name, device):
+    cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
+    r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while uping connection %s on %s' % (name, device))
+    elif r == 1:
+        raise Exception('nmcli connection up %s timed out (90s)' % (name))
+    elif r == 2:
+        raise Exception('nmcli connection up %s timed out (180s)' % (name))
+    sleep(2)
+
+
 @step(u'Bring up connection "{connection}" ignoring error')
 def bring_up_connection_ignore_error(context, connection):
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
     if r == 1:
         raise Exception('nmcli connection up %s timed out (180s)' % connection)
+
 
 @step(u'Bring down connection "{connection}"')
 def bring_down_connection(context, connection):
@@ -184,6 +210,16 @@ def disconnect_device(context, device):
         raise Exception('Got an Error while disconnecting a device %s' % device)
     elif r == 1:
         raise Exception('nmcli device disconnect %s timed out (180s)' % device)
+
+
+@step(u'Connect device "{device}"')
+def connect_device(context, device):
+    cli = pexpect.spawn('nmcli device con %s' % device, timeout = 180, logfile=context.log)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while connecting a device %s' % device)
+    elif r == 1:
+        raise Exception('nmcli device connect %s timed out (180s)' % device)
 
 
 @step(u'Check "{options}" are present in describe output for object "{obj}"')
@@ -239,6 +275,11 @@ def note_the_output_as(context, command, index):
 @step(u'Note the output of "{command}"')
 def note_the_output_of(context, command):
     context.noted_value = check_output(command, shell=True)
+
+
+@step(u'{action} all "{what}" devices')
+def do_device_stuff(context, action, what):
+    os.system("for dev in $(nmcli device status | grep '%s' | awk {'print $1'}); do nmcli device %s $dev; done" % (what, action))
 
 
 @step(u'Check noted values "{i1}" and "{i2}" are the same')

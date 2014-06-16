@@ -6,15 +6,19 @@ Feature: nmcli: connection
     Then "COMMAND :=  { show | up | down | add | modify | edit | delete | reload | load }\s+show\s+up\s+down\s+add\s+modify\s+edit\s+edit\s+delete\s+reload\s+load" is visible with command "nmcli connection help"
     Then "--active" is visible with tab after "nmcli connection show "
     Then "autoconnect\s+con\-name\s+help\s+ifname\s+type" is visible with tab after "nmcli connection add "
-    Then "add\s+delete\s+down\s+edit\s+help\s+modify\s+load\s+reload\s+show\s+up" is visible with tab after "nmcli connection "
+    Then "add|delete|down|edit|help|load|modify|reload|show|up" is visible with tab after "nmcli connection "
     Then "Usage: nmcli connection add { OPTIONS | help }\s+OPTIONS \:= COMMON_OPTIONS TYPE_SPECIFIC_OPTIONS IP_OPTIONS\s+COMMON_OPTIONS:\s+type <type>\s+ifname <interface name> |\s+ethernet\:\s+wifi:\s+ssid <SSID>\s+gsm:\s+apn <APN>\s+cdma:\s+infiniband:\s+bluetooth:\s+vlan:\s+dev <parent device \(connection  UUID, ifname, or MAC\)>\s+bond:\s+bond-slave:\s+master <master \(ifname or connection UUID\)>\s+team:\s+team-slave:\s+master <master \(ifname or connection UUID\)>\s+bridge:\s+bridge-slave:\s+master <master \(ifname or connection UUID\)>\svpn:\s+vpn-type vpnc|openvpn|pptp|openconnect|openswan\s+olpc-mesh:\s+ssid" is visible with command "nmcli connection add help"
 
 
     @connection_names_autocompletion
+    @con
     Scenario: nmcli - connection - names autocompletion
     Then "eth0" is visible with tab after "nmcli connection edit id "
-    Then "eth1" is visible with tab after "nmcli connection edit id "
-    Then "eth2" is visible with tab after "nmcli connection edit id "
+    Then "eth6" is visible with tab after "nmcli connection edit id "
+    Then "connie" is not visible with tab after "nmcli connection edit id "
+    * Add connection for a type "ethernet" named "connie" for device "eth1"
+    Then "connie" is visible with tab after "nmcli connection edit "
+    Then "connie" is visible with tab after "nmcli connection edit id "
 
 
     @connection_no_error
@@ -26,15 +30,37 @@ Feature: nmcli: connection
 
 
     @connection_delete_while_editing
+    @con
     Scenario: nmcli - connection - delete opened connection
-     * Add connection for a type "ethernet" named "connie" for device "em1"
+     * Add connection for a type "ethernet" named "connie" for device "eth1"
      * Open editor for "connie" with timeout
      * Delete connection "connie" and hit Enter
      #* Submit "save" in editor
 
 
+    @connection_restricted_to_single_device
+    @con
+    # verification for https://bugzilla.redhat.com/show_bug.cgi?id=997998
+    Scenario: nmcli - connection - restriction to single device
+     * Add connection for a type "ethernet" named "connie" for device "*"
+     * Bring up connection "connie" for "eth1"
+    Then Fail up connection "connie" for "eth2"
+
+
+    @connection_down
+    @con
+    @eth
+    Scenario: nmcli - connection - down
+     * Add connection for a type "ethernet" named "connie" for device "eth1"
+     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Bring "up" connection "connie"
+     * Bring "up" connection "ethie"
+     * Bring "down" connection "ethie"
+     Then Check if "connie" is active connection
+
+
     @testcase_282124
-    @connection
+    @con
     Scenario: nmcli - connection - set id
      * Add connection for a type "ethernet" named "connie" for device "blah"
      * Open editor for connection "connie"
@@ -48,8 +74,7 @@ Feature: nmcli: connection
 
 
     @testcase_282128
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - set uuid
      * Add connection for a type "ethernet" named "connie" for device "blah"
      * Open editor for connection "connie"
@@ -58,8 +83,7 @@ Feature: nmcli: connection
 
 
     @testcase_282130
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - set interface-name
      * Add connection for a type "ethernet" named "connie" for device "blah"
      * Open editor for connection "connie"
@@ -83,8 +107,7 @@ Feature: nmcli: connection
 
 
     @testcase_300559
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - set autoconnect on
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
@@ -92,13 +115,13 @@ Feature: nmcli: connection
      * Save in editor
      * Quit editor
      * Bring "up" connection "connie"
+     * Bring "down" connection "connie"
      * Reboot
      Then Check if "connie" is active connection
 
 
     @connection_autoconnect_warning
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - autoconnect warning while saving new
      * Open editor for new connection "connie" type "ethernet"
      * Save in editor
@@ -108,8 +131,7 @@ Feature: nmcli: connection
 
 
     @testcase_300560
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - set autoconnect off
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
@@ -122,9 +144,7 @@ Feature: nmcli: connection
 
 
     @testcase_300561
-    @eth
     @time
-    @connection
     Scenario: nmcli - connection - timestamp
      * Add connection for a type "ethernet" named "time" for device "blah"
      * Open editor for connection "time"
@@ -143,8 +163,7 @@ Feature: nmcli: connection
 
 
     @testcase_300562
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - readonly timestamp
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
@@ -154,8 +173,7 @@ Feature: nmcli: connection
 
 
     @testcase_300563
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - readonly read-only
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
@@ -164,8 +182,7 @@ Feature: nmcli: connection
 
 
     @testcase_300564
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - readonly type
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
@@ -174,8 +191,7 @@ Feature: nmcli: connection
 
 
     @testcase_300565
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - permissions to user
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
@@ -204,29 +220,27 @@ Feature: nmcli: connection
 
     @testcase_300567
     #@eth0
-    @eth
+    @con
     @firewall
-    @connection
     Scenario: nmcli - connection - zone to drop and public
-     * Add connection for a type "ethernet" named "connie" for device "eth2"
+     * Add connection for a type "ethernet" named "connie" for device "eth6"
      * Open editor for connection "connie"
      * Submit "set connection.zone drop" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "connie"
-     When "eth2" is visible with command "firewall-cmd --zone=drop --list-all"
+     When "eth6" is visible with command "firewall-cmd --zone=drop --list-all"
      * Open editor for connection "connie"
      * Submit "set connection.zone" in editor
      * Enter in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "connie"
-     Then "eth2" is visible with command "firewall-cmd --zone=public --list-all"
+     Then "eth6" is visible with command "firewall-cmd --zone=public --list-all"
 
 
     @testcase_300568
-    @eth
-    @connection
+    @con
     Scenario: nmcli - connection - describe
      * Add connection for a type "ethernet" named "connie" for device "eth2"
      * Open editor for connection "connie"
