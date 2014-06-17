@@ -49,13 +49,12 @@ Feature: nmcli: connection
 
     @connection_removal_of_disapperared_device
     @BBB
+    # verification for https://bugzilla.redhat.com/show_bug.cgi?id=1108167
     Scenario: nmcli - connection - remove connection of nonexisting device
      * Finish "sudo ip link add name BBB type bridge"
+     When "BBB" is visible with command "nmcli -f NAME connection show --active"
      * Finish "sudo ip link del BBB"
-     When "BBB" is visible with command "nmcli -f NAME show connection --active"
-     * Delete connection "BBB"
-     * Bring "down" connection "BBB"
-    Then "Active: active" is visible with command "sudo service NetworkManager status"
+     Then "BBB" is not visible with command "nmcli -f NAME connection show --active"
 
 
     @connection_down
