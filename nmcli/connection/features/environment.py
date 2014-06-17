@@ -74,33 +74,41 @@ def after_tag(context, tag):
         print "---------------------------"
         print "deleting connie"
         call("nmcli connection delete id connie", shell=True)
-        call("sleep 2", shell=True)
+        #call("sleep 2", shell=True)
         print "---------------------------"
+
+    if tag == "BBB":
+        print "---------------------------"
+        print "deleting BBB"
+        call("nmcli connection delete id BBB", shell=True)
+        #call("sleep 2", shell=True)
+        print "---------------------------"
+
 
     if tag == "eth":
         print "---------------------------"
         print "deleting connie"
-        os.system("nmcli connection delete id ethie")
-        os.system("sleep 1")
+        call("nmcli connection delete id ethie", shell=True)
+        #os.system("sleep 1")
         print "---------------------------"
 
     if tag == "firewall":
         print "---------------------------"
         print "stoppping firewall"
         call("sudo service firewalld stop", shell=True)
-        call("sleep 4", shell=True)
+        #call("sleep 4", shell=True)
         print "---------------------------"
 
     if tag == "eth0":
         print "---------------------------"
         print "upping eth0"
-        os.system("nmcli connection up id eth0")
-        sleep(2*TIMER)
+        call("nmcli connection up id eth0", shell=True)
+        #sleep(2*TIMER)
         print "---------------------------"
 
     if tag == "time":
         print "---------------------------"
         print "time connection delete"
-        os.system("nmcli connection delete id time")
+        call("nmcli connection delete id time", shell=True)
         print "---------------------------"
 

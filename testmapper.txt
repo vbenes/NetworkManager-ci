@@ -5,6 +5,7 @@ connection_help, ., nmcli/connection/./runtest.sh connection_help, NetworkManage
 connection_names_autocompletion, ., nmcli/connection/./runtest.sh connection_names_autocompletion, NetworkManager
 connection_no_error, ., nmcli/connection/./runtest.sh connection_no_error, NetworkManager
 connection_delete_while_editing, ., nmcli/connection/./runtest.sh connection_delete_while_editing, NetworkManager
+connection_restricted_to_single_device, ., nmcli/connection/./runtest.sh connection_restricted_to_single_device, NetworkManager
 connection_down, ., nmcli/connection/./runtest.sh connection_down, NetworkManager
 testcase_282124, ., nmcli/connection/./runtest.sh testcase_282124, NetworkManager
 testcase_282128, ., nmcli/connection/./runtest.sh testcase_282128, NetworkManager

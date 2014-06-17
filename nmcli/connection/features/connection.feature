@@ -47,6 +47,17 @@ Feature: nmcli: connection
     Then Fail up connection "connie" for "eth2"
 
 
+    @connection_removal_of_disapperared_device
+    @BBB
+    Scenario: nmcli - connection - remove connection of nonexisting device
+     * Finish "sudo ip link add name BBB type bridge"
+     * Finish "sudo ip link del BBB"
+     When "BBB" is visible with command "nmcli -f NAME show --active"
+     * Delete connection "BBB"
+     * Bring "down" connection "BBB"
+    Then "Active: active" is visible with command "sudo service NetworkManager status"
+
+
     @connection_down
     @con
     @eth

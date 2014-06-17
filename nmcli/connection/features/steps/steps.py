@@ -168,6 +168,9 @@ def quit_editor(context):
     context.prompt.sendline('quit')
     context.prompt.close(force=True)
 
+@step(u'Finish "{command}"')
+def wait_for_process(context, command):
+    Popen(command, shell=True).wait()
 
 @step(u'Restart NM')
 def restart_NM(context):
