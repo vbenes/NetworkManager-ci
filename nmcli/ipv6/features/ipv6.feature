@@ -294,7 +294,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then "default via 4000::1 dev eth1  proto static  metric 1024" is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
-    Then "1010::1 dev eth1  proto static  metric 0" is visible with command "ip -6 route"
+    Then "1010::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
 
 
     @ipv6_dns_manual_IP_with_manual_dns
