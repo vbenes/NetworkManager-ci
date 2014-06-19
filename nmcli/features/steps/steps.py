@@ -3,7 +3,7 @@ from behave import step
 from time import sleep, time
 import pexpect
 import os
-from subprocess import check_output, Popen, call
+from subprocess import check_output, Popen, call, PIPE
 
 
 @step(u'Activate connection')
@@ -163,7 +163,7 @@ def value_printed(context, item, value):
 
 @step(u'Check if "{name}" is active connection')
 def is_active_connection(context, name):
-    cli = pexpect.spawn('nmcli -t -f NAME connection show active', logfile=context.log)
+    cli = pexpect.spawn('nmcli -t -f NAME connection show --active', logfile=context.log)
     r = cli.expect([name,pexpect.EOF])
     if r == 1:
         raise Exception('Connection %s is not active' % name)
@@ -171,7 +171,7 @@ def is_active_connection(context, name):
 
 @step(u'Check if "{name}" is not active connection')
 def is_nonactive_connection(context, name):
-    cli = pexpect.spawn('nmcli -t -f NAME connection show active', logfile=context.log)
+    cli = pexpect.spawn('nmcli -t -f NAME connection show --active', logfile=context.log)
     r = cli.expect([name,pexpect.EOF])
     if r == 0:
         raise Exception('Connection %s is active' % name)
@@ -230,6 +230,24 @@ def check_bond_state(context, bond, state):
         return
     child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond) , logfile=context.log)
     assert child.expect(["MII Status: %s" %  state, pexpect.EOF]) == 0, "%s is not in %s state" % (bond, state)
+
+
+@step(u'Check solicitation for "{dev}" in "{file}"')
+def check_solicitation(context, dev, file):
+    #file = '/tmp/solicitation.txt'
+    #dev = 'enp0s25'
+    cmd = "ip a s %s |grep ff:ff|awk {'print $2'}" %dev
+    proc = Popen(cmd, shell=True, stdout=PIPE)
+    proc.wait()
+    mac = ""
+    for line in proc.stdout:
+        if line.find(':') != -1:
+            mac = line.strip()
+
+    mac_last_4bits = mac.split(':')[-2]+mac.split(':')[-1]
+    dump = open(file, 'r')
+
+    assert mac_last_4bits not in dump.readlines(), "Route solicitation from %s was found in tshark dump" % mac
 
 
 @step(u'Delete connection "{name}"')
