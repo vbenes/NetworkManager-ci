@@ -200,14 +200,14 @@ def is_active_connection(context, name):
 @step(u'"{pattern}" is visible with command "{command}"')
 def check_pattern_visible_with_command(context, pattern, command):
     sleep(1) # time for all to get set
-    ifconfig = pexpect.spawn(command, maxread=20000, logfile=context.log)
+    ifconfig = pexpect.spawn(command, maxread=100000, logfile=context.log)
     assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
 
 
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
     sleep(1) # time for all to get set
-    ifconfig = pexpect.spawn(command, maxread=20000, logfile=context.log)
+    ifconfig = pexpect.spawn(command, maxread=100000, logfile=context.log)
     assert ifconfig.expect([pattern, pexpect.EOF]) != 0, 'pattern %s still visible with %s' % (pattern, command)
 
 
