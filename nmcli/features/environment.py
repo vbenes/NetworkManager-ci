@@ -49,8 +49,8 @@ def before_tag(context, tag):
     if tag == "eth0":
         print "---------------------------"
         print "eth0 and eth10 disconnect"
-        os.system("nmcli device disconnect eth0")
-        os.system("nmcli device disconnect eth10")
+        call("nmcli device disconnect eth0", shell=True)
+        call("nmcli device disconnect eth10", shell=True)
         sleep(TIMER)
         print "---------------------------"
 
@@ -106,7 +106,7 @@ def after_tag(context, tag):
     if tag == "slaves":
         print "---------------------------"
         print "deleting slave profiles"
-        call'nmcli connection delete id bond0.0 bond0.1 bond-slave-eth1', shell=True)
+        call('nmcli connection delete id bond0.0 bond0.1 bond-slave-eth1', shell=True)
         print "---------------------------"
 
     if tag == "bond":
@@ -195,8 +195,9 @@ def after_tag(context, tag):
 
 
 def after_all(context):
-    Popen("nmcli connection up id eth0", shell=True).wait()
-    os.system('sudo service beah-beaker-backend restart')
-    sleep(5*TIMER)
-    print "---------------------------"
+    print "after all"
+    if call("nmcli connection up id eth0", shell=True) != 0:
+        os.system('sudo service beah-beaker-backend restart')
+        sleep(5*TIMER)
+        print "---------------------------"
 
