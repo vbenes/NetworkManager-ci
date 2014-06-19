@@ -29,7 +29,7 @@ def before_scenario(context, scenario):
 def before_tag(context, tag):
     if tag == 'eth0':
         print "---------------------------"
-        print "eth0 disconnect
+        print "eth0 disconnect"
         Popen("nmcli connection down id eth0", shell=True).wait()
         sleep(TIMER)
         if os.system("nmcli -f NAME c sh -a |grep eth0") == 0:
