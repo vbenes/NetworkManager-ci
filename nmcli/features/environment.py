@@ -144,6 +144,7 @@ def after_tag(context, tag):
         print "---------------------------"
         print "upping eth0"
         call("nmcli connection up id eth0", shell=True)
+        call('sudo service beah-beaker-backend restart', shell=True)
         print "---------------------------"
 
     if tag == "time":

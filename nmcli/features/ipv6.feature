@@ -4,7 +4,7 @@ Feature: nmcli: ipv6
     @ipv6_method_static_without_IP
     @ipv6
     Scenario: nmcli - ipv6 - method - static without IP
-      * Add connection for a type "ethernet" named "ethie" for device "eth1"
+      * Add connection type "ethernet" named "ethie" for device "eth1"
       * Open editor for connection "ethie"
       * Submit "set ipv6.method static" in editor
       * Save in editor
@@ -14,7 +14,7 @@ Feature: nmcli: ipv6
     @ipv6_method_manual_with_IP
     @ipv6
     Scenario: nmcli - ipv6 - method - manual + IP
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method manual" in editor
      * Submit "set ipv6.addresses 2607:f0d0:1002:51::4/64, 1050:0:0:0:5:600:300c:326b" in editor
@@ -28,7 +28,7 @@ Feature: nmcli: ipv6
     @ipv6_method_static_with_IP
     @ipv6
     Scenario: nmcli - ipv6 - method - static + IP
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2607:f0d0:1002:51::4, 1050:0:0:0:5:600:300c:326b" in editor
@@ -42,7 +42,7 @@ Feature: nmcli: ipv6
     @ipv6_addresses_IP_with_netmask
     @ipv6
     Scenario: nmcli - ipv6 - addresses - IP slash netmask
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method manual" in editor
      * Submit "set ipv6.addresses 2607:f0d0:1002:51::4/63, 1050:0:0:0:5:600:300c:326b/121" in editor
@@ -58,7 +58,7 @@ Feature: nmcli: ipv6
     @ipv6_addresses_yes_when_static_switch_asked
     @ipv6
     Scenario: nmcli - ipv6 - addresses - IP and yes to manual question
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.addresses dead:beaf::1" in editor
      * Submit "yes" in editor
@@ -72,7 +72,7 @@ Feature: nmcli: ipv6
     @ipv6_addresses_no_when_static_switch_asked
     @ipv6
     Scenario: nmcli - ipv6 - addresses - IP and no to manual question
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.addresses dead:beaf::1" in editor
      * Submit "no" in editor
@@ -87,7 +87,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - addresses - IP slash invalid netmask
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2607:f0d0:1002:51::4/321" in editor
@@ -98,7 +98,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - addresses - IP slash netmask and gw
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.method static" in editor
@@ -114,7 +114,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - addresses - several IPs slash netmask and gw
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses fc01::1:5/68 fc01::1:1, fb01::1:6/112 fb02::1:1" in editor
@@ -134,7 +134,7 @@ Feature: nmcli: ipv6
     @ipv6_addresses_delete_IP_moving_method_back_to_auto
     @ipv6
     Scenario: nmcli - ipv6 - addresses - delete IP and set method back to auto
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.method static" in editor
@@ -158,14 +158,14 @@ Feature: nmcli: ipv6
     @ipv6_2
     @eth0
     Scenario: nmcli - ipv6 - routes - set basic route
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2000::2/126" in editor
      * Submit "set ipv6.routes 1010::1/128 2000::1 1" in editor
      * Save in editor
      * Quit editor
-     * Add connection for a type "ethernet" named "ethie2" for device "eth2"
+     * Add connection type "ethernet" named "ethie2" for device "eth2"
      * Open editor for connection "ethie2"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126" in editor
@@ -184,14 +184,14 @@ Feature: nmcli: ipv6
     @ipv6_2
     @eth0
     Scenario: nmcli - ipv6 - routes - remove basic route
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2000::2/126" in editor
      * Submit "set ipv6.routes 1010::1/128 2000::1 1" in editor
      * Save in editor
      * Quit editor
-     * Add connection for a type "ethernet" named "ethie2" for device "eth2"
+     * Add connection type "ethernet" named "ethie2" for device "eth2"
      * Open editor for connection "ethie2"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126" in editor
@@ -224,7 +224,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - routes - set device route
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
@@ -242,7 +242,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: NM - ipv6 - correct slaac setting
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Bring "up" connection "ethie"
     Then Check device route and prefix for "eth10"
 
@@ -251,7 +251,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: NM - ipv6 - limited router solicitation
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Bring "up" connection "ethie"
      * Finish "sudo tshark -i eth10 -Y frame.len==62 -V -x -a duration:120 > /tmp/solicitation.txt"
     Then Check solicitation for "eth10" in "/tmp/solicitation.txt"
@@ -261,7 +261,7 @@ Feature: nmcli: ipv6
     @ipv6
     # reproducer for 1068673
     Scenario: NM - ipv6 - block just routing RA
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Bring "up" connection "ethie"
     Then "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra"
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra_defrtr"
@@ -272,7 +272,7 @@ Feature: nmcli: ipv6
     @ipv6_routes_invalid_IP
     @ipv6
     Scenario: nmcli - ipv6 - routes - set invalid route - non IP
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
@@ -284,7 +284,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - routes - set invalid route - missing gw
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
@@ -301,7 +301,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - dns - method static + IP + dns
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
@@ -318,7 +318,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - dns - method auto + dns
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.dns 4000::1, 5000::1" in editor
      * Save in editor
@@ -332,7 +332,7 @@ Feature: nmcli: ipv6
     @ipv6_dns_ignore-auto-dns_with_manually_set_dns
     @ipv6
     Scenario: nmcli - ipv6 - dns - method auto + dns + ignore automaticaly obtained
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.ignore-auto-dns yes" in editor
      * Submit "set ipv6.dns 4000::1, 5000::1" in editor
@@ -347,7 +347,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - dns - add dns when one already set
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
@@ -369,7 +369,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - dns - method auto then delete all dns
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.dns 4000::1, 5000::1" in editor
      * Save in editor
@@ -389,7 +389,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - dns-search - add dns-search
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv4.ignore-auto-dns yes" in editor
@@ -404,7 +404,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - dns-search - remove dns-search
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv4.ignore-auto-dns yes" in editor
@@ -426,7 +426,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - ignore auto obtained dns
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv4.ignore-auto-dns yes" in editor
@@ -444,7 +444,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - ignore auto obtained dns - generic
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv4.ignore-auto-dns yes" in editor
@@ -460,7 +460,7 @@ Feature: nmcli: ipv6
     @ipv6_method_link-local
     @ipv6
     Scenario: nmcli - ipv6 - method - link-local
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method link-local" in editor
      * Save in editor
@@ -473,7 +473,7 @@ Feature: nmcli: ipv6
     @ipv6_may_fail_set_true
     @ipv6
     Scenario: nmcli - ipv6 - may-fail - set true
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method dhcp" in editor
      * Submit "set ipv6.may-fail yes" in editor
@@ -485,7 +485,7 @@ Feature: nmcli: ipv6
     @ipv6_method_ignored
     @ipv6
     Scenario: nmcli - ipv6 - method - ignored
-     * Add connection for a type "ethernet" named "ethie" for device "eth10"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      Then Bring "up" connection "ethie"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method ignore" in editor
@@ -502,7 +502,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - never-default - set
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.never-default yes " in editor
      * Save in editor
@@ -516,7 +516,7 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: nmcli - ipv6 - never-default - remove
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.never-default yes" in editor
      * Save in editor
@@ -535,7 +535,7 @@ Feature: nmcli: ipv6
     @ipv6_dhcp-hostname_set
     @profie
     Scenario: nmcli - ipv6 - dhcp-hostname - set dhcp-hostname
-    * Add connection for a type "ethernet" named "profie" for device "eth10"
+    * Add connection type "ethernet" named "profie" for device "eth10"
     * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
     * Finish "sleep 2"
     * Open editor for connection "profie"
@@ -553,7 +553,7 @@ Feature: nmcli: ipv6
     @ipv6_dhcp-hostname_remove
     @ipv4
     Scenario: nmcli - ipv6 - dhcp-hostname - remove dhcp-hostname
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.dhcp-hostname walderon" in editor
@@ -574,7 +574,7 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_0
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 0
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 2" in editor
@@ -596,7 +596,7 @@ Feature: nmcli: ipv6
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 1
 
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 1" in editor
@@ -611,7 +611,7 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_2
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 2
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 2" in editor
@@ -627,7 +627,7 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_incorrect_value
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - incorrect value
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 3" in editor
@@ -654,7 +654,7 @@ Feature: nmcli: ipv6
     @ipv6_describe
     @ipv6
     Scenario: nmcli - ipv6 - describe
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      When Check "\[method\]|\[dhcp-hostname\]|\[dns\]|\[dns-search\]|\[addresses\]|\[routes\]|\[ignore-auto-routes\]|\[ignore-auto-dns\]|\[never-default\]|\[may-fail\]" are present in describe output for object "ipv6"
      * Submit "goto ipv6" in editor

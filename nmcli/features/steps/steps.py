@@ -18,13 +18,13 @@ def append_to_ifcfg(context, line, name):
     os.system(cmd)
 
 
-@step(u'Add connection for a type "{typ}" named "{name}"')
-def add_connection(context, typ, name):
-    cli = pexpect.spawn('nmcli connection add type %s con-name %s' % (typ, name), logfile=context.log)
-    r = cli.expect(['Error', pexpect.EOF])
-    if r == 0:
-        raise Exception('Got an Error while adding %s connection %s' % (typ, name))
-    sleep(1)
+# @step(u'Add connection for a type "{typ}" named "{name}"')
+# def add_connection(context, typ, name):
+#     cli = pexpect.spawn('nmcli connection add type %s con-name %s' % (typ, name), logfile=context.log)
+#     r = cli.expect(['Error', pexpect.EOF])
+#     if r == 0:
+#         raise Exception('Got an Error while adding %s connection %s' % (typ, name))
+#     sleep(1)
 
 
 @step(u'Add connection type "{typ}" named "{name}" for device "{ifname}"')
@@ -409,6 +409,18 @@ def check_pattern_visible_with_tab_after_command(context, pattern, command):
     exp.sendeof()
 
     assert exp.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with "%s"' % (pattern, command)
+
+
+@step(u'"{pattern}" is not visible with tab after "{command}"')
+def check_pattern_not_visible_with_tab_after_command(context, pattern, command):
+    exp = pexpect.spawn('/bin/bash', logfile=context.log)
+    exp.send(command)
+    exp.sendcontrol('i')
+    exp.sendcontrol('i')
+    exp.sendcontrol('i')
+    exp.sendeof()
+
+    assert exp.expect([pattern, pexpect.EOF, pexpect.TIMEOUT]) != 0, 'pattern %s is visible with "%s"' % (pattern, command)
 
 
 @step(u'Ping {domain}')

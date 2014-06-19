@@ -4,7 +4,7 @@ Feature: nmcli: ipv4
     @testcase_303647
     @ipv4
     Scenario: nmcli - ipv4 - method - static without IP
-     * Add connection for a type "ethernet" named "ethie" for device "eth1"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Save in editor
@@ -14,7 +14,7 @@ Feature: nmcli: ipv4
     @testcase_303648
     @ipv4
     Scenario: nmcli - ipv4 - method - manual + IP
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.122.253" in editor
@@ -29,7 +29,7 @@ Feature: nmcli: ipv4
     @testcase_303649
     @ipv4
     Scenario: nmcli - ipv4 - method - static + IP
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.253" in editor
@@ -42,7 +42,7 @@ Feature: nmcli: ipv4
     @testcase_303650
     @ipv4
     Scenario: nmcli - ipv4 - addresses - IP allowing manual when asked
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.addresses 192.168.122.253" in editor
     * Submit "yes" in editor
@@ -55,7 +55,7 @@ Feature: nmcli: ipv4
     @testcase_303651
     @ipv4
     Scenario: nmcli - ipv4 - addresses - IP slash netmask
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.253/24" in editor
@@ -70,7 +70,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - addresses - change in address
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 1.1.1.99/24 1.1.1.1" in editor
@@ -94,7 +94,7 @@ Feature: nmcli: ipv4
 #    @testcase_hash
 #    @ipv4
 #    Scenario: nmcli - ipv4 - addresses - IP slash IP netmask
-#    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+#    * Add connection type "ethernet" named "ethie" for device "eth1"
 #    * Open editor for connection "ethie"
 #    * Submit "set ipv4.method static" in editor
 #    * Submit "set ipv4.addresses 192.168.122.253/255.255.255.0" in editor
@@ -107,7 +107,7 @@ Feature: nmcli: ipv4
     @testcase_303652
     @ipv4
     Scenario: nmcli - ipv4 - addresses - IP slash invalid netmask
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.253/192.168.122.1" in editor
@@ -136,7 +136,7 @@ Feature: nmcli: ipv4
     @testcase_303653
     @ipv4
     Scenario: nmcli - ipv4 - addresses - IP slash netmask and route
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.253/24 192.168.122.96" in editor
@@ -152,7 +152,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - addresses - several IPs slash netmask and route
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.22.253/24 192.168.22.96, 192.168.122.253/16 192.168.122.95" in editor
@@ -171,7 +171,7 @@ Feature: nmcli: ipv4
     @testcase_303655
     @ipv4
     Scenario: nmcli - ipv4 - addresses - delete IP and set method back to auto
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.22.253/24 192.168.22.96, 192.168.122.253/16 192.168.122.95" in editor
@@ -195,14 +195,14 @@ Feature: nmcli: ipv4
     @ipv4_2
     @eth0
     Scenario: nmcli - ipv4 - routes - set basic route
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.3.10/24 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
     * Save in editor
     * Quit editor
-    * Add connection for a type "ethernet" named "ethie2" for device "eth2"
+    * Add connection type "ethernet" named "ethie2" for device "eth2"
     * Open editor for connection "ethie2"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.1.10/24 192.168.4.1" in editor
@@ -224,14 +224,14 @@ Feature: nmcli: ipv4
     @ipv4_2
     @eth0
     Scenario: nmcli - ipv4 - routes - remove basic route
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.3.10/24 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
     * Save in editor
     * Quit editor
-    * Add connection for a type "ethernet" named "ethie2" for device "eth2"
+    * Add connection type "ethernet" named "ethie2" for device "eth2"
     * Open editor for connection "ethie2"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.1.10/24 192.168.4.1" in editor
@@ -261,7 +261,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - routes - set device route
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
@@ -278,7 +278,7 @@ Feature: nmcli: ipv4
     @testcase_303659
     @ipv4
     Scenario: nmcli - ipv4 - routes - set invalid route - non IP
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
@@ -290,7 +290,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - routes - set invalid route - missing gw
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
@@ -307,7 +307,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - routes - set unreachable route
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
@@ -322,7 +322,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns - method static + IP + dns
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.253/24 192.168.122.1" in editor
@@ -338,7 +338,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns - method auto + dns
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns 8.8.8.8, 8.8.4.4" in editor
     * Save in editor
@@ -353,7 +353,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns - method auto + dns + ignore automaticaly obtained
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.ignore-auto-dns yes" in editor
     * Submit "set ipv4.dns 8.8.8.8, 8.8.4.4" in editor
@@ -369,7 +369,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns - add dns when one already set
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.253/24 192.168.122.1" in editor
@@ -391,7 +391,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns - method auto then delete all dns
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns 8.8.8.8, 8.8.4.4" in editor
     * Save in editor
@@ -412,7 +412,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns-search - add dns-search
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns-search redhat.com" in editor
     * Save in editor
@@ -427,7 +427,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns-search - remove dns-search
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dns-search redhat.com" in editor
     * Save in editor
@@ -448,7 +448,7 @@ Feature: nmcli: ipv4
     @testcase_303668
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - set dhcp-hostname
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname walderon" in editor
@@ -463,7 +463,7 @@ Feature: nmcli: ipv4
     @testcase_303669
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - remove dhcp-hostname
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname walderon" in editor
     * Save in editor
@@ -483,7 +483,7 @@ Feature: nmcli: ipv4
     @testcase_303670
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - don't send
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname walderon" in editor
@@ -498,7 +498,7 @@ Feature: nmcli: ipv4
     @testcase_303671
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Save in editor
@@ -511,7 +511,7 @@ Feature: nmcli: ipv4
     @testcase_304232
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - ignore sending real hostname
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/real.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-send-hostname no" in editor
@@ -526,7 +526,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv6.method ignore" in editor
     * Submit "set ipv6.ignore-auto-dns yes" in editor
@@ -542,7 +542,7 @@ Feature: nmcli: ipv4
     @testcase_304234
     @ipv4
     Scenario: nmcli - ipv4 - method - link-local
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method link-local" in editor
     * Submit "set ipv6.method ignore" in editor
@@ -555,7 +555,7 @@ Feature: nmcli: ipv4
     @testcase_304235
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - set client id
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id XXX" in editor
@@ -572,7 +572,7 @@ Feature: nmcli: ipv4
     @testcase_304236
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - remove client id
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id XXX" in editor
     * Save in editor
@@ -592,7 +592,7 @@ Feature: nmcli: ipv4
     @testcase_304237
     @ipv4
     Scenario: nmcli - ipv4 - may-fail - set true
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id 1" in editor
     * Submit "set ipv4.may-fail yes" in editor
@@ -606,7 +606,7 @@ Feature: nmcli: ipv4
     @testcase_304238
     @ipv4
     Scenario: nmcli - ipv4 - method - disabled
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.method manual" in editor
@@ -620,7 +620,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - never-default - set
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.never-default yes " in editor
     * Save in editor
@@ -633,7 +633,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - never-default - remove
-    * Add connection for a type "ethernet" named "ethie" for device "eth10"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.never-default yes" in editor
     * Save in editor
@@ -651,7 +651,7 @@ Feature: nmcli: ipv4
     @testcase_304241
     @ipv4
     Scenario: nmcli - ipv4 - describe
-    * Add connection for a type "ethernet" named "ethie" for device "eth1"
+    * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     When Check "\[method\]|\[dns\]|\[dns-search\]|\[addresses\]|\[routes\]|\[ignore-auto-routes\]|\[ignore-auto-dns\]|\[dhcp-client-id\]|\[dhcp-send-hostname\]|\[dhcp-hostname\]|\[never-default\]|\[may-fail\]" are present in describe output for object "ipv4"
     * Submit "goto ipv4" in editor

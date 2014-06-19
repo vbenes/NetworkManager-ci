@@ -16,7 +16,7 @@ Feature: nmcli: connection
     Then "eth0" is visible with tab after "nmcli connection edit id "
     Then "eth6" is visible with tab after "nmcli connection edit id "
     Then "connie" is not visible with tab after "nmcli connection edit id "
-    * Add connection for a type "ethernet" named "connie" for device "eth1"
+    * Add connection type "ethernet" named "connie" for device "eth1"
     Then "connie" is visible with tab after "nmcli connection edit "
     Then "connie" is visible with tab after "nmcli connection edit id "
 
@@ -43,7 +43,7 @@ Feature: nmcli: connection
     # verification for https://bugzilla.redhat.com/show_bug.cgi?id=997998
     Scenario: nmcli - connection - restriction to single device
      * Add connection type "ethernet" named "connie" for device "*"
-     * Bring up connection "connie" for "eth1"
+     * Bring "up" connection "connie" for "eth1"
     Then Fail up connection "connie" for "eth2"
 
 
