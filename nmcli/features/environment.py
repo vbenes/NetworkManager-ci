@@ -15,7 +15,6 @@ TIMER = 0.5
 # 4. after tag
 
 def before_scenario(context, scenario):
-def before_scenario(context, scenario):
     try:
         context.log = file('/tmp/log_%s.log' % scenario.name,'w')
 
