@@ -36,7 +36,7 @@
 
 
     @nmcli_novice_mode_create_team-slave_with_default_options
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - novice - create team-slave with default options
      * Add connection type "team" named "team0" for device "nm-team"
@@ -54,7 +54,7 @@
 
 
     @add_two_slaves_to_team
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - add slaves
      * Add connection type "team" named "team0" for device "nm-team"
@@ -67,7 +67,7 @@
 
 
     @add_team_master_via_uuid
-    @slaves
+    @team_slaves
     @team
     # bug verification for 1057494
     Scenario: nmcli - team - master via uuid
@@ -78,7 +78,7 @@
 
 
     @remove_all_slaves
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - remove last slave
      * Add connection type "team" named "team0" for device "nm-team"
@@ -90,7 +90,7 @@
 
 
     @remove_one_slave
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - remove a slave
      * Add connection type "team" named "team0" for device "nm-team"
@@ -105,7 +105,7 @@
 
 
     @change_slave_type_and_master
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - connection - slave-type and master settings
      * Add connection type "team" named "team0" for device "nm-team"
@@ -121,7 +121,7 @@
 
 
     @remove_active_team_profile
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - remove active team profile
      * Add connection type "team" named "team0" for device "nm-team"
@@ -133,7 +133,7 @@
 
 
     @disconnect_active_team
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - disconnect active team
      * Add connection type "team" named "team0" for device "nm-team"
@@ -145,7 +145,7 @@
 
 
     @team_start_by_hand_no_slaves
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team by hand with no slaves
      * Add connection type "team" named "team0" for device "nm-team"
@@ -160,7 +160,7 @@
 
 
     @start_team_by_hand_all_auto
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team by hand with all auto
      * Add connection type "team" named "team0" for device "nm-team"
@@ -177,7 +177,7 @@
 
 
     @team_activate
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - activate
      * Add connection type "team" named "team0" for device "nm-team"
@@ -197,7 +197,7 @@
 
 
     @start_team_by_hand_one_auto
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team by hand with one auto
      * Add connection type "team" named "team0" for device "nm-team"
@@ -215,7 +215,7 @@
 
 
     @start_team_on_boot
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team on boot
      * Add connection type "team" named "team0" for device "nm-team"
@@ -240,7 +240,7 @@
 
 
     @team_start_on_boot_with_nothing_auto
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team on boot - nothing auto
      * Add connection type "team" named "team0" for device "nm-team"
@@ -268,7 +268,7 @@
     #VVV    THIS IS DIFFERENT IN BOND AREA
 
     @team_start_on_boot_with_one_auto_only
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team on boot - one slave auto only
      * Add connection type "team" named "team0" for device "nm-team"
@@ -293,7 +293,7 @@
 
 
     @team_start_on_boot_with_team_and_one_slave_auto
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - start team on boot - team and one slave auto
      * Add connection type "team" named "team0" for device "nm-team"
@@ -318,7 +318,7 @@
 
 
     @config_loadbalance
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - config - set loadbalance mode
      * Add connection type "team" named "team0" for device "nm-team"
@@ -335,7 +335,7 @@
 
 
     # @config_lacp
-    # @slaves
+    # @team_slaves
     # @team
     # Scenario: nmcli - team - config - set lacp mode
     #  * Add connection type "team" named "team0" for device "nm-team"
@@ -354,7 +354,7 @@
 
 
     @config_broadcast
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - config - set broadcast mode
      * Add connection type "team" named "team0" for device "nm-team"
@@ -372,7 +372,7 @@
 
 
     @config_invalid
-    @slaves
+    @team_slaves
     @team
     @clean
     Scenario: nmcli - team - config - set invalid mode
@@ -388,7 +388,7 @@
 
 
     @remove_config
-    @slaves
+    @team_slaves
     @team
     Scenario: nmcli - team - config - remove
      * Add connection type "team" named "team0" for device "nm-team"
