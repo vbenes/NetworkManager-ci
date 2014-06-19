@@ -81,7 +81,7 @@ def autoconnect_warning(context):
 
 @step(u'Finish "{command}"')
 def wait_for_process(context, command):
-    Popen(command, shell=True).wait()
+    assert call(command, shell=True) == 0
 
 
 @step(u'Add connection for a type "{typ}" named "{name}" for device "{ifname}"')

@@ -3,7 +3,7 @@ from behave import step
 from time import sleep, time
 import pexpect
 import os
-from subprocess import Popen
+from subprocess import Popen, call
 
 @step(u'Open editor for connection "{con_name}"')
 def open_editor_for_connection(context, con_name):
@@ -283,4 +283,4 @@ def network_dropped(context, state, device):
 
 @step(u'Finish "{command}"')
 def wait_for_process(context, command):
-    Popen(command, shell=True).wait()
+    assert call(command, shell=True) == 0

@@ -146,9 +146,11 @@ def run_child_process(context, command):
     Popen(command, shell=True)
     #Popen("sleep 2", shell=True).wait()
 
+
 @step(u'Finish "{command}"')
 def wait_for_process(context, command):
-    Popen(command, shell=True).wait()
+    assert call(command, shell=True) == 0
+
 
 @step(u'Note the output of "{command}" as value "{index}"')
 def note_the_output_as(context, command, index):
