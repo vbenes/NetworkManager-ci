@@ -54,6 +54,12 @@ def before_tag(context, tag):
         sleep(TIMER)
         print "---------------------------"
 
+def after_step(context, step):
+    """
+    """
+    #pass
+    sleep(TIMER)
+
 
 def after_scenario(context, scenario):
     """
