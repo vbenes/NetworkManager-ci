@@ -3,7 +3,7 @@
     @alias_ifcfg_add_single_alias
     @alias
     Scenario: ifcfg - alias - add single alias
-    * Add connection type "ethernet" named "eth7" for device "eth7"
+    * Add connection for a type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
@@ -23,7 +23,7 @@
     @alias_ifcfg_add_multiple_aliases
     @alias
     Scenario: ifcfg - alias - add mutliple aliases
-    * Add connection type "ethernet" named "eth7" for device "eth7"
+    * Add connection for a type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
@@ -57,7 +57,7 @@
     @alias_ifcfg_connection_restart
     @alias
     Scenario: ifcfg - alias - connection restart
-    * Add connection type "ethernet" named "eth7" for device "eth7"
+    * Add connection for a type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
@@ -93,7 +93,7 @@
     @alias_ifcfg_remove_single_alias
     @alias
     Scenario: ifcfg - alias - remove single alias
-    * Add connection type "ethernet" named "eth7" for device "eth7"
+    * Add connection for a type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
@@ -130,7 +130,7 @@
     @alias_ifcfg_remove_all_aliases
     @alias
     Scenario: ifcfg - alias - remove all aliases
-    * Add connection type "ethernet" named "eth7" for device "eth7"
+    * Add connection for a type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
@@ -169,7 +169,7 @@
     @alias_ifcfg_reboot
     @alias
     Scenario: ifcfg - alias - reboot
-    * Add connection type "ethernet" named "eth7" for device "eth7"
+    * Add connection for a type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
     * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
