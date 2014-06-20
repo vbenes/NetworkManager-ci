@@ -283,7 +283,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.method static" in editor
     * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
     * Submit "set ipv4.routes 255.255.255.256" in editor
-    Then Error type "failed to set 'routes' property: invalid route destination address '255.255.255.256'" while saving in editor
+    Then Error type "failed to set 'routes' property: invalid route destination address" while saving in editor
 
 
     @testcase_303660
