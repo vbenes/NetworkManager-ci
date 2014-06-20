@@ -3,7 +3,7 @@ from behave import step
 from time import sleep, time
 import pexpect
 import os
-from subprocess import check_output, Popen, PIPE
+from subprocess import check_output, Popen, PIPE, call
 
 
 @step(u'Open editor for connection "{con_name}"')
