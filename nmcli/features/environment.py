@@ -20,8 +20,8 @@ def before_scenario(context, scenario):
 
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
 
-        os.system("ip link set dev eth1 up")
-        os.system("ip link set dev eth2 up")
+        #os.system("ip link set dev eth1 up")
+        #os.system("ip link set dev eth2 up")
 
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
