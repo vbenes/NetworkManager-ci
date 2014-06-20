@@ -290,12 +290,12 @@ def expect(context, what):
 
 @step(u'Error type "{type}" shown in editor')
 def check_error_in_editor(context, type):
-    context.prompt.expect("'%s'" % type)
+    context.prompt.expect("%s" % type)
 
 
 @step(u'Error type "{type}" while saving in editor')
 def check_error_while_saving_in_editor(context, type):
-    context.prompt.expect("'%s'" % type)
+    context.prompt.expect("%s" % type)
 
 
 @step(u'Fail up connection "{name}" for "{device}"')
