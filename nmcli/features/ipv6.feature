@@ -8,7 +8,7 @@ Feature: nmcli: ipv6
       * Open editor for connection "ethie"
       * Submit "set ipv6.method static" in editor
       * Save in editor
-    Then Error type "connection verification failed: ipv6.addresses:" while saving in editor
+    Then Error type "ipv6.addresses: this property cannot be empty for" while saving in editor
 
 
     @ipv6_method_manual_with_IP
