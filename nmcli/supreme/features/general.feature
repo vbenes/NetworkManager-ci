@@ -33,17 +33,17 @@ Feature: nmcli - general
     * Note the output of "nmcli -t -f STATE general" as value "1"
     * Note the output of "echo disconnected" as value "2"
     Then Check noted values "1" and "2" are the same
-    * "connect" all "ethernet" devices
+    * Bring up connection "eth0"
 
 
     @general
     @testcase_290426
     Scenario: nmcli - general - state asleep
-    * Execute "nmcli network off"
+    * Execute "nmcli networking off"
     * Note the output of "nmcli -t -f STATE general" as value "1"
     * Note the output of "echo asleep" as value "2"
     Then Check noted values "1" and "2" are the same
-    Then Execute "nmcli network on"
+    Then Execute "nmcli networking on"
 
 
     @general

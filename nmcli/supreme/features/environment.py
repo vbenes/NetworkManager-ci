@@ -16,7 +16,7 @@ def before_tag(context, tag):
     If tag contains 'goa', then setup a goa account:
     google_goa will setup Google account etc.
     """
-    call('sudo service NetworkManager start', shell=True)
+    #call('sudo service NetworkManager start', shell=True)
     if (tag == 'ethernet') or (tag == 'bridge') or (tag == 'vlan'):
         call("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done", shell=True)
         if call("nmcli device status |grep -v eth0 |grep -e ' connected'", shell=True) != 1:
@@ -55,7 +55,7 @@ def after_tag(context, tag):
             call('sudo nmcli device disconnect wlan0', shell=True)
             call('sudo rm -rf /etc/sysconfig/network-scripts/keys-*', shell=True)
             call('find /etc/sysconfig/network-scripts/ -type f | xargs grep -l "TYPE=Wireless" | xargs sudo rm -rf', shell=True)
-            call('sudo service NetworkManager restart', shell=True)
+            #call('sudo service NetworkManager restart', shell=True)
         if 'ifcfg-rh' in tag:
             call("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ", shell=True)
         if 'waitforip' in tag:
@@ -67,6 +67,7 @@ def after_tag(context, tag):
                     break
         if tag == 'restart':
             call('sudo service NetworkManager restart', shell=True)
+            sleep(5)
         if tag == 'bridge_server_ingore_carrier_with_dhcp':
             call('sudo yum -y remove NetworkManager-config-server', shell=True)
         if tag == 'openvswitch_ignore_ovs_network_setup':
@@ -103,6 +104,16 @@ def after_tag(context, tag):
             call('sudo nmcli con add type ethernet ifname eth2 con-name eth2 autoconnect no', shell=True)
         if tag == 'hostname_change':
             call('sudo nmcli gen host %s' % context.original_hostname, shell=True)
+        if tag == 'device_connect':# or tag == 'testcase_290429':# or tag == 'testcase_290426':
+            #pass
+            #call('sudo service NetworkManager restart', shell=True)
+            sleep(10)
+            call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)
+            #sleep(1)
+            os.system('beah-beaker-backend &')
+            sleep(20)
+            #Popen('beah-beaker-backend -H $(hostname) &', shell=True, close_fds=True)
+
     except Exception as e:
         print("error in after_tag(%s): %s" % (tag, e.message))
         raise RuntimeError
@@ -114,7 +125,7 @@ def after_step(context, step):
     Here we make screenshot and embed it (if one of formatters supports it)
     """
     pass
-    sleep(0.2)
+    #sleep(0.2)
     # try:
     #     # Make screnshot if step has failed
     #     if hasattr(context, "embed"):
@@ -133,7 +144,6 @@ def before_scenario(context, scenario):
 
 def after_scenario(context, scenario):
     """Teardown for each scenario
-    Kill evolution (in order to make this reliable we send sigkill)
     """
     print('============ /tmp/log_%s.log: ============' % scenario.name)
     print(open("/tmp/log_%s.log" % scenario.name, 'r').read())
@@ -152,8 +162,6 @@ def after_scenario(context, scenario):
     #     # Stupid behave simply crashes in case exception has occurred
     #     pass
 
+
 def after_all(context):
-    if os.system("nmcli -f NAME c sh -a |grep eth0") != 0:
-        call("nmcli connection up id eth0", shell=True)
-        call('sudo service beah-beaker-backend restart', shell=True)
-        sleep(5)
+    pass

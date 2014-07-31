@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-if [ ! -e /tmp/nmcli_testing_configured ]; then
+if [ ! -e /tmp/nm_eth_configured ]; then
     #set the root password to 'redhat' (for overcoming polkit easily)
     echo "Setting root password to 'redhat'"
     echo "redhat" | passwd root --stdin
@@ -34,16 +34,9 @@ if [ ! -e /tmp/nmcli_testing_configured ]; then
     #setting ulimit to unlimited for test user
     echo "ulimit -c unlimited" >> /home/test/.bashrc
 
-    #making sure all ethernet devices are named ethX
-    NUM=0
-    for DEV in `nmcli device | grep connected | grep ethernet | awk {'print $1'}`; do
-	ip link set $DEV down
-    mv /etc/sysconfig/network-scripts/ifcfg-$DEV /etc/sysconfig/network-scripts/ifcfg-eth$NUM
-    #echo "NM_CONTROLLED=no" >> /etc/sysconfig/network-scripts/ifcfg-eth$NUM
-	ip link set $DEV name eth$NUM
-	ip link set eth$NUM up
-	NUM=$(($NUM+1))
-    done
+    #installing behave and pexpect
+    yum -y install install/*.rpm
+
 
     #making sure all wifi devices are named wlanX
     NUM=0
@@ -54,21 +47,26 @@ if [ ! -e /tmp/nmcli_testing_configured ]; then
     NUM=$(($NUM+1))
     done
 
-    #installing packages needed for wifi and behave (no outside-world connectivity in lab)
-
-    #yum -y install install/iw*rpm
-    #yum -y install install/pexpect*rpm
-    #yum -y install install/behave*rpm
-    yum -y install install/*.rpm
-    #yum -y install install/net-tools*rpm
-
-    cp -r certs/ /tmp/ #certificates needed for wifi-sec tests
-
-    touch /tmp/nmcli_testing_configured
+    #profiles tuning
     nmcli connection down id eth0
+    nmcli connection modify eth0 ipv6.method ignore
+    nmcli connection modify eth1 connection.autoconnect no
+    nmcli connection modify eth2 connection.autoconnect no
+    nmcli connection modify eth3 connection.autoconnect no
+    nmcli connection modify eth4 connection.autoconnect no
+    nmcli connection modify eth5 connection.autoconnect no
+    nmcli connection modify eth6 connection.autoconnect no
+    nmcli connection modify eth7 connection.autoconnect no
+    nmcli connection modify eth8 connection.autoconnect no
+    nmcli connection modify eth9 connection.autoconnect no
+    nmcli connection modify eth10 connection.autoconnect no
+    nmcli connection modify eth10 ipv6.method auto
     service NetworkManager restart
-    sleep 10
+
+    touch /tmp/nm_eth_configured
+
 fi
+
 
 #rhts-run-simple-test "$TEST" "behave ipv4/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain"; rc=$?
 #behave nmcli/features -t $1 -k -f plain -o /tmp/report_$TEST.log -f plain; rc=$?
