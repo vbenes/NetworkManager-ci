@@ -495,6 +495,7 @@ Feature: nmcli: ipv6
     Then "scope link" is visible with command "ip -6 a s eth10"
     Then "scope global" is not visible with command "ip a -6 s eth10"
     # reproducer for 1004255
+    Then Bring "down" connection "ethie"
     Then "eth10" is not visible with command "ip -6 route |grep -v fe80"
 
 

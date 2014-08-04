@@ -3,7 +3,14 @@ from behave import step
 from time import sleep, time
 import pexpect
 import os
+import exceptions
+import re
 from subprocess import check_output, Popen, call, PIPE
+
+
+@step(u'{action} all "{what}" devices')
+def do_device_stuff(context, action, what):
+    os.system("for dev in $(nmcli device status | grep '%s' | awk {'print $1'}); do nmcli device %s $dev; done" % (what, action))
 
 
 @step(u'Activate connection')
@@ -34,6 +41,18 @@ def add_connection_for_iface(context, typ, name, ifname):
     if r == 0:
         raise Exception('Got an Error while adding %s connection %s for device %s' % (typ, name, ifname))
     sleep(1)
+
+
+@step(u'Add a new connection of type "{typ}" ifname "{ifname}" and options "{options}"')
+def add_new_default_connection(context, typ, ifname, options):
+    pass
+
+
+@step(u'Add a new connection of type "{typ}" and options "{options}"')
+def add_new_default_connection_without_ifname(context, typ, options):
+    cli = pexpect.spawn('nmcli connection add type %s %s' % (typ, options), logfile=context.log)
+    if cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF]) == 0:
+        raise Exception('Got an Error while creating connection of type %s with options %s' % (typ,options))
 
 
 @step(u'Add infiniband port named "{name}" for device "{ifname}" with parent "{parent}" and p-key "{pkey}"')
@@ -90,6 +109,29 @@ def start_stop_connection(context, action, name):
     sleep(4)
 
 
+@step(u'Bring up connection "{name}" for "{device}" device')
+def start_connection_for_device(context, name, device):
+    cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
+    r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while uping connection %s on %s' % (name, device))
+    elif r == 1:
+        raise Exception('nmcli connection up %s timed out (90s)' % (name))
+    elif r == 2:
+        raise Exception('nmcli connection up %s timed out (180s)' % (name))
+    sleep(2)
+
+
+@step(u'Bring up connection "{connection}"')
+def bring_up_connection(context, connection):
+    cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while upping connection %s' % connection)
+    elif r == 1:
+        raise Exception('nmcli connection up %s timed out (180s)' % connection)
+
+
 @step(u'Bring up connection "{connection}" ignoring error')
 def bring_up_connection_ignore_error(context, connection):
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
@@ -97,6 +139,21 @@ def bring_up_connection_ignore_error(context, connection):
     if r == 1:
         raise Exception('nmcli connection up %s timed out (180s)' % connection)
     sleep(4)
+
+
+@step(u'Bring down connection "{connection}"')
+def bring_down_connection(context, connection):
+    cli = pexpect.spawn('nmcli connection down %s' % connection, timeout = 180, logfile=context.log)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while downing a connection %s' % connection)
+    elif r == 1:
+        raise Exception('nmcli connection down %s timed out (180s)' % connection)
+
+
+@step(u'Change NM profile plugin to ifcfg-rh')
+def change_to_keyfile(context):
+    os.system("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ")
 
 
 @step(u'Check device route and prefix for "{dev}"')
@@ -152,6 +209,11 @@ def check_same_noted_values(context, i1, i2):
     assert context.noted[i1].strip() == context.noted[i2].strip(), "Noted values do not match!"
 
 
+@step(u'Check noted output contains "{pattern}"')
+def check_noted_output_contains(context, pattern):
+    assert re.search(pattern, context.noted_value) is not None, "Noted output does not contain the pattern %s" % pattern
+
+
 @step(u'Check if object item "{item}" has value "{value}" via print')
 def value_printed(context, item, value):
     context.prompt.sendline('print')
@@ -180,6 +242,18 @@ def is_nonactive_connection(context, name):
     r = cli.expect([name,pexpect.EOF])
     if r == 0:
         raise Exception('Connection %s is active' % name)
+
+
+@step(u'Check ifcfg-name file created with noted connection name')
+def check_ifcfg_exists(context):
+    cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % context.noted, logfile=context.log)
+    cat.expect('NAME=%s' % context.noted)
+
+
+@step(u'Check ifcfg-name file created for connection "{con_name}"')
+def check_ifcfg_exists_given_device(context, con_name):
+    cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name, logfile=context.log)
+    cat.expect('NAME=%s' % con_name)
 
 
 @step(u'Check bond "{bond}" in proc')
@@ -255,12 +329,49 @@ def check_solicitation(context, dev, file):
     assert mac_last_4bits not in dump.readlines(), "Route solicitation from %s was found in tshark dump" % mac
 
 
-@step(u'Delete connection "{name}"')
-def delete_connection(context, name):
-    cli = pexpect.spawn('nmcli connection delete %s' % name, logfile=context.log)
-    if cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF]) == 0:
-        raise Exception('Got an Error while deleting connection %s' % name)
-    sleep(2)
+@step(u'Check value saved message showed in editor')
+def check_saved_in_editor(context):
+    context.prompt.expect('successfully')
+
+
+@step(u'Connect device "{device}"')
+def connect_device(context, device):
+    cli = pexpect.spawn('nmcli device con %s' % device, timeout = 180, logfile=context.log)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while connecting a device %s' % device)
+    elif r == 1:
+        raise Exception('nmcli device connect %s timed out (180s)' % device)
+
+
+@step(u'Connect wifi device to "{network}" network')
+def connect_wifi_device(context, network):
+    cli = pexpect.spawn('nmcli device wifi connect "%s"' % network, timeout = 180, logfile=context.log)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while connecting to network %s' % network)
+    elif r == 1:
+        raise Exception('nmcli device wifi connect ... timed out (180s)')
+
+
+@step(u'Connect wifi device to "{network}" network with options "{options}"')
+def connect_wifi_device_w_options(context, network, options):
+    cli = pexpect.spawn('nmcli device wifi connect "%s" %s' % (network, options), timeout = 180, logfile=context.log)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while connecting to network %s' % network)
+    elif r == 1:
+        raise Exception('nmcli device wifi connect ... timed out (180s)')
+
+
+@step(u'Delete connection "{connection}"')
+def delete_connection(context,connection):
+    cli = pexpect.spawn('nmcli connection delete %s' % connection, timeout = 95, logfile=context.log)
+    res = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if res == 0:
+        raise Exception('Got an Error while deleting connection %s' % connection)
+    elif res == 1:
+        raise Exception('Deleting connecion %s timed out (95s)' % connection)
 
 
 @step(u'Delete connection "{name}" and hit enter')
@@ -293,6 +404,13 @@ def expect(context, what):
     context.prompt.expect(what)
 
 
+@step(u'Error appeared in editor')
+def error_appeared_in_editor(context):
+    r = context.prompt.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 2 or r == 1:
+        raise Exception('Did not see an Error in editor')
+
+
 @step(u'Error type "{type}" shown in editor')
 def check_error_in_editor(context, type):
     context.prompt.expect("%s" % type)
@@ -301,6 +419,16 @@ def check_error_in_editor(context, type):
 @step(u'Error type "{type}" while saving in editor')
 def check_error_while_saving_in_editor(context, type):
     context.prompt.expect("%s" % type)
+
+
+@step(u'Execute "{command}"')
+def execute_command(context, command):
+    os.system(command)
+
+
+@step(u'Execute "{command}" without waiting for process to finish')
+def execute_command(context, command):
+    Popen(command, shell=True)
 
 
 @step(u'Fail up connection "{name}" for "{device}"')
@@ -340,6 +468,18 @@ def global_tem_address_check(context, dev):
     assert temp_ipv6_end != mac_end, 'Mac and tmp Ipv6 are similar in the end %s..%s'
 
 
+@step(u'ifcfg-"{con_name}" file does not exist')
+def ifcfg_doesnt_exist(context, con_name):
+    cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name, logfile=context.log)
+    assert cat.expect('No such file') == 0, 'Ifcfg-%s exists!' % con_name
+
+
+@step(u'Look for "{content}" in tailed file')
+def find_tailing(context, content):
+    if context.tail.expect([content, pexpect.TIMEOUT, pexpect.EOF]) == 1:
+        raise Exception('Did not see the "%s" in tail output before timeout (180s)' % content)
+
+
 @step(u'Mode missing message shown in editor')
 def mode_missing_in_editor(context):
     context.prompt.expect("Error: connection verification failed: bond.options: mandatory option 'mode' is missing")
@@ -359,6 +499,42 @@ def network_dropped(context, state, device):
         assert os.system('ping -c 2 -I %s -W 1 10.11.5.19' % device) != 0
     if state == "is not":
         assert os.system('ping -c 2 -I %s -W 1 10.11.5.19' % device) == 0
+
+
+@step(u'No error appeared in editor')
+def no_error_appeared_in_editor(context):
+    r = context.prompt.expect([pexpect.TIMEOUT, pexpect.EOF, 'Error'])
+    if r == 2:
+        raise Exception('Got an Error in editor')
+
+
+@step(u'Note the "{prop}" property from editor print output')
+def note_print_property(context, prop):
+    category, item = prop.split('.')
+    context.prompt.sendline('print %s' % category)
+    context.prompt.expect('%s.%s:\s+(\S+)' % (category, item))
+    context.noted = context.prompt.match.group(1)
+    print context.noted
+
+
+@step(u'Note the "{prop}" property from ifconfig output for device "{device}"')
+def note_print_property(context, prop, device):
+    ifc = pexpect.spawn('ifconfig %s' % device, logfile=context.log)
+    ifc.expect('%s\s(\S+)' % prop)
+    context.noted = ifc.match.group(1)
+    print context.noted
+
+
+@step(u'Noted value contains "{pattern}"')
+def note_print_property(context, pattern):
+    assert re.search(pattern, context.noted) is not None, "Noted value does not match the pattern!"
+
+
+@step(u'Note the output of "{command}" as value "{index}"')
+def note_the_output_as(context, command, index):
+    if not hasattr(context, 'noted'):
+        context.noted = {}
+    context.noted[index] = check_output(command, shell=True)
 
 
 @step(u'Note the output of "{command}"')
@@ -401,11 +577,22 @@ def open_editor_for_a_type(context, typ):
     context.prompt = prompt
 
 
+@step(u'Open interactive connection addition mode for a type "{typ}"')
+def open_interactive_for_a_type(context, typ):
+    prompt = pexpect.spawn('nmcli -a connection add type %s' % typ, timeout = 5, logfile=context.log)
+    context.prompt = prompt
+
+
+@step(u'Open interactive connection addition mode')
+def open_interactive(context):
+    prompt = pexpect.spawn('nmcli -a connection add', timeout = 5, logfile=context.log)
+    context.prompt = prompt
+
+
 @step(u'Open wizard for adding new connection')
 def add_novice_connection(context):
     prompt = pexpect.spawn("nmcli -a connection add", logfile=context.log)
     context.prompt = prompt
-
 
 
 @step(u'"{pattern}" is visible with command "{command}"')
@@ -414,6 +601,18 @@ def check_pattern_visible_with_command(context, pattern, command):
     cmd = '/bin/bash -c "%s"' %command
     ifconfig = pexpect.spawn(cmd, maxread=100000, logfile=context.log)
     assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
+
+
+@step(u'"{pattern}" is visible with command "{command}" in "{seconds}" seconds')
+def check_pattern_visible_with_command_in_time(context, pattern, command, seconds):
+    seconds = int(seconds)
+    while seconds > 0:
+        ifconfig = pexpect.spawn(command, timeout = 180, logfile=context.log)
+        if ifconfig.expect([pattern, pexpect.EOF]) == 0:
+            return True
+        seconds = seconds - 1
+        sleep(1)
+    raise Exception('Did not see the pattern %s in %d seconds' % (pattern, seconds))
 
 
 @step(u'"{pattern}" is not visible with command "{command}"')
@@ -474,6 +673,11 @@ def prepare_connection(context):
     """)
 
 
+@step(u'Print in editor')
+def print_in_editor(context):
+    context.prompt.sendline('print')
+
+
 @step(u'Prompt is not running')
 def prompt_is_not_running(context):
     sleep(1)
@@ -483,7 +687,7 @@ def prompt_is_not_running(context):
 @step(u'Quit editor')
 def quit_editor(context):
     context.prompt.sendline('quit')
-    sleep(0.3)
+    #sleep(0.3)
 
 
 @step(u'Reboot')
@@ -521,9 +725,17 @@ def save_in_editor(context):
     context.prompt.sendline('save')
 
 
+@step(u'See Error while saving in editor')
+def check_error_while_saving_in_editor(context):
+    context.prompt.expect("Error")
+
+
 @step(u'Set a property named "{name}" to "{value}" in editor')
 def set_property_in_editor(context, name, value):
-    context.prompt.sendline('set %s %s' % (name,value))
+    if value == 'noted-value':
+        context.prompt.sendline('set %s %s' % (name,context.noted))
+    else:
+        context.prompt.sendline('set %s %s' % (name,value))
 
 
 @step(u'Set default DCB options')
@@ -545,6 +757,16 @@ def set_default_dcb(context):
         * Submit "set dcb.priority-bandwidth 100,100,100,100,100,100,100,100" in editor
         * Submit "set dcb.priority-traffic-class 7,6,5,4,3,2,1,0" in editor
     """)
+
+
+@step(u'Submit "{what}"')
+def submit(context, what):
+    if what == 'noted-value':
+        context.prompt.sendline(context.noted)
+    elif what == '<enter>':
+        context.prompt.send("\n")
+    else:
+        context.prompt.sendline(what)
 
 
 @step(u'Submit "{command}" in editor')
@@ -572,6 +794,11 @@ def start_generic_connection(context, connection, device):
     if r == 1:
         raise Exception('nmcli connection up %s timed out (180s)' % connection)
     sleep(4)
+
+
+@step(u'Start tailing file "{archivo}"')
+def start_tailing(context, archivo):
+    context.tail = pexpect.spawn('sudo tail -f %s' % archivo, timeout = 180, logfile=context.log)
 
 
 @step(u'Team "{team}" is down')
@@ -619,6 +846,19 @@ def is_not_readable(context, user, name):
 @step(u'Value saved message showed in editor')
 def check_saved_in_editor(context):
     context.prompt.expect('successfully')
+
+
+@step(u'"{value}" appeared in editor')
+def value_appeared_in_editor(context, value):
+    r = context.prompt.expect([value, pexpect.TIMEOUT, pexpect.EOF])
+    if r == 2 or r == 1:
+        raise Exception('Did not see "%s" in editor' % value)
+
+
+@step(u'Wait for at least "{secs}" seconds')
+def wait_for_x_seconds(context,secs):
+    sleep(int(secs))
+    assert True
 
 
 @step(u'Wrong bond options message shown in editor')

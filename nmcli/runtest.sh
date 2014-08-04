@@ -34,6 +34,11 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     #setting ulimit to unlimited for test user
     echo "ulimit -c unlimited" >> /home/test/.bashrc
 
+    #prepare beah not to use IPv6
+    #sed -i s/\#DEVEL=True/IPV6_DISABLED=True/  /etc/beah.conf
+    #sudo kill -9 $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk '{print $2}')
+    #beah-beaker-backend &
+
     #installing behave and pexpect
     yum -y install install/*.rpm
 
