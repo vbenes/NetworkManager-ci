@@ -468,6 +468,18 @@ def global_tem_address_check(context, dev):
     assert temp_ipv6_end != mac_end, 'Mac and tmp Ipv6 are similar in the end %s..%s'
 
 
+@step(u'Hostname is visible in log "{log}"')
+def hostname_visible(context, log):
+    cmd = "grep $(hostname -s) %s" %log
+    assert call(cmd, shell=True) == 0, 'Hostname was not visible in log'
+
+
+@step(u'Hostname is not visible in log "{log}"')
+def hostname_visible(context, log):
+    cmd = "grep $(hostname -s) %s" %log
+    assert call(cmd, shell=True) == 1, 'Hostname was visible in log'
+
+
 @step(u'ifcfg-"{con_name}" file does not exist')
 def ifcfg_doesnt_exist(context, con_name):
     cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name, logfile=context.log)

@@ -508,7 +508,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "qe-dell" is visible with command "cat /tmp/tshark.log"
+    Then Hostname is visible in log "/tmp/tshark.log"
 
 
     @testcase_304232
@@ -523,7 +523,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "Host Name" is not visible with command "grep qe-dell-ovs5-vm /tmp/real.log"
+    Then Hostname is not visible in log "/tmp/real.log"
 
 
     @testcase_304233
