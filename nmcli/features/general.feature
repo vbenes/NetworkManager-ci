@@ -172,3 +172,24 @@ Feature: nmcli - general
     * Connect device "eth2"
     Then "eth2\s+ethernet\s+connected" is visible with command "nmcli device"
     * Execute "nmcli dev disconnect eth2"
+
+    @general
+    @dns_none
+    Scenario: NM - dns none setting
+    * Execute "sudo sed -i 's/plugins=ifcfg-rh/plugins=ifcfg-rh\ndns=none/' /etc/NetworkManager/NetworkManager.conf"
+    * Execute "sudo echo 'nameserver 1.2.3.4' > /etc/resolv.conf"
+    * Execute "cat /etc/resolv.conf"
+    * Restart NM
+    * Bring "up" connection "eth0"
+    Then "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 10" is not visible with command "cat /etc/resolv.conf"
+
+    @general
+    @remove_dns_none
+    Scenario: NM - dns  none removal
+    When "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
+    * Execute "sudo sed -i 's/dns=none/\n/' /etc/NetworkManager/NetworkManager.conf"
+    * Restart NM
+    * Bring "up" connection "eth0"
+    Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver 10" is visible with command "cat /etc/resolv.conf"

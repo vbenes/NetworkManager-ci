@@ -265,6 +265,12 @@ def after_tag(context, tag):
         call('sudo service NetworkManager restart', shell=True)
         sleep(5)
 
+    if tag == 'remove_dns_none':
+        if call('grep dns /etc/NetworkManager/NetworkManager.conf', shell=True) == 0:
+            call("sudo sed -i 's/dns=none//' /etc/NetworkManager/NetworkManager.conf", shell=True)
+        call('sudo service NetworkManager restart', shell=True)
+        sleep(5)
+
     if tag == 'bridge_server_ingore_carrier_with_dhcp':
         print "---------------------------"
         print "removing server config files"

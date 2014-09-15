@@ -424,7 +424,7 @@ def check_error_while_saving_in_editor(context, type):
 @step(u'Execute "{command}"')
 def execute_command(context, command):
     os.system(command)
-
+    sleep(0.2)
 
 @step(u'Execute "{command}" without waiting for process to finish')
 def execute_command(context, command):
@@ -723,8 +723,9 @@ def reboot(context):
 
 @step(u'Restart NM')
 def restart_NM(context):
+    sleep(1)
     call("service NetworkManager restart", shell=True) == 0
-    sleep(5)
+    sleep(4)
 
 
 @step(u'Run child "{command}"')
