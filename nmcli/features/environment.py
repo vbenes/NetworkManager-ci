@@ -16,7 +16,7 @@ TIMER = 0.5
 
 def before_scenario(context, scenario):
     try:
-        context.log = file('/tmp/log_%s.log' % scenario.name,'w')
+        context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
@@ -94,7 +94,7 @@ def after_scenario(context, scenario):
             context.embed('text/plain', data)
 
         if hasattr(context, "embed"):
-            context.embed('text/plain', open("/tmp/log_%s.log" % scenario.name, 'r').read())
+            context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
