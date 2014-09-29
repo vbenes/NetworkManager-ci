@@ -109,7 +109,7 @@ else
 fi
 
 rhts-report-result $TEST $RESULT "/tmp/report_$TEST.html"
-rhts-submit-log -T $TEST -l "/tmp/log_$TEST.html"
+#rhts-submit-log -T $TEST -l "/tmp/log_$TEST.html"
 
 echo "------------ Test result: $RESULT ------------"
 exit $rc
