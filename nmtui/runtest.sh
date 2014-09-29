@@ -61,6 +61,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     nmcli connection modify eth9 connection.autoconnect no
     nmcli connection modify eth10 connection.autoconnect no
     nmcli connection modify eth10 ipv6.method auto
+
     service NetworkManager restart
 
     touch /tmp/nm_eth_configured

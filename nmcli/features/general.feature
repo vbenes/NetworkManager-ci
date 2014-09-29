@@ -164,6 +164,9 @@ Feature: nmcli - general
     * Execute "nmcli dev connect eth0"
 
 
+## Basically various bug related reproducer tests follow here
+
+
     @general
     @ethernet
     @device_connect
@@ -172,6 +175,55 @@ Feature: nmcli - general
     * Connect device "eth2"
     Then "eth2\s+ethernet\s+connected" is visible with command "nmcli device"
     * Execute "nmcli dev disconnect eth2"
+
+
+    #bz1034150
+    @general
+    @bridge
+    @nmcli_device_delete
+    Scenario: nmcli - device - delete
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
+    * "bridge0\s+bridge" is visible with command "nmcli device"
+    * Execute "nmcli device delete bridge0"
+    Then "bridge0\s+bridge" is not visible with command "nmcli device"
+    Then "bridge0" is visible with command "nmcli connection"
+
+
+    #bz1034150
+    @general
+    @nmcli_device_attempt_hw_delete
+    Scenario: nmcli - device - attempt to delete hw interface
+    * "eth9\s+ethernet" is visible with command "nmcli device"
+    Then "Error" is visible with command "nmcli device delete eth9"
+    Then "eth9\s+ethernet" is visible with command "nmcli device"
+
+
+    #bz1067712
+    @general
+    @ethernet
+    @nmcli_general_correct_profile_activated_after_restart
+    Scenario: nmcli - general - correct profile activated after restart
+    * Bring down connection "eth9" ignoring error
+    * Add a new connection of type "ethernet" and options "ifname eth9 con-name aaa"
+    * Add a new connection of type "ethernet" and options "ifname eth9 con-name bbb"
+    * Bring up connection "aaa"
+    * Restart NM
+    Then "bbb" is not visible with command "nmcli device"
+    Then "aaa" is visible with command "nmcli device"
+
+
+    #bz1007365
+    @general
+    @bridge
+    @nmcli_novice_mode_readline
+    Scenario: nmcli - general - using readline library in novice mode
+    * Open wizard for adding new connection
+    * Expect "Connection type"
+    * Send "bond" in editor
+    * Clear the text typed in editor
+    * Submit "bridge" in editor
+    Then Expect "arguments for 'bridge' connection"
+
 
     @general
     @dns_none
@@ -193,3 +245,4 @@ Feature: nmcli - general
     * Bring "up" connection "eth0"
     Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver 10" is visible with command "cat /etc/resolv.conf"
+

@@ -113,6 +113,9 @@ def can_see_welcome_screen(context):
 def press_key(context, key):
     context.tui.send(keys[key])
 
+@step(u'Come back to the top of editor')
+def come_back_to_top(context):
+    context.tui.send(keys['UPARROW']*64)
 
 @step(u'Screen is empty')
 def screen_is_empty(context):
@@ -232,6 +235,12 @@ def set_specific_field_to(context, field, value):
     context.tui.send(value)
 
 
+@step(u'Empty the field "{field}"')
+def empty_specific_field(context, field):
+    assert go_until_pattern_matches_line(context,keys['DOWNARROW'],u'^[\u2500-\u2599\s]+%s.*' % field) is not None, "Could not go to option '%s' on screen!" % field
+    context.tui.send(keys['BACKSPACE']*100)
+
+
 @step(u'In "{prop}" property add "{value}"')
 def add_in_property(context, prop, value):
     assert go_until_pattern_matches_line(context,keys['DOWNARROW'],u'^.*[\u2502\s]+%s <Add.*' % prop) is not None, "Could not find '%s' property!" % prop
@@ -310,7 +319,7 @@ def set_category(context, category, setting):
 
 @step(u'Set "{dropdown}" dropdown to "{setting}"')
 def set_dropdown(context, dropdown, setting):
-    assert go_until_pattern_matches_line(context,keys['DOWNARROW'],u'^.*\s+%s.*' % dropdown) is not None, "Could not go to dropdown '%s' on screen!" % dropdown
+    assert go_until_pattern_matches_line(context,keys['TAB'],u'^.*\s+%s.*' % dropdown) is not None, "Could not go to dropdown '%s' on screen!" % dropdown
     context.tui.send(' ')
     context.tui.send(keys['UPARROW']*16)
     match = go_until_pattern_matches_aftercursor_text(context,keys['DOWNARROW'],u'^.*\u2502%s\s*\u2502.*' % setting)

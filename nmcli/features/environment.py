@@ -333,6 +333,11 @@ def after_tag(context, tag):
         os.system('beah-beaker-backend &')
         sleep(20)
 
+    if tag == 'nmcli_general_correct_profile_activated_after_restart':
+        print "---------------------------"
+        print "beah-beaker-backend sanitization"
+        call('sudo nmcli connection delete aaa bbb', shell=True)
+
 def after_all(context):
     pass
     #call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)

@@ -284,6 +284,7 @@ Feature: Bond TUI tests
     Then Check slave "eth2" in bond "bond0" in proc
 
 
+    #bz1142864
     @bond
     @nmtui_bond_add_mode_active_backup
     Scenario: nmtui - bond - mode - active backup
@@ -301,10 +302,57 @@ Feature: Bond TUI tests
     * Ensure "Automatically connect" is checked
     * Confirm the slave settings
     * Set "Mode" dropdown to "Active Backup"
+    * Set "Primary" field to "eth2"
     * Confirm the connection settings
     Then "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/bond0" in "10" seconds
+    Then "Primary Slave: eth2" is visible with command "cat /proc/net/bonding/bond0"
     Then "192.168" is visible with command "ip a s bond0" in "10" seconds
     Then Check bond "bond0" state is "up"
+
+
+    #bz1142864
+    @bond
+    @nmtui_bond_add_mode_active_backup_no_primary
+    Scenario: nmtui - bond - mode - active backup without primary
+    * Prepare new connection of type "Bond" named "bond0"
+    * Set "Device" field to "bond0"
+    * Set "Mode" dropdown to "Active Backup"
+    Then Cannot confirm the connection settings
+
+
+    #bz1142864
+    @bond
+    @nmtui_bond_change_mode_ac_to_rr
+    Scenario: nmtui - bond - mode - change from active backup to round robin
+    * Prepare new connection of type "Bond" named "bond0"
+    * Set "Device" field to "bond0"
+    * Choose to "<Add>" a slave
+    * Choose the connection type "Ethernet"
+    * Set "Profile name" field to "bond-slave-eth1"
+    * Set "Device" field to "eth1"
+    * Ensure "Automatically connect" is not checked
+    * Confirm the slave settings
+    * Choose to "<Add>" a slave
+    * Set "Profile name" field to "bond-slave-eth2"
+    * Set "Device" field to "eth2"
+    * Ensure "Automatically connect" is checked
+    * Confirm the slave settings
+    * Set "Mode" dropdown to "Active Backup"
+    * Set "Primary" field to "eth2"
+    * Confirm the connection settings
+    * "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/bond0" in "10" seconds
+    * "Primary Slave: eth2" is visible with command "cat /proc/net/bonding/bond0"
+    * "192.168" is visible with command "ip a s bond0" in "10" seconds
+    * Check bond "bond0" state is "up"
+    * Select connection "bond0" in the list
+    * Choose to "<Edit...>" a connection
+    * Set "Mode" dropdown to "Round-robin"
+    * Confirm the connection settings
+    * Execute "nmcli connection up bond0"
+    Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/bond0"
+    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then Check bond "bond0" state is "up"
+
 
 
     @bond

@@ -503,6 +503,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
+    * Finish "sleep 2"
     * Open editor for connection "ethie"
     * Save in editor
     * Quit editor

@@ -135,6 +135,9 @@ def after_tag(context, tag):
             os.system("sudo nmcli connection delete id team0 team-slave-eth1 team-slave-eth2")
         if tag == 'inf':
             os.system("sudo nmcli connection delete id infiniband0 infiniband0-port")
+        if tag == 'wifi':
+            os.system("sudo nmcli connection delete id wifi wifi1 qe-open qe-wpa1-psk qe-wpa2-psk qe-wep")
+            os.system("sudo service NetworkManager restart") # debug restart to overcome the nmcli d w l flickering
         if tag == 'ethernet' or tag == 'ipv4' or tag == 'ipv6':
             os.system("sudo nmcli connection delete id ethernet ethernet1 ethernet2")
         if tag == "nmtui_general_display_proper_hostname" or tag == "nmtui_general_set_new_hostname":

@@ -103,7 +103,7 @@ Feature: Bridge TUI tests
 
     @bridge
     @nmtui_bridge_delete_connection_up
-    Scenario: nmtui - bridge - deactivate connection while up
+    Scenario: nmtui - bridge - delete connection while up
     * Prepare new connection of type "Bridge" named "bridge0"
     * Set "Device" field to "bridge0"
     * Confirm the connection settings
@@ -121,7 +121,7 @@ Feature: Bridge TUI tests
 
     @bridge
     @nmtui_bridge_delete_connection_down
-    Scenario: nmtui - bridge - deactivate connection while down
+    Scenario: nmtui - bridge - delete connection while down
     * Prepare new connection of type "Bridge" named "bridge0"
     * Set "Device" field to "bridge0"
     * Confirm the connection settings

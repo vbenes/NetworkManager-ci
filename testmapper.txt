@@ -23,7 +23,10 @@ dns_none, ., nmcli/./runtest.sh dns_none, NetworkManager
 remove_dns_none, ., nmcli/./runtest.sh remove_dns_none, NetworkManager
 #### ^^^
 device_connect, ., nmcli/./runtest.sh device_connect, NetworkManager
-
+nmcli_device_delete, ., nmcli/./runtest.sh nmcli_device_delete, NetworkManager
+nmcli_device_attempt_hw_delete, ., nmcli/./runtest.sh nmcli_device_attempt_hw_delete, NetworkManager
+nmcli_general_correct_profile_activated_after_restart, ., nmcli/./runtest.sh nmcli_general_correct_profile_activated_after_restart, NetworkManager
+nmcli_novice_mode_readline, ., nmcli/./runtest.sh nmcli_novice_mode_readline, NetworkManager
 #general_end
 
 #connection_start
@@ -535,3 +538,37 @@ nmtui_inf_set_mtu, ., nmtui/./runtest.sh nmtui_inf_set_mtu, NetworkManager-tui
 nmtui_inf_datagram_mode, ., nmtui/./runtest.sh nmtui_inf_datagram_mode, NetworkManager-tui
 nmtui_inf_connected_mode, ., nmtui/./runtest.sh nmtui_inf_connected_mode, NetworkManager-tui
 
+#### TUI WIFI  #####
+
+nmtui_wifi_see_all_networks, ., nmtui/./runtest.sh nmtui_wifi_see_all_networks, NetworkManager-tui
+nmtui_wifi_connect_to_open_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_open_network, NetworkManager-tui
+nmtui_wifi_connect_to_wpa1psk_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_wpa1psk_network, NetworkManager-tui
+nmtui_wifi_connect_to_wpa2psk_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_wpa2psk_network, NetworkManager-tui
+nmtui_wifi_connect_to_wep_hexkey_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_wep_hexkey_network, NetworkManager-tui
+nmtui_wifi_connect_to_wep_asciikey_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_wep_asciikey_network, NetworkManager-tui
+nmtui_wifi_connect_to_wep_phrase_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_wep_phrase_network, NetworkManager-tui
+nmtui_wifi_add_default_connection_open_network, ., nmtui/./runtest.sh nmtui_wifi_add_default_connection_open_network, NetworkManager-tui
+nmtui_wifi_fixed_device_present, ., nmtui/./runtest.sh nmtui_wifi_fixed_device_present, NetworkManager-tui
+nmtui_wifi_fixed_device_invalid, ., nmtui/./runtest.sh nmtui_wifi_fixed_device_invalid, NetworkManager-tui
+nmtui_wifi_autoconnect_off, ., nmtui/./runtest.sh nmtui_wifi_autoconnect_off, NetworkManager-tui
+nmtui_wifi_activate_wo_autoconnect, ., nmtui/./runtest.sh nmtui_wifi_activate_wo_autoconnect, NetworkManager-tui
+nmtui_wifi_activate_with_autoconnect, ., nmtui/./runtest.sh nmtui_wifi_activate_with_autoconnect, NetworkManager-tui
+nmtui_wifi_delete_connection_up, ., nmtui/./runtest.sh nmtui_wifi_delete_connection_up, NetworkManager-tui
+nmtui_wifi_delete_connection_down, ., nmtui/./runtest.sh nmtui_wifi_delete_connection_down, NetworkManager-tui
+nmtui_wifi_adhoc_network, ., nmtui/./runtest.sh nmtui_wifi_adhoc_network, NetworkManager-tui
+nmtui_wifi_ap, ., nmtui/./runtest.sh nmtui_wifi_ap, NetworkManager-tui
+nmtui_wifi_wrong_ssid, ., nmtui/./runtest.sh nmtui_wifi_wrong_ssid, NetworkManager-tui
+nmtui_wifi_no_ssid, ., nmtui/./runtest.sh nmtui_wifi_no_ssid, NetworkManager-tui
+nmtui_wifi_set_existing_bssid, ., nmtui/./runtest.sh nmtui_wifi_set_existing_bssid, NetworkManager-tui
+nmtui_wifi_set_nonexisting_bssid, ., nmtui/./runtest.sh nmtui_wifi_set_nonexisting_bssid, NetworkManager-tui
+nmtui_wifi_bogus_bssid, ., nmtui/./runtest.sh nmtui_wifi_bogus_bssid, NetworkManager-tui
+nmtui_wifi_mac_spoofing, ., nmtui/./runtest.sh nmtui_wifi_mac_spoofing, NetworkManager-tui
+nmtui_wifi_bogus_spoofing_address, ., nmtui/./runtest.sh nmtui_wifi_bogus_spoofing_address, NetworkManager-tui
+nmtui_wifi_mtu, ., nmtui/./runtest.sh nmtui_wifi_mtu, NetworkManager-tui
+nmtui_wifi_wpa1_connection, ., nmtui/./runtest.sh nmtui_wifi_wpa1_connection, NetworkManager-tui
+nmtui_wifi_wpa2_connection, ., nmtui/./runtest.sh nmtui_wifi_wpa2_connection, NetworkManager-tui
+nmtui_wifi_wep_hexkey_connection, ., nmtui/./runtest.sh nmtui_wifi_wep_hexkey_connection, NetworkManager-tui
+nmtui_wifi_wep_ascii_connection, ., nmtui/./runtest.sh nmtui_wifi_wep_ascii_connection, NetworkManager-tui
+nmtui_wifi_wep_passphrase_connection, ., nmtui/./runtest.sh nmtui_wifi_wep_passphrase_connection, NetworkManager-tui
+nmtui_wifi_leap_connection, ., nmtui/./runtest.sh nmtui_wifi_leap_connection, NetworkManager-tui
+nmtui_wifi_show_password, ., nmtui/./runtest.sh nmtui_wifi_show_password, NetworkManager-tui

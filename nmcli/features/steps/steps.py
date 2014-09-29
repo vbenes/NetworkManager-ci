@@ -87,8 +87,18 @@ def autoconnect_warning(context):
 
 
 @step(u'Backspace in editor')
-def enter_in_editor(context):
+def backspace_in_editor(context):
     context.prompt.send('\b')
+
+
+@step(u'Send "{what}" in editor')
+def send_sth_in_editor(context, what):
+    context.prompt.send(what)
+
+
+@step(u'Clear the text typed in editor')
+def clear_text_typed(context):
+    context.prompt.send("\b"*128)
 
 
 @step(u'Bring "{action}" connection "{name}"')
@@ -148,6 +158,14 @@ def bring_down_connection(context, connection):
     if r == 0:
         raise Exception('Got an Error while downing a connection %s' % connection)
     elif r == 1:
+        raise Exception('nmcli connection down %s timed out (180s)' % connection)
+
+
+@step(u'Bring down connection "{connection}" ignoring error')
+def bring_down_connection_ignoring(context, connection):
+    cli = pexpect.spawn('nmcli connection down %s' % connection, timeout = 180, logfile=context.log)
+    r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
+    if r == 1:
         raise Exception('nmcli connection down %s timed out (180s)' % connection)
 
 
