@@ -123,6 +123,7 @@ def after_tag(context, tag):
         call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:1", shell=True)
         call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:2", shell=True)
         call("sudo nmcli connection reload", shell=True)
+        call('sudo nmcli con add type ethernet ifname eth7 con-name eth7 autoconnect no', shell=True)
         #sleep(TIMER)
 
     if tag == "slaves":
