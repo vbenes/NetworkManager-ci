@@ -59,9 +59,8 @@ Feature: nmcli - general
     @testcase_290428
     Scenario: nmcli - general - not running
     * Execute "sudo service NetworkManager stop"
-    * Note the output of "nmcli -t -f RUNNING general" as value "1"
-    * Note the output of "echo not running" as value "2"
-    Then Check noted values "1" and "2" are the same
+    * Wait for at least "2" seconds
+    Then "NetworkManager is not running" is visible with command "nmcli general"
 
 
     @general
