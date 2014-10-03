@@ -10,7 +10,7 @@ Feature: IPv4 TUI tests
     * Set "Device" field to "eth1"
     * Set "IPv4 CONFIGURATION" category to "Manual"
     * Confirm the connection settings
-    Then ".*Error saving connection: ipv4.addresses.*this property cannot be empty for.*method=manual.*" is visible on screen
+    Then ".*Unable to add new connection.*ipv4.addresses: this property cannot.*be empty for 'method=manual'.*" is visible on screen
 
 
     @ipv4

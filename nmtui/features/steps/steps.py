@@ -195,6 +195,7 @@ def select_con_in_list(context, con_name):
 def choose_connection_action(context, action):
     assert go_until_pattern_matches_aftercursor_text(context,keys['TAB'],r'%s.*' % action) is not None, "Could not go to action '%s' on screen!" % action
     context.tui.send(keys['ENTER'])
+    sleep(0.5)
 
 
 @step(u'Confirm the slave settings')

@@ -40,7 +40,7 @@ Feature: VLAN TUI tests
     * Set "Device" field to "vlan_device"
     * Set "VLAN id" field to "99"
     * Confirm the connection settings
-    Then ".*Error saving connection: vlan.parent:.*property is not specified.*" is visible on screen
+    Then ".*vlan.parent: property is not.*specified and neither is '802-3-ethernet:mac-address'.*" is visible on screen
 
 
     #common mistake misplacing device with parent

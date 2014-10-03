@@ -11,7 +11,7 @@ Feature: IPv6 TUI tests
     * Set "Device" field to "eth1"
     * Set "IPv6 CONFIGURATION" category to "Manual"
     * Confirm the connection settings
-    Then ".*Error saving connection: ipv6.addresses.*this property cannot be empty for.*method=manual.*" is visible on screen
+    Then ".*Unable to add new connection.*ipv6.addresses: this property cannot.*be empty for 'method=manual'.*" is visible on screen
 
 
     @ipv6
