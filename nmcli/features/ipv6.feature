@@ -66,7 +66,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
      Then "inet6 dead:beaf" is visible with command "ip a s eth10"
-     Then "inet6 2001" is not visible with command "ip a s eth10"
+     Then "inet6 2620" is not visible with command "ip a s eth10"
 
 
     @ipv6_addresses_no_when_static_switch_asked
@@ -80,7 +80,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
      Then "inet6 dead:beaf" is visible with command "ip a s eth10"
-     Then "inet6 2001" is visible with command "ip a s eth10"
+     Then "inet6 2620" is visible with command "ip a s eth10"
 
 
     @ipv6_addresses_invalid_netmask
@@ -151,7 +151,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then "fc01::1:5/68" is not visible with command "ip a s eth10"
     Then "default via fc01::1:1 dev eth1" is not visible with command "ip -6 route"
-    Then "2001:db8:1:0:5054" is visible with command "ip a s eth10"
+    Then "2620:52:0:1086:5054" is visible with command "ip a s eth10"
 
 
     @ipv6_routes_set_basic_route
@@ -492,7 +492,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
     Then Bring "up" connection "ethie"
-    Then "scope link" is visible with command "ip -6 a s eth10"
+    Then "scope link" is not visible with command "ip -6 a s eth10"
     Then "scope global" is not visible with command "ip a -6 s eth10"
     # reproducer for 1004255
     Then Bring "down" connection "ethie"

@@ -96,14 +96,6 @@ if [[ $1 == *inf_* ]]; then
     fi
 fi
 
-if [[ $1 == *alias_* ]]; then
-    if [ ! -e /tmp/alias_configured ]; then
-        nmcli connection delete eth7
-
-        touch /tmp/alias_configured
-    fi
-fi
-
 behave nmcli/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
 
 RESULT=FAIL

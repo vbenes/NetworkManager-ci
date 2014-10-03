@@ -32,6 +32,11 @@ def before_tag(context, tag):
             Popen("nmcli device disconnect eth0", shell=True).wait()
             #sleep(TIMER)
 
+    if tag == 'alias':
+        print "---------------------------"
+        print "deleting eth7 connections"
+        call("nmcli connection delete eth7", shell=True)
+
     if tag == "firewall":
         print "---------------------------"
         print "starting firewall"

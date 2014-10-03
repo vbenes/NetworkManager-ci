@@ -421,12 +421,10 @@
     @team
     Scenario: nmcli - team - describe team
      * Open editor for a type "team"
-     Then Check "=== \[interface-name\]|\[NM property description\]|=== \[config\] ===|\[NM property description\]" are present in describe output for object "team"
+     Then Check "<<<bond>>>|=== \[config\] ===|\[NM property description\]" are present in describe output for object "team"
      Then Check "The JSON configuration for the team network interface.  The property should contain raw JSON configuration data suitable for teamd, because the value is passed directly to teamd. If not specified, the default configuration is used.  See man teamd.conf for the format details." are present in describe output for object "team.config"
-     Then Check "=== \[interface-name\] ===|\[NM property description\]|The name of the virtual in-kernel team network interface" are present in describe output for object "team.interface-name"
       * Submit "g t" in editor
      Then Check "NM property description|The JSON configuration for the team network interface.  The property should contain raw JSON configuration data suitable for teamd, because the value is passed directly to teamd. If not specified, the default configuration is used.  See man teamd.conf for the format details." are present in describe output for object "config"
-     Then Check "\[interface-name\]|\[NM property description\]|The name of the virtual in-kernel team network interface" are present in describe output for object "interface-name"
       * Submit "g c" in editor
      Then Check "The JSON configuration for the team network interface.  The property should contain raw JSON configuration data suitable for teamd, because the value is passed directly to teamd. If not specified, the default configuration is used.  See man teamd.conf for the format details." are present in describe output for object " "
 
