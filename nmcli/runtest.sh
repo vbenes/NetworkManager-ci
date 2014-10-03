@@ -58,11 +58,11 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     nmcli connection modify eth10 ipv6.method auto
     service NetworkManager restart
 
-    print "beah-beaker-backend sanitization"
-    call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)
-    sleep(1)
-    os.system('beah-beaker-backend &')
-    sleep(5)
+    # beah-beaker-backend sanitization
+    kill -9 $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk '{print $2}')
+    sleep 1
+    beah-beaker-backend &
+    sleep 5
 
     touch /tmp/nm_eth_configured
 fi
