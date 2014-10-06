@@ -185,7 +185,10 @@ def press_dialog_button(context, button):
 
 @step(u'Select connection "{con_name}" in the list')
 def select_con_in_list(context, con_name):
-    context.tui.send(keys['LEFTARROW']*8)
+    match = re.match('.*Delete.*', get_screen_string(context.screen), re.UNICODE | re.DOTALL)
+    if match is not None:
+        context.tui.send(keys['LEFTARROW']*8)
+        context.tui.send(keys['UPARROW']*16)
     assert go_until_pattern_matches_line(context,keys['DOWNARROW'],r'.*%s.*' % con_name) is not None, "Could not go to connection '%s' on screen!" % con_name
 
 
