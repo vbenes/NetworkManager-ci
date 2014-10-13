@@ -47,6 +47,18 @@ Feature: nmcli: connection
     Then Fail up connection "connie" for "eth2"
 
 
+    @connection_secondaries_restricted_to_vpn
+    @con
+    @time
+    # verification for https://bugzilla.redhat.com/show_bug.cgi?id=1094296
+    Scenario: nmcli - connection - restriction to single device
+     * Add connection type "ethernet" named "connie" for device "*"
+     * Add connection type "ethernet" named "time" for device "time"
+     * Open editor for connection "connie"
+     * Submit "set connection.secondaries time" in editor
+    Then Error type "is not a VPN connection profile" shown in editor
+
+
     @connection_removal_of_disapperared_device
     @BBB
     # verification for https://bugzilla.redhat.com/show_bug.cgi?id=1108167

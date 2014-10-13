@@ -34,6 +34,7 @@ connection_restricted_to_single_device, ., nmcli/./runtest.sh connection_restric
 connection_help, ., nmcli/./runtest.sh connection_help, NetworkManager
 connection_names_autocompletion, ., nmcli/./runtest.sh connection_names_autocompletion, NetworkManager
 connection_no_error, ., nmcli/./runtest.sh connection_no_error, NetworkManager
+connection_secondaries_restricted_to_vpn, ., nmcli/./runtest.sh connection_secondaries_restricted_to_vpn, NetworkManager
 connection_delete_while_editing, ., nmcli/./runtest.sh connection_delete_while_editing, NetworkManager
 connection_removal_of_disapperared_device, ., nmcli/./runtest.sh connection_removal_of_disapperared_device, NetworkManager
 connection_down, ., nmcli/./runtest.sh connection_down, NetworkManager
