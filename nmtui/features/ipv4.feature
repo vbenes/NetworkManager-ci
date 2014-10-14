@@ -582,3 +582,19 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * In "DNS servers" property add "123456789"
     Then Cannot confirm the connection settings
+
+
+    @bz1105770
+    @ipv4
+    @nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form
+    Scenario: nmtui - ipv4 - addresses - gateway, address and prefix stored in nonzero notation
+    * Prepare new connection of type "Ethernet" named "ethernet"
+    * Set "Device" field to "eth1"
+    * Set "IPv4 CONFIGURATION" category to "Manual"
+    * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.125.253/24"
+    * Set "Gateway" field to "192.168.125.96"
+    * Confirm the connection settings
+    Then "GATEWAY=192.168.125.96" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
+    Then "IPADDR=192.168.125.253" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
+    Then "PREFIX=24" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"

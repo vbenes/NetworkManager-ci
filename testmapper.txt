@@ -431,6 +431,7 @@ nmtui_ipv4_never_default_set, ., nmtui/./runtest.sh nmtui_ipv4_never_default_set
 nmtui_ipv4_invalid_address, ., nmtui/./runtest.sh nmtui_ipv4_invalid_address, NetworkManager-tui
 nmtui_ipv4_invalid_gateway, ., nmtui/./runtest.sh nmtui_ipv4_invalid_gateway, NetworkManager-tui
 nmtui_ipv4_invalid_dns, ., nmtui/./runtest.sh nmtui_ipv4_invalid_dns, NetworkManager-tui
+nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, ., nmtui/./runtest.sh nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, NetworkManager-tui
 
 nmtui_ipv6_addresses_static_no_address, ., nmtui/./runtest.sh nmtui_ipv6_addresses_static_no_address, NetworkManager-tui
 nmtui_ipv6_addresses_static_no_mask, ., nmtui/./runtest.sh nmtui_ipv6_addresses_static_no_mask, NetworkManager-tui
