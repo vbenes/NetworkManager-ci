@@ -121,3 +121,22 @@ Feature: General TUI tests
     * Choose to "Activate a connection" from main screen
     * Execute "nmcli con add type ethernet con-name ethernet ifname eth1"
     Then ".* \* ethernet.*" is visible on screen
+
+
+    @dsl
+    @nmtui_dsl_create_default_connection
+    Scenario: nmtui - dsl - create default connection
+    * Prepare new connection of type "DSL" named "dsl0"
+    * Set "Device" field to "eth5"
+    * Set "Username" field to "JohnSmith"
+    * Set "Password" field to "testingpassword"
+    * Set "Service" field to "NINJA"
+    * Ensure "Automatically connect" is not checked
+    * Confirm the connection settings
+    Then "id=dsl0" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
+    Then "interface-name=eth5" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
+    Then "type=pppoe" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
+    Then "service=NINJA" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
+    Then "username=JohnSmith" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
+    Then "password=testingpassword" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
+    Then "dsl0\s+.*pppoe" is visible with command "nmcli connection"

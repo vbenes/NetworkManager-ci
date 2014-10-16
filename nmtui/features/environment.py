@@ -135,6 +135,8 @@ def after_tag(context, tag):
             os.system("sudo nmcli connection delete id team0 team-slave-eth1 team-slave-eth2")
         if tag == 'inf':
             os.system("sudo nmcli connection delete id infiniband0 infiniband0-port")
+        if tag == 'dsl':
+            os.system("sudo nmcli connection delete id dsl0")
         if tag == 'wifi':
             os.system("sudo nmcli connection delete id wifi wifi1 qe-open qe-wpa1-psk qe-wpa2-psk qe-wep")
             os.system("sudo service NetworkManager restart") # debug restart to overcome the nmcli d w l flickering
