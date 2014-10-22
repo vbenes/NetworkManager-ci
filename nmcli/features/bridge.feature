@@ -127,6 +127,20 @@ Feature: nmcli - bridge
     Then ifcfg-"br12" file does not exist
 
 
+    @bridge
+    @bridge_set_mac
+    Scenario: nmcli - bridge - set mac address
+    * Add a new connection of type "bridge" and options "con-name br12 ifname br12 autoconnect no"
+    * Check ifcfg-name file created for connection "br12"
+    * Open editor for connection "br12"
+    * Set a property named "bridge.mac-address" to "f0:de:aa:fb:bb:cc" in editor
+    * Save in editor
+    * Check value saved message showed in editor
+    * Quit editor
+    * Bring up connection "br12" ignoring error
+    Then "ether f0:de:aa:fb:bb:cc" is visible with command "ip a s br12"
+
+
 	@bridge
     @testcase_285537
     Scenario: nmcli - bridge - add slave
