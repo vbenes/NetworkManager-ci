@@ -153,14 +153,13 @@ Feature: nmcli - vlan
     @testcase_284357
     Scenario: nmcli - vlan - describe all
     * Open editor for a type "vlan"
-    Then Check "interface-name|parent|id|flags|ingress-priority-map|egress-priority-map" are present in describe output for object "vlan"
+    Then Check "parent|id|flags|ingress-priority-map|egress-priority-map" are present in describe output for object "vlan"
 
 
     @vlan
     @testcase_281282
     Scenario: nmcli - vlan - describe separately
     * Open editor for a type "vlan"
-    Then Check "\[interface-name\]" are present in describe output for object "vlan.interface-name"
     Then Check "\[parent\]" are present in describe output for object "vlan.parent"
     Then Check "\[id\]" are present in describe output for object "vlan.id"
     Then Check "\[flags\]" are present in describe output for object "vlan.flags"

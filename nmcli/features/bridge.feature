@@ -82,14 +82,14 @@ Feature: nmcli - bridge
     @testcase_285533
     Scenario: nmcli - bridge - describe all
     * Open editor for a type "bridge"
-    Then Check "interface-name|stp|priority|forward-delay|hello-time|max-age|ageing-time" are present in describe output for object "bridge"
+    Then Check "mac-address|stp|priority|forward-delay|hello-time|max-age|ageing-time" are present in describe output for object "bridge"
 
 
     @bridge
     @testcase_285534
     Scenario: nmcli - bridge - describe separately
     * Open editor for a type "bridge"
-    Then Check "\[interface-name\]" are present in describe output for object "bridge.interface-name"
+    Then Check "\[mac-address\]" are present in describe output for object "bridge.mac-address"
     Then Check "\[stp\]" are present in describe output for object "bridge.stp"
     Then Check "\[priority\]" are present in describe output for object "bridge.priority"
     Then Check "\[forward-delay\]" are present in describe output for object "bridge.forward-delay"
