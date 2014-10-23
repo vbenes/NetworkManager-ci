@@ -178,7 +178,7 @@ def change_to_keyfile(context):
 def check_slaac_setup(context, dev):
     cmd = "sudo radvdump > /tmp/radvdump.txt"
     proc = Popen(cmd, shell=True)
-    sleep(104)
+    sleep(164)
     cmd = "sudo pkill radvdump"
     Popen(cmd, shell=True).wait()
     dump = open("/tmp/radvdump.txt", "r")
