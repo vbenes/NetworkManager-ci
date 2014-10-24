@@ -151,7 +151,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then "fc01::1:5/68" is not visible with command "ip a s eth10"
     Then "default via fc01::1:1 dev eth1" is not visible with command "ip -6 route"
-    Then "2620:52:0:1086:5054" is visible with command "ip a s eth10"
+    Then "2620:52:0:1086:" is visible with command "ip a s eth10"
 
 
     @ipv6_routes_set_basic_route

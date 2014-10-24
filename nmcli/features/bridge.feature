@@ -144,7 +144,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285537
     Scenario: nmcli - bridge - add slave
-    * Execute "nmcli dev con eth1"
+    #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15 autoconnect no"
     * Check ifcfg-name file created for connection "br15"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"
@@ -155,7 +155,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285538
     Scenario: nmcli - bridge - remove slave
-    * Execute "nmcli dev con eth1"
+    #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15 autoconnect no"
     * Check ifcfg-name file created for connection "br15"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"
@@ -169,7 +169,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285539
     Scenario: nmcli - bridge - up with slaves
-    * Execute "nmcli dev con eth1"
+    #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15"
     * Check ifcfg-name file created for connection "br15"
     * Open editor for connection "br15"
@@ -194,7 +194,7 @@ Feature: nmcli - bridge
 	@bridge
     @testcase_285540
     Scenario: nmcli - bridge - up slave
-    * Execute "nmcli dev con eth1"
+    #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br10 ifname br10"
     * Check ifcfg-name file created for connection "br10"
     * Open editor for connection "br10"
