@@ -257,6 +257,7 @@ Feature: Bond TUI tests
     Then "TYPE=InfiniBand" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond-slave-eth2"
 
 
+    @veth
     @bond
     @nmtui_bond_start_on_boot_with_one_slave_auto
     Scenario: nmtui - bond - start on boot with only one slave auto

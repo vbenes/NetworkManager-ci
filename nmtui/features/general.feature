@@ -76,17 +76,19 @@ Feature: General TUI tests
     Then "testsethostname" is visible with command "hostname"
 
 
+    @veth
     @general
     @bridge
     @ethernet
     @nmtui_general_active_connections_display
     Scenario: nmtui - general - active connections display
-    * Execute "nmcli con add type ethernet con-name ethernet1 ifname eth1"
+    * Execute "nmcli con add type ethernet con-name ethernet1 ifname eth1 autoconnect no"
+    * Bring up connection "ethernet1"
     * Execute "nmcli con add type ethernet con-name ethernet2 ifname eth2 autoconnect no"
     * Execute "nmcli c a type bridge con-name bridge0 ifname bridge0"
     * Start nmtui
     * Choose to "Activate a connection" from main screen
-    Then ".* \* eth0.*" is visible on screen
+    Then ".* \* testeth0.*" is visible on screen
     Then ".* \* ethernet1.*" is visible on screen
     Then ".*   ethernet2.*" is visible on screen
     Then Select connection "bridge" in the list
@@ -99,8 +101,8 @@ Feature: General TUI tests
     Scenario: nmtui - general - realtime connection refresh edit screen
     * Start nmtui
     * Choose to "Edit a connection" from main screen
-    * Execute "nmcli con add type ethernet con-name ethernet ifname eth1 autoconnect no"
-    Then ".*ethernet.*" is visible on screen
+    * Execute "nmcli con add type ethernet con-name ethernet1 ifname eth1 autoconnect no"
+    Then Select connection "ethernet1" in the list
 
 
     @general
@@ -109,8 +111,8 @@ Feature: General TUI tests
     Scenario: nmtui - general - realtime connection refresh activation screen without autoconnect
     * Start nmtui
     * Choose to "Activate a connection" from main screen
-    * Execute "nmcli con add type ethernet con-name ethernet ifname eth1 autoconnect no"
-    Then ".*   ethernet.*" is visible on screen
+    * Execute "nmcli con add type ethernet con-name ethernet1 ifname eth1 autoconnect no"
+    Then ".*   ethernet1.*" is visible on screen
 
 
     @general
@@ -119,15 +121,16 @@ Feature: General TUI tests
     Scenario: nmtui - general - realtime connection refresh activation screen
     * Start nmtui
     * Choose to "Activate a connection" from main screen
-    * Execute "nmcli con add type ethernet con-name ethernet ifname eth1"
-    Then ".* \* ethernet.*" is visible on screen
+    * Execute "nmcli con add type ethernet con-name ethernet1 ifname eth1 autoconnect no"
+    * Bring up connection "ethernet1"
+    Then ".* \* ethernet1.*" is visible on screen
 
 
     @dsl
     @nmtui_dsl_create_default_connection
     Scenario: nmtui - dsl - create default connection
     * Prepare new connection of type "DSL" named "dsl0"
-    * Set "Device" field to "eth5"
+    * Set "Ethernet device" field to "eth5"
     * Set "Username" field to "JohnSmith"
     * Set "Password" field to "testingpassword"
     * Set "Service" field to "NINJA"

@@ -139,6 +139,7 @@ Feature: Bridge TUI tests
     Then "bridge0" is not visible with command "brctl show"
 
 
+    @veth
     @bridge
     @nmtui_bridge_add_many_slaves
     Scenario: nmtui - bridge - add many slaves

@@ -185,6 +185,8 @@ def press_dialog_button(context, button):
 
 @step(u'Select connection "{con_name}" in the list')
 def select_con_in_list(context, con_name):
+    if os.path.isfile('/tmp/nm_veth_configured'):
+        context.last_con_name = con_name
     match = re.match('.*Delete.*', get_screen_string(context.screen), re.UNICODE | re.DOTALL)
     if match is not None:
         context.tui.send(keys['LEFTARROW']*8)
@@ -196,12 +198,69 @@ def select_con_in_list(context, con_name):
 @step(u'Choose to "{action}" a slave')
 @step(u'Choose to "{action}" a connection')
 def choose_connection_action(context, action):
+    if os.path.isfile('/tmp/nm_veth_configured') and action == '<Activate>':
+        if not hasattr(context, 'last_con_name'):
+            assert False, 'veth mod: Did not have the name of conection to ip link up its device'
+        else:
+            if hasattr(context, 'is_virtual') and context.is_virtual is True:
+                print("veth mod: activating virtal device, upping eth1 and eth2 devices (ip link...)")
+                subprocess.call("ip link set dev eth1 up", shell=True)
+                subprocess.call("ip link set dev eth2 up", shell=True)
+            else:
+                device = subprocess.check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % context.last_con_name, shell=True).strip()
+                subprocess.call('ip link set dev %s up' % device, shell=True)
+            sleep(0.2)
     assert go_until_pattern_matches_aftercursor_text(context,keys['TAB'],r'%s.*' % action) is not None, "Could not go to action '%s' on screen!" % action
     context.tui.send(keys['ENTER'])
     sleep(0.5)
 
 
+@step(u'Bring up connection "{connection}"')
+def bring_up_connection(context, connection):
+    method = subprocess.check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
+    if method in ["auto","disabled","link-local"]:
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            device = subprocess.check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
+            subprocess.call('ip link set dev %s up' % device, shell=True)
+    cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while upping connection %s' % connection)
+    elif r == 1:
+        raise Exception('nmcli connection up %s timed out (180s)' % connection)
+
+
+@step(u'Bring up connection "{connection}" ignoring everything')
+def bring_up_connection_ignore_everything(context, connection):
+    method = subprocess.check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
+    if method in ["auto","disabled","link-local"]:
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            device = subprocess.check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
+            subprocess.call('ip link set dev %s up' % device, shell=True)
+    subprocess.Popen('nmcli connection up %s' % connection, shell=True)
+    sleep(1)
+
+
+@step(u'Confirm the route settings')
+def confirm_route_screen(context):
+    context.tui.send(keys['DOWNARROW']*64)
+    sleep(0.2)
+    context.stream.feed(open(OUTPUT, 'r').read())
+    match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
+    assert match is not None, "Could not get to the <OK> route dialog button!"
+    context.tui.send(keys['ENTER'])
+
+
 @step(u'Confirm the slave settings')
+def confirm_slave_screen(context):
+    context.tui.send(keys['DOWNARROW']*64)
+    sleep(0.2)
+    context.stream.feed(open(OUTPUT, 'r').read())
+    match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
+    assert match is not None, "Could not get to the <OK> button! (In form? Segfault?)"
+    context.tui.send(keys['ENTER'])
+
+
 @step(u'Confirm the connection settings')
 def confirm_connection_screen(context):
     context.tui.send(keys['DOWNARROW']*64)
@@ -210,7 +269,21 @@ def confirm_connection_screen(context):
     match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
     assert match is not None, "Could not get to the <OK> button! (In form? Segfault?)"
     context.tui.send(keys['ENTER'])
-
+    if hasattr(context, 'no_autoconnect'):
+        del context.no_autoconnect
+    elif not hasattr(context, 'no_autoconnect') and hasattr(context, 'last_profile_name') and os.path.isfile('/tmp/nm_veth_configured'):
+        sleep(0.5)
+        if hasattr(context, 'is_virtual') and context.is_virtual is True:
+            context.execute_steps('''* Bring up connection "%s" ignoring everything''' % context.last_profile_name)
+        else:
+            context.execute_steps('''* Bring up connection "%s"''' % context.last_profile_name)
+        print 'veth mod: brought profile online: %s' % context.last_profile_name
+        del context.last_profile_name
+        if hasattr(context, 'slave_profile_names'):
+            for name in context.slave_profile_names:
+                context.execute_steps('''* Bring up connection "%s" ignoring everything''' % name)
+                print 'veth mod: brought slave profile online: %s' % name
+            del context.slave_profile_names
 
 @step(u'Cannot confirm the connection settings')
 def cannot_confirm_connection_screen(context):
@@ -238,6 +311,13 @@ def set_specific_field_to(context, field, value):
     assert go_until_pattern_matches_line(context,keys['DOWNARROW'],u'^[\u2500-\u2599\s]+%s.*' % field) is not None, "Could not go to option '%s' on screen!" % field
     context.tui.send(keys['BACKSPACE']*100)
     context.tui.send(value)
+    if os.path.isfile('/tmp/nm_veth_configured') and field == 'Profile name':
+        if 'slave' in value:
+            if not hasattr(context, 'slave_profile_names'):
+                context.slave_profile_names = []
+            context.slave_profile_names.append(value)
+        else:
+            context.last_profile_name = value
 
 
 @step(u'Empty the field "{field}"')
@@ -270,7 +350,7 @@ def add_route(context, values):
         context.tui.send(keys['BACKSPACE']*32)
         context.tui.send(value)
         context.tui.send('\t')
-    context.execute_steps(u'* Confirm the connection settings')
+    context.execute_steps(u'* Confirm the route settings')
 
 
 @step(u'Cannot add ip route "{values}"')
@@ -341,6 +421,8 @@ def ensure_toggle_is_checked(context, toggle, n=None):
         context.tui.send(' ')
     elif match.group(1) == u'[X]' and n is not None:
         context.tui.send(' ')
+    if toggle == 'Automatically connect' and n is not None and os.path.isfile('/tmp/nm_veth_configured'):
+        context.no_autoconnect = True
 
 
 @step(u'Execute "{command}"')

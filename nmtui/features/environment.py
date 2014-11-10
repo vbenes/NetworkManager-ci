@@ -60,6 +60,24 @@ def before_scenario(context, scenario):
 
 def before_tag(context, tag):
     #try:
+    if tag == 'veth':
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            if os.path.isfile('/tmp/tui-screen.log'):
+                os.remove('/tmp/tui-screen.log')
+            f = open('/tmp/tui-screen.log', 'a+')
+            f.write('INFO: VETH mod: this test has been disabled in VETH setup')
+            f.flush()
+            f.close()
+            import sys
+            sys.exit(0)
+    if tag in ('vlan','bridge','bond','team', 'inf'):
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            context.is_virtual = True
+            call("ip link set dev eth1 up", shell=True)
+            call("ip link set dev eth1p up", shell=True)
+            call("ip link set dev eth2 up", shell=True)
+            call("ip link set dev eth2p up", shell=True)
+        sleep(1)
     if tag == 'eth0':
         print "---------------------------"
         print "eth0"# and eth10 disconnect"
@@ -124,9 +142,11 @@ def after_tag(context, tag):
             sleep(1)
             os.system('beah-beaker-backend &')
             sleep(20)
-
         if tag == 'bridge':
             os.system("sudo nmcli connection delete id bridge0 bridge-slave-eth1 bridge-slave-eth2")
+        if tag in ('vlan','bridge','bond','team', 'inf'):
+            if hasattr(context, 'is_virtual'):
+                context.is_virtual = False
         if tag == 'vlan':
             os.system("sudo nmcli connection delete id vlan eth1.99")
         if tag == 'bond':
@@ -142,6 +162,9 @@ def after_tag(context, tag):
             os.system("sudo service NetworkManager restart") # debug restart to overcome the nmcli d w l flickering
         if tag == 'ethernet' or tag == 'ipv4' or tag == 'ipv6':
             os.system("sudo nmcli connection delete id ethernet ethernet1 ethernet2")
+            #if os.path.isfile('/tmp/nm_veth_configured'):
+            #    os.system("sudo ip link set dev eth1p up")
+            #    os.system("sudo ip link set dev eth1 up")
         if tag == "nmtui_general_display_proper_hostname" or tag == "nmtui_general_set_new_hostname":
             context.execute_steps(u"* Restore hostname from the noted value")
         if tag == 'nmtui_ethernet_set_mtu':
@@ -155,6 +178,8 @@ def after_tag(context, tag):
         if tag == 'nmtui_team_add_many_slaves':
             os.system("sudo nmcli con delete team-slave-eth3 team-slave-eth4 team-slave-eth5"+
                       " team-slave-eth6 team-slave-eth7 team-slave-eth8 team-slave-eth9")
+        if tag == 'nmtui_ethernet_set_mtu':
+            os.system("ip link set mtu 1500 dev eth1")
         if tag == "eth0":
             print "---------------------------"
             print "upping eth0"

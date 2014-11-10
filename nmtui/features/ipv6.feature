@@ -10,6 +10,7 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet"
     * Set "Device" field to "eth1"
     * Set "IPv6 CONFIGURATION" category to "Manual"
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then ".*Unable to add new connection.*ipv6.addresses: this property cannot.*be empty for 'method=manual'.*" is visible on screen
 
@@ -23,7 +24,7 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * In "Addresses" property add "2607:f0d0:1002:51::4"
     * Confirm the connection settings
-    Then "eth1.*inet6 2607:f0d0:1002:51::4/128.*eth2" is visible with command "ip a" in "10" seconds
+    Then "inet6 2607:f0d0:1002:51::4/128" is visible with command "ip a" in "10" seconds
     Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device"
 
 
@@ -139,7 +140,7 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * Remove all "Addresses" property items
     * Confirm the connection settings
-    * Execute "nmcli con up ethernet"
+    * Bring up connection "ethernet"
     Then "fc01::1:5/68" is not visible with command "ip a s eth10"
     Then "dynamic" is visible with command "ip -6 a s eth10" in "10" seconds
 
@@ -201,8 +202,8 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * Remove all routes
     * Confirm the connection settings
-    * Execute "nmcli con up ethernet1"
-    * Execute "nmcli con up ethernet2"
+    * Bring up connection "ethernet1"
+    * Bring up connection "ethernet2"
     Then "2000::2/126" is visible with command "ip a s eth1"
     Then "2001::1/126" is visible with command "ip a s eth2"
     Then "1010::1 via 2000::1 dev eth1  proto static  metric 1" is not visible with command "ip -6 route"
@@ -313,7 +314,7 @@ Feature: IPv6 TUI tests
     * Set "DNS servers" field to "4000::1"
     * In this property also add "5000::1"
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then "nameserver 4000::1.+nameserver 5000::1" is visible with command "cat /etc/resolv.conf" in "10" seconds
 
 
@@ -332,7 +333,7 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * Remove all "DNS servers" property items
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then "nameserver 4000::1" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver 5000::1" is not visible with command "cat /etc/resolv.conf"
 
@@ -362,7 +363,7 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * Remove all "Search domains" property items
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
 
 
@@ -384,6 +385,7 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv6 CONFIGURATION" category
     * Ensure "Require IPv6 addressing for this connection" is checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "IPV6_FAILURE_FATAL=yes" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv6.may-fail:\s+no" is visible with command "nmcli con show ethernet1"
@@ -396,6 +398,7 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv6 CONFIGURATION" category
     * Ensure "Require IPv6 addressing for this connection" is not checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "IPV6_FAILURE_FATAL=no" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv6.may-fail:\s+yes" is visible with command "nmcli con show ethernet1"
@@ -410,7 +413,7 @@ Feature: IPv6 TUI tests
     * Set "IPv6 CONFIGURATION" category to "Ignore"
     * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then "IPV6INIT=no" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "inet6 ((?!fe80).)" is not visible with command "ip -6 a s eth1"
 
@@ -421,6 +424,7 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv6 CONFIGURATION" category
     * Ensure "Never use this network for default route" is not checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "IPV6_DEFROUTE=yes" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv6.never-default:\s+no" is visible with command "nmcli con show ethernet1"
@@ -432,6 +436,7 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv6 CONFIGURATION" category
     * Ensure "Never use this network for default route" is checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "IPV6_DEFROUTE=no" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv6.never-default:\s+yes" is visible with command "nmcli con show ethernet1"

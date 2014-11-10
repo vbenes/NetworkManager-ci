@@ -9,6 +9,7 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet"
     * Set "Device" field to "eth1"
     * Set "IPv4 CONFIGURATION" category to "Manual"
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then ".*Unable to add new connection.*ipv4.addresses: this property cannot.*be empty for 'method=manual'.*" is visible on screen
 
@@ -22,20 +23,20 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * In "Addresses" property add "192.168.1.10"
     * Confirm the connection settings
-    Then "eth1.*inet 192.168.1.10/32.*eth2" is visible with command "ip a" in "10" seconds
+    Then "inet 192.168.1.10/32" is visible with command "ip a s eth1" in "10" seconds
     Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device"
 
 
     @ipv4
     @nmtui_ipv4_addresses_auto_with_manual
-    Scenario: nmcli - ipv4 - addresses - auto with manual address present
+    Scenario: nmtui - ipv4 - addresses - auto with manual address present
     * Prepare new connection of type "Ethernet" named "ethernet"
     * Set "Device" field to "eth1"
     * Come in "IPv4 CONFIGURATION" category
     * In "Addresses" property add "1.2.2.1/24"
     * Confirm the connection settings
-    Then "eth1.*inet 192.168.*eth2" is visible with command "ip a" in "10" seconds
-    Then "eth1.*inet 1.2.2.1/24.*eth2" is visible with command "ip a"
+    Then "inet 192.168" is visible with command "ip a s eth1" in "10" seconds
+    Then "inet 1.2.2.1/24" is visible with command "ip a s eth1"
     Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device"
 
 
@@ -123,7 +124,7 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * Remove all "Addresses" property items
     * Confirm the connection settings
-    * Execute "nmcli con up ethernet"
+    * Bring up connection "ethernet"
     Then "192.168.253.101/24" is not visible with command "ip a s eth1"
     Then "192.168.253.102/24" is not visible with command "ip a s eth1"
     Then "192.168.253.103/24" is not visible with command "ip a s eth1"
@@ -192,8 +193,8 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * Remove all routes
     * Confirm the connection settings
-    * Execute "nmcli con up ethernet1"
-    * Execute "nmcli con up ethernet2"
+    * Bring up connection "ethernet1"
+    * Bring up connection "ethernet2"
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric 2" is not visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
@@ -267,6 +268,7 @@ Feature: IPv4 TUI tests
     Then Cannot add ip route "192.168.1.10/24 123456789"
 
 
+    @veth
     @ipv4
     @nmtui_ipv4_routes_set_unreachable_route
     Scenario: nmtui - ipv4 - routes - set unreachable route
@@ -330,7 +332,7 @@ Feature: IPv4 TUI tests
     * Set "DNS servers" field to "8.8.8.8"
     * In this property also add "8.8.4.4"
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then "nameserver 8.8.8.8.*nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf" in "10" seconds
 
 
@@ -349,7 +351,7 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * Remove all "DNS servers" property items
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then "nameserver 8.8.8.8" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
 
@@ -379,7 +381,7 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * Remove all "Search domains" property items
     * Confirm the connection settings
-    * Execute "nmcli connection up ethernet1"
+    * Bring up connection "ethernet1"
     Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
 
 
@@ -400,6 +402,7 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv4 CONFIGURATION" category
     * Ensure "Require IPv4 addressing for this connection" is checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "IPV4_FAILURE_FATAL=yes" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv4.may-fail:\s+no" is visible with command "nmcli con show ethernet1"
@@ -412,6 +415,7 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv4 CONFIGURATION" category
     * Ensure "Require IPv4 addressing for this connection" is not checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "IPV4_FAILURE_FATAL=no" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv4.may-fail:\s+yes" is visible with command "nmcli con show ethernet1"
@@ -436,6 +440,7 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv4 CONFIGURATION" category
     * Ensure "Never use this network for default route" is not checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "DEFROUTE=yes" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv4.never-default:\s+no" is visible with command "nmcli con show ethernet1"
@@ -447,6 +452,7 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv4 CONFIGURATION" category
     * Ensure "Never use this network for default route" is checked
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "DEFROUTE=no" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet1"
     Then "ipv4.never-default:\s+yes" is visible with command "nmcli con show ethernet1"
@@ -594,6 +600,7 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * In "Addresses" property add "192.168.125.253/24"
     * Set "Gateway" field to "192.168.125.96"
+    * Ensure "Automatically connect" is not checked
     * Confirm the connection settings
     Then "GATEWAY=192.168.125.96" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
     Then "IPADDR=192.168.125.253" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"

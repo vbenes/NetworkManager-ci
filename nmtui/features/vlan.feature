@@ -40,7 +40,7 @@ Feature: VLAN TUI tests
     * Set "Device" field to "vlan_device"
     * Set "VLAN id" field to "99"
     * Confirm the connection settings
-    Then ".*vlan.parent: property is not.*specified and neither is '802-3-ethernet:mac-address'.*" is visible on screen
+    Then ".*vlan.parent: property is not.*specified and neither is.*'802-3-ethernet:mac-address'.*" is visible on screen
 
 
     #common mistake misplacing device with parent
@@ -72,6 +72,9 @@ Feature: VLAN TUI tests
     * Prepare new connection of type "VLAN" named "vlan"
     * Set "Device" field to "eth52.99"
     * Ensure "Automatically connect" is checked
+    Then ".*Parent eth52.*" is visible on screen
+    Then ".*VLAN id 99.*" is visible on screen
+
 
 
     @vlan
