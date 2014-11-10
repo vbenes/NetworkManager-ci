@@ -107,7 +107,15 @@ def start_stop_connection(context, action, name):
         if os.system("nmcli connection show --active |grep %s" %name) != 0:
             print "Warning: Connection is down no need to down it again"
             return
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name, shell=True).strip()
+    if action == "up" and method in ["auto","disabled","link-local"]:
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            device = check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % name, shell=True).strip()
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
+
     cli = pexpect.spawn('nmcli connection %s id %s' % (action, name), logfile=context.log,  timeout=180)
+
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
     sleep(2)
     if r == 0:
@@ -121,6 +129,12 @@ def start_stop_connection(context, action, name):
 
 @step(u'Bring up connection "{name}" for "{device}" device')
 def start_connection_for_device(context, name, device):
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name, shell=True).strip()
+    if method in ["auto","disabled","link-local"]:
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
+
     cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
@@ -134,6 +148,13 @@ def start_connection_for_device(context, name, device):
 
 @step(u'Bring up connection "{connection}"')
 def bring_up_connection(context, connection):
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
+    if method in ["auto","disabled","link-local"]:
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            device = check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
+
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
@@ -144,6 +165,13 @@ def bring_up_connection(context, connection):
 
 @step(u'Bring up connection "{connection}" ignoring error')
 def bring_up_connection_ignore_error(context, connection):
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
+    if method in ["auto","disabled","link-local"]:
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            device = check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
+
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
     if r == 1:
@@ -169,16 +197,11 @@ def bring_down_connection_ignoring(context, connection):
         raise Exception('nmcli connection down %s timed out (180s)' % connection)
 
 
-@step(u'Change NM profile plugin to ifcfg-rh')
-def change_to_keyfile(context):
-    os.system("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ")
-
-
 @step(u'Check device route and prefix for "{dev}"')
 def check_slaac_setup(context, dev):
     cmd = "sudo radvdump > /tmp/radvdump.txt"
     proc = Popen(cmd, shell=True)
-    sleep(164)
+    sleep(200)
     cmd = "sudo pkill radvdump"
     Popen(cmd, shell=True).wait()
     dump = open("/tmp/radvdump.txt", "r")
@@ -743,7 +766,19 @@ def reboot(context):
 def restart_NM(context):
     sleep(1)
     call("service NetworkManager restart", shell=True) == 0
+    if os.path.isfile('/tmp/nm_veth_configured'):
+        call('ip link set dev eth0 up', shell=True)
+        call('ip link set dev eth0p up', shell=True)
+        call('ip link set dev eth99 up', shell=True)
+        call('ip link set dev eth99p up', shell=True)
+        call('ip link set dev eth99p up', shell=True)
+        call('nmcli c modify dhcp-srv ipv4.method shared', shell=True)
+        call('nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24', shell=True)
+        call('nmcli con up dhcp-srv', shell=True)
+        call('nmcli con up testeth0', shell=True)
+
     sleep(4)
+
 
 
 @step(u'Run child "{command}"')

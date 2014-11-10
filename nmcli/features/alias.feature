@@ -167,6 +167,7 @@
 
 
     @alias_ifcfg_reboot
+    @veth
     @alias
     Scenario: ifcfg - alias - reboot
     * Add connection type "ethernet" named "eth7" for device "eth7"

@@ -115,6 +115,7 @@ Feature: nmcli: ipv4
 
 
     @ipv4_take_manually_created_ifcfg_with_ip
+    @veth
     @ipv4
     # covering https://bugzilla.redhat.com/show_bug.cgi?id=1073824
     Scenario: nmcli - ipv4 - use manually created ipv4 profile
@@ -446,6 +447,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_303668
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - set dhcp-hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -462,6 +464,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_303669
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - remove dhcp-hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -483,6 +486,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_303670
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - don't send
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -499,6 +503,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_303671
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -513,6 +518,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_304232
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - ignore sending real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -558,6 +564,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_304235
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - set client id
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -576,6 +583,7 @@ Feature: nmcli: ipv4
 
 
     @testcase_304236
+    @tshark
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - remove client id
     * Add connection type "ethernet" named "ethie" for device "eth10"

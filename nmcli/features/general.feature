@@ -27,6 +27,7 @@ Feature: nmcli - general
 
     @general
     @restart
+    @veth
     @testcase_290425
     Scenario: nmcli - general - state disconnected
     * "disconnect" all " connected" devices
@@ -37,6 +38,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @testcase_290426
     Scenario: nmcli - general - state asleep
     * Execute "nmcli networking off"
@@ -55,6 +57,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @restart
     @testcase_290428
     Scenario: nmcli - general - not running
@@ -64,6 +67,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @testcase_290429
     Scenario: nmcli - general - networking
     * Note the output of "nmcli -t -f NETWORKING general" as value "1"
@@ -85,6 +89,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @testcase_290431
     Scenario: nmcli - networking - status - disabled
     * Note the output of "nmcli networking" as value "1"
@@ -98,6 +103,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @testcase_290432
     Scenario: nmcli - networking - turn off
     * "eth0:" is visible with command "ifconfig"
@@ -107,6 +113,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @testcase_290433
     Scenario: nmcli - networking - turn on
     * Execute "nmcli networking off"
@@ -159,8 +166,8 @@ Feature: nmcli - general
     Scenario: nmcli - device - disconnect
     * "eth0\s+ethernet\s+connected" is visible with command "nmcli device"
     * Disconnect device "eth0"
-    Then "eth0\s+ethernet\s+disconnected" is visible with command "nmcli device"
-    * Execute "nmcli dev connect eth0"
+    Then "eth0\s+ethernet\s+connected" is not visible with command "nmcli device"
+    * Bring "up" connection "testeth0"
 
 
 ## Basically various bug related reproducer tests follow here
@@ -190,6 +197,7 @@ Feature: nmcli - general
 
     #bz1034150
     @general
+    @veth
     @nmcli_device_attempt_hw_delete
     Scenario: nmcli - device - attempt to delete hw interface
     * "eth9\s+ethernet" is visible with command "nmcli device"

@@ -13,8 +13,8 @@ Feature: nmcli: connection
     @connection_names_autocompletion
     @con
     Scenario: nmcli - connection - names autocompletion
-    Then "eth0" is visible with tab after "nmcli connection edit id "
-    Then "eth6" is visible with tab after "nmcli connection edit id "
+    Then "testeth0" is visible with tab after "nmcli connection edit id "
+    Then "testeth6" is visible with tab after "nmcli connection edit id "
     Then "connie" is not visible with tab after "nmcli connection edit id "
     * Add connection type "ethernet" named "connie" for device "eth1"
     Then "connie" is visible with tab after "nmcli connection edit "
@@ -72,14 +72,14 @@ Feature: nmcli: connection
 
     @connection_down
     @con
-    @eth
+    #@eth
     Scenario: nmcli - connection - down
      * Add connection type "ethernet" named "connie" for device "eth1"
-     * Add connection type "ethernet" named "ethie" for device "eth1"
+     #* Add connection type "ethernet" named "ethie" for device "eth1"
      * Bring "up" connection "connie"
-     * Bring "up" connection "ethie"
-     * Bring "down" connection "ethie"
-     Then Check if "connie" is active connection
+     #* Bring "up" connection "ethie"
+     * Bring "down" connection "connie"
+     Then "connie" is not visible with command "nmcli -f NAME connection show --active"
 
 
     @testcase_282124
@@ -130,6 +130,7 @@ Feature: nmcli: connection
 
 
     @testcase_300559
+    @veth
     @con
     Scenario: nmcli - connection - set autoconnect on
      * Add connection type "ethernet" named "connie" for device "eth2"
@@ -154,6 +155,7 @@ Feature: nmcli: connection
 
 
     @testcase_300560
+    @veth
     @con
     Scenario: nmcli - connection - set autoconnect off
      * Add connection type "ethernet" named "connie" for device "eth2"

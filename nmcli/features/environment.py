@@ -22,34 +22,39 @@ def before_scenario(context, scenario):
         print("Error in before_scenario: %s" % e.message)
 
 def before_tag(context, tag):
+    if tag == 'veth':
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            import sys
+            sys.exit(0)
+
     if tag == 'eth0':
         print "---------------------------"
         print "eth0 disconnect"
-        Popen("nmcli connection down id eth0", shell=True).wait()
-        #sleep(TIMER)
-        if os.system("nmcli -f NAME c sh -a |grep eth0") == 0:
-            print "shutting down eth0 once more as it is not down"
-            Popen("nmcli device disconnect eth0", shell=True).wait()
-            #sleep(TIMER)
+        call("nmcli con down testeth0", shell=True)
+        call('nmcli con down testeth1', shell=True)
+        call('nmcli con down testeth2', shell=True)
 
     if tag == 'alias':
         print "---------------------------"
         print "deleting eth7 connections"
+        call("nmcli connection up testeth7", shell=True)
         call("nmcli connection delete eth7", shell=True)
 
     if tag == "firewall":
         print "---------------------------"
         print "starting firewall"
+        call("sudo yum -y install firewalld", shell=True)
         call("sudo systemctl unmask firewalld", shell=True)
-        call("sudo service firewalld restart", shell=True)
+        call("sudo systemctl start firewalld", shell=True)
         #call("sleep 4", shell=True)
 
-    if tag == "eth0":
+    if tag == "tshark":
         print "---------------------------"
-        print "eth0 and eth10 disconnect"
-        call("nmcli device disconnect eth0", shell=True)
-        call("nmcli device disconnect eth10", shell=True)
-        #sleep(TIMER)
+        print "ip link up eth10 connection"
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            call("ip link set dev eth10 up", shell=True)
+            call("ip link set dev eth0p up", shell=True)
+
 
     if (tag == 'ethernet') or (tag == 'bridge') or (tag == 'vlan'):
         print "---------------------------"
@@ -57,18 +62,31 @@ def before_tag(context, tag):
         #call("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done", shell=True)
         #if call("nmcli device status |grep -v eth0 |grep -e ' connected'", shell=True) != 1:
         #    call("for dev in $(nmcli device status |grep -v eth0 |grep -e ' connected' |awk {'print $1'}); do sudo nmcli device disconnect $dev; done", shell=True)
-        call('sudo nmcli con del eth1 eth2', shell=True)
-        call('sudo nmcli con add type ethernet ifname eth1 con-name eth1 autoconnect no', shell=True)
-        #call('sudo ifup eth1', shell=True)
-        call('sudo nmcli con add type ethernet ifname eth2 con-name eth2 autoconnect no', shell=True)
-        #call('sudo ifup eth2', shell=True)
-        call('sudo nmcli con down eth1', shell=True)
-        call('sudo nmcli con down eth2', shell=True)
 
-    if tag == 'bridge':
+        call('sudo nmcli con del testeth1 testeth2', shell=True)
+        call('sudo nmcli con add type ethernet ifname eth1 con-name testeth1 autoconnect no', shell=True)
+        #call('sudo ifup eth1', shell=True)
+        call('sudo nmcli con add type ethernet ifname eth2 con-name testeth2 autoconnect no', shell=True)
+        #call('sudo ifup eth2', shell=True)
+        call('sudo nmcli con down testeth1', shell=True)
+        call('sudo nmcli con down testeth2', shell=True)
+
+    if tag == 'vlan' or tag == 'bridge':
         print "---------------------------"
         print "connecting eth1"
-        call("nmcli device connect eth1", shell=True)
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            call("ip link set dev eth1 up", shell=True)
+            call("ip link set dev eth1p up", shell=True)
+            sleep(1)
+        call("nmcli connection up testeth1", shell=True)
+
+    if tag == 'bond' or tag == 'team':
+        print "---------------------------"
+        print "ip upping eth1/eth2"
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            call("ip link set dev eth1 up", shell=True)
+            call("ip link set dev eth2 up", shell=True)
+            call('nmcli con up testeth1', shell=True)
 
     if tag == 'hostname_change':
         print "---------------------------"
@@ -124,11 +142,11 @@ def after_tag(context, tag):
         print "---------------------------"
         print "deleting alias connections"
         call("nmcli connection delete eth7", shell=True)
-        call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:0", shell=True)
-        call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:1", shell=True)
-        call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:2", shell=True)
+        call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-aliaseth7:0", shell=True)
+        call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-aliaseth7:1", shell=True)
+        call("sudo rm -f /etc/sysconfig/network-scripts/ifcfg-aliaseth7:2", shell=True)
         call("sudo nmcli connection reload", shell=True)
-        call('sudo nmcli con add type ethernet ifname eth7 con-name eth7 autoconnect no', shell=True)
+        #call('sudo nmcli con add type ethernet ifname eth7 con-name testeth7 autoconnect no', shell=True)
         #sleep(TIMER)
 
     if tag == "slaves":
@@ -141,6 +159,7 @@ def after_tag(context, tag):
         print "---------------------------"
         print "deleting bond profile"
         call('nmcli connection delete id bond0 bond', shell=True)
+
         #sleep(TIMER)
         print os.system('ls /proc/net/bonding')
 
@@ -177,8 +196,12 @@ def after_tag(context, tag):
     if tag == "eth0":
         print "---------------------------"
         print "upping eth0"
-        call("nmcli connection up id eth0", shell=True)
-        #sleep(10)
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            call("ip link set dev eth0 up address $(cat /tmp/nm_orig_mac)", shell=True)
+            call("ip link set dev eth0p up", shell=True)
+
+        call("nmcli connection up id testeth0", shell=True)
+        sleep(2)
 
     if tag == "time":
         print "---------------------------"
@@ -242,6 +265,11 @@ def after_tag(context, tag):
         call('sudo nmcli con del vlan eth1.99 eth1.299 eth1.399 eth1.65 eth1.165 eth1.265 eth1.499 eth1.80 eth1.90 bridge-slave-eth1.80', shell=True)
         call('sudo nmcli con del bridge-slave-eth1 bridge-slave-eth2 bridge-slave-eth3', shell=True)
         call('sudo nmcli con del bridge0 bridge bridge.15 nm-bridge br88 br11 br12 br15 bridge-slave br15-slave br15-slave1 br15-slave2 br10 br10-slave', shell=True)
+        if os.path.isfile('/tmp/nm_veth_configured'):
+            for item in ["vlan","eth1.99","eth1.299","eth1.399","eth1.65","eth1.165","eth1.265","eth1.499","eth1.80","eth1.90"]:
+                call('ip link delete %s' % item, shell=True)
+        call("nmcli connection down testeth1", shell=True)
+
 
     if tag == 'wifi':
         print "---------------------------"
@@ -331,7 +359,7 @@ def after_tag(context, tag):
         print "restoring original hostname"
         call('sudo nmcli gen host %s' % context.original_hostname, shell=True)
 
-    if tag == 'device_connect':# or tag == 'testcase_290429':# or tag == 'testcase_290426':
+    if tag == 'device_connect' or tag == 'ipv6_describe' or tag == 'testcase_304241':
         print "---------------------------"
         print "beah-beaker-backend sanitization"
         call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)

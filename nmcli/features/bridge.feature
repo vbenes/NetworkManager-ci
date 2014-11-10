@@ -269,7 +269,7 @@ Feature: nmcli - bridge
     @bridge_server_ingore_carrier_with_dhcp
     Scenario: nmcli - bridge - server ingore carrier with_dhcp
     * Execute "sudo yum -y install NetworkManager-config-server"
-    * Execute "service NetworkManager restart"
+    * Restart NM
     * Disconnect device "eth1"
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
     * Check ifcfg-name file created for connection "bridge0"

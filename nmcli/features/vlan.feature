@@ -205,7 +205,6 @@ Feature: nmcli - vlan
     @vlan
     @testcase_281211
     Scenario: nmcli - vlan - device tagging
-    * Execute "nmcli dev con eth1"
     * Execute "yum -y install wireshark"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"
     * "eth1.80:" is visible with command "ifconfig"

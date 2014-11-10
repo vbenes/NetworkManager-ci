@@ -488,15 +488,18 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth10"
      Then Bring "up" connection "ethie"
      * Open editor for connection "ethie"
+     * Submit "set ipv4.method static" in editor
+     * Submit "set ipv4.addresses 192.168.122.253/24" in editor
      * Submit "set ipv6.method ignore" in editor
      * Save in editor
      * Quit editor
     Then Bring "up" connection "ethie"
-    Then "scope link" is not visible with command "ip -6 a s eth10"
+    # VVV commented out because of fe80 is still on by kernel very likely
+    # Then "scope link" is not visible with command "ip -6 a s eth10"
     Then "scope global" is not visible with command "ip a -6 s eth10"
     # reproducer for 1004255
     Then Bring "down" connection "ethie"
-    Then "eth10" is not visible with command "ip -6 route |grep -v fe80"
+    Then "eth10 " is not visible with command "ip -6 route |grep -v fe80"
 
 
     @ipv6_never-default_set_true
@@ -508,7 +511,7 @@ Feature: nmcli: ipv6
      * Submit "set ipv6.never-default yes " in editor
      * Save in editor
      * Quit editor
-     * Bring "up" connection "eth10"
+     * Bring "up" connection "testeth10"
      * Bring "up" connection "ethie"
     Then "default via " is not visible with command "ip -6 route |grep eth2"
 
@@ -528,12 +531,13 @@ Feature: nmcli: ipv6
      * Enter in editor
      * Save in editor
      * Quit editor
-     * Bring "up" connection "eth10"
+     * Bring "up" connection "testeth10"
      * Bring "up" connection "ethie"
     Then "default via " is not visible with command "ip -6 route |grep eth2"
 
 
     @ipv6_dhcp-hostname_set
+    @veth
     @profie
     Scenario: nmcli - ipv6 - dhcp-hostname - set dhcp-hostname
     * Add connection type "ethernet" named "profie" for device "eth10"
@@ -546,12 +550,14 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "profie"
-    * Run child "sleep 5; sudo kill -9 $(pidof tshark)"
-    Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
+    * Finish "sleep 5"
+    * Run child "sudo kill -9 $(pidof tshark)"
+    #Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
     Then "walderon" is visible with command "grep walderon /tmp/ipv6-hostname.log"
 
 
     @ipv6_dhcp-hostname_remove
+    @veth
     @ipv4
     Scenario: nmcli - ipv6 - dhcp-hostname - remove dhcp-hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -568,6 +574,7 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
+    * Finish "sleep 5"
     * Run child "sudo kill -9 $(pidof tshark)"
     Then "walderon" is not visible with command "cat /tmp/tshark.log"
 
@@ -638,6 +645,7 @@ Feature: nmcli: ipv6
 
 
     @ipv6_take_manually_created_ifcfg
+    @veth
     @ipv6
     # covering https://bugzilla.redhat.com/show_bug.cgi?id=1073824
     Scenario: ifcfg - ipv6 - use manually created link-local profile

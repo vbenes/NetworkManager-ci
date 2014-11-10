@@ -197,6 +197,7 @@
 
 
     @start_team_by_hand_one_auto
+    @veth
     @team_slaves
     @team
     Scenario: nmcli - team - start team by hand with one auto
@@ -215,6 +216,7 @@
 
 
     @start_team_on_boot
+    @veth
     @team_slaves
     @team
     Scenario: nmcli - team - start team on boot
@@ -240,6 +242,7 @@
 
 
     @team_start_on_boot_with_nothing_auto
+    @veth
     @team_slaves
     @team
     Scenario: nmcli - team - start team on boot - nothing auto
@@ -268,6 +271,7 @@
     #VVV    THIS IS DIFFERENT IN BOND AREA
 
     @team_start_on_boot_with_one_auto_only
+    @veth
     @team_slaves
     @team
     Scenario: nmcli - team - start team on boot - one slave auto only
@@ -293,6 +297,7 @@
 
 
     @team_start_on_boot_with_team_and_one_slave_auto
+    @veth
     @team_slaves
     @team
     Scenario: nmcli - team - start team on boot - team and one slave auto
@@ -328,6 +333,8 @@
      * Submit "set team.config {\\"device\\":\"nm-team\",\"runner\":{\"name\":\"loadbalance\"},\"ports\":{\"eth1\":{},\"eth2\": {}}}" in editor
      * Save in editor
      * Quit editor
+     * Bring "up" connection "team0.1"
+     * Bring "up" connection "team0.0"
      * Bring "up" connection "team0"
     Then "\"kernel_team_mode_name\": \"loadbalance\"" is visible with command "sudo teamdctl nm-team state dump"
     Then Check slave "eth1" in team "nm-team" is "up"
@@ -364,6 +371,8 @@
      * Submit "set team.config {    \"device\":       \"nm-team\",  \"runner\":       {\"name": \"broadcast\"},  \"ports\":        {\"eth1\": {}, \"eth2\": {}}}" in editor
      * Save in editor
      * Quit editor
+     * Bring "up" connection "team0.1"
+     * Bring "up" connection "team0.0"
      * Bring "up" connection "team0"
     Then "\"kernel_team_mode_name\": \"broadcast\"" is visible with command "sudo teamdctl nm-team state dump"
     Then Check slave "eth1" in team "nm-team" is "up"
@@ -411,6 +420,8 @@
      * Enter in editor
      * Save in editor
      * Quit editor
+     * Bring "up" connection "team0.1"
+     * Bring "up" connection "team0.0"
      * Bring "up" connection "team0"
     Then "\"kernel_team_mode_name\": \"loadbalance\"" is not visible with command "sudo teamdctl nm-team state dump"
     Then Check slave "eth1" in team "nm-team" is "up"
