@@ -73,10 +73,11 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 1.1.1.99/24 1.1.1.1" in editor
+    * Submit "set ipv4.addresses 1.1.1.99/24" in editor
+    * Submit "set ipv4.gateway 1.1.1.1" in editor
     * Save in editor
     * Submit "goto ipv4" in editor
-    * Submit "goto addresses" in editor
+    * Submit "goto gateway" in editor
     * Submit "change" in editor
     * Backspace in editor
     * Submit "4" in editor
@@ -140,7 +141,8 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.253/24 192.168.122.96" in editor
+    * Submit "set ipv4.addresses 192.168.122.253/24" in editor
+    * Submit "set ipv4.gateway 192.168.122.96" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -156,17 +158,16 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.22.253/24 192.168.22.96, 192.168.122.253/16 192.168.122.95" in editor
-    * Submit "set ipv4.addresses 192.168.222.253/8 192.168.222.94" in editor
+    * Submit "set ipv4.addresses 192.168.22.253/24, 192.168.122.253/16" in editor
+    * Submit "set ipv4.addresses 192.168.222.253/8" in editor
+    * Submit "set ipv4.gateway 192.168.22.96" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
     Then "192.168.22.253/24" is visible with command "ip a s eth1"
     Then "default via 192.168.22.96" is visible with command "ip route"
     Then "192.168.122.253/16" is visible with command "ip a s eth1"
-    Then "192.168.122.95" is not visible with command "ip route"
     Then "192.168.222.253/8" is visible with command "ip a s eth1"
-    Then "192.168.222.94" is not visible with command "ip route"
 
 
     @testcase_303655
@@ -175,12 +176,15 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.22.253/24 192.168.22.96, 192.168.122.253/16 192.168.122.95" in editor
+    * Submit "set ipv4.addresses 192.168.22.253/24, 192.168.122.253/16" in editor
+    * Submit "set ipv4.gateway 192.168.22.96" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
     * Open editor for connection "ethie"
     * Submit "set ipv4.addresses" in editor
+    * Enter in editor
+    * Submit "set ipv4.gateway" in editor
     * Enter in editor
     * Submit "set ipv4.method auto" in editor
     * Save in editor
@@ -199,14 +203,16 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.3.10/24 192.168.4.1" in editor
+    * Submit "set ipv4.addresses 192.168.3.10/24" in editor
+    * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
     * Save in editor
     * Quit editor
     * Add connection type "ethernet" named "ethie2" for device "eth2"
     * Open editor for connection "ethie2"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.1.10/24 192.168.4.1" in editor
+    * Submit "set ipv4.addresses 192.168.1.10/24" in editor
+    * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.2.0/24 192.168.1.11 2" in editor
     * Save in editor
     * Quit editor
@@ -228,14 +234,16 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.3.10/24 192.168.4.1" in editor
+    * Submit "set ipv4.addresses 192.168.3.10/24" in editor
+    * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
     * Save in editor
     * Quit editor
     * Add connection type "ethernet" named "ethie2" for device "eth2"
     * Open editor for connection "ethie2"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.1.10/24 192.168.4.1" in editor
+    * Submit "set ipv4.addresses 192.168.1.10/24" in editor
+    * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.2.0/24 192.168.1.11 2" in editor
     * Save in editor
     * Quit editor
@@ -265,7 +273,8 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
+    * Submit "set ipv4.addresses 192.168.122.2/24" in editor
+    * Submit "set ipv4.gateway 192.168.122.1" in editor
     * Submit "set ipv4.routes 192.168.1.0/24 0.0.0.0, 192.168.2.0/24 192.168.122.5" in editor
     * Save in editor
     * Quit editor
@@ -282,9 +291,9 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
+    * Submit "set ipv4.addresses 192.168.122.2/24" in editor
     * Submit "set ipv4.routes 255.255.255.256" in editor
-    Then Error type "failed to set 'routes' property: invalid route destination address" while saving in editor
+    Then Error type "failed to set 'routes' property:" while saving in editor
 
 
     @testcase_303660
@@ -294,7 +303,8 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
+    * Submit "set ipv4.addresses 192.168.122.2/24" in editor
+    * Submit "set ipv4.gateway 192.168.122.1" in editor
     * Submit "set ipv4.routes 192.168.1.0/24" in editor
     * Save in editor
     * Quit editor
@@ -311,7 +321,8 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.2/24 192.168.122.1" in editor
+    * Submit "set ipv4.addresses 192.168.122.2/24" in editor
+    * Submit "set ipv4.gateway 192.168.122.1" in editor
     * Submit "set ipv4.routes 192.168.1.0/24 192.168.3.11 1" in editor
     * Save in editor
     * Quit editor
@@ -326,7 +337,8 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.253/24 192.168.122.1" in editor
+    * Submit "set ipv4.addresses 192.168.122.253/24" in editor
+    * Submit "set ipv4.gateway 192.168.122.1" in editor
     * Submit "set ipv4.dns 8.8.8.8, 8.8.4.4" in editor
     * Save in editor
     * Quit editor
@@ -373,7 +385,8 @@ Feature: nmcli: ipv4
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method static" in editor
-    * Submit "set ipv4.addresses 192.168.122.253/24 192.168.122.1" in editor
+    * Submit "set ipv4.addresses 192.168.122.253/24" in editor
+    * Submit "set ipv4.gateway 192.168.122.1" in editor
     * Submit "set ipv4.dns 8.8.8.8" in editor
     * Save in editor
     * Quit editor
@@ -666,9 +679,8 @@ Feature: nmcli: ipv4
     @testcase_304241
     @ipv4
     Scenario: nmcli - ipv4 - describe
-    * Add connection type "ethernet" named "ethie" for device "eth1"
-    * Open editor for connection "ethie"
-    When Check "\[method\]|\[dns\]|\[dns-search\]|\[addresses\]|\[routes\]|\[ignore-auto-routes\]|\[ignore-auto-dns\]|\[dhcp-client-id\]|\[dhcp-send-hostname\]|\[dhcp-hostname\]|\[never-default\]|\[may-fail\]" are present in describe output for object "ipv4"
+    * Open editor for a type "ethernet"
+    When Check "\[method\]|\[dns\]|\[dns-search\]|\[addresses\]|\[gateway\]|\[routes\]|\[ignore-auto-routes\]|\[ignore-auto-dns\]|\[dhcp-hostname\]|\[never-default\]|\[may-fail\]" are present in describe output for object "ipv4"
     * Submit "goto ipv4" in editor
     Then Check "=== \[method\] ===\s+\[NM property description\]\s+IPv4 configuration method.  If \"auto\" is specified then the appropriate automatic method \(DHCP, PPP, etc\) is used for the interface and most other properties can be left unset.  If \"link\-local\" is specified, then a link-local address in the 169.254\/16 range will be assigned to the interface.  If \"manual\" is specified, static IP addressing is used and at least one IP address must be given in the \"addresses\" property.  If \"shared\" is specified \(indicating that this connection will provide network access to other computers\) then the interface is assigned an address in the 10.42.x.1/24 range and a DHCP and forwarding DNS server are started, and the interface is NAT-ed to the current default network connection.  \"disabled\" means IPv4 will not be used on this connection. This property must be set." are present in describe output for object "method"
 
@@ -676,7 +688,9 @@ Feature: nmcli: ipv4
 
     Then Check "=== \[dns-search\] ===\s+\[NM property description\]\s+List of DNS search domains.  For the \"auto\" method, these search domains are appended to those returned by automatic configuration. Search domains cannot be used with the \"shared\", \"link-local\", or \"disabled\" methods as there is no upstream network.  In all other methods, these search domains are used as the only search domains for this connection." are present in describe output for object "dns-search"
 
-    Then Check "=== \[addresses\] ===\s+\[NM property description\]\s+Array of IPv4 address structures.  Each IPv4 address structure is composed of 3 32\-bit values; the first being the IPv4 address \(network byte order\), the second the prefix \(1 \- 32\), and last the IPv4 gateway \(network byte order\). The gateway may be left as 0 if no gateway exists for that subnet.  For the \"auto\" method, given IP addresses are appended to those returned by automatic configuration.  Addresses cannot be used with the \"shared\", \"link-local\", or \"disabled\" methods as addressing is either automatic or disabled with these methods." are present in describe output for object "addresses"
+    Then Check "ip\[/prefix\], ip\[/prefix\],\.\.\." are present in describe output for object "addresses"
+
+    Then Check "gateway" are present in describe output for object "gateway"
 
     Then Check "=== \[routes\] ===\s+\[NM property description\]\s+Array of IPv4 route structures.  Each IPv4 route structure is composed of 4 32\-bit values; the first being the destination IPv4 network or address \(network byte order\), the second the destination network or address prefix \(1 \- 32\), the third being the next\-hop \(network byte order\) if any, and the fourth being the route metric. For the \"auto\" method, given IP routes are appended to those returned by automatic configuration. Routes cannot be used with the \"shared\", \"link\-local\", or \"disabled\" methods because there is no upstream network." are present in describe output for object "routes"
 

@@ -102,7 +102,8 @@ Feature: nmcli: ipv6
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses 2607:f0d0:1002:51::4/64 2607:f0d0:1002:51::1" in editor
+     * Submit "set ipv6.addresses 2607:f0d0:1002:51::4/64" in editor
+     * Submit "set ipv6.gateway 2607:f0d0:1002:51::1" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
@@ -117,17 +118,15 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses fc01::1:5/68 fc01::1:1, fb01::1:6/112 fb02::1:1" in editor
+     * Submit "set ipv6.addresses fc01::1:5/68, fb01::1:6/112" in editor
      * Submit "set ipv6.addresses fc02::1:21/96" in editor
+     * Submit "set ipv6.gateway fc01::1:1" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
     Then "fc02::1:21/96" is visible with command "ip a s eth1"
     Then "fc01::1:5/68" is visible with command "ip a s eth1"
     Then "fb01::1:6/112" is visible with command "ip a s eth1"
-    Then "fc01::/68 dev eth1" is visible with command "ip -6 route"
-    Then "fc02::/96 dev eth1" is visible with command "ip -6 route"
-    Then "fb01::1:0/112 dev eth1" is visible with command "ip -6 route"
     Then "default via fc01::1:1 dev eth1" is visible with command "ip -6 route"
 
 
@@ -138,12 +137,15 @@ Feature: nmcli: ipv6
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses fc01::1:5/68 fc01::1:1" in editor
+     * Submit "set ipv6.addresses fc01::1:5/68" in editor
+     * Submit "set ipv6.gateway fc01::1:1" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
      * Open editor for connection "ethie"
      * Submit "set ipv6.addresses" in editor
+     * Enter in editor
+     * Submit "set ipv6.gateway" in editor
      * Enter in editor
      * Submit "set ipv6.method auto" in editor
      * Save in editor
@@ -227,7 +229,8 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
+     * Submit "set ipv6.addresses 2001::1/126" in editor
+     * Submit "set ipv6.gateway 4000::1" in editor
      * Submit "set ipv6.routes 1010::1/128 :: 3, 3030::1/128 2001::2 2 " in editor
      * Save in editor
      * Quit editor
@@ -275,9 +278,10 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
+     * Submit "set ipv6.addresses 2001::1/126" in editor
+     * Submit "set ipv6.gateway 4000::1" in editor
      * Submit "set ipv6.routes non:rout:set:up" in editor
-    Then Error type "failed to set 'routes' property: invalid route destination address" while saving in editor
+    Then Error type "failed to set 'routes' property:" while saving in editor
 
 
     @ipv6_routes_without_gw
@@ -287,7 +291,8 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
+     * Submit "set ipv6.addresses 2001::1/126" in editor
+     * Submit "set ipv6.gateway 4000::1" in editor
      * Submit "set ipv6.routes 1010::1/128" in editor
      * Save in editor
      * Quit editor
@@ -304,7 +309,8 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth10"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
+     * Submit "set ipv6.addresses 2001::1/126" in editor
+     * Submit "set ipv6.gateway 4000::1" in editor
      * Submit "set ipv6.dns 4000::1, 5000::1" in editor
      * Save in editor
      * Quit editor
@@ -350,7 +356,8 @@ Feature: nmcli: ipv6
      * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
-     * Submit "set ipv6.addresses 2001::1/126 4000::1" in editor
+     * Submit "set ipv6.addresses 2001::1/126" in editor
+     * Submit "set ipv6.gateway 4000::1" in editor
      * Submit "set ipv6.dns 4000::1, 5000::1" in editor
      * Save in editor
      * Quit editor
@@ -665,7 +672,7 @@ Feature: nmcli: ipv6
     Scenario: nmcli - ipv6 - describe
      * Add connection type "ethernet" named "ethie" for device "eth1"
      * Open editor for connection "ethie"
-     When Check "\[method\]|\[dhcp-hostname\]|\[dns\]|\[dns-search\]|\[addresses\]|\[routes\]|\[ignore-auto-routes\]|\[ignore-auto-dns\]|\[never-default\]|\[may-fail\]" are present in describe output for object "ipv6"
+     When Check "\[method\]|\[dns\]|\[dns-search\]|\[addresses\]|\[gateway\]|\[routes\]|\[ignore-auto-routes\]|\[ignore-auto-dns\]|\[never-default\]|\[may-fail\]" are present in describe output for object "ipv6"
      * Submit "goto ipv6" in editor
      Then Check "=== \[method\] ===\s+\[NM property description\]\s+IPv6 configuration method." are present in describe output for object "method"
      Then Check "=== \[dns\] ===\s+\[NM property description\]\s+Array of DNS servers" are present in describe output for object "dns"

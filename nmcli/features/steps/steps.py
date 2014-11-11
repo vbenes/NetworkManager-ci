@@ -579,7 +579,7 @@ def note_print_property(context, prop, device):
 
 
 @step(u'Noted value contains "{pattern}"')
-def note_print_property(context, pattern):
+def note_print_property_b(context, pattern):
     assert re.search(pattern, context.noted) is not None, "Noted value does not match the pattern!"
 
 
@@ -597,11 +597,12 @@ def note_the_output_of(context, command):
 
 @step(u'Open editor for connection "{con_name}"')
 def open_editor_for_connection(context, con_name):
+    sleep(0.2)
     prompt = pexpect.spawn('nmcli connection ed %s' % con_name, logfile=context.log)
     context.prompt = prompt
-    r = prompt.expect(['Error', con_name])
-    if r == 0:
-        raise Exception('Got an Error while opening  %s profile %s' % (typ, con_name))
+    r = prompt.expect([con_name, 'Error'])
+    if r == 1:
+        raise Exception('Got an Error while opening profile %s' % (con_name))
 
 
 @step(u'Open editor for "{con_name}" with timeout')
