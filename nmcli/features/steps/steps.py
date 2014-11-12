@@ -5,37 +5,12 @@ import pexpect
 import os
 import exceptions
 import re
-import subprocess
-from subprocess import Popen
+from subprocess import check_output, Popen, call, PIPE
 
-# Helpers for the steps that leave the execution trace
-
-def run(context, command, *a, **kw):
-    try:
-        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, *a, **kw)
-        returncode = 0
-        exception = None
-    except subprocess.CalledProcessError as e:
-        output = e.output
-        returncode = e.returncode
-        exception = e
-    context.embed('text/plain', '$?=%d' % returncode, caption='%s result' % command)
-    context.embed('text/plain', output, caption='%s output' % command)
-    return output, returncode, exception
-
-def command_output(context, command, *a, **kw):
-    output, code, e = run(context, command, *a, **kw)
-    if code != 0:
-        raise e
-    return output
-
-def command_code(context, command, *a, **kw):
-    _, code, _ = run(context, command, *a, **kw)
-    return code
 
 @step(u'{action} all "{what}" devices')
 def do_device_stuff(context, action, what):
-    command_code(context, "for dev in $(nmcli device status | grep '%s' | awk {'print $1'}); do nmcli device %s $dev; done" % (what, action))
+    os.system("for dev in $(nmcli device status | grep '%s' | awk {'print $1'}); do nmcli device %s $dev; done" % (what, action))
 
 
 @step(u'Activate connection')
@@ -47,7 +22,7 @@ def activate_connection(context):
 @step('Append "{line}" to ifcfg file "{name}"')
 def append_to_ifcfg(context, line, name):
     cmd = 'sudo echo "%s" >> /etc/sysconfig/network-scripts/ifcfg-%s' % (line, name)
-    command_code(context, cmd)
+    os.system(cmd)
 
 
 # @step(u'Add connection for a type "{typ}" named "{name}"')
@@ -129,15 +104,15 @@ def clear_text_typed(context):
 @step(u'Bring "{action}" connection "{name}"')
 def start_stop_connection(context, action, name):
     if action == "down":
-        if command_code(context, "nmcli connection show --active |grep %s" %name) != 0:
+        if os.system("nmcli connection show --active |grep %s" %name) != 0:
             print "Warning: Connection is down no need to down it again"
             return
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name).strip()
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name, shell=True).strip()
     if action == "up" and method in ["auto","disabled","link-local"]:
         if os.path.isfile('/tmp/nm_veth_configured'):
-            device = command_output(context, "nmcli connection s %s |grep interface-name |awk '{print $2}'" % name).strip()
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
+            device = check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % name, shell=True).strip()
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
 
     cli = pexpect.spawn('nmcli connection %s id %s' % (action, name), logfile=context.log,  timeout=180)
 
@@ -154,11 +129,11 @@ def start_stop_connection(context, action, name):
 
 @step(u'Bring up connection "{name}" for "{device}" device')
 def start_connection_for_device(context, name, device):
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name).strip()
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name, shell=True).strip()
     if method in ["auto","disabled","link-local"]:
         if os.path.isfile('/tmp/nm_veth_configured'):
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
 
     cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
@@ -173,12 +148,12 @@ def start_connection_for_device(context, name, device):
 
 @step(u'Bring up connection "{connection}"')
 def bring_up_connection(context, connection):
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection).strip()
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
     if method in ["auto","disabled","link-local"]:
         if os.path.isfile('/tmp/nm_veth_configured'):
-            device = command_output(context, "nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection).strip()
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
+            device = check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
 
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
@@ -190,12 +165,12 @@ def bring_up_connection(context, connection):
 
 @step(u'Bring up connection "{connection}" ignoring error')
 def bring_up_connection_ignore_error(context, connection):
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection).strip()
+    method = check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
     if method in ["auto","disabled","link-local"]:
         if os.path.isfile('/tmp/nm_veth_configured'):
-            device = command_output(context, "nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection).strip()
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
+            device = check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
+            call('ip link set dev %s up' % device, shell=True)
+            #call('ip link set dev %sp up' % device, shell=True)
 
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
@@ -237,8 +212,10 @@ def check_slaac_setup(context, dev):
             break
 
     cmd = "ip -6 route |grep %s" %prefix
+    grep = Popen(cmd, shell=True, stdout=PIPE)
+    grep.wait()
     search = ""
-    for line in command_output(cmd).split('\n'):
+    for line in grep.stdout:
         if line.find(dev) != -1:
             search = line
             break
@@ -249,8 +226,10 @@ def check_slaac_setup(context, dev):
 
     device_prefix = prefix.split('::')[1]
     cmd = 'ip a s %s |grep inet6| grep "scope global"' %dev
+    ip = Popen(cmd, shell=True, stdout=PIPE)
+    ip.wait()
     ipv6_line = ""
-    for line in command_output(cmd).split('\n'):
+    for line in ip.stdout:
         if line.find('inet6'):
             ipv6_line = line
             break
@@ -367,7 +346,7 @@ def check_slave_not_in_bond_in_proc(context, slave, bond):
 
 @step(u'Check bond "{bond}" state is "{state}"')
 def check_bond_state(context, bond, state):
-    if command_code(context, 'ls /proc/net/bonding/%s' %bond) != 0 and state == "down":
+    if os.system('ls /proc/net/bonding/%s' %bond) != 0 and state == "down":
         return
     child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond) , logfile=context.log)
     assert child.expect(["MII Status: %s" %  state, pexpect.EOF]) == 0, "%s is not in %s state" % (bond, state)
@@ -378,8 +357,10 @@ def check_solicitation(context, dev, file):
     #file = '/tmp/solicitation.txt'
     #dev = 'enp0s25'
     cmd = "ip a s %s |grep ff:ff|awk {'print $2'}" %dev
+    proc = Popen(cmd, shell=True, stdout=PIPE)
+    proc.wait()
     mac = ""
-    for line in command_output(cmd).split('\n'):
+    for line in proc.stdout:
         if line.find(':') != -1:
             mac = line.strip()
 
@@ -436,7 +417,7 @@ def delete_connection(context,connection):
 
 @step(u'Delete connection "{name}" and hit enter')
 def delete_connection_with_enter(context, name):
-    command_code(context, 'nmcli connection delete id %s' %name)
+    os.system('nmcli connection delete id %s' %name)
     sleep(5)
     context.prompt.send('\n')
     sleep(2)
@@ -483,7 +464,7 @@ def check_error_while_saving_in_editor(context, type):
 
 @step(u'Execute "{command}"')
 def execute_command(context, command):
-    command_code(context, command)
+    os.system(command)
     sleep(0.2)
 
 @step(u'Execute "{command}" without waiting for process to finish')
@@ -502,16 +483,18 @@ def fail_up_connection_for_device(context, name, device):
 
 @step(u'Finish "{command}"')
 def wait_for_process(context, command):
-    assert command_code(context, command) == 0
+    assert call(command, shell=True) == 0
 
 
 @step(u'Global temporary ip is not based on mac of device "{dev}"')
 def global_tem_address_check(context, dev):
     cmd = "ip a s %s" %dev
+    pexpect.spawn(cmd, maxread=20000, logfile=context.log)
+    proc = Popen(cmd, shell=True, stdout=PIPE)
     mac = ""
     temp_ipv6 = ""
     ipv6 = ""
-    for line in command_output(cmd).split('\n'):
+    for line in proc.stdout:
         if line.find('brd ff:ff:ff:ff:ff:ff') != -1:
             mac = line.split()[1]
         if line.find('scope global temporary dynamic') != -1:
@@ -529,13 +512,13 @@ def global_tem_address_check(context, dev):
 @step(u'Hostname is visible in log "{log}"')
 def hostname_visible(context, log):
     cmd = "grep $(hostname -s) %s" %log
-    assert command_code(context, cmd) == 0, 'Hostname was not visible in log'
+    assert call(cmd, shell=True) == 0, 'Hostname was not visible in log'
 
 
 @step(u'Hostname is not visible in log "{log}"')
 def hostname_visible(context, log):
     cmd = "grep $(hostname -s) %s" %log
-    assert command_code(context, cmd) == 1, 'Hostname was visible in log'
+    assert call(cmd, shell=True) == 1, 'Hostname was visible in log'
 
 
 @step(u'ifcfg-"{con_name}" file does not exist')
@@ -558,17 +541,17 @@ def mode_missing_in_editor(context):
 @step(u'Network trafic "{state}" dropped')
 def network_dropped(context, state):
     if state == "is":
-        assert command_code(context, 'ping -c 1 -W 1 nix.cz') != 0
+        assert os.system('ping -c 1 -W 1 nix.cz') != 0
     if state == "is not":
-        assert command_code(context, 'ping -c 1 -W 1 nix.cz') == 0
+        assert os.system('ping -c 1 -W 1 nix.cz') == 0
 
 
 @step(u'Network trafic "{state}" dropped on "{device}"')
 def network_dropped(context, state, device):
     if state == "is":
-        assert command_code(context, 'ping -c 2 -I %s -W 1 10.11.5.19' % device) != 0
+        assert os.system('ping -c 2 -I %s -W 1 10.11.5.19' % device) != 0
     if state == "is not":
-        assert command_code(context, 'ping -c 2 -I %s -W 1 10.11.5.19' % device) == 0
+        assert os.system('ping -c 2 -I %s -W 1 10.11.5.19' % device) == 0
 
 
 @step(u'No error appeared in editor')
@@ -604,12 +587,12 @@ def note_print_property_b(context, pattern):
 def note_the_output_as(context, command, index):
     if not hasattr(context, 'noted'):
         context.noted = {}
-    context.noted[index] = command_output(context, command)
+    context.noted[index] = check_output(command, shell=True)
 
 
 @step(u'Note the output of "{command}"')
 def note_the_output_of(context, command):
-    context.noted_value = command_output(context, command)
+    context.noted_value = check_output(command, shell=True)
 
 
 @step(u'Open editor for connection "{con_name}"')
@@ -763,37 +746,37 @@ def quit_editor(context):
 
 @step(u'Reboot')
 def reboot(context):
-    command_code(context, "sudo ip link set dev eth1 down")
-    command_code(context, "sudo ip link set dev eth2 down")
-    command_code(context, "sudo ip link set dev eth3 down")
-    command_code(context, "sudo ip link set dev eth4 down")
-    command_code(context, "sudo ip link set dev eth5 down")
-    command_code(context, "sudo ip link set dev eth6 down")
-    command_code(context, "sudo ip link set dev eth7 down")
-    command_code(context, "sudo ip link set dev eth8 down")
-    command_code(context, "sudo ip link set dev eth9 down")
-    command_code(context, "sudo ip link set dev eth10 down")
-    command_code(context, "nmcli device disconnect nm-bond")
-    command_code(context, "nmcli device disconnect nm-team")
+    os.system("sudo ip link set dev eth1 down")
+    os.system("sudo ip link set dev eth2 down")
+    os.system("sudo ip link set dev eth3 down")
+    os.system("sudo ip link set dev eth4 down")
+    os.system("sudo ip link set dev eth5 down")
+    os.system("sudo ip link set dev eth6 down")
+    os.system("sudo ip link set dev eth7 down")
+    os.system("sudo ip link set dev eth8 down")
+    os.system("sudo ip link set dev eth9 down")
+    os.system("sudo ip link set dev eth10 down")
+    os.system("nmcli device disconnect nm-bond")
+    os.system("nmcli device disconnect nm-team")
     sleep(2)
-    assert command_code(context, "sudo service NetworkManager restart") == 0
+    assert call("sudo service NetworkManager restart", shell=True) == 0
     sleep(4)
 
 
 @step(u'Restart NM')
 def restart_NM(context):
     sleep(1)
-    command_code(context, "service NetworkManager restart") == 0
+    call("service NetworkManager restart", shell=True) == 0
     if os.path.isfile('/tmp/nm_veth_configured'):
-        command_code(context, 'ip link set dev eth0 up')
-        command_code(context, 'ip link set dev eth0p up')
-        command_code(context, 'ip link set dev eth99 up')
-        command_code(context, 'ip link set dev eth99p up')
-        command_code(context, 'ip link set dev eth99p up')
-        command_code(context, 'nmcli c modify dhcp-srv ipv4.method shared')
-        command_code(context, 'nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24')
-        command_code(context, 'nmcli con up dhcp-srv')
-        command_code(context, 'nmcli con up testeth0')
+        call('ip link set dev eth0 up', shell=True)
+        call('ip link set dev eth0p up', shell=True)
+        call('ip link set dev eth99 up', shell=True)
+        call('ip link set dev eth99p up', shell=True)
+        call('ip link set dev eth99p up', shell=True)
+        call('nmcli c modify dhcp-srv ipv4.method shared', shell=True)
+        call('nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24', shell=True)
+        call('nmcli con up dhcp-srv', shell=True)
+        call('nmcli con up testeth0', shell=True)
 
     sleep(4)
 
@@ -888,8 +871,8 @@ def start_tailing(context, archivo):
 @step(u'Team "{team}" is down')
 def team_is_down(context, team):
     cmd = pexpect.spawn('teamdctl %s state dump' %team, logfile=context.log)
-    print command_code(context, 'teamdctl %s state dump' %team)
-    assert command_code(context, 'teamdctl %s state dump' %team) != 0, 'team "%s" exists' % (team)
+    print os.system('teamdctl %s state dump' %team)
+    assert os.system('teamdctl %s state dump' %team) != 0, 'team "%s" exists' % (team)
 
 
 @step(u'Terminate spawned process "{command}"')
