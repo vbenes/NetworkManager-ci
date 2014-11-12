@@ -14,6 +14,15 @@ TIMER = 0.5
 # 3. after scenario
 # 4. after tag
 
+def dump_status(context, when):
+    context.log.write("Network configuration %s:\n\n" % when)
+    for cmd in ['ip link', 'ip addr', 'ip -4 route', 'ip -6 route',
+        'nmcli g', 'nmcli c', 'nmcli d']:
+             context.log.write("--- %s ---\n" % cmd)
+             context.log.flush()
+             call(cmd, shell=True, stdout=context.log)
+             context.log.write("\n")
+
 def before_scenario(context, scenario):
 
     if 'veth' in scenario.tags:
@@ -95,6 +104,7 @@ def before_scenario(context, scenario):
     try:
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
+        dump_status(context, 'before %s' % scenario.name)
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
 
@@ -116,8 +126,9 @@ def after_scenario(context, scenario):
         if data:
             context.embed('text/plain', data)
 
-        if hasattr(context, "embed"):
-            context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
+        dump_status(context, 'after %s' % scenario.name)
+        context.log.close ()
+        context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
