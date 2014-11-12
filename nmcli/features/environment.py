@@ -93,7 +93,7 @@ def before_tag(context, tag):
         print "saving original hostname"
         context.original_hostname = check_output('cat /etc/hostname', shell=True).strip()
 
-    if 'openvswitch' in tag:
+    if tag == 'openvswitch':
         print "---------------------------"
         print "deleting eth1 and eth2 for openswitch tests"
         call('sudo nmcli con del eth1 eth2', shell=True) # delete these profile, we'll work with other ones
@@ -279,12 +279,12 @@ def after_tag(context, tag):
         call('find /etc/sysconfig/network-scripts/ -type f | xargs grep -l "TYPE=Wireless" | xargs sudo rm -rf', shell=True)
         #call('sudo service NetworkManager restart', shell=True)
 
-    if 'ifcfg-rh' in tag:
+    if tag == 'ifcfg-rh':
         print "---------------------------"
         print "enabling ifcfg-plugin"
         call("sudo sh -c \"echo '[main]\nplugins=ifcfg-rh' > /etc/NetworkManager/NetworkManager.conf\" ", shell=True)
 
-    if 'waitforip' in tag:
+    if tag == 'waitforip':
         print "---------------------------"
         print "waiting till original IP regained"
         while True:
@@ -344,7 +344,7 @@ def after_tag(context, tag):
         call('sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-eth2', shell=True)
         call('sudo nmcli con reload', shell=True)
 
-    if 'openvswitch' in tag:
+    if tag == 'openvswitch':
         print "---------------------------"
         print "regenerating eth1 and eth2 profiles after openvswitch manipulation"
         call('service openvswitch stop', shell=True)

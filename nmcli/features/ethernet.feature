@@ -211,6 +211,7 @@ Feature: nmcli - ethernet
     Then "inet6 2607:f0d0:1002:51::4\s+prefixlen 64" is visible with command "ifconfig eth1"
 
 
+    @openvswitch
     @openvswitch_interface_recognized
     Scenario: nmcli - ethernet - openvswitch interface recognized
     * Execute "modprobe openvswitch"
@@ -223,6 +224,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
+    @openvswitch
     @openvswitch_ignore_ovs_network_setup
     Scenario: nmcli - ethernet - openvswitch ignore ovs network setup
     * Execute "modprobe openvswitch"
@@ -244,6 +246,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
+    @openvswitch
     @openvswitch_ignore_ovs_vlan_network_setup
     Scenario: nmcli - ethernet - openvswitch ignore ovs network setup
     * Execute "modprobe openvswitch"
@@ -261,6 +264,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
+    @openvswitch
     @openvswitch_ignore_ovs_bond_network_setup
     Scenario: nmcli - ethernet - openvswitch ignore ovs network setup
     * Execute "modprobe openvswitch"
