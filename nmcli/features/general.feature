@@ -239,7 +239,7 @@ Feature: nmcli - general
     * Execute "sudo echo 'nameserver 1.2.3.4' > /etc/resolv.conf"
     * Execute "cat /etc/resolv.conf"
     * Restart NM
-    * Bring "up" connection "eth0"
+    * Bring "up" connection "testeth0"
     Then "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 10" is not visible with command "cat /etc/resolv.conf"
 
@@ -249,7 +249,7 @@ Feature: nmcli - general
     When "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
     * Execute "sudo sed -i 's/dns=none/\n/' /etc/NetworkManager/NetworkManager.conf"
     * Restart NM
-    * Bring "up" connection "eth0"
+    * Bring "up" connection "testeth0"
     Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver 10" is visible with command "cat /etc/resolv.conf"
 
