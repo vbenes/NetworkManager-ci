@@ -108,7 +108,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
     Then "2607:f0d0:1002:51::4/64" is visible with command "ip a s eth1"
-    Then "default via 2607:f0d0:1002:51::1 dev eth1  proto static  metric 1024" is visible with command "ip -6 route"
+    Then "default via 2607:f0d0:1002:51::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
 
 
     @ipv6_addresses_set_several_IPv6s_with_masks_and_gws
@@ -235,7 +235,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "default via 4000::1 dev eth1  proto static  metric 1024" is visible with command "ip -6 route"
+    Then "default via 4000::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
     Then "3030::1 via 2001::2 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "1010::1 dev eth1  proto static  metric 3" is visible with command "ip -6 route"
@@ -297,7 +297,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "default via 4000::1 dev eth1  proto static  metric 1024" is visible with command "ip -6 route"
+    Then "default via 4000::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "1010::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
 

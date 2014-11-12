@@ -222,7 +222,7 @@ Feature: nmcli: ipv4
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric" is visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
-    Then "192.168.4.1 dev eth1  proto static  scope link  metric 1024" is visible with command "ip route"
+    Then "192.168.4.1 dev eth1  proto static  scope link  metric" is visible with command "ip route"
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric" is visible with command "ip route"
     #* Bring "up" connection "eth0"
 
@@ -262,7 +262,7 @@ Feature: nmcli: ipv4
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric 1" is not visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
-    Then "192.168.4.1 dev eth1  proto static  scope link  metric 1024" is visible with command "ip route"
+    Then "192.168.4.1 dev eth1  proto static  scope link  metric" is visible with command "ip route"
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric 1" is not visible with command "ip route"
 
 
@@ -279,7 +279,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 192.168.122.1 dev eth10  proto static  metric 1024" is visible with command "ip route"
+    Then "default via 192.168.122.1 dev eth10  proto static  metric" is visible with command "ip route"
     Then "192.168.1.0/24 dev eth10  proto static  scope link  metric" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.122.5 dev eth10  proto static  metric" is visible with command "ip route"
     Then "192.168.122.0/24 dev eth10  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
@@ -309,7 +309,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "default via 192.168.122.1 dev eth1  proto static  metric 1024" is visible with command "ip route"
+    Then "default via 192.168.122.1 dev eth1  proto static  metric" is visible with command "ip route"
     Then "192.168.1.0/24 dev eth1  proto static  scope link  metric" is visible with command "ip route"
     Then "192.168.122.0/24 dev eth1  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
 
