@@ -34,7 +34,7 @@ Feature: nmcli - general
     * Note the output of "nmcli -t -f STATE general" as value "1"
     * Note the output of "echo disconnected" as value "2"
     Then Check noted values "1" and "2" are the same
-    * Bring up connection "eth0"
+    * Bring up connection "testeth0"
 
 
     @general
