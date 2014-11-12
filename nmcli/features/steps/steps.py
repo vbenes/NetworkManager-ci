@@ -227,8 +227,8 @@ def check_slaac_setup(context, dev):
     cmd = "sudo radvdump > /tmp/radvdump.txt"
     proc = Popen(cmd, shell=True)
     sleep(200)
-    cmd = "sudo pkill radvdump"
-    Popen(cmd, shell=True).wait()
+    cmd = "sudo pkill -9 radvdump"
+    command_code(context, cmd)
     dump = open("/tmp/radvdump.txt", "r")
     prefix = ""
     for line in dump.readlines():
@@ -519,7 +519,6 @@ def global_tem_address_check(context, dev):
         if line.find('scope global dynamic') != -1:
             ipv6 = line.split()[1]
 
-    proc.wait()
     assert temp_ipv6 != ipv6, 'IPV6 Address are similar!'
     temp_ipv6_end = temp_ipv6.split('/')[0].split(':')[-1]
     mac_end = mac.split(':')[-2]+mac.split(':')[-1]
