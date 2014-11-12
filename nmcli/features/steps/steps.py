@@ -238,7 +238,7 @@ def check_slaac_setup(context, dev):
 
     cmd = "ip -6 route |grep %s" %prefix
     search = ""
-    for line in command_output(cmd).split('\n'):
+    for line in command_output(context, cmd).split('\n'):
         if line.find(dev) != -1:
             search = line
             break
@@ -250,7 +250,7 @@ def check_slaac_setup(context, dev):
     device_prefix = prefix.split('::')[1]
     cmd = 'ip a s %s |grep inet6| grep "scope global"' %dev
     ipv6_line = ""
-    for line in command_output(cmd).split('\n'):
+    for line in command_output(context, cmd).split('\n'):
         if line.find('inet6'):
             ipv6_line = line
             break
@@ -379,7 +379,7 @@ def check_solicitation(context, dev, file):
     #dev = 'enp0s25'
     cmd = "ip a s %s |grep ff:ff|awk {'print $2'}" %dev
     mac = ""
-    for line in command_output(cmd).split('\n'):
+    for line in command_output(context, cmd).split('\n'):
         if line.find(':') != -1:
             mac = line.strip()
 
@@ -511,7 +511,7 @@ def global_tem_address_check(context, dev):
     mac = ""
     temp_ipv6 = ""
     ipv6 = ""
-    for line in command_output(cmd).split('\n'):
+    for line in command_output(context,cmd).split('\n'):
         if line.find('brd ff:ff:ff:ff:ff:ff') != -1:
             mac = line.split()[1]
         if line.find('scope global temporary dynamic') != -1:
