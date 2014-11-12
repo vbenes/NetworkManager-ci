@@ -6,7 +6,8 @@
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
+    * Submit "set ipv4.addresses 192.168.0.100/24" in editor
+    * Submit "set ipv4.gateway 192.168.0.1" in editor
     * Save in editor
     * Quit editor
 
@@ -26,7 +27,8 @@
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
+    * Submit "set ipv4.addresses 192.168.0.100/24" in editor
+    * Submit "set ipv4.gateway 192.168.0.1" in editor
     * Save in editor
     * Quit editor
 
@@ -60,7 +62,8 @@
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
+    * Submit "set ipv4.addresses 192.168.0.100/24" in editor
+    * Submit "set ipv4.gateway 192.168.0.1" in editor
     * Save in editor
     * Quit editor
 
@@ -96,7 +99,8 @@
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
+    * Submit "set ipv4.addresses 192.168.0.100/24" in editor
+    * Submit "set ipv4.gateway 192.168.0.1" in editor
     * Save in editor
     * Quit editor
 
@@ -133,7 +137,8 @@
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
+    * Submit "set ipv4.addresses 192.168.0.100/24" in editor
+    * Submit "set ipv4.gateway 192.168.0.1" in editor
     * Save in editor
     * Quit editor
 
@@ -173,7 +178,8 @@
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
     * Submit "set ipv4.method manual" in editor
-    * Submit "set ipv4.addresses 192.168.0.100/24 192.168.0.1" in editor
+    * Submit "set ipv4.addresses 192.168.0.100/24" in editor
+    * Submit "set ipv4.gateway 192.168.0.1" in editor
     * Save in editor
     * Quit editor
 
