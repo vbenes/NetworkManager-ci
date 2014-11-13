@@ -139,6 +139,7 @@ Feature: IPv6 TUI tests
     * Set "IPv6 CONFIGURATION" category to "Automatic"
     * Come in "IPv6 CONFIGURATION" category
     * Remove all "Addresses" property items
+    * Empty the field "Gateway"
     * Confirm the connection settings
     * Bring up connection "ethernet"
     Then "fc01::1:5/68" is not visible with command "ip a s eth10"

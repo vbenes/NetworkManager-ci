@@ -62,7 +62,7 @@ Feature: IPv4 TUI tests
     * Confirm the connection settings
     Then "GATEWAY=192.168.125.96" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
     Then "192.168.125.253/24" is visible with command "ip a s eth1"
-    Then "default via 192.168.125" is not visible with command "ip route"
+    Then "default via 192.168.125" is visible with command "ip route"
     Then "192.168.125.0/24 dev eth1" is visible with command "ip route"
 
 
@@ -82,7 +82,7 @@ Feature: IPv4 TUI tests
     Then "192.168.125.101/24" is visible with command "ip a s eth1"
     Then "192.168.125.102/24" is visible with command "ip a s eth1"
     Then "192.168.125.103/24" is visible with command "ip a s eth1"
-    Then "default via 192.168.125" is not visible with command "ip route"
+    Then "default via 192.168.125" is visible with command "ip route"
     Then "192.168.125.0/24 dev eth1" is visible with command "ip route"
 
 
@@ -123,6 +123,7 @@ Feature: IPv4 TUI tests
     * Set "IPv4 CONFIGURATION" category to "Automatic"
     * Come in "IPv4 CONFIGURATION" category
     * Remove all "Addresses" property items
+    * Empty the field "Gateway"
     * Confirm the connection settings
     * Bring up connection "ethernet"
     Then "192.168.253.101/24" is not visible with command "ip a s eth1"
@@ -213,8 +214,9 @@ Feature: IPv4 TUI tests
     * Add ip route "192.168.1.0/24 0.0.0.0"
     * Add ip route "192.168.2.0/24 192.168.122.5"
     * Confirm the connection settings
-    Then "192.168.1.0/24 dev eth1  proto static  scope link  metric" is visible with command "ip route"
-    Then "192.168.2.0/24 via 192.168.122.5 dev eth1  proto static  metric" is visible with command "ip route"
+    Then "default via 192.168.122.1 dev eth1  proto static" is visible with command "ip route"
+    Then "192.168.1.0/24 dev eth1  proto static  scope link" is visible with command "ip route"
+    Then "192.168.2.0/24 via 192.168.122.5 dev eth1  proto static" is visible with command "ip route"
     Then "192.168.122.0/24 dev eth1  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
 
 
