@@ -78,6 +78,47 @@ def init_screen():
     stream.attach(screen)
     return stream, screen
 
+def go_until_pattern_matches_line(context, key, pattern, limit=50):
+    sleep(0.2)
+    context.stream.feed(open(OUTPUT, 'r').read())
+    for i in range(0,limit):
+        match = re.match(pattern, context.screen.display[context.screen.cursor.y], re.UNICODE)
+        if match is not None:
+            return match
+        else:
+            context.tui.send(key)
+            sleep(0.3)
+            context.stream.feed(open(OUTPUT, 'r').read())
+    return None
+
+
+def go_until_pattern_matches_aftercursor_text(context, key, pattern, limit=50, include_precursor_char=True):
+    pre_c = 0
+    sleep(0.2)
+    context.stream.feed(open(OUTPUT, 'r').read())
+    if include_precursor_char is True:
+        pre_c = -1
+    for i in range(0,limit):
+        match = re.match(pattern, context.screen.display[context.screen.cursor.y][context.screen.cursor.x+pre_c:], re.UNICODE)
+        print(context.screen.display[context.screen.cursor.y].encode('utf-8'))
+        if match is not None:
+            return match
+        else:
+            context.tui.send(key)
+            sleep(0.3)
+            context.stream.feed(open(OUTPUT, 'r').read())
+    return None
+
+def dump_command_output(command):
+    if not os.path.isfile('/tmp/tui-screen.log'):
+        return
+    fd = open('/tmp/tui-screen.log', 'a+')
+    fd.write("----------\nInfo: next failed step's '%s' output:\n" % command)
+    fd.flush()
+    subprocess.call(command, shell=True, stdout=fd)
+    fd.write("\n")
+    fd.flush()
+    fd.close()
 
 @step('Prepare virtual terminal environment')
 def prepare_environment(context):
@@ -130,38 +171,6 @@ def prep_conn_abstract(context, typ, name):
                               * Choose to "<Add>" a connection
                               * Choose the connection type "%s"
                               * Set "Profile name" field to "%s"''' % (typ, name))
-
-
-def go_until_pattern_matches_line(context, key, pattern, limit=50):
-    sleep(0.2)
-    context.stream.feed(open(OUTPUT, 'r').read())
-    for i in range(0,limit):
-        match = re.match(pattern, context.screen.display[context.screen.cursor.y], re.UNICODE)
-        if match is not None:
-            return match
-        else:
-            context.tui.send(key)
-            sleep(0.3)
-            context.stream.feed(open(OUTPUT, 'r').read())
-    return None
-
-
-def go_until_pattern_matches_aftercursor_text(context, key, pattern, limit=50, include_precursor_char=True):
-    pre_c = 0
-    sleep(0.2)
-    context.stream.feed(open(OUTPUT, 'r').read())
-    if include_precursor_char is True:
-        pre_c = -1
-    for i in range(0,limit):
-        match = re.match(pattern, context.screen.display[context.screen.cursor.y][context.screen.cursor.x+pre_c:], re.UNICODE)
-        print(context.screen.display[context.screen.cursor.y].encode('utf-8'))
-        if match is not None:
-            return match
-        else:
-            context.tui.send(key)
-            sleep(0.3)
-            context.stream.feed(open(OUTPUT, 'r').read())
-    return None
 
 
 @step(u'Choose to "{option}" from main screen')
@@ -443,7 +452,9 @@ def restore_hostname(context):
 @step(u'"{pattern}" is visible with command "{command}"')
 def check_pattern_visible_with_command(context, pattern, command):
     cmd = pexpect.spawn(command, timeout = 180)
-    assert cmd.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
+    if cmd.expect([pattern, pexpect.EOF]) != 0:
+        dump_command_output(command)
+        raise Exception('Did not see the pattern %s' % (pattern))
 
 
 @step(u'"{pattern}" is visible with command "{command}" in "{seconds}" seconds')
@@ -455,13 +466,16 @@ def check_pattern_visible_with_command_in_time(context, pattern, command, second
             return True
         timer = timer - 1
         sleep(1)
+    dump_command_output(command)
     raise Exception('Did not see the pattern %s in %s seconds' % (pattern, seconds))
 
 
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
     cmd = pexpect.spawn(command, timeout = 180)
-    assert cmd.expect([pattern, pexpect.EOF]) == 1, 'pattern %s still visible with %s' % (pattern, command)
+    if cmd.expect([pattern, pexpect.EOF]) == 0:
+        dump_command_output(command)
+        raise Exception('pattern %s still visible with %s' % (pattern, command))
 
 
 @step(u'Check ifcfg-name file created for connection "{con_name}"')
