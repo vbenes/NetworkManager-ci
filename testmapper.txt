@@ -414,6 +414,7 @@ nmtui_ipv4_addresses_delete_ip_and_back_to_auto, ., nmtui/./runtest.sh nmtui_ipv
 nmtui_ipv4_routes_set_basic_route, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_basic_route, NetworkManager-tui
 nmtui_ipv4_routes_remove_basic_route, ., nmtui/./runtest.sh nmtui_ipv4_routes_remove_basic_route, NetworkManager-tui
 nmtui_ipv4_routes_set_device_route, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_device_route, NetworkManager-tui
+nmtui_ipv4_routes_several_default_routes_metrics, ., nmtui/./runtest.sh nmtui_ipv4_routes_several_default_routes_metrics, NetworkManager-tui
 nmtui_ipv4_routes_set_invalid_route_destination, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_invalid_route_destination, NetworkManager-tui
 nmtui_ipv4_routes_set_invalid_route_hop, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_invalid_route_hop, NetworkManager-tui
 nmtui_ipv4_routes_set_unreachable_route, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_unreachable_route, NetworkManager-tui
@@ -446,6 +447,7 @@ nmtui_ipv6_addresses_delete_ip_and_back_to_auto, ., nmtui/./runtest.sh nmtui_ipv
 nmtui_ipv6_routes_set_basic_route, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_basic_route, NetworkManager-tui
 nmtui_ipv6_routes_remove_basic_route, ., nmtui/./runtest.sh nmtui_ipv6_routes_remove_basic_route, NetworkManager-tui
 nmtui_ipv6_routes_set_device_route, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_device_route, NetworkManager-tui
+nmtui_ipv6_routes_several_default_routes_metrics, ., nmtui/./runtest.sh nmtui_ipv6_routes_several_default_routes_metrics, NetworkManager-tui
 nmtui_ipv6_routes_set_invalid_route_destination, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_invalid_route_destination, NetworkManager-tui
 nmtui_ipv6_routes_set_invalid_route_hop, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_invalid_route_hop, NetworkManager-tui
 nmtui_ipv6_dns_method_static_+_IP_+_dns, ., nmtuinmtui_ipv6_dns_method_static_runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
