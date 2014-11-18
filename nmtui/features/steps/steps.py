@@ -406,7 +406,7 @@ def set_category(context, category, setting):
     assert go_until_pattern_matches_line(context,keys['DOWNARROW'],u'^.*[\u2550|\u2564]\s%s.*' % category) is not None, "Could not go to category '%s' on screen!" % category
     context.tui.send(' ')
     context.tui.send(keys['UPARROW']*16)
-    match = go_until_pattern_matches_aftercursor_text(context,keys['DOWNARROW'],u'^.*\u2502%s\s*\u2502.*' % setting)
+    match = go_until_pattern_matches_aftercursor_text(context,keys['DOWNARROW'],u'^\s*%s\s*\u2502.*' % setting)
     assert match is not None, "Could not find setting %s for the category %s " % (setting, category)
     context.tui.send('\r\n')
 
@@ -416,7 +416,7 @@ def set_dropdown(context, dropdown, setting):
     assert go_until_pattern_matches_line(context,keys['TAB'],u'^.*\s+%s.*' % dropdown) is not None, "Could not go to dropdown '%s' on screen!" % dropdown
     context.tui.send(' ')
     context.tui.send(keys['UPARROW']*16)
-    match = go_until_pattern_matches_aftercursor_text(context,keys['DOWNARROW'],u'^.*\u2502%s\s*\u2502.*' % setting)
+    match = go_until_pattern_matches_aftercursor_text(context,keys['DOWNARROW'],u'^\s*%s\s*\u2502.*' % setting)
     assert match is not None, "Could not find setting %s for the dropdown %s " % (setting, dropdown)
     context.tui.send('\r\n')
 
