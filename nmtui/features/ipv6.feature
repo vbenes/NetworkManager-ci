@@ -139,7 +139,6 @@ Feature: IPv6 TUI tests
     * Set "IPv6 CONFIGURATION" category to "Automatic"
     * Come in "IPv6 CONFIGURATION" category
     * Remove all "Addresses" property items
-    * Empty the field "Gateway"
     * Confirm the connection settings
     * Bring up connection "ethernet"
     Then "fc01::1:5/68" is not visible with command "ip a s eth10"
@@ -519,6 +518,7 @@ Feature: IPv6 TUI tests
     Scenario: nmtui - ipv6 - invalid gateway
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv6 CONFIGURATION" category
+    * In "Addresses" property add "2001::2/126"
     * Set "Gateway" field to "1010::fffff/128"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -526,6 +526,7 @@ Feature: IPv6 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv6 CONFIGURATION" category
+    * In "Addresses" property add "2001::2/126"
     * Set "Gateway" field to "dead::beef/129"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -533,6 +534,7 @@ Feature: IPv6 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv6 CONFIGURATION" category
+    * In "Addresses" property add "2001::2/126"
     * Set "Gateway" field to "192.168.1.142/32"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -540,6 +542,7 @@ Feature: IPv6 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv6 CONFIGURATION" category
+    * In "Addresses" property add "2001::2/126"
     * Set "Gateway" field to ":::/32"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -547,6 +550,7 @@ Feature: IPv6 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv6 CONFIGURATION" category
+    * In "Addresses" property add "2001::2/126"
     * Set "Gateway" field to "::::"
     Then Cannot confirm the connection settings
 

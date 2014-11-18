@@ -102,7 +102,7 @@ Feature: IPv4 TUI tests
     Then "192.168.253.101/24" is visible with command "ip a s eth1"
     Then "192.168.253.102/24" is visible with command "ip a s eth1"
     Then "192.168.253.103/24" is visible with command "ip a s eth1"
-    Then "default via 192.168.253" is not visible with command "ip route"
+    Then "default via 192.168.253" is visible with command "ip route"
     Then "192.168.253.0/24 dev eth1" is visible with command "ip route"
 
 
@@ -123,7 +123,6 @@ Feature: IPv4 TUI tests
     * Set "IPv4 CONFIGURATION" category to "Automatic"
     * Come in "IPv4 CONFIGURATION" category
     * Remove all "Addresses" property items
-    * Empty the field "Gateway"
     * Confirm the connection settings
     * Bring up connection "ethernet"
     Then "192.168.253.101/24" is not visible with command "ip a s eth1"
@@ -536,6 +535,7 @@ Feature: IPv4 TUI tests
     Scenario: nmtui - ipv4 - invalid gateway
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.1.2"
     * Set "Gateway" field to "192.168.1.256"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -543,6 +543,7 @@ Feature: IPv4 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.1.2"
     * Set "Gateway" field to "192.05.1.142"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -550,6 +551,7 @@ Feature: IPv4 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.1.2"
     * Set "Gateway" field to "192.168.1.142/33"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -557,6 +559,7 @@ Feature: IPv4 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.1.2"
     * Set "Gateway" field to "000.000.000.000"
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -564,6 +567,7 @@ Feature: IPv4 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.1.2"
     * Set "Gateway" field to "..."
     * Cannot confirm the connection settings
     * Press "ENTER" key
@@ -571,6 +575,7 @@ Feature: IPv4 TUI tests
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "ethernet"
     * Come in "IPv4 CONFIGURATION" category
+    * In "Addresses" property add "192.168.1.2"
     * Set "Gateway" field to "123456789"
     Then Cannot confirm the connection settings
 
