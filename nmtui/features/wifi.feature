@@ -272,7 +272,7 @@ Feature: WIFI TUI tests
     * Set "Device" field to "wlan0"
     * Set "SSID" field to "qehsdkfjhsdkjfhskjdhfkdsjhfkjshkjagdgdsfsjkdhf"
     * Confirm the connection settings
-    Then ".*Error saving connection.*SSID length.*" is visible on screen
+    Then ".*Unable to add new connection.*SSID length.*" is visible on screen
 
 
     @wifi

@@ -61,23 +61,27 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
     #making sure all wifi devices are named wlanX
     NUM=0
+    wlan=0
     for DEV in `nmcli device | grep wifi | awk {'print $1'}`; do
-    ip link set $DEV down
-    ip link set $DEV name wlan$NUM
-    ip link set wlan$NUM up
-    NUM=$(($NUM+1))
+        wlan=1
+        ip link set $DEV down
+        ip link set $DEV name wlan$NUM
+        ip link set wlan$NUM up
+        NUM=$(($NUM+1))
     done
 
     #installing behave and pexpect
     yum -y install install/*.rpm
 
     veth=0
-    for X in $(seq 0 10); do
-        if ! nmcli -f DEVICE -t device |grep eth${X}; then
-            veth=1
-            break
-        fi
-    done
+    if [ $wlan -eq 0 ]; then
+        for X in $(seq 0 10); do
+            if ! nmcli -f DEVICE -t device |grep eth${X}; then
+                veth=1
+                break
+            fi
+        done
+    fi
 
 
     if [ $veth -eq 1 ]; then
@@ -174,15 +178,17 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
     else
         #profiles tuning
-        nmcli connection add type ethernet con-name testeth0 ifname eth0 autoconnect yes
-        nmcli connection modify testeth0 ipv6.method ignore
-        nmcli connection delete eth0
-        for X in $(seq 1 10); do
-            nmcli connection add type ethernet con-name testeth$X ifname eth$X autoconnect no
-            nmcli connection delete eth$X
-        done
-        nmcli connection modify testeth10 ipv6.method auto
-        nmcli connection up id testeth0
+        if [ $wlan -eq 0 ]; then
+            nmcli connection add type ethernet con-name testeth0 ifname eth0 autoconnect yes
+            nmcli connection modify testeth0 ipv6.method ignore
+            nmcli connection delete eth0
+            for X in $(seq 1 10); do
+                nmcli connection add type ethernet con-name testeth$X ifname eth$X autoconnect no
+                nmcli connection delete eth$X
+            done
+            nmcli connection modify testeth10 ipv6.method auto
+            nmcli connection up id testeth0
+        fi
         #service NetworkManager restart
     fi
     # beah-beaker-backend sanitization
