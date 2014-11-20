@@ -256,6 +256,7 @@ Feature: nmcli - general
 
     # VVV 1136836 reproducer
     @general
+    @connection_up_after_journald_restart
     Scenario: NM - general - bring up connection after journald restart
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Bring "up" connection "ethie"
