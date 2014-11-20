@@ -553,14 +553,14 @@ Feature: nmcli: ipv6
     * Open editor for connection "profie"
     * Submit "set ipv6.may-fail true" in editor
     * Submit "set ipv6.method dhcp" in editor
-    * Submit "set ipv6.dhcp-hostname walderon" in editor
+    * Submit "set ipv6.dhcp-hostname RHX" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "profie"
     * Finish "sleep 5"
     * Run child "sudo kill -9 $(pidof tshark)"
     #Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
-    Then "walderon" is visible with command "grep walderon /tmp/ipv6-hostname.log"
+    Then "RHX" is visible with command "grep walderon /tmp/ipv6-hostname.log"
 
 
     @ipv6_dhcp-hostname_remove
@@ -570,7 +570,7 @@ Feature: nmcli: ipv6
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
-    * Submit "set ipv6.dhcp-hostname walderon" in editor
+    * Submit "set ipv6.dhcp-hostname RHX" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -583,7 +583,7 @@ Feature: nmcli: ipv6
     * Bring "up" connection "ethie"
     * Finish "sleep 5"
     * Run child "sudo kill -9 $(pidof tshark)"
-    Then "walderon" is not visible with command "cat /tmp/tshark.log"
+    Then "RHX" is not visible with command "cat /tmp/tshark.log"
 
 
     @ipv6_ip6-privacy_0
@@ -647,8 +647,8 @@ Feature: nmcli: ipv6
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.ip6-privacy 3" in editor
     Then Error type "failed to set 'ip6-privacy' property: '3' is not valid\; use 0, 1, or 2" while saving in editor
-    * Submit "set ipv6.ip6-privacy walderoon" in editor
-    Then Error type "failed to set 'ip6-privacy' property: 'walderoon' is not a number" while saving in editor
+    * Submit "set ipv6.ip6-privacy RHX" in editor
+    Then Error type "failed to set 'ip6-privacy' property: 'RHX' is not a number" while saving in editor
 
 
     @ipv6_take_manually_created_ifcfg
