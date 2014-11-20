@@ -1,8 +1,6 @@
 @testplan
 Feature: nmcli - general
 
- # Background:
- #   * Close Evolution and cleanup data
     @general
     @testcase_290423
     Scenario: nmcli - general - check version
@@ -17,6 +15,7 @@ Feature: nmcli - general
     * Note the output of "nmcli -t -f STATE general" as value "1"
     * Note the output of "echo connected" as value "2"
     Then Check noted values "1" and "2" are the same
+
 
     @general
     @hostname_change
@@ -243,6 +242,7 @@ Feature: nmcli - general
     Then "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 10" is not visible with command "cat /etc/resolv.conf"
 
+
     @general
     @remove_dns_none
     Scenario: NM - dns  none removal
@@ -253,3 +253,11 @@ Feature: nmcli - general
     Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver 10" is visible with command "cat /etc/resolv.conf"
 
+
+    # VVV 1136836 reproducer
+    @general
+    Scenario: NM - general - bring up connection after journald restart
+    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Bring "up" connection "ethie"
+    * Finish "sudo systemctl restart systemd-journald.service"
+    Then Bring "up" connection "ethie"
