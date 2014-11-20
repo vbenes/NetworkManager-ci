@@ -208,6 +208,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.3.10/24" in editor
     * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
+    * Submit "set ipv4.route-metric 21" in editor
     * Save in editor
     * Quit editor
     * Add connection type "ethernet" named "ethie2" for device "eth2"
@@ -216,6 +217,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.1.10/24" in editor
     * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.2.0/24 192.168.1.11 2" in editor
+    * Submit "set ipv4.route-metric 22" in editor
     * Save in editor
     * Quit editor
     #* Bring "down" connection "eth0"
@@ -224,7 +226,8 @@ Feature: nmcli: ipv4
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric" is visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
-    Then "192.168.4.1 dev eth1  proto static  scope link  metric" is visible with command "ip route"
+    Then "192.168.4.1 dev eth1  proto static  scope link  metric 21" is visible with command "ip route"
+    Then "192.168.4.1 dev eth2  proto static  scope link  metric 22" is visible with command "ip route"
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric" is visible with command "ip route"
     #* Bring "up" connection "eth0"
 
@@ -239,6 +242,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.3.10/24" in editor
     * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
+    * Submit "set ipv4.route-metric 21" in editor
     * Save in editor
     * Quit editor
     * Add connection type "ethernet" named "ethie2" for device "eth2"
@@ -247,6 +251,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.1.10/24" in editor
     * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.2.0/24 192.168.1.11 2" in editor
+    * Submit "set ipv4.route-metric 22" in editor
     * Save in editor
     * Quit editor
     * Open editor for connection "ethie"
@@ -264,7 +269,8 @@ Feature: nmcli: ipv4
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric 1" is not visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
-    Then "192.168.4.1 dev eth1  proto static  scope link  metric" is visible with command "ip route"
+    Then "192.168.4.1 dev eth1  proto static  scope link  metric 21" is visible with command "ip route"
+    Then "192.168.4.1 dev eth2  proto static  scope link  metric 22" is visible with command "ip route"
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric 1" is not visible with command "ip route"
 
 
