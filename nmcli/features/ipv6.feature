@@ -560,7 +560,7 @@ Feature: nmcli: ipv6
     * Finish "sleep 5"
     * Run child "sudo kill -9 $(pidof tshark)"
     #Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
-    Then "RHX" is visible with command "grep walderon /tmp/ipv6-hostname.log"
+    Then "RHX" is visible with command "grep RHX /tmp/ipv6-hostname.log"
 
 
     @ipv6_dhcp-hostname_remove
