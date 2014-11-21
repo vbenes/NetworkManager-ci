@@ -73,14 +73,24 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     #installing behave and pexpect
     yum -y install install/*.rpm
 
+    dcb_inf=0
+    if [[ $1 == *dcb_* ]]; then
+        dcb_inf=1
+    fi
+    if [[ $1 == *inf_* ]]; then
+        dcb_inf=1
+    fi
+
     veth=0
-    if [ $wlan -eq 0 ] || ! [[ $1 == *dcb_* ]] || ! [[ $1 == *inf_* ]]; then
-        for X in $(seq 0 10); do
-            if ! nmcli -f DEVICE -t device |grep eth${X}; then
-                veth=1
-                break
-            fi
-        done
+    if [ $wlan -eq 0 ]; then
+        if [ $dcb_inf -eq 0 ]; then
+            for X in $(seq 0 10); do
+                if ! nmcli -f DEVICE -t device |grep eth${X}; then
+                    veth=1
+                    break
+                fi
+            done
+        fi
     fi
 
 
