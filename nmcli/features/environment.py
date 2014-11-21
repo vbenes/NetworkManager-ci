@@ -45,8 +45,10 @@ def before_scenario(context, scenario):
 
         if 'scapy' in scenario.tags:
             print "---------------------------"
-            print "installing scapy"
-            call("pip install http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz", shell=True)
+            print "installing scapy and tcpdump"
+            if not os.path.isfile('/usr/bin/scapy'):
+                call('sudo yum -y install tcpdump')
+                call("sudo pip install http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz", shell=True)
 
         if 'firewall' in scenario.tags:
             print "---------------------------"
@@ -278,6 +280,12 @@ def after_scenario(context, scenario):
                 for item in ["vlan","eth1.99","eth1.299","eth1.399","eth1.65","eth1.165","eth1.265","eth1.499","eth1.80","eth1.90"]:
                     call('ip link delete %s' % item, shell=True)
             call("nmcli connection down testeth1", shell=True)
+
+        if 'scapy' in scenario.tags:
+            print "---------------------------"
+            print "removing veth devices"
+            call("ip link delete test11", shell=True)
+            call("nmcli connection delete ethernet-test10 ethernet-test11", shell=True)
 
 
         if 'wifi' in scenario.tags:

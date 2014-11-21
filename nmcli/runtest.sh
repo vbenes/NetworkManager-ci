@@ -32,7 +32,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     echo "redhat" | passwd root --stdin
 
     #adding ntp and syncing time
-    yum -y install ntp
+    yum -y install ntp tcpdump
     service ntpd restart
     sleep 10
 
