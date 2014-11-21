@@ -189,7 +189,15 @@ if [ ! -e /tmp/nm_eth_configured ]; then
             nmcli connection modify testeth10 ipv6.method auto
             nmcli connection up id testeth0
         fi
-        #service NetworkManager restart
+        if [ $wlan -eq 1 ]; then
+            # we need to do this to have the device rescan networks after the renaming
+            service NetworkManager restart
+            # obtain valid certificates
+            mkdir /tmp/certs
+            wget http://wlan-lab.eng.bos.redhat.com/certs/eaptest_ca_cert.pem -O /tmp/certs/eaptest_ca_cert.pem
+            wget http://wlan-lab.eng.bos.redhat.com/certs/client.pem -O /tmp/certs/client.pem
+        fi
+
     fi
     # beah-beaker-backend sanitization
     kill -9 $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk '{print $2}')

@@ -587,7 +587,7 @@ def network_dropped(context, state):
 
 
 @step(u'Network trafic "{state}" dropped on "{device}"')
-def network_dropped(context, state, device):
+def network_dropped_two(context, state, device):
     if state == "is":
         assert command_code(context, 'ping -c 2 -I %s -W 1 10.11.5.19' % device) != 0
     if state == "is not":
@@ -596,7 +596,7 @@ def network_dropped(context, state, device):
 
 @step(u'No error appeared in editor')
 def no_error_appeared_in_editor(context):
-    r = context.prompt.expect([pexpect.TIMEOUT, pexpect.EOF, 'Error'])
+    r = context.prompt.expect([pexpect.TIMEOUT, pexpect.EOF, 'Error'], timeout=5)
     if r == 2:
         raise Exception('Got an Error in editor')
 

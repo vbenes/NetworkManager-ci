@@ -149,7 +149,7 @@ Feature: nmcli - wifi
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Bring up connection "qe-open"
+    * Bring up connection "qe-open" ignoring error
     Then "qe-open" is not visible with command "iw dev wlan0 link"
     Then "\*\s+qe-open" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -229,12 +229,13 @@ Feature: nmcli - wifi
     * Check ifcfg-name file created for connection "qe-open"
     * Open editor for connection "qe-open"
     * Set a property named "802-11-wireless.band" to "bg" in editor
-    * Set a property named "802-11-wireless.channel" to "11" in editor
-    * Save in editor
-    * Check value saved message showed in editor
-    * Quit editor
-    Then "Error" is visible with command "nmcli connection up qe-open"
-    Then "\*\s+qe-open" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
+    * Set a property named "802-11-wireless.channel" to "3" in editor
+    Then Error type "might be ignored in infrastructure mode" shown in editor
+    # * Save in editor
+    # * Check value saved message showed in editor
+    # * Quit editor
+    # Then "Error" is visible with command "nmcli connection up qe-open"
+    # Then "\*\s+qe-open" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
     @wifi
@@ -646,7 +647,7 @@ Feature: nmcli - wifi
     * Set a property named "802-11-wireless-security.key-mgmt" to "wpa-eap" in editor
     * Set a property named "802-1x.eap" to "peap" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
     * Set a property named "802-1x.phase2-auth" to "gtc" in editor
     * Set a property named "802-1x.password" to "testing123" in editor
     * Save in editor
@@ -667,10 +668,10 @@ Feature: nmcli - wifi
     * Set a property named "802-11-wireless-security.key-mgmt" to "wpa-eap" in editor
     * Set a property named "802-1x.eap" to "tls" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
-    * Set a property named "802-1x.client-cert" to "/tmp/certs/client.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.client-cert" to "file:///tmp/certs/client.pem" in editor
     * Set a property named "802-1x.private-key-password" to "12345testing" in editor
-    * Set a property named "802-1x.private-key" to "/tmp/certs/client.pem" in editor
+    * Set a property named "802-1x.private-key" to "file:///tmp/certs/client.pem" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -691,7 +692,7 @@ Feature: nmcli - wifi
     * Set a property named "802-1x.phase2-auth" to "mschapv2" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
     * Set a property named "802-1x.password" to "testing123" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -710,7 +711,7 @@ Feature: nmcli - wifi
     * Set a property named "802-11-wireless-security.key-mgmt" to "wpa-eap" in editor
     * Set a property named "802-1x.eap" to "peap" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
     * Set a property named "802-1x.phase2-auth" to "gtc" in editor
     * Set a property named "802-1x.password" to "testing123" in editor
     * Save in editor
@@ -720,6 +721,7 @@ Feature: nmcli - wifi
     * Bring up connection "qe-wpa2-enterprise"
     Then "qe-wpa2-enterprise" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wpa2-enterprise" is visible with command "nmcli -f IN-USE,SSID device wifi list"
+    Then "inet 10." is visible with command "ip a s wlan0"
 
 
     @wifi
@@ -731,10 +733,10 @@ Feature: nmcli - wifi
     * Set a property named "802-11-wireless-security.key-mgmt" to "wpa-eap" in editor
     * Set a property named "802-1x.eap" to "tls" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
-    * Set a property named "802-1x.client-cert" to "/tmp/certs/client.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.client-cert" to "file:///tmp/certs/client.pem" in editor
     * Set a property named "802-1x.private-key-password" to "12345testing" in editor
-    * Set a property named "802-1x.private-key" to "/tmp/certs/client.pem" in editor
+    * Set a property named "802-1x.private-key" to "file:///tmp/certs/client.pem" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -755,7 +757,7 @@ Feature: nmcli - wifi
     * Set a property named "802-1x.phase2-auth" to "mschapv2" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
     * Set a property named "802-1x.password" to "testing123" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -792,10 +794,10 @@ Feature: nmcli - wifi
     * Set a property named "802-11-wireless-security.key-mgmt" to "ieee8021x" in editor
     * Set a property named "802-1x.eap" to "tls" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
-    * Set a property named "802-1x.client-cert" to "/tmp/certs/client.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.client-cert" to "file:///tmp/certs/client.pem" in editor
     * Set a property named "802-1x.private-key-password" to "12345testing" in editor
-    * Set a property named "802-1x.private-key" to "/tmp/certs/client.pem" in editor
+    * Set a property named "802-1x.private-key" to "file:///tmp/certs/client.pem" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -816,7 +818,7 @@ Feature: nmcli - wifi
     * Set a property named "802-1x.phase2-auth" to "mschapv2" in editor
     * Set a property named "802-1x.identity" to "Bill Smith" in editor
     * Set a property named "802-1x.password" to "testing123" in editor
-    * Set a property named "802-1x.ca-cert" to "/tmp/certs/eaptest_ca_cert.pem" in editor
+    * Set a property named "802-1x.ca-cert" to "file:///tmp/certs/eaptest_ca_cert.pem" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -1168,15 +1170,15 @@ Feature: nmcli - wifi
     * Open editor for connection "qe-wep"
     * Set a property named "802-11-wireless-security.key-mgmt" to "none" in editor
     * Set a property named "802-11-wireless-security.wep-key0" to "123" in editor
-    * "104/128-bit passphrase" appeared in editor
+    * "passphrase" appeared in editor
     * Set a property named "802-11-wireless-security.wep-key0" to "aaaaabbsbb" in editor
-    * "104/128-bit passphrase" appeared in editor
+    * "passphrase" appeared in editor
     * Set a property named "802-11-wireless-security.wep-key0" to "1234A678B01F" in editor
-    * "104/128-bit passphrase" appeared in editor
+    * "passphrase" appeared in editor
     * Set a property named "802-11-wireless-security.wep-key0" to "1234567890123456" in editor
-    * "104/128-bit passphrase" appeared in editor
+    * "passphrase" appeared in editor
     * Set a property named "802-11-wireless-security.wep-key0" to "G234567F9012345678911F3451" in editor
-    Then "104/128-bit passphrase" appeared in editor
+    Then "passphrase" appeared in editor
 
 
     @wifi
@@ -1208,7 +1210,7 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are 3 optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
     * Submit "no"
     * Expect "Do you want to add IP addresses?"
     * Submit "no"
@@ -1226,7 +1228,7 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are 3 optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
     * Submit "yes"
     * Expect "MTU"
     * Submit "64"
@@ -1234,6 +1236,8 @@ Feature: nmcli - wifi
     * Submit "noted-value"
     * Expect "Cloned MAC"
     * Submit "noted-value"
+    * Expect "Mode"
+    * Submit "infrastructure"
     * Expect "Do you want to add IP addresses?"
     * Submit "no"
     * Wait for at least "5" seconds
@@ -1251,7 +1255,7 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are 3 optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
     * Submit "no"
     * Expect "Do you want to add IP addresses?"
     * Submit "yes"
@@ -1260,21 +1264,18 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Submit "10.1.1.6/24"
     * No error appeared in editor
-    * Submit "10.1.1.6/24 10.1.1.1"
-    * No error appeared in editor
-    * Submit "10.1.1.6 10.1.1.1"
-    * No error appeared in editor
     * Submit "<enter>"
+    * Expect "IPv4 gateway"
+    * Submit "10.1.1.1"
     * Expect "IPv6 address"
     * Submit "fe80::215:ff:fe93:ffff"
     * No error appeared in editor
     * Submit "fe80::215:ff:fe93:ffff/128"
     * No error appeared in editor
-    * Submit "fe80::215:ff:fe93:ffff/128 ::1"
-    * No error appeared in editor
-    * Submit "fe80::215:ff:fe93:ffff ::1"
-    * No error appeared in editor
     * Submit "<enter>"
+    * Expect "IPv6 gateway"
+    * Submit "::1"
+    * Expect "Connection.*successfully added"
     * Wait for at least "5" seconds
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-open" is visible with command "iw dev wlan0 link"
@@ -1292,7 +1293,7 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are 3 optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
     * Submit "no"
     * Expect "Do you want to add IP addresses?"
     * Submit "yes"

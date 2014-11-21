@@ -16,8 +16,8 @@ TIMER = 0.5
 
 def dump_status(context, when):
     context.log.write("Network configuration %s:\n\n" % when)
-    for cmd in ['ip link', 'ip addr', 'ip -4 route', 'ip -6 route',
-        'nmcli g', 'nmcli c', 'nmcli d']:
+    for cmd in ['ip addr', 'ip -4 route', 'ip -6 route',
+        'nmcli g', 'nmcli c', 'nmcli d', 'nmcli d w l']:
              context.log.write("--- %s ---\n" % cmd)
              context.log.flush()
              call(cmd, shell=True, stdout=context.log)
@@ -291,10 +291,14 @@ def after_scenario(context, scenario):
         if 'wifi' in scenario.tags:
             print "---------------------------"
             print "removing all wifi residues"
-            call('sudo nmcli device disconnect wlan0', shell=True)
+            #call('sudo nmcli device disconnect wlan0', shell=True)
             call('sudo nmcli con del qe-open qe-wep qe-wep-psk qe-wep-enterprise qe-wep-enterprise-cisco', shell=True)
             call('sudo nmcli con del qe-wpa1-psk qe-wpa2-psk qe-wpa1-enterprise qe-wpa2-enterprise qe-hidden-wpa2-psk', shell=True)
             call('sudo nmcli con del qe-adhoc wifi-wlan0', shell=True)
+            if 'testcase_309441' in scenario.tags:
+                context.prompt.close()
+                sleep(1)
+                call('sudo nmcli con del wifi-wlan0', shell=True)
             #call('sudo nmcli device disconnect wlan0', shell=True)
             #call('sudo rm -rf /etc/sysconfig/network-scripts/keys-*', shell=True)
             #call('find /etc/sysconfig/network-scripts/ -type f | xargs grep -l "TYPE=Wireless" | xargs sudo rm -rf', shell=True)
