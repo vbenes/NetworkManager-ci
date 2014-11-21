@@ -43,6 +43,11 @@ def before_scenario(context, scenario):
             call("nmcli connection up testeth7", shell=True)
             call("nmcli connection delete eth7", shell=True)
 
+        if 'scapy' in scenario.tags:
+            print "---------------------------"
+            print "installing scapy"
+            call("pip install http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz", shell=True)
+
         if 'firewall' in scenario.tags:
             print "---------------------------"
             print "starting firewall"

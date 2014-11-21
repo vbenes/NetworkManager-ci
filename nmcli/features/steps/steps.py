@@ -552,6 +552,21 @@ def ifcfg_doesnt_exist(context, con_name):
     assert cat.expect('No such file') == 0, 'Ifcfg-%s exists!' % con_name
 
 
+@step(u'Lifetimes are slightly smaller than "{valid_lft}" and "{pref_lft}" for device "{device}"')
+def correct_lifetime(context, content):
+    command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $2}" % device
+    valid = command_output(context, command)
+    command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $4}" % device
+    pref = command_output(context, command)
+    valid = valid.strip()
+    valid = valid.replace('sec', '')
+    pref = pref.strip()
+    pref = pref.replace('sec', '')
+    assert int(valid) != int(pref)
+    assert int(valid) <= int(valid_lft)
+    assert int(pref) <= int(pref_lft)
+
+
 @step(u'Look for "{content}" in tailed file')
 def find_tailing(context, content):
     if context.tail.expect([content, pexpect.TIMEOUT, pexpect.EOF]) == 1:
@@ -821,6 +836,20 @@ def save_in_editor(context):
 def check_error_while_saving_in_editor(context):
     context.prompt.expect("Error")
 
+@step(u'Send scapy packet "{values}" for in "{in_device}" and out "{out_device}" devices')
+def send_scapy_packet(context, values, in_device, out_device):
+    from scapy.all import get_if_hwaddr
+    from scapy.all import sendp, Ether, IPv6
+    from scapy.all import ICMPv6ND_RA
+    from scapy.all import ICMPv6NDOptPrefixInfo
+
+    p = Ether(dst=get_if_hwaddr(out_device), src=get_if_hwaddr(in_device))
+    p /= IPv6(dst="ff02::1")
+    p /= ICMPv6ND_RA()
+    p /= ICMPv6NDOptPrefixInfo(values)
+
+    sendp(p, iface=in_if)
+    # EOF
 
 @step(u'Set a property named "{name}" to "{value}" in editor')
 def set_property_in_editor(context, name, value):

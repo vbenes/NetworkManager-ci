@@ -96,6 +96,7 @@ ipv6_ip6-privacy_0, ., nmcli/./runtest.sh ipv6_ip6-privacy_0, NetworkManager
 ipv6_ip6-privacy_1, ., nmcli/./runtest.sh ipv6_ip6-privacy_1, NetworkManager
 ipv6_ip6-privacy_2, ., nmcli/./runtest.sh ipv6_ip6-privacy_2, NetworkManager
 ipv6_ip6-privacy_incorrect_value, ., nmcli/./runtest.sh ipv6_ip6-privacy_incorrect_value, NetworkManager
+ipv6_lifetime_set_from_network, ., nmcli/./runtest.sh ipv6_lifetime_set_from_network, NetworkManager
 ipv6_describe, ., nmcli/./runtest.sh ipv6_describe, NetworkManager
 #ipv6_end
 

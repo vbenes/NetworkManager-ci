@@ -667,6 +667,16 @@ Feature: nmcli: ipv6
     Then "aa17d688-a38d-481d-888d-6d69cca781b8" is visible with command "nmcli -f UUID connection show -a"
 
 
+    @ipv6_lifetime_set_from_network
+    @scapy
+    Scenario: NM - ipv6 - set lifetime from network
+    * Finish "ip link add test10 type veth peer name test11"
+    * Finish "nmcli c add type ethernet ifname test10"
+    * Finish "nmcli c add type ethernet ifname test11"
+    * Send scapy packet "prefix='fd00:8086:1337::', prefixlen=64, validlifetime=3600, preferredlifetime=1800") for in "test10" and out "test11" devices
+    Then Lifetimes are slightly smaller than "3600" and "1800" for device "test11"
+
+
     @ipv6_describe
     @ipv6
     Scenario: nmcli - ipv6 - describe
