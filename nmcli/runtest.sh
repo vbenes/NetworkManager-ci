@@ -74,7 +74,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     yum -y install install/*.rpm
 
     veth=0
-    if [ $wlan -eq 0 ]; then
+    if [ $wlan -eq 0 ] || [[ $1 != *dcb_* ]] || [[ $1 != *inf_* ]]; then
         for X in $(seq 0 10); do
             if ! nmcli -f DEVICE -t device |grep eth${X}; then
                 veth=1
