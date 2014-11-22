@@ -3,7 +3,7 @@
     @dcb_enable_connection
     @dcb
     Scenario: nmcli - dcb - enable connection
-    * Add connection for a type "ethernet" named "dcb" for device "enp4s0f0"
+    * Add connection type "ethernet" named "dcb" for device "enp4s0f0"
     * Open editor for connection "dcb"
     * Prepare connection
     * Set default DCB options
@@ -38,7 +38,7 @@
     @dcb_disable_connection
     @dcb
     Scenario: nmcli - dcb - disable connection
-    * Add connection for a type "ethernet" named "dcb" for device "enp4s0f0"
+    * Add connection type "ethernet" named "dcb" for device "enp4s0f0"
     * Open editor for connection "dcb"
     * Prepare connection
     * Set default DCB options
@@ -60,7 +60,7 @@
     @dcb_enable_after_reboot
     @dcb
     Scenario: nmcli - dcb - enable after reboot
-    * Add connection for a type "ethernet" named "dcb" for device "enp4s0f0"
+    * Add connection type "ethernet" named "dcb" for device "enp4s0f0"
     * Open editor for connection "dcb"
     * Prepare connection
     * Set default DCB options

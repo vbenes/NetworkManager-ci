@@ -3,7 +3,7 @@
     @inf_create_connection
     @inf
     Scenario: nmcli - inf - create master connection
-    * Add connection for a type "infiniband" named "inf" for device "mlx4_ib1"
+    * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
     * Bring "up" connection "inf"
     Then "inet 172" is visible with command "ip a s mlx4_ib1"
 
@@ -27,7 +27,7 @@
     @inf_disable_connection
     @inf
     Scenario: nmcli - inf - disable master connection
-    * Add connection for a type "infiniband" named "inf" for device "mlx4_ib1"
+    * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
     * Bring "up" connection "inf"
     * Bring "down" connection "inf"
     Then "inet 172" is not visible with command "ip a s mlx4_ib1"
@@ -36,7 +36,7 @@
     @inf_create_port_connection
     @inf
     Scenario: nmcli - inf - create port connection
-    * Add connection for a type "infiniband" named "inf" for device "mlx4_ib1"
+    * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
     * Add infiniband port named "inf.8003" for device "mlx4_ib1.8003" with parent "mlx4_ib1" and p-key "0x8003"
     * Bring "up" connection "inf"
     * Bring "up" connection "inf.8003"
@@ -46,7 +46,7 @@
     @inf_create_port_novice_mode
     @inf
     Scenario: nmcli - inf - novice - create infiniband port with default options
-     * Add connection for a type "infiniband" named "inf" for device "mlx4_ib1"
+     * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
      * Bring "up" connection "inf"
      * Open wizard for adding new connection
      * Expect "Connection type"
@@ -75,7 +75,7 @@
     @inf_disable_port
     @inf
     Scenario: nmcli - inf - disable port connection
-    * Add connection for a type "infiniband" named "inf" for device "mlx4_ib1"
+    * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
     * Add infiniband port named "inf.8003" for device "mlx4_ib1.8003" with parent "mlx4_ib1" and p-key "0x8003"
     * Bring "up" connection "inf"
     * Bring "up" connection "inf.8003"
@@ -87,7 +87,7 @@
     @inf_enable_after_reboot
     @inf
     Scenario: nmcli - inf - enable after reboot
-    * Add connection for a type "infiniband" named "inf" for device "mlx4_ib1"
+    * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
     * Add infiniband port named "inf.8003" for device "mlx4_ib1.8003" with parent "mlx4_ib1" and p-key "0x8003"
     * Bring "up" connection "inf"
     * Bring "up" connection "inf.8003"
