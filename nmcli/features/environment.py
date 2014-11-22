@@ -6,6 +6,7 @@ import sys
 import traceback
 from subprocess import call, Popen, PIPE, check_output
 from time import sleep, localtime, strftime
+from glob import glob
 
 
 TIMER = 0.5
@@ -232,6 +233,30 @@ def before_scenario(context, scenario):
 
             call("sudo systemctl unmask racoon", shell=True)
             call("sudo systemctl restart racoon", shell=True)
+
+        if 'openvpn' in scenario.tags:
+            print "---------------------------"
+            print "setting up OpenVPN"
+            call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+            call("[ -x /usr/sbin/openvpn ] || sudo yum -y install /usr/sbin/openvpn", shell=True)
+            call("rpm -q NetworkManager-openvpn || sudo yum -y install NetworkManager-openvpn", shell=True)
+
+            samples = glob('/usr/share/doc/openvpn-*/sample')[0]
+            cfg = Popen("sudo sh -c 'cat >/etc/openvpn/trest-server.conf'", stdin=PIPE, shell=True).stdin
+            cfg.write('# OpenVPN configuration for client testing')
+            cfg.write("\n" + 'port 1194')
+            cfg.write("\n" + 'proto udp')
+            cfg.write("\n" + 'dev tun')
+            cfg.write("\n" + 'ca %s/sample-keys/ca.crt' % samples)
+            cfg.write("\n" + 'cert %s/sample-keys/server.crt' % samples)
+            cfg.write("\n" + 'key %s/sample-keys/server.key' % samples)
+            cfg.write("\n" + 'dh %s/sample-keys/dh2048.pem' % samples)
+            cfg.write("\n" + 'server 172.31.70.0 255.255.255.0')
+            cfg.write("\n" + 'persist-key')
+            cfg.write("\n" + 'persist-tun')
+            cfg.write("\n")
+            cfg.close()
+            call("sudo systemctl restart openvpn@trest-server", shell=True)
 
         if 'restore_hostname' in scenario.tags:
             print "---------------------------"
@@ -501,6 +526,11 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "deleting vpnc profile"
             call('nmcli connection delete vpnc', shell=True)
+
+        if 'openvpn' in scenario.tags:
+            print "---------------------------"
+            print "deleting openvpn profile"
+            call('nmcli connection delete openvpn', shell=True)
 
         if 'ethernet' in scenario.tags:
             print "---------------------------"
