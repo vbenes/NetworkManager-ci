@@ -4,7 +4,7 @@ import os
 import pexpect
 import sys
 import traceback
-from subprocess import call, check_output
+from subprocess import call, Popen, PIPE, check_output
 from time import sleep, localtime, strftime
 
 
@@ -179,6 +179,60 @@ def before_scenario(context, scenario):
                 call("ip link set dev eth2 up", shell=True)
                 call('nmcli con up testeth1', shell=True)
 
+        if 'vpnc' in scenario.tags:
+            print "---------------------------"
+            print "setting up racoon"
+            call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+            call("[ -x /usr/sbin/racoon ] || sudo yum -y install /usr/sbin/racoon", shell=True)
+            call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
+ 
+            cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
+            cfg.write('# Racoon configuration for Cisco VPN client testing')
+            cfg.write("\n" + 'path include "/etc/racoon";')
+            cfg.write("\n" + 'path pre_shared_key "/etc/racoon/psk.txt";')
+            cfg.write("\n" + 'path certificate "/etc/racoon/certs";')
+            cfg.write("\n" + 'path script "/etc/racoon/scripts";')
+            cfg.write("\n" + '')
+            cfg.write("\n" + 'sainfo anonymous {')
+            cfg.write("\n" + '        encryption_algorithm aes;')
+            cfg.write("\n" + '        authentication_algorithm hmac_sha1;')
+            cfg.write("\n" + '        compression_algorithm deflate;')
+            cfg.write("\n" + '}')
+            cfg.write("\n" + '')
+            cfg.write("\n" + 'remote anonymous {')
+            cfg.write("\n" + '        exchange_mode aggressive;')
+            cfg.write("\n" + '        proposal_check obey;')
+            cfg.write("\n" + '')
+            cfg.write("\n" + '        generate_policy on;')
+            cfg.write("\n" + '        dpd_delay 20;')
+            cfg.write("\n" + '        nat_traversal force;')
+            cfg.write("\n" + '        proposal {')
+            cfg.write("\n" + '                encryption_algorithm aes;')
+            cfg.write("\n" + '                hash_algorithm sha1;')
+            cfg.write("\n" + '                authentication_method xauth_psk_server;')
+            cfg.write("\n" + '                dh_group 2;')
+            cfg.write("\n" + '        }')
+            cfg.write("\n" + '}')
+            cfg.write("\n" + '')
+            cfg.write("\n" + 'mode_cfg {')
+            cfg.write("\n" + '        network4 172.31.60.2;')
+            cfg.write("\n" + '        pool_size 20;')
+            cfg.write("\n" + '        banner "/etc/os-release";')
+            cfg.write("\n" + '        auth_source pam;')
+            cfg.write("\n" + '}')
+            cfg.write("\n")
+            cfg.close()
+
+            psk = Popen("sudo sh -c 'cat >/etc/racoon/psk.txt'", stdin=PIPE, shell=True).stdin
+            psk.write("127.0.0.1 ipsecret\n")
+            psk.close()
+
+            call("sudo userdel -r budulinek", shell=True)
+            call("sudo useradd -s /sbin/nologin -p yO9FLHPGuPUfg budulinek", shell=True)
+
+            call("sudo systemctl unmask racoon", shell=True)
+            call("sudo systemctl restart racoon", shell=True)
+
         if 'restore_hostname' in scenario.tags:
             print "---------------------------"
             print "saving original hostname"
@@ -220,7 +274,6 @@ def before_scenario(context, scenario):
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
 
-
 def after_step(context, step):
     """
     """
@@ -257,6 +310,7 @@ def after_scenario(context, scenario):
         if 'ipv4_2' in scenario.tags:
             print "---------------------------"
             print "deleting connections ethie and ethie2"
+
             call("nmcli connection delete id ethie2", shell=True)
             call("nmcli connection delete id ethie", shell=True)
             #sleep(TIMER)
@@ -442,6 +496,11 @@ def after_scenario(context, scenario):
         if 'teamd' in scenario.tags:
             call("systemctl stop teamd", shell=True)
             call("systemctl reset-failed teamd", shell=True)
+
+        if 'vpnc' in scenario.tags:
+            print "---------------------------"
+            print "deleting vpnc profile"
+            call('nmcli connection delete vpnc', shell=True)
 
         if 'ethernet' in scenario.tags:
             print "---------------------------"
