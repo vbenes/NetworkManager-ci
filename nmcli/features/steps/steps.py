@@ -761,7 +761,8 @@ def ping6_domain(context, domain):
 def prepare_connection(context):
     context.execute_steps(u"""
         * Submit "set ipv4.method manual" in editor
-        * Submit "set ipv4.addresses 1.2.3.4/24 1.1.1.1" in editor
+        * Submit "set ipv4.addresses 1.2.3.4/24" in editor
+        * Submit "set ipv4.gateway 1.1.1.1" in editor
         * Submit "set ipv4.never-default yes" in editor
         * Submit "set ipv6.method ignore" in editor
     """)
