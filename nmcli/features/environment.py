@@ -97,7 +97,7 @@ def before_scenario(context, scenario):
                 call("ip link set dev eth2 up", shell=True)
                 call('nmcli con up testeth1', shell=True)
 
-        if 'hostname_change' in scenario.tags:
+        if 'restore_hostname' in scenario.tags:
             print "---------------------------"
             print "saving original hostname"
             context.original_hostname = check_output('cat /etc/hostname', shell=True).strip()
@@ -391,7 +391,7 @@ def after_scenario(context, scenario):
             call('sudo nmcli con add type ethernet ifname eth1 con-name eth1 autoconnect no', shell=True)
             call('sudo nmcli con add type ethernet ifname eth2 con-name eth2 autoconnect no', shell=True)
 
-        if 'hostname_change' in scenario.tags:
+        if 'restore_hostname' in scenario.tags:
             print "---------------------------"
             print "restoring original hostname"
             call('sudo nmcli gen host %s' % context.original_hostname, shell=True)

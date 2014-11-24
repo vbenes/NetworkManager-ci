@@ -19,6 +19,7 @@ testcase_294544, ., nmcli/./runtest.sh testcase_294544, NetworkManager
 testcase_294545, ., nmcli/./runtest.sh testcase_294545, NetworkManager
 testcase_294546, ., nmcli/./runtest.sh testcase_294546, NetworkManager
 connection_up_after_journald_restart, ., nmcli/./runtest.sh connection_up_after_journald_restart, NetworkManager
+nmcli_general_dhcp_hostname_over_localhost, ., nmcli/./runtest.sh nmcli_general_dhcp_hostname_over_localhost, NetworkManager
 
 #### vv KEEP THESE TWO TESTS ALWAYS TOGETHER!
 dns_none, ., nmcli/./runtest.sh dns_none, NetworkManager

@@ -18,6 +18,7 @@ Feature: nmcli - general
 
 
     @general
+    @restore_hostname
     @hostname_change
     Scenario: nmcli - general - set hostname
     * Execute "sudo nmcli general hostname walderon"
@@ -262,3 +263,27 @@ Feature: nmcli - general
     * Bring "up" connection "ethie"
     * Finish "sudo systemctl restart systemd-journald.service"
     Then Bring "up" connection "ethie"
+
+
+    @veth
+    @bz1110436
+    @general
+    @restore_hostname
+    @nmcli_general_dhcp_hostname_over_localhost
+    Scenario: NM - general - dont take localhost as configured hostname
+    * Note the output of "cat /etc/hostname" as value "orig_file"
+    * Note the output of "hostname" as value "orig_cmd"
+    * Check noted values "orig_file" and "orig_cmd" are the same
+    * Execute "echo localhost.localdomain > /etc/hostname"
+    * Wait for at least "5" seconds
+    * Note the output of "hostname" as value "localh_cmd"
+    # Check that setting the hostname to localhost have been ignored
+    * Check noted values "orig_cmd" and "localh_cmd" are the same
+    # Now set it to custom non-localhost value
+    * Execute "echo myown.hostname > /etc/hostname"
+    * Note the output of "echo myown.hostname" as value "nonlocalh_file"
+    * Wait for at least "5" seconds
+    * Note the output of "hostname" as value "nonlocalh_cmd"
+    # Now see that the non-locahost value has been set
+    Then Check noted values "nonlocalh_file" and "nonlocalh_cmd" are the same
+    # Restoring orig. hostname in after_scenario
