@@ -172,7 +172,6 @@ Feature: nmcli - general
 
 ## Basically various bug related reproducer tests follow here
 
-
     @general
     @ethernet
     @device_connect
@@ -183,7 +182,18 @@ Feature: nmcli - general
     * Execute "nmcli dev disconnect eth2"
 
 
-    #bz1034150
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1113941
+    @general
+    @device_connect_no_profile
+    Scenario: nmcli - device - connect - no profile
+    * Finish "nmcli connection delete id testeth2"
+    * Connect device "eth2"
+    * Bring "down" connection "eth2"
+    Then "eth2" is not visible with command "nmcli connection show -a"
+    Then "connection.interface-name: \s+eth2" is visible with command "nmcli connection show eth2"
+
+
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1034150
     @general
     @bridge
     @nmcli_device_delete
@@ -195,7 +205,7 @@ Feature: nmcli - general
     Then "bridge0" is visible with command "nmcli connection"
 
 
-    #bz1034150
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1034150
     @general
     @veth
     @nmcli_device_attempt_hw_delete
@@ -205,7 +215,7 @@ Feature: nmcli - general
     Then "eth9\s+ethernet" is visible with command "nmcli device"
 
 
-    #bz1067712
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1067712
     @general
     @ethernet
     @nmcli_general_correct_profile_activated_after_restart
@@ -219,7 +229,7 @@ Feature: nmcli - general
     Then "aaa" is visible with command "nmcli device"
 
 
-    #bz1007365
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1007365
     @general
     @bridge
     @nmcli_novice_mode_readline
@@ -255,7 +265,7 @@ Feature: nmcli - general
     Then "nameserver 10" is visible with command "cat /etc/resolv.conf"
 
 
-    # VVV 1136836 reproducer
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1136836
     @general
     @connection_up_after_journald_restart
     Scenario: NM - general - bring up connection after journald restart

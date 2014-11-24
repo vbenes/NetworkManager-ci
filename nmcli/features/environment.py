@@ -406,8 +406,14 @@ def after_scenario(context, scenario):
 
         if 'nmcli_general_correct_profile_activated_after_restart' in scenario.tags:
             print "---------------------------"
-            print "beah-beaker-backend sanitization"
+            print "deleting profiles"
             call('sudo nmcli connection delete aaa bbb', shell=True)
+
+        if 'device_connect_no_profile' in scenario.tags:
+            print "---------------------------"
+            print "env sanitization"
+            call('nmcli connection delete testeth2 eth2', shell=True)
+            call('nmcli connection add type ethernet ifname eth2 con-name testeth2 autoconnect no', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)

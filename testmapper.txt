@@ -26,6 +26,7 @@ dns_none, ., nmcli/./runtest.sh dns_none, NetworkManager
 remove_dns_none, ., nmcli/./runtest.sh remove_dns_none, NetworkManager
 #### ^^^
 device_connect, ., nmcli/./runtest.sh device_connect, NetworkManager
+device_connect_no_profile, ., nmcli/./runtest.sh device_connect_no_profile, NetworkManager
 nmcli_device_delete, ., nmcli/./runtest.sh nmcli_device_delete, NetworkManager
 nmcli_device_attempt_hw_delete, ., nmcli/./runtest.sh nmcli_device_attempt_hw_delete, NetworkManager
 nmcli_general_correct_profile_activated_after_restart, ., nmcli/./runtest.sh nmcli_general_correct_profile_activated_after_restart, NetworkManager
