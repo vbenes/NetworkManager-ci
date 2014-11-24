@@ -1338,3 +1338,25 @@ Feature: nmcli - wifi
     Then "enabled" is visible with command "nmcli radio wifi"
     Then "qe-open" is visible with command "iw dev wlan0 link"
     Then "wlan0\s+wifi\s+connected" is visible with command "nmcli device"
+
+
+    @bz1080628
+    @wifi
+    @nmcli_wifi_keep_secrets_after_modification
+    Scenario: nmcli - wifi-sec - keep secrets after connection modification
+    * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-wpa2-psk autoconnect off ssid qe-wpa2-psk"
+    * Check ifcfg-name file created for connection "qe-wpa2-psk"
+    * Open editor for connection "qe-wpa2-psk"
+    * Set a property named "802-11-wireless-security.key-mgmt" to "wpa-psk" in editor
+    * Set a property named "802-11-wireless-security.psk" to "over the river and through the woods" in editor
+    * Save in editor
+    * No error appeared in editor
+    * Check value saved message showed in editor
+    * Quit editor
+    * Bring up connection "qe-wpa2-psk"
+    * Bring down connection "qe-wpa2-psk"
+    * Execute "nmcli con modify qe-wpa2-psk connection.zone trusted"
+    * Bring up connection "qe-wpa2-psk"
+    Then "qe-wpa2-psk" is visible with command "iw dev wlan0 link"
+    Then "\*\s+qe-wpa2-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
+    Then "inet 10" is visible with command "ip a s wlan0"
