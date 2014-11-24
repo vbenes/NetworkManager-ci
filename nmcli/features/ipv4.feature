@@ -685,6 +685,25 @@ Feature: nmcli: ipv4
     Then "default via 10." is visible with command "ip route"
 
 
+    @set_mtu_from_DHCP
+    @mtu
+    Scenario: NM - ipv4 - set dhcp received MTU
+    * Finish "ip link add test1 type veth peer name test1p"
+    * Finish "ip link add test1 type veth peer name test1p"
+    * Finish "brctl addbr vethbr"
+    * Finish "brctl addif vethbr test1p test2p"
+    * Finish "ip link set dev test1 up"
+    * Finish "ip link set dev test1p up"
+    * Finish "ip link set dev test2 up"
+    * Finish "ip link set dev test2p up"
+    * Finish "nmcli connection add type ethernet con-name tc1 ifname test1 ip4 192.168.100.1/24"
+    * Finish "nmcli connection add type ethernet con-name tc2 ifname test2"
+    * Bring "up" connection "tc1"
+    * Run "/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=192.168.100.1 --dhcp-range=192.168.100.10,192.168.100.254,60m --dhcp-option=option:router,192.168.100.1 --dhcp-lease-max=50 --dhcp-option-force=26,1800 &"
+    * Bring "up" connection "tc2"
+    Then "mtu 1800" is visible with command "ip a s test2"
+
+
     @testcase_304241
     @ipv4
     Scenario: nmcli - ipv4 - describe

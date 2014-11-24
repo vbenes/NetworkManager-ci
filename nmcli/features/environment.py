@@ -227,6 +227,18 @@ def after_scenario(context, scenario):
             call("nmcli connection delete id dcb", shell=True)
             sleep(10*TIMER)
 
+        if 'mtu' in scenario.tags:
+            print "---------------------------"
+            print "deleting veth devices from mtu test"
+            call("nmcli connection delete id tc1 tc2", shell=True)
+            call("ip link delete test1", shell=True)
+            call("ip link delete test2", shell=True)
+            call("ip link delete test1", shell=True)
+            call("ip link delete test2", shell=True)
+            call("ip link set dev vethbr down", shell=True)
+            call("ibrctl delbr vethbr", shell=True)
+            call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep -v grep |awk '{print $2}'", shell=True)
+
         if 'inf' in scenario.tags:
             print "---------------------------"
             print "deleting infiniband connections"
