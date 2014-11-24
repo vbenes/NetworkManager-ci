@@ -248,6 +248,7 @@ def after_scenario(context, scenario):
             call("nmcli connection delete id infiniband-mlx4_ib1", shell=True)
             call("nmcli connection delete id inf.8003", shell=True)
             call("nmcli connection delete id infiniband-mlx4_ib1.8003", shell=True)
+            call("nmcli connection up id tg3_1", shell=True)
             sleep(10*TIMER)
 
         if 'profie' in scenario.tags:
