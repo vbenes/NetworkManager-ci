@@ -236,7 +236,7 @@ def after_scenario(context, scenario):
             call("ip link delete test1", shell=True)
             call("ip link delete test2", shell=True)
             call("ip link set dev vethbr down", shell=True)
-            call("ibrctl delbr vethbr", shell=True)
+            call("brctl delbr vethbr", shell=True)
             call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep -v grep |awk '{print $2}'", shell=True)
 
         if 'inf' in scenario.tags:
