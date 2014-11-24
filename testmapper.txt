@@ -581,3 +581,4 @@ nmtui_wifi_wep_ascii_connection, ., nmtui/./runtest.sh nmtui_wifi_wep_ascii_conn
 nmtui_wifi_wep_passphrase_connection, ., nmtui/./runtest.sh nmtui_wifi_wep_passphrase_connection, NetworkManager-tui
 nmtui_wifi_leap_connection, ., nmtui/./runtest.sh nmtui_wifi_leap_connection, NetworkManager-tui
 nmtui_wifi_show_password, ., nmtui/./runtest.sh nmtui_wifi_show_password, NetworkManager-tui
+nmtui_wifi_connect_to_network_after_dismissal, ., nmtui/./runtest.sh nmtui_wifi_connect_to_network_after_dismissal, NetworkManager-tui

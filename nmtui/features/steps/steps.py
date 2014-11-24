@@ -192,6 +192,12 @@ def press_dialog_button(context, button):
     context.tui.send(keys['ENTER'])
 
 
+@step(u'Press "{button}" button in the password dialog')
+def press_password_dialog_button(context, button):
+    assert go_until_pattern_matches_aftercursor_text(context,keys['TAB'],r'^%s.*$' % button) is not None, "Could not go to action '<Create>' on screen!"
+    context.tui.send(keys['ENTER'])
+
+
 @step(u'Select connection "{con_name}" in the list')
 def select_con_in_list(context, con_name):
     if os.path.isfile('/tmp/nm_veth_configured'):
@@ -201,6 +207,12 @@ def select_con_in_list(context, con_name):
         context.tui.send(keys['LEFTARROW']*8)
         context.tui.send(keys['UPARROW']*16)
     assert go_until_pattern_matches_line(context,keys['DOWNARROW'],r'.*%s.*' % con_name) is not None, "Could not go to connection '%s' on screen!" % con_name
+
+
+@step(u'Get back to the connection list')
+def back_to_con_list(context):
+    context.tui.send(keys['LEFTARROW']*8)
+    context.tui.send(keys['UPARROW']*32)
 
 
 @step(u'Exit nmtui via "{action}" button')

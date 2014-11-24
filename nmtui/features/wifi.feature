@@ -462,3 +462,25 @@ Feature: WIFI TUI tests
     * ".*\*\*\*\*\*\*\*\*.*" is visible on screen
     * Ensure "Show password" is checked
     Then ".*testingpassword.*" is visible on screen
+
+
+    @bz1132612
+    @wifi
+    @nmtui_wifi_connect_to_network_after_dismissal
+    Scenario: nmtui - wifi - connect to a network after dialog dismissal
+    * Start nmtui
+    * Choose to "Activate a connection" from main screen
+    * Select connection "qe-wpa2-psk" in the list
+    * Choose to "<Activate>" a connection
+    * Wait for at least "2" seconds
+    * Press "<Cancel>" button in the password dialog
+    * ".*Could not activate connection.*Activation failed.*" is visible on screen
+    * Press "ENTER" key
+    * Get back to the connection list
+    * Select connection "qe-wpa2-psk" in the list
+    * Choose to "<Activate>" a connection
+    * Set current field to "over the river and through the woods"
+    * Press "ENTER" key
+    Then "ESSID=\"qe-wpa2-psk\"" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-qe-wpa2-psk"
+    Then "TYPE=Wireless" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-qe-wpa2-psk"
+    Then "inet 10." is visible with command "ip a s wlan0" in "30" seconds
