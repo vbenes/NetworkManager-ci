@@ -17,7 +17,7 @@ TIMER = 0.5
 def dump_status(context, when):
     context.log.write("Network configuration %s:\n\n" % when)
     for cmd in ['ip addr', 'ip -4 route', 'ip -6 route',
-        'nmcli g', 'nmcli c', 'nmcli d', 'nmcli d w l']:
+        'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w']:
              context.log.write("--- %s ---\n" % cmd)
              context.log.flush()
              call(cmd, shell=True, stdout=context.log)
