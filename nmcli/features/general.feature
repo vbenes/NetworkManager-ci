@@ -297,3 +297,17 @@ Feature: nmcli - general
     # Now see that the non-locahost value has been set
     Then Check noted values "nonlocalh_file" and "nonlocalh_cmd" are the same
     # Restoring orig. hostname in after_scenario
+
+
+    @bz1136843
+    @general
+    @nmcli_general_ignore_specified_unamanaged_devices
+    Scenario: NM - general - ignore specified unmanaged devices
+    * Execute "ip link add name donttouch type bond"
+    # Still managed
+    * "donttouch\s+bond\s+disconnected" is visible with command "nmcli device"
+    # Add a config rule to unmanage the device
+    * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:donttouch > /etc/NetworkManager/NetworkManager.conf"
+    * Wait for at least "5" seconds
+    # Now the device should be listed as unmanaged
+    Then "donttouch\s+bond\s+unmanaged" is visible with command "nmcli device"

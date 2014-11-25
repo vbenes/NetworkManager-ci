@@ -107,6 +107,11 @@ def before_scenario(context, scenario):
             print "deleting eth1 and eth2 for openswitch tests"
             call('sudo nmcli con del eth1 eth2', shell=True) # delete these profile, we'll work with other ones
 
+        if 'nmcli_general_ignore_specified_unamanaged_devices' in scenario.tags:
+            print "---------------------------"
+            print "backing up NetworkManager.conf"
+            call('sudo cp -f /etc/NetworkManager/NetworkManager.conf /tmp/bckp_nm.conf', shell=True)
+
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
         dump_status(context, 'before %s' % scenario.name)
@@ -415,6 +420,12 @@ def after_scenario(context, scenario):
             print "env sanitization"
             call('nmcli connection delete testeth2 eth2', shell=True)
             call('nmcli connection add type ethernet ifname eth2 con-name testeth2 autoconnect no', shell=True)
+
+        if 'nmcli_general_ignore_specified_unamanaged_devices' in scenario.tags:
+            print "---------------------------"
+            print "restoring original NetworkManager.conf and deleting bond device"
+            call('sudo cp -f /tmp/bckp_nm.conf /etc/NetworkManager/NetworkManager.conf', shell=True)
+            call('sudo ip link del donttouch', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
