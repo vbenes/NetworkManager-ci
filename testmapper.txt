@@ -382,6 +382,7 @@ inf_enable_after_reboot, ., nmcli/./runtest.sh inf_enable_after_reboot, NetworkM
 dcb_enable_connection, ., nmcli/./runtest.sh dcb_enable_connection, NetworkManager
 dcb_disable_connection, ., nmcli/./runtest.sh dcb_disable_connection, NetworkManager
 dcb_enable_after_reboot, ., nmcli/./runtest.sh dcb_enable_after_reboot, NetworkManager
+dcb_error_shown, ., nmcli/./runtest.sh dcb_error_shown, NetworkManager
 #dcb_end
 
 #### NMTUI TESTS ####

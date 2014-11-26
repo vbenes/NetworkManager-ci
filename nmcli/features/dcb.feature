@@ -86,3 +86,13 @@
     Then "appcfg:\s+04" is visible with command "dcbtool gc enp4s0f0 app:fip"
 
 
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1080510
+    @dcb_error_shown
+    @dcb
+    Scenario: nmcli - dcb - error shown
+    * Add connection type "ethernet" named "dcb" for device "enp4s0f0"
+    * Open editor for connection "dcb"
+    * Prepare connection
+    * Set default DCB options
+    * Submit "set dcb.app-fcoe-priority 8" in editor
+    Then Error type "failed to set 'app-fcoe-priority' property: '8' is not valid; use <-1-7>" shown in editor
