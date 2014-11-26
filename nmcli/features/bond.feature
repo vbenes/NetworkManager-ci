@@ -779,6 +779,20 @@
      Then Check bond "nm-bond" state is "up"
 
 
+    @dummy
+    @bond_reflect_changes_from_outside_of_NM
+    Scenario: nmcli - bond - reflect changes from outside of NM
+    * Finish "ip link add type bond"
+    * Finish "ip link add dummy0 type dummy"
+    When "bond0\s+bond\s+disconnected" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip addr add 1.1.1.1/24 dev bond0"
+    * Finish "sleep 2"
+    When "bond0\s+bond\s+connected\s+bond0" is visible with command "nmcli d"
+    * Finish "ifenslave bond0 dummy0"
+    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
+    Then "BOND.SLAVES:\s+dummy0" is visible with command "nmcli -f bond.slaves dev show bond0"
+
 #FIXME: more tests with arp and conflicts with load balancing can be written
 
 

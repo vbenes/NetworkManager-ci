@@ -180,6 +180,7 @@ bridge_dhcp_config_with_ethernet_port, ., nmcli/./runtest.sh bridge_dhcp_config_
 bridge_dhcp_config_with_multiple_ethernet_ports, ., nmcli/./runtest.sh bridge_dhcp_config_with_multiple_ethernet_ports, NetworkManager;bridge-utils
 bridge_static_config_with_multiple_ethernet_ports, ., nmcli/./runtest.sh bridge_static_config_with_multiple_ethernet_ports, NetworkManager;bridge-utils
 bridge_server_ingore_carrier_with_dhcp, ., nmcli/./runtest.sh bridge_server_ingore_carrier_with_dhcp, NetworkManager;bridge-utils
+bridge_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bridge_reflect_changes_from_outside_of_NM, NetworkManager;bridge-utils
 #bridge_end
 
 #ethernet_start
@@ -271,6 +272,8 @@ nmcli_novice_mode_create_bond_with_mii_monitor_values, ., nmcli/./runtest.sh nmc
 nmcli_novice_mode_create_bond_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond_with_default_options, NetworkManager
 nmcli_novice_mode_create_bond_with_arp_monitor_values, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond_with_arp_monitor_values, NetworkManager
 nmcli_novice_mode_create_bond-slave_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond-slave_with_default_options, NetworkManager
+bond_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bond_reflect_changes_from_outside_of_NM, NetworkManager
+
 #bond_end
 
 #wifi_start

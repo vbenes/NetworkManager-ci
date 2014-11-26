@@ -305,6 +305,15 @@ def after_scenario(context, scenario):
             call("ip link delete test11", shell=True)
             call("nmcli connection delete ethernet-test10 ethernet-test11", shell=True)
 
+        if 'dummy' in scenario.tags:
+            print "---------------------------"
+            print "removing dummy and bridge/bond/team devices"
+            call("ip link delete dummy0", shell=True)
+            call("ip link set dev br0 down", shell=True)
+            call("brctl delbr br0", shell=True)
+            call("ip link del bond0", shell=True)
+            call("ip link del team0", shell=True)
+
 
         if 'wifi' in scenario.tags:
             print "---------------------------"

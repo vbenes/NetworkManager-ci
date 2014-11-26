@@ -279,3 +279,16 @@ Feature: nmcli - bridge
     Then "eth1.*master bridge0.*eth2" is visible with command "ip a"
     Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
 
+
+    @dummy
+    @bridge_reflect_changes_from_outside_of_NM
+    Scenario: nmcli - bridge - reflect changes from outside of NM
+    * Finish "brctl addbr br0"
+    * Finish "ip link add dummy0 type dummy"
+    When "br0\s+bridge\s+disconnected" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip addr add 1.1.1.1/24 dev br0"
+    When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d"
+    * Finish "brctl addif br0 dummy0"
+    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
+    Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
