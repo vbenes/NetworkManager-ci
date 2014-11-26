@@ -8,8 +8,6 @@
     * Prepare connection
     * Set default DCB options
     * Save in editor
-    # VV need to workaround 1080904
-    * Save in editor
     * Quit editor
     * Bring "up" connection "dcb"
 
@@ -43,13 +41,11 @@
     * Prepare connection
     * Set default DCB options
     * Save in editor
-    # VV need to workaround 1080904
-    * Save in editor
     * Quit editor
     * Bring "up" connection "dcb"
     * Bring "down" connection "dcb"
     # dcb off
-    Then "DCB State:\s+off" is visible with command "dcbtool gc enp4s0f0 dcb"
+    #Then "DCB State:\s+off" is visible with command "dcbtool gc enp4s0f0 dcb"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pg"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pfc"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 app:fcoe"
@@ -64,8 +60,6 @@
     * Open editor for connection "dcb"
     * Prepare connection
     * Set default DCB options
-    * Save in editor
-    # VV need to workaround 1080904
     * Save in editor
     * Quit editor
     * Bring "up" connection "dcb"
