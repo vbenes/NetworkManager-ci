@@ -263,6 +263,7 @@ bond_start_by_hand_with_one_auto_only, ., nmcli/./runtest.sh bond_start_by_hand_
 bond_start_on_boot_with_one_auto_only, ., nmcli/./runtest.sh bond_start_on_boot_with_one_auto_only, NetworkManager
 bond_start_on_boot_with_bond_and_one_slave_auto, ., nmcli/./runtest.sh bond_start_on_boot_with_bond_and_one_slave_auto, NetworkManager
 testcase_281150, ., nmcli/./runtest.sh testcase_281150, NetworkManager
+bond_8023ad_with_lacp_rate_fast, ., nmcli/./runtest.sh bond_8023ad_with_lacp_rate_fast, NetworkManager
 testcase_281151, ., nmcli/./runtest.sh testcase_281151, NetworkManager
 testcase_281153, ., nmcli/./runtest.sh testcase_281153, NetworkManager
 testcase_281154, ., nmcli/./runtest.sh testcase_281154, NetworkManager

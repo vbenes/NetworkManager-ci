@@ -722,6 +722,25 @@
      Then Check bond "nm-bond" state is "up"
 
 
+    @bond_8023ad_with_lacp_rate_fast
+    @slaves
+    @bond
+    Scenario: nmcli - bond - options - mode set to 802.3ad with lacp_rate fast
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Open editor for connection "bond0"
+     * Set a property named "bond.options" to "mode=802.3ad,miimon=100,xmit_hash_policy=layer2+3,lacp_rate=fast" in editor
+     * Save in editor
+     Then Value saved message showed in editor
+     * Quit editor
+     * Bring "up" connection "bond0"
+     Then "Bonding Mode: IEEE 802.3ad Dynamic link aggregation" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then "Transmit Hash Policy:\s+layer2\+3" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then "802.3ad info\s+LACP rate: fast" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then Check bond "nm-bond" state is "up"
+
+
     @testcase_281151
     @slaves
     @bond
