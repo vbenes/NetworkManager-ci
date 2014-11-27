@@ -34,6 +34,11 @@ nmcli_general_correct_profile_activated_after_restart, ., nmcli/./runtest.sh nmc
 nmcli_novice_mode_readline, ., nmcli/./runtest.sh nmcli_novice_mode_readline, NetworkManager
 #general_end
 
+#vpn
+vpn_add_profile, ., nmcli/./runtest.sh vpn_add_profile, NetworkManager
+vpn_describe, ., nmcli/./runtest.sh vpn_describe, NetworkManager
+
+#vpn_end
 #connection_start
 connection_restricted_to_single_device, ., nmcli/./runtest.sh connection_restricted_to_single_device, NetworkManager
 connection_help, ., nmcli/./runtest.sh connection_help, NetworkManager

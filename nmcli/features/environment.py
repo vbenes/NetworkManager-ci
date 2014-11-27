@@ -243,6 +243,7 @@ def after_scenario(context, scenario):
             call("ip link set dev vethbr down", shell=True)
             call("brctl delbr vethbr", shell=True)
             call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep -v grep |awk '{print $2}'", shell=True)
+            call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep -v grep |awk '{print $2}'", shell=True)
 
         if 'inf' in scenario.tags:
             print "---------------------------"
@@ -298,6 +299,11 @@ def after_scenario(context, scenario):
                 for item in ["vlan","eth1.99","eth1.299","eth1.399","eth1.65","eth1.165","eth1.265","eth1.499","eth1.80","eth1.90"]:
                     call('ip link delete %s' % item, shell=True)
             call("nmcli connection down testeth1", shell=True)
+
+        if 'vpn' in scenario.tags:
+            print "---------------------------"
+            print "removing vpn profiles"
+            call("nmcli connection delete vpn", shell=True)
 
         if 'scapy' in scenario.tags:
             print "---------------------------"
