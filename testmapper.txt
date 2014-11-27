@@ -186,6 +186,7 @@ bridge_dhcp_config_with_multiple_ethernet_ports, ., nmcli/./runtest.sh bridge_dh
 bridge_static_config_with_multiple_ethernet_ports, ., nmcli/./runtest.sh bridge_static_config_with_multiple_ethernet_ports, NetworkManager;bridge-utils
 bridge_server_ingore_carrier_with_dhcp, ., nmcli/./runtest.sh bridge_server_ingore_carrier_with_dhcp, NetworkManager;bridge-utils
 bridge_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bridge_reflect_changes_from_outside_of_NM, NetworkManager;bridge-utils
+bridge_assumed_connection_race, ., nmcli/./runtest.sh  bridge_assumed_connection_race, NetworkManager;bridge-utils
 #bridge_end
 
 #ethernet_start
