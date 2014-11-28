@@ -240,6 +240,9 @@ Feature: nmcli - general
     * Clear the text typed in editor
     * Submit "bridge" in editor
     Then Expect "arguments for 'bridge' connection"
+    * Submit "no" in editor
+    * Submit "no" in editor
+    Then "nm-bridge" is visible with command "nmcli connection show bridge"
 
 
     @general
