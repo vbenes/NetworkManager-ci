@@ -304,11 +304,11 @@ Feature: nmcli - general
     @general
     @nmcli_general_ignore_specified_unamanaged_devices
     Scenario: NM - general - ignore specified unmanaged devices
-    * Execute "ip link add name donttouch type bond"
+    * Execute "ip link add name dnt type bond"
     # Still managed
-    * "donttouch\s+bond\s+disconnected" is visible with command "nmcli device"
+    * "dnt\s+bond\s+disconnected" is visible with command "nmcli device"
     # Add a config rule to unmanage the device
-    * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:donttouch > /etc/NetworkManager/NetworkManager.conf"
+    * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:dnt > /etc/NetworkManager/NetworkManager.conf"
     * Wait for at least "5" seconds
     # Now the device should be listed as unmanaged
-    Then "donttouch\s+bond\s+unmanaged" is visible with command "nmcli device"
+    Then "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"

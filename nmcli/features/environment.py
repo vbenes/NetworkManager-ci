@@ -440,7 +440,7 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "restoring original NetworkManager.conf and deleting bond device"
             call('sudo cp -f /tmp/bckp_nm.conf /etc/NetworkManager/NetworkManager.conf', shell=True)
-            call('sudo ip link del donttouch', shell=True)
+            call('sudo ip link del dnt', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
