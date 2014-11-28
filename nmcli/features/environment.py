@@ -309,6 +309,7 @@ def after_scenario(context, scenario):
         if 'scapy' in scenario.tags:
             print "---------------------------"
             print "removing veth devices"
+            call("ip link delete test10", shell=True)
             call("ip link delete test11", shell=True)
             call("nmcli connection delete ethernet-test10 ethernet-test11", shell=True)
 
