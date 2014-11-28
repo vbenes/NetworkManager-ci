@@ -54,6 +54,7 @@ def before_scenario(context, scenario):
         if 'dummy' in scenario.tags:
             print "---------------------------"
             print "removing dummy devices"
+            call("ip link add dummy0 type dummy", shell=True)
             call("ip link delete dummy0", shell=True)
 
         if 'firewall' in scenario.tags:
