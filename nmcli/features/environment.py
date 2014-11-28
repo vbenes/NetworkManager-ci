@@ -45,10 +45,10 @@ def before_scenario(context, scenario):
 
         if 'scapy' in scenario.tags:
             print "---------------------------"
-            print "installing scapy and tcpdump"
             if not os.path.isfile('/usr/bin/scapy'):
-                call('sudo yum -y install tcpdump')
-                call('sudo easy_install pip')
+                print "installing scapy and tcpdump"
+                call('sudo yum -y install tcpdump', shell=True)
+                call('sudo easy_install pip', shell=True)
                 call("sudo pip install http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz", shell=True)
 
         if 'firewall' in scenario.tags:
