@@ -168,7 +168,7 @@ Feature: nmcli: ipv4
     Then "192.168.22.253/24" is visible with command "ip a s eth1"
     Then "192.168.122.253/16" is visible with command "ip a s eth1"
     Then "192.168.222.253/8" is visible with command "ip a s eth1"
-    Then "default via 192.168.22.96 dev eth1  proto static  metric 20" is visible with command "ip route"
+    Then "default via 192.168.22.96 dev eth1  proto static  metric" is visible with command "ip route"
     Then "default via 10." is not visible with command "ip route"
 
 
