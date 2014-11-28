@@ -403,6 +403,16 @@ def check_saved_in_editor(context):
     context.prompt.expect('successfully')
 
 
+@step(u'Create 300 bridges and delete them')
+def create_delete_bridges(context):
+    i = 0
+    while i < 300:
+        Popen('brctl addbr br0' , shell=True).wait()
+        Popen('ip addr add 1.1.1.1/24 dev br0' , shell=True).wait()
+        Popen('ip link delete dev br0' , shell=True).wait()
+        i += 1
+
+
 @step(u'Connect device "{device}"')
 def connect_device(context, device):
     cli = pexpect.spawn('nmcli device con %s' % device, timeout = 180, logfile=context.log)

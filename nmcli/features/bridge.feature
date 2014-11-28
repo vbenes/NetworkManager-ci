@@ -297,5 +297,5 @@ Feature: nmcli - bridge
     @bridge_assumed_connection_race
     @restart
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
-    Finish "i='0'; while [ $i -lt 300 ];do brctl addbr br0 && ip addr add 1.1.1.1/24 dev br0 && ip link delete dev br0 || break; i=$[$i+1];done"
-    Then "Active:\s+active" is visible with command "service NetworkManager status"
+    * Create 300 bridges and delete them
+    Then "active \(running\)" is visible with command "service NetworkManager status"
