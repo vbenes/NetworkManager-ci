@@ -267,6 +267,7 @@ Feature: nmcli - general
 
     # https://bugzilla.redhat.com/show_bug.cgi?id=1136836
     @general
+    @ipv4
     @connection_up_after_journald_restart
     Scenario: NM - general - bring up connection after journald restart
     * Add connection type "ethernet" named "ethie" for device "eth1"
