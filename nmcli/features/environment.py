@@ -51,6 +51,11 @@ def before_scenario(context, scenario):
                 call('sudo easy_install pip', shell=True)
                 call("sudo pip install http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz", shell=True)
 
+        if 'dummy' in scenario.tags:
+            print "---------------------------"
+            print "removing dummy devices"
+            call("ip link delete dummy0", shell=True)
+
         if 'firewall' in scenario.tags:
             print "---------------------------"
             print "starting firewall"
