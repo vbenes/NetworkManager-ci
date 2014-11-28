@@ -512,6 +512,7 @@ def fail_up_connection_for_device(context, name, device):
 @step(u'Finish "{command}"')
 def wait_for_process(context, command):
     assert command_code(context, command) == 0
+    sleep(0.1)
 
 
 @step(u'Global temporary ip is not based on mac of device "{dev}"')
