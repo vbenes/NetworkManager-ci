@@ -878,8 +878,12 @@ def set_property_in_editor(context, name, value):
 
 
 @step(u'Set logging for "{domain}" to "{level}"')
-def set_property_in_editor(context, domain, level):
-    cli = pexpect.spawn('nmcli g l level %s domains %s' % (level, domains), timeout = 60, logfile=context.log)
+def set_logging(context, domain, level):
+    if level == " ":
+        cli = pexpect.spawn('nmcli g l domains %s' % (domain), timeout = 60, logfile=context.log)
+    else:
+        cli = pexpect.spawn('nmcli g l level %s domains %s' % (level, domain), timeout = 60, logfile=context.log)
+
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
     if r != 0:
         raise Exception('Something bad happened when changing log level')
