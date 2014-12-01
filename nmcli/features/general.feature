@@ -324,3 +324,14 @@ Feature: nmcli - general
     * Wait for at least "5" seconds
     # Now the device should be listed as unmanaged
     Then "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
+
+
+    @vlan
+    @general
+    @nmcli_general_ifcfg_tailing_whitespace
+    Scenario: nmcli - general - ifcfg tailing whitespace ignored
+    * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect no dev eth1 id 99"
+    * Check ifcfg-name file created for connection "eth1.99"
+    * Execute "sed -i 's/PHYSDEV=eth1/PHYSDEV=eth2    /' /etc/sysconfig/network-scripts/ifcfg-eth1.99"
+    * Execute "nmcli connection reload"
+    Then "eth2" is visible with command "nmcli con show eth1.99"

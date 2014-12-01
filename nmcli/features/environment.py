@@ -84,8 +84,8 @@ def before_scenario(context, scenario):
             #call('sudo ifup eth1', shell=True)
             call('sudo nmcli con add type ethernet ifname eth2 con-name testeth2 autoconnect no', shell=True)
             #call('sudo ifup eth2', shell=True)
-            call('sudo nmcli con down testeth1', shell=True)
-            call('sudo nmcli con down testeth2', shell=True)
+            #call('sudo nmcli con down testeth1', shell=True)
+            #call('sudo nmcli con down testeth2', shell=True)
 
         if 'logging' in scenario.tags:
             context.loggin_level = check_output('nmcli -t -f LEVEL general logging', shell=True).strip()

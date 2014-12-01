@@ -22,6 +22,7 @@ testcase_294546, ., nmcli/./runtest.sh testcase_294546, NetworkManager
 connection_up_after_journald_restart, ., nmcli/./runtest.sh connection_up_after_journald_restart, NetworkManager
 nmcli_general_dhcp_hostname_over_localhost, ., nmcli/./runtest.sh nmcli_general_dhcp_hostname_over_localhost, NetworkManager
 nmcli_general_ignore_specified_unamanaged_devices, ., nmcli/./runtest.sh nmcli_general_ignore_specified_unamanaged_devices, NetworkManager
+nmcli_general_ifcfg_tailing_whitespace, ., nmcli/./runtest.sh nmcli_general_ifcfg_tailing_whitespace, NetworkManager
 
 #### vv KEEP THESE TWO TESTS ALWAYS TOGETHER!
 dns_none, ., nmcli/./runtest.sh dns_none, NetworkManager
