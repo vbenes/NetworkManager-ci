@@ -299,3 +299,13 @@ Feature: nmcli - bridge
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
     * Create 300 bridges and delete them
     Then "active \(running\)" is visible with command "service NetworkManager status"
+
+
+    @bridge_assumed_connection_no_firewalld_zone
+    @firewall
+    @dummy
+    Scenario: NM - bridge - no firewalld zone for bridge assumed connection
+    * Finish "sudo ip link add br0 type bridge"
+    * Finish "sudo ip addr add 1.1.1.2/24 dev br0"
+    When "IP4.ADDRESS\[1\]:\s+1.1.1.2\/24" is visible with command "nmcli con show br0"
+    Then "br0" is not visible with command "firewall-cmd --get-active-zones"
