@@ -1,6 +1,7 @@
 #Testname , Relative workdir under component, Command and args , Pkg Dependencies
 
 #general_start
+logging, ., nmcli/./runtest.sh logging, NetworkManager
 hostname_change, ., nmcli/./runtest.sh hostname_change, NetworkManager
 testcase_290423, ., nmcli/./runtest.sh testcase_290423, NetworkManager
 testcase_290424, ., nmcli/./runtest.sh testcase_290424, NetworkManager
