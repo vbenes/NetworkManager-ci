@@ -2,6 +2,15 @@
 Feature: nmcli - general
 
     @general
+    @logging
+    Scenario: NM - general - setting log level and autocompletion
+    Then "DEBUG\s+ERR\s+INFO\s+TRACE\s+WARN" is visible with tab after "sudo nmcli general logging level "
+    * Set logging for "all" to "INFO"
+    Then "INFO\s+PLATFORM,RFKILL,ETHER,WIFI,BT,MB,DHCP4,DHCP6,PPP,WIFI_SCAN,IP4,IP6,AUTOIP4,DNS,VPN,SHARING,SUPPLICANT,AGENTS,SETTINGS,SUSPEND,CORE,DEVICE,OLPC,WIMAX,INFINIBAND,FIREWALL,ADSL,BOND,VLAN,BRIDGE,DBUS_PROPS,TEAM,CONCHECK,DCB,DISPATCH" is visible with command "nmcli general logging"
+    * Set logging for "default,WIFI:ERR" to " "
+    Then "INFO\s+PLATFORM,RFKILL,ETHER,WIFI:ERR,BT,MB,DHCP4,DHCP6,PPP,IP4,IP6,AUTOIP4,DNS,VPN,SHARING,SUPPLICANT,AGENTS,SETTINGS,SUSPEND,CORE,DEVICE,OLPC,WIMAX,INFINIBAND,FIREWALL,ADSL,BOND,VLAN,BRIDGE,TEAM,CONCHECK,DCB,DISPATCH" is visible with command "nmcli general logging"
+
+    @general
     @testcase_290423
     Scenario: nmcli - general - check version
     * Note the output of "rpm -q --queryformat '%{VERSION}' NetworkManager" as value "1"

@@ -87,6 +87,9 @@ def before_scenario(context, scenario):
             call('sudo nmcli con down testeth1', shell=True)
             call('sudo nmcli con down testeth2', shell=True)
 
+        if 'logging' in scenario.tags:
+            context.loggin_level = check_output('nmcli -t -f LEVEL general logging', shell=True).strip()
+
         if 'vlan' in scenario.tags or 'bridge' in scenario.tags:
             print "---------------------------"
             print "connecting eth1"
@@ -215,6 +218,11 @@ def after_scenario(context, scenario):
             sleep(1)
             os.system('beah-beaker-backend &')
             sleep(20)
+
+        if 'logging' in scenario.tags:
+            print "---------------------------"
+            print "setting log level back"
+            call('sudo nmcli g log level %s domains ALL' % context.loggin_level, shell=True)
 
         if 'eth0' in scenario.tags:
             print "---------------------------"
