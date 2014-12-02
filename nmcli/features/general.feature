@@ -335,3 +335,12 @@ Feature: nmcli - general
     * Execute "sed -i 's/PHYSDEV=eth1/PHYSDEV=eth2    /' /etc/sysconfig/network-scripts/ifcfg-eth1.99"
     * Execute "nmcli connection reload"
     Then "eth2" is visible with command "nmcli con show eth1.99"
+
+
+    @mock
+    @nmcli_device_wifi_with_two_devices
+    Scenario: nmcli - device - wifi show two devices
+    Then "test_two_wifi_with_accesspoints \(__main__.TestNetworkManager\) ... ok" is visible with command "sudo -u test python /mnt/tests/NetworkManager/tmp/dbusmock-unittest.py TestNetworkManager.test_two_wifi_with_accesspoints"
+
+
+

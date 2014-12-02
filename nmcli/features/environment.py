@@ -45,11 +45,20 @@ def before_scenario(context, scenario):
 
         if 'scapy' in scenario.tags:
             print "---------------------------"
-            if not os.path.isfile('/usr/bin/scapy'):
-                print "installing scapy and tcpdump"
-                call('sudo yum -y install tcpdump', shell=True)
+            print "installing scapy and tcpdump"
+            if not os.path.isfile('/usr/bin/pip'):
                 call('sudo easy_install pip', shell=True)
+            if not os.path.isfile('/usr/bin/scapy'):
+                call('sudo yum -y install tcpdump', shell=True)
                 call("sudo pip install http://www.secdev.org/projects/scapy/files/scapy-latest.tar.gz", shell=True)
+
+        if 'mock' in scenario.tags:
+            print "---------------------------"
+            print "installing pip and python-dbusmock"
+            if not os.path.isfile('/usr/bin/pip'):
+                call('sudo easy_install pip', shell=True)
+            if call('pip list |grep python-dbusmock', shell=True) != 0:
+                call("sudo pip install python-dbusmock", shell=True)
 
         if 'dummy' in scenario.tags:
             print "---------------------------"
