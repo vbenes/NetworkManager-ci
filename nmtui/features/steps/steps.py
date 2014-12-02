@@ -321,6 +321,12 @@ def pattern_on_screen(context, pattern):
     assert match is not None, "Could see pattern '%s' on screen!" % pattern
 
 
+@step(u'"{pattern}" is not visible on screen')
+def pattern_not_on_screen(context, pattern):
+    match = re.match(pattern, get_screen_string(context.screen), re.UNICODE | re.DOTALL)
+    assert match is None, "The pattern is visible '%s' on screen!" % pattern
+
+
 @step(u'Set current field to "{value}"')
 def set_current_field_to(context, value):
     context.tui.send(keys['BACKSPACE']*100)

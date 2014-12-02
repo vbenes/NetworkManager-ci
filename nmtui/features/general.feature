@@ -143,3 +143,31 @@ Feature: General TUI tests
     Then "username=JohnSmith" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
     Then "password=testingpassword" is visible with command "cat /etc/NetworkManager/system-connections/dsl0"
     Then "dsl0\s+.*pppoe" is visible with command "nmcli connection"
+
+
+    @bz1131574
+    @general
+    @team
+    @nmtui_general_show_orphaned_slaves
+    Scenario: nmtui - general - show orphaned slaves
+    * Prepare new connection of type "Team" named "team0"
+    * Set "Device" field to "team0"
+    * Choose to "<Add>" a slave
+    * Choose the connection type "Ethernet"
+    * Set "Profile name" field to "team-slave-eth1"
+    * Set "Device" field to "eth1"
+    * Confirm the slave settings
+    * Choose to "<Add>" a slave
+    * Choose the connection type "Ethernet"
+    * Set "Profile name" field to "team-slave-eth2"
+    * Set "Device" field to "eth2"
+    * Confirm the slave settings
+    * Confirm the connection settings
+    * "team0\s+team\s+connected" is visible with command "nmcli device" in "30" seconds
+    * ".*team-slave-eth1.*" is not visible on screen
+    * ".*team-slave-eth2.*" is not visible on screen
+    # Removing master via CLI does not affect the slaves (opposed to TUI)
+    * Execute "nmcli connection delete team0"
+    * Wait for at least "3" seconds
+    Then ".*team-slave-eth1.*" is visible on screen
+    Then ".*team-slave-eth2.*" is visible on screen

@@ -410,6 +410,7 @@ nmtui_general_realtime_refresh_edit_screen, ., nmtui/./runtest.sh nmtui_general_
 nmtui_general_realtime_refresh_activate_screen_wo_autoconnect, ., nmtui/./runtest.sh nmtui_general_realtime_refresh_activate_screen_wo_autoconnect, NetworkManager-tui
 nmtui_general_realtime_refresh_activate_screen, ., nmtui/./runtest.sh nmtui_general_realtime_refresh_activate_screen, NetworkManager-tui
 nmtui_dsl_create_default_connection, ., nmtui/./runtest.sh nmtui_dsl_create_default_connection, NetworkManager-tui
+nmtui_general_show_orphaned_slaves, ., nmtui/./runtest.sh nmtui_general_show_orphaned_slaves, NetworkManager-tui
 
 nmtui_ethernet_create_default_connection, ., nmtui/./runtest.sh nmtui_ethernet_create_default_connection, NetworkManager-tui
 nmtui_ethernet_create_device_bound_connection, ., nmtui/./runtest.sh nmtui_ethernet_create_device_bound_connection, NetworkManager-tui
@@ -550,6 +551,7 @@ nmtui_team_delete_connection_up, ., nmtui/./runtest.sh nmtui_team_delete_connect
 nmtui_team_delete_connection_down, ., nmtui/./runtest.sh nmtui_team_delete_connection_down, NetworkManager-tui
 nmtui_team_add_many_slaves, ., nmtui/./runtest.sh nmtui_team_add_many_slaves, NetworkManager-tui
 nmtui_team_over_ethernet_devices, ., nmtui/./runtest.sh nmtui_team_over_ethernet_devices, NetworkManager-tui
+nmtui_team_delete_slaves_after_deleting_profile, ., nmtui/./runtest.sh nmtui_team_delete_slaves_after_deleting_profile, NetworkManager-tui
 nmtui_team_infiniband_slaves, ., nmtui/./runtest.sh nmtui_team_infiniband_slaves, NetworkManager-tui
 nmtui_team_slaves_non_auto, ., nmtui/./runtest.sh nmtui_team_slaves_non_auto, NetworkManager-tui
 nmtui_team_boot_with_team_and_one_slave_auto, ., nmtui/./runtest.sh nmtui_team_boot_with_team_and_one_slave_auto, NetworkManager-tui

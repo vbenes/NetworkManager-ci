@@ -212,6 +212,34 @@ Feature: Team TUI tests
     Then "192.168" is visible with command "ip a s team0"
 
 
+    @bz1131574
+    @team
+    @nmtui_team_delete_slaves_after_deleting_profile
+    Scenario: nmtui - team - delete slaves after deleting master
+    * Prepare new connection of type "Team" named "team0"
+    * Set "Device" field to "team0"
+    * Choose to "<Add>" a slave
+    * Choose the connection type "Ethernet"
+    * Set "Profile name" field to "team-slave-eth1"
+    * Set "Device" field to "eth1"
+    * Confirm the slave settings
+    * Choose to "<Add>" a slave
+    * Choose the connection type "Ethernet"
+    * Set "Profile name" field to "team-slave-eth2"
+    * Set "Device" field to "eth2"
+    * Confirm the slave settings
+    * Confirm the connection settings
+    * "team0\s+team\s+connected" is visible with command "nmcli device" in "30" seconds
+    * Select connection "team0" in the list
+    * Choose to "<Delete>" a connection
+    * Press "Delete" button in the dialog
+    * Wait for at least "3" seconds
+    Then ".*team-slave-eth1.*" is not visible on screen
+    Then ".*team-slave-eth2.*" is not visible on screen
+    Then "team-slave-eth1" is not visible with command "nmcli connection"
+    Then "team-slave-eth2" is not visible with command "nmcli connection"
+
+
     @team
     @nmtui_team_infiniband_slaves
     Scenario: nmtui - team - infiniband slaves
