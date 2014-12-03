@@ -639,3 +639,18 @@ Feature: IPv4 TUI tests
     Then "GATEWAY=192.168.125.96" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
     Then "IPADDR=192.168.125.253" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
     Then "PREFIX=24" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
+
+
+    @ipv4
+    @bz1131434
+    @nmtui_ipv4_addresses_can_add_after_removing_invalid
+    Scenario: nmtui - ipv4 - addresses - add address after removing invalid one
+    Given Prepare new connection of type "Ethernet" named "ethernet"
+    Given Set "Device" field to "eth1"
+    Given Set "IPv4 CONFIGURATION" category to "Manual"
+    Given Come in "IPv4 CONFIGURATION" category
+    Given In "Addresses" property add "9999999"
+    When Remove all "Addresses" property items
+    Then In "Addresses" property add "192.168.1.5"
+    Then Confirm the connection settings
+    Then "inet 192.168.1.5" is visible with command "ip a s eth1" in "10" seconds
