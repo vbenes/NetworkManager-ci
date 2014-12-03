@@ -885,7 +885,7 @@ def set_logging(context, domain, level):
         cli = pexpect.spawn('nmcli g l level %s domains %s' % (level, domain), timeout = 60, logfile=context.log)
 
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-    if r != 0:
+    if r != 3:
         raise Exception('Something bad happened when changing log level')
 
 @step(u'Set default DCB options')
