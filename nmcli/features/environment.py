@@ -54,7 +54,10 @@ def before_scenario(context, scenario):
 
         if 'mock' in scenario.tags:
             print "---------------------------"
-            print "installing pip and python-dbusmock"
+            print "installing dbus-x11, pip, and python-dbusmock"
+            dbus-x11
+            if call('rpm -q --quiet dbus-x11', shell=True) != 0:
+                call('yum -y install dbus-x11')
             if not os.path.isfile('/usr/bin/pip'):
                 call('sudo easy_install pip', shell=True)
             if call('pip list |grep python-dbusmock', shell=True) != 0:
