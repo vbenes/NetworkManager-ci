@@ -34,7 +34,7 @@ nmcli_device_delete, ., nmcli/./runtest.sh nmcli_device_delete, NetworkManager
 nmcli_device_attempt_hw_delete, ., nmcli/./runtest.sh nmcli_device_attempt_hw_delete, NetworkManager
 nmcli_general_correct_profile_activated_after_restart, ., nmcli/./runtest.sh nmcli_general_correct_profile_activated_after_restart, NetworkManager
 nmcli_novice_mode_readline, ., nmcli/./runtest.sh nmcli_novice_mode_readline, NetworkManager
-nmcli_general_ifcfg_tailing_whitespace, ., nmcli/./runtest.sh nmcli_general_ifcfg_tailing_whitespace, NetworkManager
+nmcli_device_wifi_with_two_devices, ., nmcli/./runtest.sh nmcli_device_wifi_with_two_devices, NetworkManager
 #general_end
 
 #vpn
