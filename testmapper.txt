@@ -458,6 +458,7 @@ nmtui_ipv4_invalid_address, ., nmtui/./runtest.sh nmtui_ipv4_invalid_address, Ne
 nmtui_ipv4_invalid_gateway, ., nmtui/./runtest.sh nmtui_ipv4_invalid_gateway, NetworkManager-tui
 nmtui_ipv4_invalid_dns, ., nmtui/./runtest.sh nmtui_ipv4_invalid_dns, NetworkManager-tui
 nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, ., nmtui/./runtest.sh nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, NetworkManager-tui
+nmtui_ipv4_addresses_can_add_after_removing_invalid, ., nmtui/./runtest.sh nmtui_ipv4_addresses_can_add_after_removing_invalid, NetworkManager-tui
 
 nmtui_ipv6_addresses_static_no_address, ., nmtui/./runtest.sh nmtui_ipv6_addresses_static_no_address, NetworkManager-tui
 nmtui_ipv6_addresses_static_no_mask, ., nmtui/./runtest.sh nmtui_ipv6_addresses_static_no_mask, NetworkManager-tui
@@ -489,6 +490,7 @@ nmtui_ipv6_never_default_set, ., nmtui/./runtest.sh nmtui_ipv6_never_default_set
 nmtui_ipv6_invalid_address, ., nmtui/./runtest.sh nmtui_ipv6_invalid_address, NetworkManager-tui
 nmtui_ipv6_invalid_gateway, ., nmtui/./runtest.sh nmtui_ipv6_invalid_gateway, NetworkManager-tui
 nmtui_ipv6_invalid_dns, ., nmtui/./runtest.sh nmtui_ipv6_invalid_dns, NetworkManager-tui
+nmtui_ipv6_addresses_can_add_after_removing_invalid, ., nmtui/./runtest.sh nmtui_ipv6_addresses_can_add_after_removing_invalid, NetworkManager-tui
 
 nmtui_vlan_add_default_connection, ., nmtui/./runtest.sh nmtui_vlan_add_default_connection, NetworkManager-tui
 nmtui_vlan_set_device, ., nmtui/./runtest.sh nmtui_vlan_set_device, NetworkManager-tui

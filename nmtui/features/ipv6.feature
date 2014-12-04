@@ -589,3 +589,18 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * In "DNS servers" property add "::::"
     Then Cannot confirm the connection settings
+
+
+    @bz1131434
+    @ipv6
+    @nmtui_ipv6_addresses_can_add_after_removing_invalid
+    Scenario: nmtui - ipv6 - addresses - add address after removing invalid one
+    Given Prepare new connection of type "Ethernet" named "ethernet"
+    Given Set "Device" field to "eth1"
+    Given Set "IPv6 CONFIGURATION" category to "Manual"
+    Given Come in "IPv6 CONFIGURATION" category
+    Given In "Addresses" property add "99999999999"
+    When Remove all "Addresses" property items
+    Then In "Addresses" property add "dead::beef"
+    Then Confirm the connection settings
+    Then "inet6 dead::beef" is visible with command "ip -6 a s eth1" in "10" seconds
