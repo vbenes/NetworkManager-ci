@@ -488,6 +488,14 @@ def after_scenario(context, scenario):
             call('sudo cp -f /tmp/bckp_nm.conf /etc/NetworkManager/NetworkManager.conf', shell=True)
             call('sudo ip link del dnt', shell=True)
 
+        if 'nmcli_general_keep_slave_device_unmanaged' in scenario.tags:
+            print "---------------------------"
+            print "restoring the testeth1 profile to managed state / removing slave"
+            call('sudo ip link del eth1.100', shell=True)
+            call('sudo rm -f /etc/sysconfig/network-scripts/ifcfg-testeth1', shell=True)
+            call('sudo nmcli connection reload', shell=True)
+            call('nmcli connection add type ethernet ifname eth1 con-name testeth1 autoconnect no', shell=True)
+
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
 

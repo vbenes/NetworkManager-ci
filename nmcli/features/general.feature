@@ -343,4 +343,14 @@ Feature: nmcli - general
     Then "test_two_wifi_with_accesspoints \(__main__.TestNetworkManager\) ... ok" is visible with command "sudo -u test python /mnt/tests/NetworkManager/tmp/dbusmock-unittest.py TestNetworkManager.test_two_wifi_with_accesspoints"
 
 
-
+    @bz1114681
+    @general
+    @nmcli_general_keep_slave_device_unmanaged
+    Scenario: nmcli - general - keep slave device unmanaged
+    Given Check ifcfg-name file created for connection "testeth1"
+    * Execute "echo -e NM_CONTROLLED=no >> /etc/sysconfig/network-scripts/ifcfg-testeth1"
+    * Execute "nmcli connection reload"
+    * Execute "ip link add link eth1 name eth1.100 type vlan id 100"
+    Then "eth1\s+ethernet\s+unmanaged" is visible with command "nmcli device" in "5" seconds
+    Then "eth1.100\s+vlan\s+unmanaged" is visible with command "nmcli device"
+    Then "testeth1" is not visible with command "nmcli device"

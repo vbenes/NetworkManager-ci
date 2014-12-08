@@ -520,7 +520,7 @@ def check_error_while_saving_in_editor(context, type):
 @step(u'Execute "{command}"')
 def execute_command(context, command):
     command_code(context, command)
-    sleep(0.2)
+    sleep(0.3)
 
 @step(u'Execute "{command}" without waiting for process to finish')
 def execute_command(context, command):
