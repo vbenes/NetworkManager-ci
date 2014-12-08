@@ -704,6 +704,27 @@ Feature: nmcli: ipv4
     Then "mtu 1800" is visible with command "ip a s test2"
 
 
+    @renewal_gw_after_dhcp_outage
+    @two_bridged_veths
+    @dhcpd
+    Scenario: NM - ipv4 - renewal gw after DHCP outage
+    * Prepare veth pairs "test1,test2" bridged over "vethbr"
+    * Add a new connection of type "ethernet" and options "con-name tc1 ifname test1 ip4 192.168.100.1/24"
+    * Add a new connection of type "ethernet" and options "con-name tc2 ifname test2"
+    * Execute "nmcli connection modify tc2 ipv4.may-fail no"
+    * Execute "nmcli connection modify tc1 ipv4.never-default yes"
+    * Bring "up" connection "tc1"
+    * Configure dhcp server for subnet "192.168.100" with lease time "20"
+    * Execute "service dhcpd restart"
+    * Bring "up" connection "tc2"
+    When "default" is visible with command "ip r"
+    * Execute "service dhcpd stop"
+    When "default" is not visible with command "ip r |grep test2" in "50" seconds
+    When "tc2" is not visible with command "nmcli connection s -a" in "200" seconds
+    * Execute "service dhcpd restart"
+    Then "routers = 192.168.100.1" is visible with command "nmcli con show tc2" in "400" seconds
+
+
     @testcase_304241
     @ipv4
     Scenario: nmcli - ipv4 - describe
