@@ -191,16 +191,18 @@ if [ ! -e /tmp/nm_eth_configured ]; then
         #profiles tuning
         if [ $wlan -eq 0 ]; then
             if [ $dcb_inf -eq 0 ]; then
-                nmcli connection add type ethernet con-name testeth0 ifname eth0 autoconnect yes
-                nmcli connection modify testeth0 ipv6.method ignore
+                nmcli connection add type ethernet ifname eth0 con-name testeth0
                 nmcli connection delete eth0
+                #nmcli connection modify testeth0 ipv6.method ignore
+                nmcli connection up id testeth0
+                nmcli con show -a
+            fi
                 for X in $(seq 1 10); do
                     nmcli connection add type ethernet con-name testeth$X ifname eth$X autoconnect no
                     nmcli connection delete eth$X
                 done
                 nmcli connection modify testeth10 ipv6.method auto
-                nmcli connection up id testeth0
-            fi
+
         fi
         if [ $wlan -eq 1 ]; then
             # we need to do this to have the device rescan networks after the renaming
