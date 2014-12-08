@@ -884,10 +884,10 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     * Execute "nmcli connection up qe-wep" without waiting for process to finish
     Then "KEY4=s:testing123456" is visible with command "sudo cat /etc/sysconfig/network-scripts/keys-qe-wep"
-    Then Look for "'wep_tx_keyidx' value '3'" in tailed file
+    Then Look for "'wep_tx_keyidx' value '3'" in journal
 
 
     @wifi
@@ -943,9 +943,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     * Execute "nmcli connection up qe-wep" without waiting for process to finish
-    Then Look for "added 'auth_alg' value 'SHARED'" in tailed file
+    Then Look for "added 'auth_alg' value 'SHARED'" in journal
 
 
     @wifi
@@ -1019,9 +1019,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     Then "Error" is visible with command "nmcli connection up qe-wpa2-psk"
-    Then Look for "added 'proto' value 'WPA'" in tailed file
+    Then Look for "added 'proto' value 'WPA'" in journal
     Then "\*\s+qe-wpa2-psk" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
@@ -1038,9 +1038,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     * Bring up connection "qe-wpa2-psk"
-    Then Look for "added 'pairwise' value 'CCMP'" in tailed file
+    Then Look for "added 'pairwise' value 'CCMP'" in journal
     Then "qe-wpa2-psk" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wpa2-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -1058,9 +1058,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     * Bring up connection "qe-wpa1-psk"
-    Then Look for "added 'pairwise' value 'TKIP'" in tailed file
+    Then Look for "added 'pairwise' value 'TKIP'" in journal
     Then "qe-wpa1-psk" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wpa1-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -1078,9 +1078,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     Then "Error" is visible with command "nmcli connection up qe-wpa2-psk"
-    Then Look for "added 'pairwise' value 'TKIP'" in tailed file
+    Then Look for "added 'pairwise' value 'TKIP'" in journal
     Then "\*\s+qe-wpa2-psk" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
@@ -1097,9 +1097,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     * Bring up connection "qe-wpa2-psk"
-    Then Look for "added 'group' value 'CCMP'" in tailed file
+    Then Look for "added 'group' value 'CCMP'" in journal
     Then "qe-wpa2-psk" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wpa2-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -1117,9 +1117,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     * Bring up connection "qe-wpa1-psk"
-    Then Look for "added 'group' value 'TKIP'" in tailed file
+    Then Look for "added 'group' value 'TKIP'" in journal
     Then "qe-wpa1-psk" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wpa1-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -1137,9 +1137,9 @@ Feature: nmcli - wifi
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Start tailing file "/var/log/messages"
+    * Start following journal
     Then "Error" is visible with command "nmcli connection up qe-wpa2-psk"
-    Then Look for "added 'group' value 'TKIP'" in tailed file
+    Then Look for "added 'group' value 'TKIP'" in journal
     Then "\*\s+qe-wpa2-psk" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 

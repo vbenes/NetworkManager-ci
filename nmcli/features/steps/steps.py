@@ -991,6 +991,19 @@ def start_generic_connection(context, connection, device):
 @step(u'Start tailing file "{archivo}"')
 def start_tailing(context, archivo):
     context.tail = pexpect.spawn('sudo tail -f %s' % archivo, timeout = 180, logfile=context.log)
+    sleep(0.3)
+
+
+@step(u'Start following journal')
+def start_tailing_journal(context):
+    context.journal = pexpect.spawn('sudo journalctl --follow -o cat', timeout = 180, logfile=context.log)
+    sleep(0.3)
+
+
+@step(u'Look for "{content}" in journal')
+def find_tailing_journal(context, content):
+    if context.journal.expect([content, pexpect.TIMEOUT, pexpect.EOF]) == 1:
+        raise Exception('Did not see the "%s" in journal output before timeout (180s)' % content)
 
 
 @step(u'Team "{team}" is down')
