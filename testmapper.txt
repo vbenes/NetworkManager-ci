@@ -151,6 +151,7 @@ testcase_304239, ., nmcli/./runtest.sh testcase_304239, NetworkManager
 testcase_304240, ., nmcli/./runtest.sh testcase_304240, NetworkManager
 testcase_304241, ., nmcli/./runtest.sh testcase_304241, NetworkManager
 set_mtu_from_DHCP, ., nmcli/./runtest.sh set_mtu_from_DHCP, NetworkManager
+renewal_gw_after_dhcp_outage, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage, NetworkManager
 #ipv4_end
 
 #vlan_start
