@@ -55,13 +55,24 @@ def before_scenario(context, scenario):
         if 'mock' in scenario.tags:
             print "---------------------------"
             print "installing dbus-x11, pip, and python-dbusmock"
-            dbus-x11
             if call('rpm -q --quiet dbus-x11', shell=True) != 0:
                 call('yum -y install dbus-x11', shell=True)
             if not os.path.isfile('/usr/bin/pip'):
                 call('sudo easy_install pip', shell=True)
             if call('pip list |grep python-dbusmock', shell=True) != 0:
                 call("sudo pip install python-dbusmock", shell=True)
+
+        if 'dhcpd' in scenario.tags:
+            print "---------------------------"
+            print "installing dhcp"
+            if call('rpm -q --quiet dhcp', shell=True) != 0:
+                call('yum -y install dhcp', shell=True)
+
+        if 'two_bridged_veths' in scenario.tags:
+            print "---------------------------"
+            print "removing default for veth pairs"
+            call("sudo sed -i 's/plugins=ifcfg-rh/plugins=ifcfg-rh\nno-auto-default=test1,test1p,test2p' /etc/NetworkManager/NetworkManager.conf", shell=True)
+            call("service NetworkManager restart", shell=True)
 
         if 'dummy' in scenario.tags:
             print "---------------------------"
@@ -259,6 +270,22 @@ def after_scenario(context, scenario):
             call("nmcli connection delete id dcb", shell=True)
             sleep(10*TIMER)
 
+        if 'two_bridged_veths' in scenario.tags:
+            print "---------------------------"
+            print "deleting veth devices"
+            call("nmcli connection delete id tc1 tc2", shell=True)
+            call("ip link del test1", shell=True)
+            call("ip link del test2", shell=True)
+            call("ip link del vethbr", shell=True)
+            call("nmcli con del tc1 tc2", shell=True)
+            call("sudo sed -i 's/no-auto-default=test1,test1p,test2p//' /etc/NetworkManager/NetworkManager.conf", shell=True)
+            call("service NetworkManager restart", shell=True)
+
+        if 'dhcpd' in scenario.tags:
+            print "---------------------------"
+            print "deleting veth devices"
+            call("sudo service dhcpd stop", shell=True)
+
         if 'mtu' in scenario.tags:
             print "---------------------------"
             print "deleting veth devices from mtu test"
@@ -269,8 +296,8 @@ def after_scenario(context, scenario):
             call("ip link delete test2", shell=True)
             call("ip link set dev vethbr down", shell=True)
             call("brctl delbr vethbr", shell=True)
-            call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep -v grep |awk '{print $2}'", shell=True)
-            call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep -v grep |awk '{print $2}'", shell=True)
+            call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep 192.168 |grep -v grep |awk '{print $2}')", shell=True)
+            call("kill -9 $(ps aux|grep '/usr/sbin/dns' |grep 192.168 |grep -v grep |awk '{print $2}')", shell=True)
 
         if 'inf' in scenario.tags:
             print "---------------------------"

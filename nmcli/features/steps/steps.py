@@ -413,6 +413,23 @@ def create_delete_bridges(context):
         i += 1
 
 
+@step(u'Configure dhcp server for subnet "{subnet}" with lease time "{lease}"')
+def config_dhcp(context, subnet, lease):
+    config = []
+    config.append('default-lease-time %d;' %int(lease))
+    config.append('max-lease-time %d;' %(int(lease)*2))
+    config.append('subnet %s.0 netmask 255.255.255.0 {' %subnet)
+    config.append('range %s.128 %s.250;' %(subnet, subnet))
+    config.append('option routers %s.1;' %subnet)
+    config.append('option domain-name "nodhcp";')
+    config.append('option domain-name-servers %s.1, 8.8.8.8;}' %subnet)
+
+    f = open('/etc/dhcp/dhcpd.conf','w')
+    for line in config:
+        f.write(line+'\n')
+    f.close()
+
+
 @step(u'Connect device "{device}"')
 def connect_device(context, device):
     cli = pexpect.spawn('nmcli device con %s' % device, timeout = 180, logfile=context.log)
@@ -719,6 +736,16 @@ def check_pattern_visible_with_command_in_time(context, pattern, command, second
         sleep(1)
     raise Exception('Did not see the pattern %s in %d seconds' % (pattern, seconds))
 
+@step(u'"{pattern}" is not visible with command "{command}" in "{seconds}" seconds')
+def check_pattern_not_visible_with_command_in_time(context, pattern, command, seconds):
+    seconds = int(seconds)
+    while seconds > 0:
+        ifconfig = pexpect.spawn(command, timeout = 180, logfile=context.log)
+        if ifconfig.expect([pattern, pexpect.EOF]) != 0:
+            return True
+        seconds = seconds - 1
+        sleep(1)
+    raise Exception('Still did see the pattern %s in %d seconds' % (pattern, seconds))
 
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
@@ -777,6 +804,21 @@ def prepare_connection(context):
         * Submit "set ipv4.never-default yes" in editor
         * Submit "set ipv6.method ignore" in editor
     """)
+
+
+
+@step(u'Prepare veth pairs "{pairs_array}" bridged over "{bridge}"')
+def prepare_veths(context, pairs_array, bridge):
+    pairs = []
+    for pair in pairs_array.split(','):
+        pairs.append(pair.strip())
+
+    command_code(context, "sudo brctl addbr %s"% bridge)
+    for pair in pairs:
+        command_code(context, "ip link add %s type veth peer name %sp" %(pair, pair))
+        command_code(context, "brctl addif vethbr %sp" %pair)
+        command_code(context, "ip link set dev %s up" % pair)
+        command_code(context, "ip link set dev %sp up" % pair)
 
 
 @step(u'Print in editor')
