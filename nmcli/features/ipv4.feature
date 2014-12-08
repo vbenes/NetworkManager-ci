@@ -709,12 +709,12 @@ Feature: nmcli: ipv4
     @dhcpd
     Scenario: NM - ipv4 - renewal gw after DHCP outage
     * Prepare veth pairs "test1,test2" bridged over "vethbr"
-    * Add a new connection of type "ethernet" and options "con-name tc1 ifname test1 ip4 192.168.100.1/24"
+    * Add a new connection of type "ethernet" and options "con-name tc1 ifname test1 ip4 192.168.10.1/24"
     * Add a new connection of type "ethernet" and options "con-name tc2 ifname test2"
     * Execute "nmcli connection modify tc2 ipv4.may-fail no"
     * Execute "nmcli connection modify tc1 ipv4.never-default yes"
     * Bring "up" connection "tc1"
-    * Configure dhcp server for subnet "192.168.100" with lease time "20"
+    * Configure dhcp server for subnet "192.168.10" with lease time "20"
     * Execute "service dhcpd restart"
     * Bring "up" connection "tc2"
     When "default" is visible with command "ip r"
@@ -722,7 +722,7 @@ Feature: nmcli: ipv4
     When "default" is not visible with command "ip r |grep test2" in "50" seconds
     When "tc2" is not visible with command "nmcli connection s -a" in "200" seconds
     * Execute "service dhcpd restart"
-    Then "routers = 192.168.100.1" is visible with command "nmcli con show tc2" in "400" seconds
+    Then "routers = 192.168.10.1" is visible with command "nmcli con show tc2" in "400" seconds
 
 
     @testcase_304241

@@ -212,11 +212,6 @@ if [ ! -e /tmp/nm_eth_configured ]; then
         fi
 
     fi
-    # beah-beaker-backend sanitization
-    kill -9 $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk '{print $2}')
-    sleep 1
-    beah-beaker-backend &
-    sleep 10
 
     touch /tmp/nm_eth_configured
 fi
@@ -244,7 +239,6 @@ if [[ $1 == *inf_* ]]; then
         nmcli connection delete mlx4_ib1
         nmcli connection delete mlx4_ib1.8003
         sleep 5
-        service NetworkManager restart
 
         touch /tmp/inf_configured
     fi
