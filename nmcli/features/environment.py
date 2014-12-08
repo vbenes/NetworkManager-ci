@@ -62,11 +62,11 @@ def before_scenario(context, scenario):
             if call('pip list |grep python-dbusmock', shell=True) != 0:
                 call("sudo pip install python-dbusmock", shell=True)
 
-        if 'dhcpd' in scenario.tags:
-            print "---------------------------"
-            print "installing dhcp"
-            if call('rpm -q --quiet dhcp', shell=True) != 0:
-                call('yum -y install dhcp', shell=True)
+        # if 'dhcpd' in scenario.tags:
+        #     print "---------------------------"
+        #     print "installing dhcp"
+        #     if call('rpm -q --quiet dhcp', shell=True) != 0:
+        #         call('yum -y install dhcp', shell=True)
 
         if 'dummy' in scenario.tags:
             print "---------------------------"
