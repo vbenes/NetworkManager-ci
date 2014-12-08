@@ -68,12 +68,6 @@ def before_scenario(context, scenario):
             if call('rpm -q --quiet dhcp', shell=True) != 0:
                 call('yum -y install dhcp', shell=True)
 
-        if 'two_bridged_veths' in scenario.tags:
-            print "---------------------------"
-            print "removing default for veth pairs"
-            call("sudo sed -i 's/plugins=ifcfg-rh/plugins=ifcfg-rh\nno-auto-default=test1,test1p,test2p' /etc/NetworkManager/NetworkManager.conf", shell=True)
-            call("service NetworkManager restart", shell=True)
-
         if 'dummy' in scenario.tags:
             print "---------------------------"
             print "removing dummy devices"
@@ -277,9 +271,7 @@ def after_scenario(context, scenario):
             call("ip link del test1", shell=True)
             call("ip link del test2", shell=True)
             call("ip link del vethbr", shell=True)
-            call("nmcli con del tc1 tc2", shell=True)
-            call("sudo sed -i 's/no-auto-default=test1,test1p,test2p//' /etc/NetworkManager/NetworkManager.conf", shell=True)
-            call("service NetworkManager restart", shell=True)
+            call("nmcli con del tc1 tc2 vethbr", shell=True)
 
         if 'dhcpd' in scenario.tags:
             print "---------------------------"
