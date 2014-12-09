@@ -67,6 +67,7 @@ testcase_300565, ., nmcli/./runtest.sh testcase_300565, NetworkManager
 #testcase_300566, ., nmcli/./runtest.sh testcase_300566, NetworkManager
 testcase_300567, ., nmcli/./runtest.sh testcase_300567, NetworkManager
 testcase_300568, ., nmcli/./runtest.sh testcase_300568, NetworkManager
+route_priorities, ., nmcli/./runtest.sh route_priorities, NetworkManager
 #connection_end
 
 #ipv6_start

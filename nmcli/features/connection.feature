@@ -265,6 +265,27 @@ Feature: nmcli: connection
      Then "eth6" is visible with command "firewall-cmd --zone=public --list-all"
 
 
+   @route_priorities
+    @con
+    @eth
+    @rhbz663730
+    Scenario: nmcli - connection - route priorities
+     * Add connection type "ethernet" named "ethie" for device "eth0"
+     * Add connection type "ethernet" named "connie" for device "eth10"
+     * Bring "up" connection "ethie"
+     * Bring "up" connection "connie"
+     * Ping "nix.cz" from "eth0"
+     * Unable to ping "nix.cz" from "eth10"
+     * Execute "nmcli con modify connie ipv4.route-metric 10"
+     * Bring "up" connection "connie"
+     * Ping "nix.cz" from "eth10"
+     * Unable to ping "nix.cz" from "eth0"
+     * Execute "nmcli con modify connie ipv4.route-metric -1"
+     * Bring "up" connection "connie"
+     Then Ping "nix.cz" from "eth0"
+     Then Unable to ping "nix.cz" from "eth10"
+
+
     @testcase_300568
     @con
     Scenario: nmcli - connection - describe
