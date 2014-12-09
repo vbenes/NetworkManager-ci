@@ -191,7 +191,7 @@ Feature: nmcli - general
     * Execute "nmcli dev disconnect eth2"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1113941
+    @rhbz1113941
     @general
     @device_connect_no_profile
     Scenario: nmcli - device - connect - no profile
@@ -202,7 +202,7 @@ Feature: nmcli - general
     Then "connection.interface-name: \s+eth2" is visible with command "nmcli connection show eth2"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1034150
+    @rhbz1034150
     @general
     @bridge
     @nmcli_device_delete
@@ -214,7 +214,7 @@ Feature: nmcli - general
     Then "bridge0" is visible with command "nmcli connection"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1034150
+    @rhbz1034150
     @general
     @veth
     @nmcli_device_attempt_hw_delete
@@ -224,7 +224,7 @@ Feature: nmcli - general
     Then "eth9\s+ethernet" is visible with command "nmcli device"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1067712
+    @rhbz1067712
     @general
     @ethernet
     @nmcli_general_correct_profile_activated_after_restart
@@ -238,7 +238,7 @@ Feature: nmcli - general
     Then "aaa" is visible with command "nmcli device"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1007365
+    @rhbz1007365
     @general
     @bridge
     @nmcli_novice_mode_readline
@@ -277,7 +277,7 @@ Feature: nmcli - general
     Then "nameserver 10" is visible with command "cat /etc/resolv.conf"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1136836
+    @rhbz1136836
     @general
     @ipv4
     @connection_up_after_journald_restart
@@ -289,7 +289,7 @@ Feature: nmcli - general
 
 
     @veth
-    @bz1110436
+    @rhbz1110436
     @general
     @restore_hostname
     @nmcli_general_dhcp_hostname_over_localhost
@@ -312,7 +312,7 @@ Feature: nmcli - general
     # Restoring orig. hostname in after_scenario
 
 
-    @bz1136843
+    @rhbz1136843
     @general
     @nmcli_general_ignore_specified_unamanaged_devices
     Scenario: NM - general - ignore specified unmanaged devices
@@ -343,7 +343,7 @@ Feature: nmcli - general
     Then "test_two_wifi_with_accesspoints \(__main__.TestNetworkManager\) ... ok" is visible with command "sudo -u test python /mnt/tests/NetworkManager/tmp/dbusmock-unittest.py TestNetworkManager.test_two_wifi_with_accesspoints"
 
 
-    @bz1114681
+    @rhbz1114681
     @general
     @nmcli_general_keep_slave_device_unmanaged
     Scenario: nmcli - general - keep slave device unmanaged
@@ -354,3 +354,11 @@ Feature: nmcli - general
     Then "eth1\s+ethernet\s+unmanaged" is visible with command "nmcli device" in "5" seconds
     Then "eth1.100\s+vlan\s+unmanaged" is visible with command "nmcli device"
     Then "testeth1" is not visible with command "nmcli device"
+
+
+    @rhbz1103777
+    @no_error_when_firewald_restarted
+    @firewall
+    Scenario: NM - general - no error when firewalld restarted
+    * Execute "sudo service firewalld restart"
+    Then "nm_connection_get_setting_connection: assertion `NM_IS_CONNECTION \(connection\)' failed" is not visible with command "sudo tail -n 30 /var/log/messages"
