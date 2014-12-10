@@ -225,6 +225,7 @@ Feature: nmcli - general
 
 
     @rhbz1067712
+    @veth
     @general
     @ethernet
     @nmcli_general_correct_profile_activated_after_restart
