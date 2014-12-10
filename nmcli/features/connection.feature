@@ -287,6 +287,7 @@ Feature: nmcli: connection
 
 
     @profile_priorities
+    @veth
     @con
     @eth
     @rhbz663730
