@@ -296,6 +296,7 @@ Feature: nmcli - bridge
 
 
     @bridge_assumed_connection_race
+    @veth
     @restart
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
     * Create 300 bridges and delete them
