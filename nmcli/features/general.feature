@@ -255,6 +255,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @dns_none
     Scenario: NM - dns none setting
     * Execute "sudo sed -i 's/plugins=ifcfg-rh/plugins=ifcfg-rh\ndns=none/' /etc/NetworkManager/NetworkManager.conf"
@@ -267,6 +268,7 @@ Feature: nmcli - general
 
 
     @general
+    @veth
     @remove_dns_none
     Scenario: NM - dns  none removal
     When "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
