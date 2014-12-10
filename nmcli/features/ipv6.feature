@@ -315,7 +315,8 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "nameserver 4000::1\s+nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
 
 #FIXME: this need some tuning as there may be some auto obtained ipv6 dns VVVV
