@@ -102,20 +102,21 @@ if [ ! -e /tmp/nm_eth_configured ]; then
             echo "ignore-carrier=*" >> /etc/NetworkManager/NetworkManager.conf
             service NetworkManager restart
         fi
+        sleep 5
 
         NUM=0
         # renaming all possible device to parX
         for DEV in $(nmcli -f TYPE,DEVICE -t c sh -a  | grep ethernet | awk '{split($0,a,":"); print a[2]}'); do
-            if [ "$DEV" == "$(ip route |grep default |awk '{print $5}')" ]; then
-                ip link set $DEV down
-                ip link set $DEV name par$NUM
-                ip link set par$NUM up
-                nmcli c add type ethernet con-name par$NUM ifname par$NUM autoconnect no
-                nmcli c down par$NUM
-                nmcli c del $DEV
-            else
-                ip link set $DEV down
-            fi
+            #if [ "$DEV" == "$(ip route |grep default |awk '{print $5}')" ]; then
+            ip link set $DEV down
+            ip link set $DEV name par$NUM
+            ip link set par$NUM up
+            nmcli c add type ethernet con-name par$NUM ifname par$NUM autoconnect no
+            nmcli c down par$NUM
+            nmcli c del $DEV
+            #else
+            #    ip link set $DEV down
+            #fi
             ((NUM++))
         done
 
