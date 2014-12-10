@@ -3,7 +3,7 @@ set -x
 
 if [ -e /tmp/nm_veth_configured ]; then
     # check if macs aren't the same again
-    if [ `ip a s par0 |grep link/ether | awk '{print $2}'` != `ip a s eth0 |grep link/ether | awk '{print $2}'` ]; then
+    if [ `ip a s par0 |grep link/ether | awk '{print $2}'` == `ip a s eth0 |grep link/ether | awk '{print $2}'` ]; then
         macaddr=$(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
         ip link set dev par0 address $macaddr
     fi
