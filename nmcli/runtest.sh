@@ -103,14 +103,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
             service NetworkManager restart
         fi
 
-        # clonning mac address of original master device to new eth0
-        orig_macaddr=$(ip a s par0 |grep link/ether | awk '{print $2}')
-        #ip link set dev eth0 address $orig_macaddr
-        echo $orig_macaddr > /tmp/nm_orig_mac
-        macaddr=$(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
-        ip link set dev par0 address $macaddr
         NUM=0
-
         # renaming all possible device to parX
         for DEV in $(nmcli -f TYPE,DEVICE -t c sh -a  | grep ethernet | awk '{split($0,a,":"); print a[2]}'); do
             if [ "$DEV" == "$(ip route |grep default |awk '{print $5}')" ]; then
@@ -123,7 +116,15 @@ if [ ! -e /tmp/nm_eth_configured ]; then
             else
                 ip link set $DEV down
             fi
+            ((NUM++))
         done
+
+        # clonning mac address of original master device to new eth0
+        orig_macaddr=$(ip a s par0 |grep link/ether | awk '{print $2}')
+        #ip link set dev eth0 address $orig_macaddr
+        echo $orig_macaddr > /tmp/nm_orig_mac
+        macaddr=$(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+        ip link set dev par0 address $macaddr
 
         # removing all possible devices
         for X in $(seq 0 10); do

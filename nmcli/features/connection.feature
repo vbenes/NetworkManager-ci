@@ -274,15 +274,15 @@ Feature: nmcli: connection
      * Add connection type "ethernet" named "connie" for device "eth10"
      * Bring "up" connection "ethie"
      * Bring "up" connection "connie"
-     * Ping "nix.cz" from "eth0"
-     * Unable to ping "nix.cz" from "eth10"
+     * Ping "nix.cz" from "eth0" device
+     * Unable to ping "nix.cz" from "eth10" device
      * Execute "nmcli con modify connie ipv4.route-metric 10"
      * Bring "up" connection "connie"
-     * Ping "nix.cz" from "eth10"
-     * Unable to ping "nix.cz" from "eth0"
+     * Ping "nix.cz" from "eth10" device
+     * Unable to ping "nix.cz" from "eth0" device
      * Execute "nmcli con modify connie ipv4.route-metric -1"
      * Bring "up" connection "connie"
-     Then Ping "nix.cz" from "eth0"
+     Then Ping "nix.cz" from "eth0" device
      Then Unable to ping "nix.cz" from "eth10"
 
 

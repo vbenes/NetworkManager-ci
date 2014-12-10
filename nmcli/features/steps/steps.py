@@ -779,7 +779,7 @@ def check_pattern_not_visible_with_tab_after_command(context, pattern, command):
     assert exp.expect([pattern, pexpect.EOF, pexpect.TIMEOUT]) != 0, 'pattern %s is visible with "%s"' % (pattern, command)
 
 
-@step(u'Ping {domain}')
+@step(u'Ping "{domain}"')
 def ping_domain(context, domain):
     ping = pexpect.spawn('ping -c 2 %s' %domain, logfile=context.log)
     ping.expect([pexpect.EOF])
@@ -787,7 +787,7 @@ def ping_domain(context, domain):
     assert ping.exitstatus == 0
 
 
-@step(u'Ping {domain} from "{device}"')
+@step(u'Ping "{domain}" from "{device}" device')
 def ping_domain_from_device(context, domain, device):
     ping = pexpect.spawn('ping -c 2 -I %s %s' %(device, domain), logfile=context.log)
     ping.expect([pexpect.EOF])
@@ -795,7 +795,7 @@ def ping_domain_from_device(context, domain, device):
     assert ping.exitstatus == 0
 
 
-@step(u'Ping6 {domain}')
+@step(u'Ping6 "{domain}"')
 def ping6_domain(context, domain):
     ping = pexpect.spawn('ping6 -c 2 %s' %domain, logfile=context.log)
     ping.expect([pexpect.EOF])
@@ -1026,7 +1026,7 @@ def terminate_spawned_process(context, command):
     assert context.spawned_processes[command].terminate() == True
 
 
-@step(u'Unable to ping {domain}')
+@step(u'Unable to ping "{domain}"')
 def cannot_ping_domain(context, domain):
     ping = pexpect.spawn('ping -c 2 %s' %domain, logfile=context.log)
     ping.expect([pexpect.EOF])
@@ -1034,7 +1034,7 @@ def cannot_ping_domain(context, domain):
     assert ping.exitstatus != 0
 
 
-@step(u'Unable to ping {domain} from {device}')
+@step(u'Unable to ping "{domain}" from "{device}" device')
 def cannot_ping_domain_from_device(context, domain, device):
     ping = pexpect.spawn('ping -c 2 -I %s %s ' %(device, domain), logfile=context.log)
     ping.expect([pexpect.EOF])
@@ -1042,7 +1042,7 @@ def cannot_ping_domain_from_device(context, domain, device):
     assert ping.exitstatus != 0
 
 
-@step(u'Unable to ping6 {domain}')
+@step(u'Unable to ping6 "{domain}"')
 def cannot_ping6_domain(context, domain):
     ping = pexpect.spawn('ping6 -c 2 %s' %domain, logfile=context.log)
     ping.expect([pexpect.EOF])
