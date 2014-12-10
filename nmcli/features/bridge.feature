@@ -266,6 +266,7 @@ Feature: nmcli - bridge
 
 
     @bridge
+    @veth
     @bridge_server_ingore_carrier_with_dhcp
     Scenario: nmcli - bridge - server ingore carrier with_dhcp
     * Execute "sudo yum -y install NetworkManager-config-server"
