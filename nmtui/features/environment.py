@@ -104,7 +104,7 @@ def after_step(context, step):
     Here we make screenshot and embed it (if one of formatters supports it)
     """
     try:
-        sleep(1)
+        sleep(0.5)
         if os.path.isfile('/tmp/nmtui.out'):
             context.stream.feed(open('/tmp/nmtui.out', 'r').read())
         print_screen(context.screen)
