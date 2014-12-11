@@ -170,13 +170,14 @@ Feature: nmcli - general
     Then Check noted output contains "GENERAL.CON-PATH:\s+\S+\s"
     Then Check noted output contains "GENERAL.CONNECTION:\s+\S+\s"
 
+
     @general
     @testcase_294546
     Scenario: nmcli - device - disconnect
-    * "eth0\s+ethernet\s+connected" is visible with command "nmcli device"
-    * Disconnect device "eth0"
-    Then "eth0\s+ethernet\s+connected" is not visible with command "nmcli device"
-    * Bring "up" connection "testeth0"
+    * Bring "up" connection "testeth1"
+    * "eth1\s+ethernet\s+connected" is visible with command "nmcli device"
+    * Disconnect device "eth1"
+    Then "eth1\s+ethernet\s+connected" is not visible with command "nmcli device"
 
 
 ## Basically various bug related reproducer tests follow here
