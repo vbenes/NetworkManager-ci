@@ -158,6 +158,33 @@ set_mtu_from_DHCP, ., nmcli/./runtest.sh set_mtu_from_DHCP, NetworkManager
 renewal_gw_after_dhcp_outage, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage, NetworkManager;dhcp
 #ipv4_end
 
+#team_start
+add_default_team, ., nmcli/./runtest.sh add_default_team, NetworkManager
+ifcfg_team_slave_device_type, ., nmcli/./runtest.sh ifcfg_team_slave_device_type, NetworkManager
+nmcli_novice_mode_create_team, ., nmcli/./runtest.sh nmcli_novice_mode_create_team, NetworkManager
+nmcli_novice_mode_create_team-slave_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_team-slave_with_default_options, NetworkManager
+add_two_slaves_to_team, ., nmcli/./runtest.sh add_two_slaves_to_team, NetworkManager
+add_team_master_via_uuid, ., nmcli/./runtest.sh add_team_master_via_uuid, NetworkManager
+remove_all_slaves, ., nmcli/./runtest.sh remove_all_slaves, NetworkManager
+remove_one_slave, ., nmcli/./runtest.sh remove_one_slave, NetworkManager
+#change_slave_type_and_master, ., nmcli/./runtest.sh change_slave_type_and_master, NetworkManager
+remove_active_team_profile, ., nmcli/./runtest.sh remove_active_team_profile, NetworkManager
+disconnect_active_team, ., nmcli/./runtest.sh disconnect_active_team, NetworkManager
+team_start_by_hand_no_slaves, ., nmcli/./runtest.sh team_start_by_hand_no_slaves, NetworkManager
+team_activate, ., nmcli/./runtest.sh team_activate, NetworkManager
+start_team_by_hand_all_auto, ., nmcli/./runtest.sh start_team_by_hand_all_auto, NetworkManager
+start_team_by_hand_one_auto, ., nmcli/./runtest.sh start_team_by_hand_one_auto, NetworkManager
+start_team_on_boot, ., nmcli/./runtest.sh start_team_on_boot, NetworkManager
+team_start_on_boot_with_nothing_auto, ., nmcli/./runtest.sh team_start_on_boot_with_nothing_auto, NetworkManager
+team_start_on_boot_with_one_auto_only, ., nmcli/./runtest.sh team_start_on_boot_with_one_auto_only, NetworkManager
+team_start_on_boot_with_team_and_one_slave_auto, ., nmcli/./runtest.sh team_start_on_boot_with_team_and_one_slave_auto, NetworkManager
+config_loadbalance, ., nmcli/./runtest.sh config_loadbalance, NetworkManager
+config_broadcast, ., nmcli/./runtest.sh config_broadcast, NetworkManager
+config_invalid, ., nmcli/./runtest.sh config_invalid, NetworkManager
+remove_config, ., nmcli/./runtest.sh remove_config, NetworkManager
+describe, ., nmcli/./runtest.sh describe, NetworkManager
+#team_end
+
 #vlan_start
 testcase_281205, ., nmcli/./runtest.sh testcase_281205, NetworkManager
 testcase_281211, ., nmcli/./runtest.sh testcase_281211, NetworkManager
@@ -220,33 +247,6 @@ openvswitch_ignore_ovs_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_o
 openvswitch_ignore_ovs_vlan_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_vlan_network_setup, NetworkManager
 openvswitch_ignore_ovs_bond_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_bond_network_setup, NetworkManager
 #ethernet_end
-
-#team_start
-add_default_team, ., nmcli/./runtest.sh add_default_team, NetworkManager
-ifcfg_team_slave_device_type, ., nmcli/./runtest.sh ifcfg_team_slave_device_type, NetworkManager
-nmcli_novice_mode_create_team, ., nmcli/./runtest.sh nmcli_novice_mode_create_team, NetworkManager
-nmcli_novice_mode_create_team-slave_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_team-slave_with_default_options, NetworkManager
-add_two_slaves_to_team, ., nmcli/./runtest.sh add_two_slaves_to_team, NetworkManager
-add_team_master_via_uuid, ., nmcli/./runtest.sh add_team_master_via_uuid, NetworkManager
-remove_all_slaves, ., nmcli/./runtest.sh remove_all_slaves, NetworkManager
-remove_one_slave, ., nmcli/./runtest.sh remove_one_slave, NetworkManager
-#change_slave_type_and_master, ., nmcli/./runtest.sh change_slave_type_and_master, NetworkManager
-remove_active_team_profile, ., nmcli/./runtest.sh remove_active_team_profile, NetworkManager
-disconnect_active_team, ., nmcli/./runtest.sh disconnect_active_team, NetworkManager
-team_start_by_hand_no_slaves, ., nmcli/./runtest.sh team_start_by_hand_no_slaves, NetworkManager
-team_activate, ., nmcli/./runtest.sh team_activate, NetworkManager
-start_team_by_hand_all_auto, ., nmcli/./runtest.sh start_team_by_hand_all_auto, NetworkManager
-start_team_by_hand_one_auto, ., nmcli/./runtest.sh start_team_by_hand_one_auto, NetworkManager
-start_team_on_boot, ., nmcli/./runtest.sh start_team_on_boot, NetworkManager
-team_start_on_boot_with_nothing_auto, ., nmcli/./runtest.sh team_start_on_boot_with_nothing_auto, NetworkManager
-team_start_on_boot_with_one_auto_only, ., nmcli/./runtest.sh team_start_on_boot_with_one_auto_only, NetworkManager
-team_start_on_boot_with_team_and_one_slave_auto, ., nmcli/./runtest.sh team_start_on_boot_with_team_and_one_slave_auto, NetworkManager
-config_loadbalance, ., nmcli/./runtest.sh config_loadbalance, NetworkManager
-config_broadcast, ., nmcli/./runtest.sh config_broadcast, NetworkManager
-config_invalid, ., nmcli/./runtest.sh config_invalid, NetworkManager
-remove_config, ., nmcli/./runtest.sh remove_config, NetworkManager
-describe, ., nmcli/./runtest.sh describe, NetworkManager
-#team_end
 
 #bond_start
 testcase_281207, ., nmcli/./runtest.sh testcase_281207, NetworkManager
