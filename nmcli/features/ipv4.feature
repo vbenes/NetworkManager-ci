@@ -696,10 +696,10 @@ Feature: nmcli: ipv4
     * Finish "ip link set dev test1p up"
     * Finish "ip link set dev test2 up"
     * Finish "ip link set dev test2p up"
-    * Finish "nmcli connection add type ethernet con-name tc1 ifname test1 ip4 192.168.100.1/24"
+    * Finish "nmcli connection add type ethernet con-name tc1 ifname test1 ip4 192.168.99.1/24"
     * Finish "nmcli connection add type ethernet con-name tc2 ifname test2"
     * Bring "up" connection "tc1"
-    * Execute "/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=192.168.100.1 --dhcp-range=192.168.100.10,192.168.100.254,60m --dhcp-option=option:router,192.168.100.1 --dhcp-lease-max=50 --dhcp-option-force=26,1800 &"
+    * Execute "/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=192.168.99.1 --dhcp-range=192.168.99.10,192.168.99.254,60m --dhcp-option=option:router,192.168.99.1 --dhcp-lease-max=50 --dhcp-option-force=26,1800 &"
     * Bring "up" connection "tc2"
     Then "mtu 1800" is visible with command "ip a s test2"
 
