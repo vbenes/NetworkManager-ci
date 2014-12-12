@@ -282,7 +282,10 @@ Feature: nmcli - general
 
 
     @rhbz1136836
+    @rhbz1173632
     @general
+    @restart
+    @veth
     @ipv4
     @connection_up_after_journald_restart
     Scenario: NM - general - bring up connection after journald restart
