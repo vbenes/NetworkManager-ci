@@ -76,7 +76,6 @@ Feature: nmcli - general
 
 
     @general
-    @veth
     @testcase_290429
     Scenario: nmcli - general - networking
     * Note the output of "nmcli -t -f NETWORKING general" as value "1"
@@ -98,7 +97,6 @@ Feature: nmcli - general
 
 
     @general
-    @veth
     @testcase_290431
     Scenario: nmcli - networking - status - disabled
     * Note the output of "nmcli networking" as value "1"
@@ -258,7 +256,6 @@ Feature: nmcli - general
 
 
     @general
-    @veth
     @dns_none
     Scenario: NM - dns none setting
     * Execute "sudo sed -i 's/plugins=ifcfg-rh/plugins=ifcfg-rh\ndns=none/' /etc/NetworkManager/NetworkManager.conf"
@@ -271,7 +268,6 @@ Feature: nmcli - general
 
 
     @general
-    @veth
     @remove_dns_none
     Scenario: NM - dns  none removal
     When "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
@@ -286,17 +282,14 @@ Feature: nmcli - general
     @rhbz1173632
     @general
     @restart
-    @veth
-    @ipv4
     @connection_up_after_journald_restart
     Scenario: NM - general - bring up connection after journald restart
-    * Add connection type "ethernet" named "ethie" for device "eth1"
-    * Bring "up" connection "ethie"
+    #* Add connection type "ethernet" named "ethie" for device "eth1"
+    #* Bring "up" connection "testeth0"
     * Finish "sudo systemctl restart systemd-journald.service"
-    Then Bring "up" connection "ethie"
+    Then Bring "up" connection "testeth0"
 
 
-    @veth
     @rhbz1110436
     @general
     @restore_hostname

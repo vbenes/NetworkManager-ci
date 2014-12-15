@@ -20,14 +20,9 @@ if [ -e /tmp/nm_veth_configured ]; then
     fi
 
     if ! nmcli con s -a |grep testeth0; then
-        macaddr=$(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
-        ip link set dev par0 up address $macaddr
-
         ip link set dev eth0 up address $(cat /tmp/nm_orig_mac)
         ip link set dev eth0p up
-
         nmcli con up testeth0
-        sleep 2
     fi
 fi
 
@@ -178,6 +173,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
         # adding bridge and connecting eth0 and eth10 peers inside
         brctl addbr outbr
         nmcli connection add type bridge-slave ifname par0 con-name par0_out master outbr
+        nmcli connection modify par0_out 802-3-ethernet.cloned-mac-address $(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
         brctl addif outbr eth0p
         brctl addif outbr eth10p
 
