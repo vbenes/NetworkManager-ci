@@ -17,6 +17,7 @@ if [ -e /tmp/nm_veth_configured ]; then
 
     if ! nmcli con s -a |grep par0_out; then
         nmcli con up par0_out
+    fi
 
     if ! nmcli con s -a |grep testeth0; then
         macaddr=$(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
