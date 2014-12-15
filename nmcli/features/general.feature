@@ -186,10 +186,11 @@ Feature: nmcli - general
     @ethernet
     @device_connect
     Scenario: nmcli - device - connect
-    * "eth2\s+ethernet\s+disconnected" is visible with command "nmcli device"
+    * Bring "up" connection "testeth2"
+    * Disconnect device "eth2"
+    When "eth2\s+ethernet\s+ connected\s+eth2" is not visible with command "nmcli device"
     * Connect device "eth2"
     Then "eth2\s+ethernet\s+connected" is visible with command "nmcli device"
-    * Execute "nmcli dev disconnect eth2"
 
 
     @rhbz1113941

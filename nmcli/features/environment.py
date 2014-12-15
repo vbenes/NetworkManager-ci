@@ -463,7 +463,7 @@ def after_scenario(context, scenario):
             print "restoring original hostname"
             call('sudo nmcli gen host %s' % context.original_hostname, shell=True)
 
-        if 'device_connect' in scenario.tags or 'ipv6_describe' in scenario.tags or 'testcase_304241' in scenario.tags:
+        if 'ipv6_describe' in scenario.tags or 'testcase_304241' in scenario.tags:
             print "---------------------------"
             print "beah-beaker-backend sanitization"
             call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)
@@ -476,7 +476,7 @@ def after_scenario(context, scenario):
             print "deleting profiles"
             call('sudo nmcli connection delete aaa bbb', shell=True)
 
-        if 'device_connect_no_profile' in scenario.tags:
+        if 'device_connect_no_profile' in scenario.tags or 'device_connect' in scenario.tags:
             print "---------------------------"
             print "env sanitization"
             call('nmcli connection delete testeth2 eth2', shell=True)

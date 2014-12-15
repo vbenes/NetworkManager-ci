@@ -15,10 +15,8 @@ if [ -e /tmp/nm_veth_configured ]; then
         sleep 2
     fi
 
-    # for X in $(seq 0 10); do
-    #     ip link set eth${X} up
-    #     ip link set eth${X}p up
-    # done
+    if ! nmcli con s -a |grep par0_out; then
+        nmcli con up par0_out
 
     if ! nmcli con s -a |grep testeth0; then
         macaddr=$(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
@@ -178,7 +176,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
         # adding bridge and connecting eth0 and eth10 peers inside
         brctl addbr outbr
-        brctl addif outbr par0
+        nmcli connection add type bridge-slave ifname par0 con-name par0_out master outbr
         brctl addif outbr eth0p
         brctl addif outbr eth10p
 
