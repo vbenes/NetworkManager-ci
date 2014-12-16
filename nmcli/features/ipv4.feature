@@ -473,15 +473,15 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - set dhcp-hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
-    * Finish "sleep 15"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
+    When "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname RHX" in editor
     #* Submit "set ipv4.send-hostname yes" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
     Then "RHX" is visible with command "cat /tmp/tshark.log"
 
 
@@ -495,15 +495,15 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
-    * Finish "sleep 15"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
+    When "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname" in editor
     * Enter in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 10;sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 2;sudo kill -9 $(pidof tshark)"
    Then "RHX" is not visible with command "cat /tmp/tshark.log"
 
 
@@ -513,15 +513,15 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - don't send
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/hostname.log"
-    * Finish "sleep 15"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/hostname.log"
+    When "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-hostname RHY" in editor
     * Submit "set ipv4.dhcp-send-hostname no" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
     Then "RHY" is not visible with command "cat /tmp/hostname.log"
 
 
@@ -531,13 +531,13 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/tshark.log"
-    * Finish "sleep 15"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
+    When "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Open editor for connection "ethie"
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
     Then Hostname is visible in log "/tmp/tshark.log"
 
 
@@ -547,14 +547,14 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - ignore sending real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -O bootp -i eth10 > /tmp/real.log"
-    * Finish "sleep 15"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/real.log"
+    Then "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-send-hostname no" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
     Then Hostname is not visible in log "/tmp/real.log"
 
 
@@ -594,14 +594,14 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - set client id
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
-    * Finish "sleep 15"
+    * Run child "sudo tshark -l -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
+    Then "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id RHC" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
     Then "RHC" is visible with command "cat /tmp/tshark.log"
     #Then "walderon" is visible with command "cat /var/lib/NetworkManager/dhclient-eth10.conf"
     #VVV verify bug 999503
@@ -625,9 +625,9 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "down" connection "ethie"
     * Run child "sudo tshark -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
-    * Finish "sleep 15"
+    When "Ethernet" is visible with command "cat /tmp/tshark.log" in "20" seconds
     * Bring "up" connection "ethie"
-    * Run child "sleep 10; sudo kill -9 $(pidof tshark)"
+    * Run child "sleep 2; sudo kill -9 $(pidof tshark)"
     Then "RHX" is not visible with command "cat /tmp/tshark.log"
 
 
