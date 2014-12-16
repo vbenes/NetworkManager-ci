@@ -329,7 +329,6 @@ def check_slave_in_bond_in_proc(context, slave, bond):
     child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond), logfile=context.log )
     assert child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) == 0, "Slave %s is not in %s" % (slave, bond)
 
-
 @step(u'Check slave "{slave}" in team "{team}" is "{state}"')
 def check_slave_in_team_is_up(context, slave, team, state):
     #sleep(2)

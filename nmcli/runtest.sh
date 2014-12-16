@@ -15,7 +15,7 @@ if [ -e /tmp/nm_veth_configured ]; then
         sleep 2
     fi
 
-    if nmcli con s dhcp-srv |grep 192.168.100.1; then
+    if ! nmcli con s dhcp-srv |grep 192.168.100.1; then
         nmcli con mod dhcp ipv4.addresses 192.168.100.1/24 ipv4.method shared
         nmcli c up id dhcp-srv
     fi
