@@ -528,6 +528,9 @@ def execute_command(context, command):
 
 @step(u'Fail up connection "{name}" for "{device}"')
 def fail_up_connection_for_device(context, name, device):
+    if os.path.isfile('/tmp/nm_veth_configured'):
+        command_code(context, 'ip link set dev %s up' %device)
+
     cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
     if r == 3:
@@ -988,9 +991,12 @@ def spawn_process(context, command):
 
 @step(u'Start generic connection "{connection}" for "{device}"')
 def start_generic_connection(context, connection, device):
+    if os.path.isfile('/tmp/nm_veth_configured'):
+        command_code(context, 'ip link set dev %s up' %device)
+
     cli = pexpect.spawn('nmcli connection up %s ifname %s' % (connection, device), timeout = 180, logfile=context.log)
     r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
-    if r == 1:
+    if r != 0:
         raise Exception('nmcli connection up %s timed out (180s)' % connection)
     sleep(4)
 
