@@ -266,7 +266,6 @@ Feature: nmcli - bridge
 
 
     @bridge
-    @veth
     @bridge_server_ingore_carrier_with_dhcp
     Scenario: nmcli - bridge - server ingore carrier with_dhcp
     * Execute "sudo yum -y install NetworkManager-config-server"
@@ -296,7 +295,6 @@ Feature: nmcli - bridge
 
 
     @bridge_assumed_connection_race
-    @veth
     @restart
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
     * Create 300 bridges and delete them

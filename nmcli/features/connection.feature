@@ -251,6 +251,8 @@ Feature: nmcli: connection
     Scenario: nmcli - connection - zone to drop and public
      * Add connection type "ethernet" named "connie" for device "eth6"
      * Open editor for connection "connie"
+     * Submit "set ipv4.method manual" in editor
+     * Submit "set ipv4.addresses 192.168.122.253" in editor
      * Submit "set connection.zone drop" in editor
      * Save in editor
      * Quit editor
