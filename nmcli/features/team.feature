@@ -333,9 +333,9 @@
      * Submit "set team.config {\\"device\\":\"nm-team\",\"runner\":{\"name\":\"loadbalance\"},\"ports\":{\"eth1\":{},\"eth2\": {}}}" in editor
      * Save in editor
      * Quit editor
+     * Bring "up" connection "team0"
      * Bring "up" connection "team0.1"
      * Bring "up" connection "team0.0"
-     * Bring "up" connection "team0"
     Then "\"kernel_team_mode_name\": \"loadbalance\"" is visible with command "sudo teamdctl nm-team state dump"
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
@@ -371,9 +371,9 @@
      * Submit "set team.config {    \"device\":       \"nm-team\",  \"runner\":       {\"name": \"broadcast\"},  \"ports\":        {\"eth1\": {}, \"eth2\": {}}}" in editor
      * Save in editor
      * Quit editor
+     * Bring "up" connection "team0"
      * Bring "up" connection "team0.1"
      * Bring "up" connection "team0.0"
-     * Bring "up" connection "team0"
     Then "\"kernel_team_mode_name\": \"broadcast\"" is visible with command "sudo teamdctl nm-team state dump"
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
@@ -420,9 +420,9 @@
      * Enter in editor
      * Save in editor
      * Quit editor
+     * Bring "up" connection "team0"
      * Bring "up" connection "team0.1"
      * Bring "up" connection "team0.0"
-     * Bring "up" connection "team0"
     Then "\"kernel_team_mode_name\": \"loadbalance\"" is not visible with command "sudo teamdctl nm-team state dump"
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "up"
