@@ -747,7 +747,7 @@ def check_pattern_not_visible_with_command_in_time(context, pattern, command, se
             return True
         seconds = seconds - 1
         sleep(1)
-    raise Exception('Still did see the pattern %s in %d seconds' % (pattern, seconds))
+    raise Exception('Did still see the pattern %s after %d seconds' % (pattern, seconds))
 
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
@@ -1091,3 +1091,11 @@ def wait_for_x_seconds(context,secs):
 def wrong_bond_options_in_editor(context):
     context.prompt.expect("Error: failed to set 'options' property:")
 
+
+@step(u'Autocomplete "{cmd}" in bash and execute')
+def autocomplete_command(context, cmd):
+    bash = pexpect.spawn("bash")
+    bash.send(cmd)
+    bash.send('\t')
+    bash.send('\r\n')
+    bash.sendeof()

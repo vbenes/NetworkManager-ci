@@ -363,3 +363,12 @@ Feature: nmcli - general
     Scenario: NM - general - no error when firewalld restarted
     * Execute "sudo service firewalld restart"
     Then "nm_connection_get_setting_connection: assertion `NM_IS_CONNECTION \(connection\)' failed" is not visible with command "sudo tail -n 30 /var/log/messages"
+
+    @rhbz1041901
+    @general
+    @nmcli_general_multiword_autocompletion
+    Scenario: nmcli - general - multiword autocompletion
+    * Add a new connection of type "bond" and options "con-name 'Bondy connection 1'"
+    * "Bondy connection 1" is visible with command "nmcli connection"
+    * Autocomplete "nmcli connection delete Bondy" in bash and execute
+    Then "Bondy connection 1" is not visible with command "nmcli connection" in "3" seconds

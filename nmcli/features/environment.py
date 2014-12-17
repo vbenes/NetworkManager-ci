@@ -495,6 +495,10 @@ def after_scenario(context, scenario):
             call('sudo rm -f /etc/sysconfig/network-scripts/ifcfg-testeth1', shell=True)
             call('sudo nmcli connection reload', shell=True)
             call('nmcli connection add type ethernet ifname eth1 con-name testeth1 autoconnect no', shell=True)
+        if 'nmcli_general_multiword_autocompletion' in scenario.tags:
+            print "---------------------------"
+            print "deleting profile in case of test failure"
+            call('nmcli connection delete "Bondy connection 1"', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
