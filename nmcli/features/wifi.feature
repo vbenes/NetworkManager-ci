@@ -12,6 +12,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_306548
     Scenario: nmcli - wifi - connect to WPA2 PSK network without profile
+    Given "qe-wpa2-psk" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
     * Connect wifi device to "qe-wpa2-psk" network with options "password 'over the river and through the woods'"
     Then "\*\s+qe-wpa2-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-wpa2-psk" is visible with command "iw dev wlan0 link"
@@ -20,6 +21,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_306549
     Scenario: nmcli - wifi - connect to WPA1 PSK network without profile
+    Given "qe-wpa1-psk" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
     * Connect wifi device to "qe-wpa1-psk" network with options "password 'over the river and through the woods'"
     Then "\*\s+qe-wpa1-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-wpa1-psk" is visible with command "iw dev wlan0 link"
@@ -28,6 +30,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_306550
     Scenario: nmcli - wifi - connect to open network without profile
+    Given "qe-open" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
     * Connect wifi device to "qe-open" network
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-open" is visible with command "iw dev wlan0 link"
@@ -36,6 +39,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_306551
     Scenario: nmcli - wifi - connect to WEP hex-key network without profile
+    Given "qe-wep" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
     * Connect wifi device to "qe-wep" network with options "password 74657374696E67313233343536 wep-key-type key"
     Then "\*\s+qe-wep" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-wep" is visible with command "iw dev wlan0 link"
@@ -44,6 +48,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_309707
     Scenario: nmcli - wifi - connect to WEP ascii-key network without profile
+    Given "qe-wep" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
     * Connect wifi device to "qe-wep" network with options "password testing123456 wep-key-type key"
     Then "\*\s+qe-wep" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-wep" is visible with command "iw dev wlan0 link"
@@ -52,6 +57,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_306552
     Scenario: nmcli - wifi - connect to WEP phrase network without profile
+    Given "qe-wep-psk" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
     * Connect wifi device to "qe-wep-psk" network with options "password testing123456 wep-key-type phrase"
     Then "\*\s+qe-wep" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "qe-wep" is visible with command "iw dev wlan0 link"
@@ -1336,8 +1342,8 @@ Feature: nmcli - wifi
     * "wlan0\s+wifi\s+unavailable" is visible with command "nmcli device"
     * Execute "nmcli radio wifi on"
     Then "enabled" is visible with command "nmcli radio wifi"
-    Then "qe-open" is visible with command "iw dev wlan0 link"
-    Then "wlan0\s+wifi\s+connected" is visible with command "nmcli device"
+    Then "qe-open" is visible with command "iw dev wlan0 link" in "15" seconds
+    Then "wlan0\s+wifi\s+connected" is visible with command "nmcli device" in "15" seconds
 
 
     @bz1080628
