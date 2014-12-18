@@ -289,6 +289,8 @@ Feature: nmcli - bridge
     When "br0\s+bridge\s+disconnected" is visible with command "nmcli d"
     * Finish "ip link add dummy0 type dummy"
     When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip link set dev dummy0 up"
+    When "dummy0\s+dummy\s+disconnected" is visible with command "nmcli d"
     * Finish "ip addr add 1.1.1.1/24 dev br0"
     When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d"
     * Finish "brctl addif br0 dummy0"
