@@ -318,7 +318,9 @@ Feature: nmcli - general
     @nmcli_general_ignore_specified_unamanaged_devices
     Scenario: NM - general - ignore specified unmanaged devices
     * Execute "ip link add name dnt type bond"
-    # Still managed
+    # Still unmanaged
+    * "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
+    * Execute "ip link set dev dnt up"
     * "dnt\s+bond\s+disconnected" is visible with command "nmcli device"
     # Add a config rule to unmanage the device
     * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:dnt > /etc/NetworkManager/NetworkManager.conf"

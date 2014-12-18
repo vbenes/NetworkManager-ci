@@ -284,8 +284,10 @@ Feature: nmcli - bridge
     @bridge_reflect_changes_from_outside_of_NM
     Scenario: nmcli - bridge - reflect changes from outside of NM
     * Finish "ip link add br0 type bridge"
-    * Finish "ip link add dummy0 type dummy"
+    When "br0\s+bridge\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip link set dev br0 up"
     When "br0\s+bridge\s+disconnected" is visible with command "nmcli d"
+    * Finish "ip link add dummy0 type dummy"
     When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
     * Finish "ip addr add 1.1.1.1/24 dev br0"
     When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d"
