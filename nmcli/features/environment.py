@@ -401,6 +401,9 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "restarting NM service"
             call('sudo service NetworkManager restart', shell=True)
+            if os.path.isfile('/tmp/nm_veth_configured'):
+                call('ip link set dev isobr up')
+                call('ip link set dev outbr up')
             sleep(5)
 
         if 'remove_dns_none' in scenario.tags:

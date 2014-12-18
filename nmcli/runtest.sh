@@ -143,6 +143,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
         # adding bridge and connecting eth99 peer inside
         brctl addbr isobr
+        ip link set dev isobr up
         brctl addif isobr eth99p
 
         # creating shared profile (dnsmasq dhcp server)
@@ -177,6 +178,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
 
         # adding bridge and connecting eth0 and eth10 peers inside
         brctl addbr outbr
+        ip link set dev outbr up
         nmcli connection add type bridge-slave ifname par0 con-name par0_out master outbr
         nmcli connection modify par0_out 802-3-ethernet.cloned-mac-address $(echo $(hostname)|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
         brctl addif outbr eth0p

@@ -64,6 +64,7 @@ Feature: nmcli: connection
     # verification for https://bugzilla.redhat.com/show_bug.cgi?id=1108167
     Scenario: nmcli - connection - remove connection of nonexisting device
      * Finish "sudo ip link add name BBB type bridge"
+     * Finish "ip link set dev BBB up"
      * Finish "ip addr add 192.168.201.3/24 dev BBB"
      When "BBB" is visible with command "nmcli -f NAME connection show --active"
      * Finish "sudo ip link del BBB"

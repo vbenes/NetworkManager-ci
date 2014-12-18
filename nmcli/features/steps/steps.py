@@ -824,6 +824,7 @@ def prepare_veths(context, pairs_array, bridge):
         pairs.append(pair.strip())
 
     command_code(context, "sudo brctl addbr %s"% bridge)
+    command_code(context, "sudo ip link set dev %s up"% bridge)
     for pair in pairs:
         command_code(context, "ip link add %s type veth peer name %sp" %(pair, pair))
         command_code(context, "brctl addif vethbr %sp" %pair)
@@ -877,10 +878,13 @@ def restart_NM(context):
         command_code(context, 'ip link set dev eth99 up')
         command_code(context, 'ip link set dev eth99p up')
         command_code(context, 'ip link set dev eth99p up')
+        command_code(context, 'ip link set dev outbr up')
+        command_code(context, 'ip link set dev isobr up')
         command_code(context, 'nmcli c modify dhcp-srv ipv4.method shared')
         command_code(context, 'nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24')
         command_code(context, 'nmcli con up dhcp-srv')
         command_code(context, 'nmcli con up testeth0')
+
 
     sleep(4)
 
