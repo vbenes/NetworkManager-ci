@@ -374,3 +374,12 @@ Feature: nmcli - general
     * "Bondy connection 1" is visible with command "nmcli connection"
     * Autocomplete "nmcli connection delete Bondy" in bash and execute
     Then "Bondy connection 1" is not visible with command "nmcli connection" in "3" seconds
+
+
+    @rhbz1170199
+    @general
+    @ethernet
+    @nmcli_general_dbus_set_gateway
+    Scenario: nmcli - general - dbus api gateway setting
+    * Execute "python tmp/dbus-set-gw.py"
+    Then "ipv4.gateway:\s+192.168.1.100" is visible with command "nmcli connection show ethos"

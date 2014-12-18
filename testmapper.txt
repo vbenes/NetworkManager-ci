@@ -25,6 +25,7 @@ nmcli_general_ignore_specified_unamanaged_devices, ., nmcli/./runtest.sh nmcli_g
 nmcli_general_ifcfg_tailing_whitespace, ., nmcli/./runtest.sh nmcli_general_ifcfg_tailing_whitespace, NetworkManager
 nmcli_general_keep_slave_device_unmanaged, ., nmcli/./runtest.sh nmcli_general_keep_slave_device_unmanaged, NetworkManager
 no_error_when_firewald_restarted, ., nmcli/./runtest.sh no_error_when_firewald_restarted, NetworkManager
+nmcli_general_dbus_set_gateway, ., nmcli/./runtest.sh nmcli_general_dbus_set_gateway, NetworkManager
 
 #### vv KEEP THESE TWO TESTS ALWAYS TOGETHER!
 dns_none, ., nmcli/./runtest.sh dns_none, NetworkManager
