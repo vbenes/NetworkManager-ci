@@ -290,7 +290,6 @@ Feature: nmcli - bridge
     * Finish "ip link add dummy0 type dummy"
     When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
     * Finish "ip link set dev dummy0 up"
-    When "dummy0\s+dummy\s+disconnected" is visible with command "nmcli d"
     * Finish "ip addr add 1.1.1.1/24 dev br0"
     When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d"
     * Finish "brctl addif br0 dummy0"
@@ -310,6 +309,7 @@ Feature: nmcli - bridge
     @dummy
     Scenario: NM - bridge - no firewalld zone for bridge assumed connection
     * Finish "sudo ip link add br0 type bridge"
+    * Finish "sudo ip link set dev br0 up"
     * Finish "sudo ip addr add 1.1.1.2/24 dev br0"
     When "IP4.ADDRESS\[1\]:\s+1.1.1.2\/24" is visible with command "nmcli con show br0"
     Then "br0" is not visible with command "firewall-cmd --get-active-zones"
