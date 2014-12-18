@@ -863,7 +863,7 @@ def reboot(context):
     command_code(context, "sudo ip link set dev eth10 down")
     command_code(context, "nmcli device disconnect nm-bond")
     command_code(context, "nmcli device disconnect nm-team")
-    sleep(2)
+    sleep(8)
     assert command_code(context, "sudo service NetworkManager restart") == 0
     sleep(4)
 
@@ -884,7 +884,6 @@ def restart_NM(context):
         command_code(context, 'nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24')
         command_code(context, 'nmcli con up dhcp-srv')
         command_code(context, 'nmcli con up testeth0')
-
 
     sleep(4)
 
