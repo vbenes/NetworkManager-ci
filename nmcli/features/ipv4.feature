@@ -594,7 +594,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - set client id
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -l -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
+    * Run child "sudo tshark -l -O bootp -i eth10 -x > /tmp/tshark.log"
     Then "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id RHC" in editor
@@ -624,7 +624,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Run child "sudo tshark -l -i eth10 -f 'port 67 or 68' -V -x > /tmp/tshark.log"
+    * Run child "sudo tshark -l -O bootp -i eth10 -x > /tmp/tshark.log"
     When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
     * Bring "up" connection "ethie"
     * Run child "sleep 2; sudo kill -9 $(pidof tshark)"
