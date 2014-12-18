@@ -277,16 +277,16 @@ Feature: nmcli: connection
      * Add connection type "ethernet" named "connie" for device "eth10"
      * Bring "up" connection "ethie"
      * Bring "up" connection "connie"
-     * Ping "nix.cz" from "eth0" device
-     * Unable to ping "nix.cz" from "eth10" device
+     When "metric 100" is visible with command "ip r |grep default |grep eth0"
+     When "metric 101" is visible with command "ip r |grep default |grep eth10"
      * Execute "nmcli con modify connie ipv4.route-metric 10"
      * Bring "up" connection "connie"
-     * Ping "nix.cz" from "eth10" device
-     * Unable to ping "nix.cz" from "eth0" device
+     When "metric 100" is visible with command "ip r |grep default |grep eth0"
+     When "metric 10" is visible with command "ip r |grep default |grep eth10"
      * Execute "nmcli con modify connie ipv4.route-metric -1"
      * Bring "up" connection "connie"
-     Then Ping "nix.cz" from "eth0" device
-     Then Unable to ping "nix.cz" from "eth10"
+     When "metric 100" is visible with command "ip r |grep default |grep eth0"
+     When "metric 101" is visible with command "ip r |grep default |grep eth10"
 
 
     @profile_priorities

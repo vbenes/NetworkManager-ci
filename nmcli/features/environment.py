@@ -215,6 +215,7 @@ def after_scenario(context, scenario):
         if 'BBB' in scenario.tags:
             print "---------------------------"
             print "deleting BBB"
+            call("ip link delete BBB", shell=True)
             call("nmcli connection delete id BBB", shell=True)
             #sleep(TIMER)
 
