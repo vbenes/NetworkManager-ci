@@ -851,19 +851,12 @@ def quit_editor(context):
 
 @step(u'Reboot')
 def reboot(context):
-    command_code(context, "sudo ip link set dev eth1 down")
-    command_code(context, "sudo ip link set dev eth2 down")
-    command_code(context, "sudo ip link set dev eth3 down")
-    command_code(context, "sudo ip link set dev eth4 down")
-    command_code(context, "sudo ip link set dev eth5 down")
-    command_code(context, "sudo ip link set dev eth6 down")
-    command_code(context, "sudo ip link set dev eth7 down")
-    command_code(context, "sudo ip link set dev eth8 down")
-    command_code(context, "sudo ip link set dev eth9 down")
-    command_code(context, "sudo ip link set dev eth10 down")
+    for x in xrange(1,10):
+        command_code(context, "sudo ip link set dev eth%d down" %int(x)
+        command_code(context, "sudo ip addr flush dev eth%d" %int(x)
     command_code(context, "nmcli device disconnect nm-bond")
     command_code(context, "nmcli device disconnect nm-team")
-    sleep(8)
+    sleep(4)
     assert command_code(context, "sudo service NetworkManager restart") == 0
     sleep(4)
 
