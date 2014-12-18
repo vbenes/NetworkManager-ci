@@ -491,6 +491,8 @@ def after_scenario(context, scenario):
             print "restoring original NetworkManager.conf and deleting bond device"
             call('sudo cp -f /tmp/bckp_nm.conf /etc/NetworkManager/NetworkManager.conf', shell=True)
             call('sudo ip link del dnt', shell=True)
+            call('sudo ip link del bond0', shell=True)
+
 
         if 'nmcli_general_keep_slave_device_unmanaged' in scenario.tags:
             print "---------------------------"
