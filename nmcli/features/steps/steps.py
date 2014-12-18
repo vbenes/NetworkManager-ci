@@ -852,8 +852,8 @@ def quit_editor(context):
 @step(u'Reboot')
 def reboot(context):
     for x in xrange(1,10):
-        command_code(context, "sudo ip link set dev eth%d down" %int(x)
-        command_code(context, "sudo ip addr flush dev eth%d" %int(x)
+        command_code(context, "sudo ip link set dev eth%d down" %int(x))
+        command_code(context, "sudo ip addr flush dev eth%d" %int(x))
     command_code(context, "nmcli device disconnect nm-bond")
     command_code(context, "nmcli device disconnect nm-team")
     sleep(4)
