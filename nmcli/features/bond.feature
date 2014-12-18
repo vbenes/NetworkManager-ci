@@ -789,7 +789,6 @@
     * Finish "ip link add dummy0 type dummy"
     When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
     * Finish "ip link set dev dummy0 up"
-    When "dummy0\s+dummy\s+disconnected" is visible with command "nmcli d"
     * Finish "ip addr add 1.1.1.1/24 dev bond0"
     * Finish "sleep 2"
     When "bond0\s+bond\s+connected\s+bond0" is visible with command "nmcli d"
