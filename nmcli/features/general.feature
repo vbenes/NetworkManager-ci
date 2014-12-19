@@ -192,6 +192,7 @@ Feature: nmcli - general
 
 
     @rhbz1113941
+    @veth
     @general
     @device_connect_no_profile
     Scenario: nmcli - device - connect - no profile
