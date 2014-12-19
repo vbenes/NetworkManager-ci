@@ -279,6 +279,7 @@ def confirm_slave_screen(context):
     context.stream.feed(open(OUTPUT, 'r').read())
     match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
     assert match is not None, "Could not get to the <OK> button! (In form? Segfault?)"
+    del context.is_slave_now
     context.tui.send(keys['ENTER'])
 
 
@@ -302,8 +303,13 @@ def confirm_connection_screen(context):
         del context.last_profile_name
         if hasattr(context, 'slave_profile_names'):
             for name in context.slave_profile_names:
-                context.execute_steps('''* Bring up connection "%s" ignoring everything''' % name)
-                print 'veth mod: brought slave profile online: %s' % name
+                if hasattr(context, 'no_autoconnect_slaves') and name in context.no_autoconnect_slaves:
+                    pass
+                else:
+                    context.execute_steps('''* Bring up connection "%s" ignoring everything''' % name)
+                    print 'veth mod: brought slave profile online: %s' % name
+            if hasattr(context, 'no_autoconnect_slaves'):
+                del context.no_autoconnect_slaves
             del context.slave_profile_names
 
 @step(u'Cannot confirm the connection settings')
@@ -343,6 +349,7 @@ def set_specific_field_to(context, field, value):
             if not hasattr(context, 'slave_profile_names'):
                 context.slave_profile_names = []
             context.slave_profile_names.append(value)
+            context.is_slave_now = True
         else:
             context.last_profile_name = value
 
@@ -449,7 +456,12 @@ def ensure_toggle_is_checked(context, toggle, n=None):
     elif match.group(1) == u'[X]' and n is not None:
         context.tui.send(' ')
     if toggle == 'Automatically connect' and n is not None and os.path.isfile('/tmp/nm_veth_configured'):
-        context.no_autoconnect = True
+        if hasattr(context, 'is_slave_now'):
+            if not hasattr(context, 'no_autoconnect_slaves'):
+                context.no_autoconnect_slaves = []
+            context.no_autoconnect_slaves.append(context.slave_profile_names[-1])
+        else:
+            context.no_autoconnect = True
 
 
 @step(u'Execute "{command}"')

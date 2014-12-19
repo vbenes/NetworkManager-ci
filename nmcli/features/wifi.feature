@@ -68,9 +68,8 @@ Feature: nmcli - wifi
     Scenario: nmcli - wifi - create a new connection for an open network
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect on ssid qe-open"
     * Check ifcfg-name file created for connection "qe-open"
-    * Wait for at least "5" seconds
-    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
-    Then "qe-open" is visible with command "iw dev wlan0 link"
+    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
+    Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
 
 
     @wifi
@@ -125,9 +124,8 @@ Feature: nmcli - wifi
     * Check value saved message showed in editor
     * Quit editor
     * Execute "nmcli connection up qe-adhoc"
-    * Wait for at least "3" seconds
-    Then "qe-adhoc" is visible with command "iw dev wlan0 link"
-    Then "Joined IBSS" is visible with command "iw dev wlan0 link"
+    Then "qe-adhoc" is visible with command "iw dev wlan0 link" in "30" seconds
+    Then "Joined IBSS" is visible with command "iw dev wlan0 link" in "30" seconds
 
 
     @wifi
@@ -1220,9 +1218,8 @@ Feature: nmcli - wifi
     * Submit "no"
     * Expect "Do you want to add IP addresses?"
     * Submit "no"
-    * Wait for at least "5" seconds
-    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
-    Then "qe-open" is visible with command "iw dev wlan0 link"
+    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
+    Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
 
 
     @wifi
@@ -1246,9 +1243,8 @@ Feature: nmcli - wifi
     * Submit "infrastructure"
     * Expect "Do you want to add IP addresses?"
     * Submit "no"
-    * Wait for at least "5" seconds
-    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
-    Then "qe-open" is visible with command "iw dev wlan0 link"
+    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
+    Then "qe-open" is visible with command "iw dev wlan0 link"  in "30" seconds
 
 
     @wifi
@@ -1282,11 +1278,10 @@ Feature: nmcli - wifi
     * Expect "IPv6 gateway"
     * Submit "::1"
     * Expect "Connection.*successfully added"
-    * Wait for at least "5" seconds
-    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
-    Then "qe-open" is visible with command "iw dev wlan0 link"
-    Then "10.1.1.5.*fe80::215:ff:fe93:ffff" is visible with command "ip a"
-    Then "10.1.1.6" is visible with command "ip a"
+    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
+    Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
+    Then "10.1.1.5.*fe80::215:ff:fe93:ffff" is visible with command "ip a" in "30" seconds
+    Then "10.1.1.6" is visible with command "ip a" in "30" seconds
 
 
     @wifi
