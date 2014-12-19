@@ -890,10 +890,11 @@ def run_child_process(context, command):
 @step(u'Save in editor')
 def save_in_editor(context):
     context.prompt.sendline('save')
+    sleep(0.2)
 
 
 @step(u'See Error while saving in editor')
-def check_error_while_saving_in_editor(context):
+def check_error_while_saving_in_editor_2(context):
     context.prompt.expect("Error")
 
 
