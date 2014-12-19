@@ -43,9 +43,10 @@
     * Save in editor
     * Quit editor
     * Bring "up" connection "dcb"
-    * Bring "down" connection "dcb"
+    * Disconnect device "enp4s0f0"
+    * Finish "sleep 5"
     # dcb off
-    #Then "DCB State:\s+off" is visible with command "dcbtool gc enp4s0f0 dcb"
+    Then "DCB State:\s+off" is visible with command "dcbtool gc enp4s0f0 dcb"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pg"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pfc"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 app:fcoe"
