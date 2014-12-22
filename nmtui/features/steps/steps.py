@@ -279,7 +279,8 @@ def confirm_slave_screen(context):
     context.stream.feed(open(OUTPUT, 'r').read())
     match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
     assert match is not None, "Could not get to the <OK> button! (In form? Segfault?)"
-    del context.is_slave_now
+    if hasattr(context, 'is_slave_now') and os.path.isfile('/tmp/nm_veth_configured'):
+        del context.is_slave_now
     context.tui.send(keys['ENTER'])
 
 
