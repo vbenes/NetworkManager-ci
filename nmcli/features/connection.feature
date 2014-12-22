@@ -295,7 +295,7 @@ Feature: nmcli: connection
     @eth
     @rhbz663730
     Scenario: nmcli - connection - profile priorities
-     * Add connection type "ethernet" named "ethie" for device "eth0"
+     * Add connection type "ethernet" named "ethie" for device "eth10"
      * Add connection type "ethernet" named "connie" for device "eth10"
      * Execute "nmcli con modify ethie connection.autoconnect-priority 2"
      * Execute "nmcli con modify connie connection.autoconnect-priority 1"
