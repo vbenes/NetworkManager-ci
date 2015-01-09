@@ -212,6 +212,20 @@ Feature: nmcli - ethernet
     Then "inet6 2607:f0d0:1002:51::4\s+prefixlen 64" is visible with command "ifconfig eth1"
 
 
+    @ethernet
+    @nmcli_ethernet_no_ip
+    Scenario: nmcli - ethernet - no ip
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
+    * Open editor for connection "ethernet"
+    * Set a property named "ipv6.method" to "ignore" in editor
+    * Set a property named "ipv4.method" to "disabled" in editor
+    * Save in editor
+    * Check value saved message showed in editor
+    * Quit editor
+    * Bring up connection "ethernet"
+    Then "eth1\s+ethernet\s+connected" is visible with command "nmcli device"
+
+
     @openvswitch
     @openvswitch_interface_recognized
     Scenario: nmcli - ethernet - openvswitch interface recognized

@@ -1094,5 +1094,7 @@ def autocomplete_command(context, cmd):
     bash = pexpect.spawn("bash")
     bash.send(cmd)
     bash.send('\t')
+    sleep(1)
     bash.send('\r\n')
+    sleep(1)
     bash.sendeof()
