@@ -62,11 +62,11 @@ def before_scenario(context, scenario):
             if call('pip list |grep python-dbusmock', shell=True) != 0:
                 call("sudo pip install python-dbusmock", shell=True)
 
-        # if 'dhcpd' in scenario.tags:
-        #     print "---------------------------"
-        #     print "installing dhcp"
-        #     if call('rpm -q --quiet dhcp', shell=True) != 0:
-        #         call('yum -y install dhcp', shell=True)
+        if 'dhcpd' in scenario.tags:
+            print "---------------------------"
+            print "installing dhcp"
+            if call('rpm -q --quiet dhcp', shell=True) != 0:
+                call('yum -y install dhcp', shell=True)
 
         if 'dummy' in scenario.tags:
             print "---------------------------"
@@ -218,6 +218,14 @@ def after_scenario(context, scenario):
             call("ip link delete BBB", shell=True)
             call("nmcli connection delete id BBB", shell=True)
             #sleep(TIMER)
+
+        if 'disp' in scenario.tags:
+            print "---------------------------"
+            print "deleting dispatcher files"
+            call("rm -rf /etc/NetworkManager/dispatcher.d/99-disp", shell=True)
+            call("rm -rf /etc/NetworkManager/dispatcher.d/pre-up.d/98-disp", shell=True)
+            call("rm -rf /etc/NetworkManager/dispatcher.d/pre-down.d/97-disp", shell=True)
+            call("rm -rf /tmp/dispatcher.txt", shell=True)
 
         if 'eth' in scenario.tags:
             print "---------------------------"

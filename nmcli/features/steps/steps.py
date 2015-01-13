@@ -103,6 +103,16 @@ def open_slave_connection(context, master, device, name):
     sleep(2)
 
 
+@step(u'Autocomplete "{cmd}" in bash and execute')
+def autocomplete_command(context, cmd):
+    bash = pexpect.spawn("bash")
+    bash.send(cmd)
+    bash.send('\t')
+    sleep(1)
+    bash.send('\r\n')
+    sleep(1)
+    bash.sendeof()
+
 
 @step(u'Autoconnect warning is shown')
 def autoconnect_warning(context):
@@ -1084,17 +1094,20 @@ def wait_for_x_seconds(context,secs):
     assert True
 
 
+@step(u'Write dispatcher "{path}" file with params "{params}"')
+@step(u'Write dispatcher "{path}" file')
+def write_dispatcher_file(context, path, params=None):
+    disp_file  = '/etc/NetworkManager/dispatcher.d/%s' % path
+    f = open(disp_file,'w')
+    f.write('#!/bin/bash\n')
+    if params:
+        f.write(params)
+    f.write('\necho $2 >> /tmp/dispatcher.txt\n')
+    f.close()
+    command_code(context, 'chmod +x %s' % disp_file)
+    sleep(1)
+
+
 @step(u'Wrong bond options message shown in editor')
 def wrong_bond_options_in_editor(context):
     context.prompt.expect("Error: failed to set 'options' property:")
-
-
-@step(u'Autocomplete "{cmd}" in bash and execute')
-def autocomplete_command(context, cmd):
-    bash = pexpect.spawn("bash")
-    bash.send(cmd)
-    bash.send('\t')
-    sleep(1)
-    bash.send('\r\n')
-    sleep(1)
-    bash.sendeof()
