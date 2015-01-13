@@ -103,16 +103,6 @@ def open_slave_connection(context, master, device, name):
     sleep(2)
 
 
-@step(u'Autocomplete "{cmd}" in bash and execute')
-def autocomplete_command(context, cmd):
-    bash = pexpect.spawn("bash")
-    bash.send(cmd)
-    bash.send('\t')
-    sleep(1)
-    bash.send('\r\n')
-    sleep(1)
-    bash.sendeof()
-
 
 @step(u'Autoconnect warning is shown')
 def autoconnect_warning(context):
@@ -989,11 +979,9 @@ def submit_team_command_in_editor(context, command):
     context.prompt.sendline('%s' % command)
 
 
-@step(u'Spawn process "{command}"')
+@step(u'Spawn "{command}" command')
 def spawn_process(context, command):
-    if not hasattr(context, 'spawned_processes'):
-        context.spawned_processes = {}
-    context.spawned_processes[command] = pexpect.spawn(command, logfile=context.log)
+    context.prompt = pexpect.spawn(command, logfile=context.log)
 
 
 @step(u'Start generic connection "{connection}" for "{device}"')
@@ -1111,3 +1099,14 @@ def write_dispatcher_file(context, path, params=None):
 @step(u'Wrong bond options message shown in editor')
 def wrong_bond_options_in_editor(context):
     context.prompt.expect("Error: failed to set 'options' property:")
+
+
+@step(u'Autocomplete "{cmd}" in bash and execute')
+def autocomplete_command(context, cmd):
+    bash = pexpect.spawn("bash")
+    bash.send(cmd)
+    bash.send('\t')
+    sleep(1)
+    bash.send('\r\n')
+    sleep(1)
+    bash.sendeof()

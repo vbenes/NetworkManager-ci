@@ -383,6 +383,8 @@ testcase_309441, ., nmcli/./runtest.sh testcase_309441, NetworkManager;iw;pexpec
 testcase_309442, ., nmcli/./runtest.sh testcase_309442, NetworkManager;iw;pexpect
 testcase_309443, ., nmcli/./runtest.sh testcase_309443, NetworkManager;iw;pexpect
 nmcli_wifi_keep_secrets_after_modification, ., nmcli/./runtest.sh nmcli_wifi_keep_secrets_after_modification, NetworkManager;iw;pexpect
+nmcli_wifi_wpa_ask_passwd, ., nmcli/./runtest.sh nmcli_wifi_wpa_ask_passwd, NetworkManager;iw;pexpect
+nmcli_wifi_wep_ask_passwd, ., nmcli/./runtest.sh nmcli_wifi_wep_ask_passwd, NetworkManager;iw;pexpect
 #wifi_end
 
 #alias

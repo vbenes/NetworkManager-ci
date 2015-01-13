@@ -1361,3 +1361,27 @@ Feature: nmcli - wifi
     Then "qe-wpa2-psk" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wpa2-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list"
     Then "inet 10" is visible with command "ip a s wlan0"
+
+
+    @rhbz990111
+    @wifi
+    @nmcli_wifi_wpa_ask_passwd
+    Scenario: nmcli - wifi - connect WPA network asking for password
+    Given "qe-wpa2-psk" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
+    * Spawn "nmcli -a device wifi connect qe-wpa2-psk" command
+    * Expect "Password:"
+    * Submit "over the river and through the woods"
+    Then "\*\s+qe-wpa2-psk" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "45" seconds
+    Then "qe-wpa2-psk" is visible with command "iw dev wlan0 link"
+
+
+    @rhbz990111
+    @wifi
+    @nmcli_wifi_wep_ask_passwd
+    Scenario: nmcli - wifi - connect WEP network asking for password
+    Given "qe-wep" is visible with command "nmcli -f SSID device wifi list" in "15" seconds
+    * Spawn "nmcli -a device wifi connect qe-wep" command
+    * Expect "Password:"
+    * Submit "testing123456"
+    Then "\*\s+qe-wep" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "45" seconds
+    Then "qe-wep" is visible with command "iw dev wlan0 link"
