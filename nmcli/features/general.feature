@@ -384,3 +384,15 @@ Feature: nmcli - general
     Scenario: nmcli - general - dbus api gateway setting
     * Execute "python tmp/dbus-set-gw.py"
     Then "ipv4.gateway:\s+192.168.1.100" is visible with command "nmcli connection show ethos"
+
+
+    @rhbz1141264
+    @general
+    @BBB
+    @preserve_failed_assumed_connections
+    Scenario: NM - general - presume failed assumed connections
+    * Execute "ip tuntap add BBB mode tap"
+    * Execute "ip addr add 10.2.5.6/24 valid_lft 1024 preferred_lft 1024 dev BBB"
+    When "unmanaged" is visible with command "nmcli device show BBB"
+    * Execute "ip link set dev BBB up"
+    Then "connected" is visible with command "nmcli device show BBB" in "45" seconds
