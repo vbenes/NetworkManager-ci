@@ -11,6 +11,7 @@ Feature: NM: dispatcher
     Then "pre-up\s+up" is visible with command "cat /tmp/dispatcher.txt" in "20" seconds
 
     @dispatcher_predown_and_down
+    @disp
     Scenario: NM - dispatcher - pre-down and down
     * Bring "up" connection "testeth1"
     * Write dispatcher "99-disp" file with params "if [ "$2" == "down" ]; then sleep 15; fi"
