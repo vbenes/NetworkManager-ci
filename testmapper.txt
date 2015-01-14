@@ -44,8 +44,11 @@ nmcli_device_wifi_with_two_devices, ., nmcli/./runtest.sh nmcli_device_wifi_with
 dispatcher_preup_and_up, ., nmcli/./runtest.sh dispatcher_preup_and_up, NetworkManager
 dispatcher_predown_and_down, ., nmcli/./runtest.sh dispatcher_predown_and_down, NetworkManager
 dispatcher_hostname, ., nmcli/./runtest.sh dispatcher_hostname, NetworkManager
-
+dispatcher_synchronicity, ., nmcli/./runtest.sh dispatcher_synchronicity, NetworkManager
+dispatcher_synchronicity_with_predown, ., nmcli/./runtest.sh dispatcher_synchronicity_with_predown, NetworkManager
+dispatcher_serialization, ., nmcli/./runtest.sh dispatcher_serialization, NetworkManager
 #dispatcher_end
+
 #vpn
 vpn_add_profile, ., nmcli/./runtest.sh vpn_add_profile, NetworkManager
 vpn_describe, ., nmcli/./runtest.sh vpn_describe, NetworkManager
