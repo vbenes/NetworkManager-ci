@@ -1076,6 +1076,39 @@ def value_appeared_in_editor(context, value):
         raise Exception('Did not see "%s" in editor' % value)
 
 
+@step(u'vxlan device "{dev}" check')
+def vxlan_device_check(context, dev):
+    import dbus, sys
+
+    bus = dbus.SystemBus()
+    proxy = bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+    manager = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+
+
+    devices = manager.GetDevices()
+    assert devices, "Failed to find any vxlan interface"
+
+    for d in devices:
+        dev_proxy = bus.get_object("org.freedesktop.NetworkManager", d)
+        prop_iface = dbus.Interface(dev_proxy, "org.freedesktop.DBus.Properties")
+        props = prop_iface.GetAll("org.freedesktop.NetworkManager.Device")
+
+        if props['Interface'] != dev:
+            continue
+
+        vxlan = prop_iface.GetAll("org.freedesktop.NetworkManager.Device.Vxlan")
+
+        assert vxlan['Id'] == 42, "bad id '%s'" % vxlan['Id']
+        assert vxlan['Group'] == "239.1.1.1", "bad group '%s'" % vxlan['Group']
+
+        # Get parent
+        parent_proxy = bus.get_object("org.freedesktop.NetworkManager", vxlan['Parent'])
+        parent_prop_iface = dbus.Interface(parent_proxy, "org.freedesktop.DBus.Properties")
+        parent_props = parent_prop_iface.GetAll("org.freedesktop.NetworkManager.Device")
+
+        assert parent_props['Interface'] == "eth1", "bad parent '%s'" % parent_props['Interface']
+
+
 @step(u'Wait for at least "{secs}" seconds')
 def wait_for_x_seconds(context,secs):
     sleep(int(secs))

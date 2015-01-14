@@ -38,6 +38,7 @@ nmcli_device_attempt_hw_delete, ., nmcli/./runtest.sh nmcli_device_attempt_hw_de
 nmcli_general_correct_profile_activated_after_restart, ., nmcli/./runtest.sh nmcli_general_correct_profile_activated_after_restart, NetworkManager
 nmcli_novice_mode_readline, ., nmcli/./runtest.sh nmcli_novice_mode_readline, NetworkManager
 nmcli_device_wifi_with_two_devices, ., nmcli/./runtest.sh nmcli_device_wifi_with_two_devices, NetworkManager
+vxlan_interface_recognition, ., nmcli/./runtest.sh vxlan_interface_recognition, NetworkManager
 #general_end
 
 #dispatcher

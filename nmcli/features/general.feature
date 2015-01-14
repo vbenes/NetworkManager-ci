@@ -396,3 +396,15 @@ Feature: nmcli - general
     When "unmanaged" is visible with command "nmcli device show BBB"
     * Execute "ip link set dev BBB up"
     Then "connected" is visible with command "nmcli device show BBB" in "45" seconds
+
+
+    @rhbz1066705
+    @general
+    @BBB
+    @vxlan_interface_recognition
+    Scenario: NM - general - vxlan interface support
+    * Execute "/sbin/ip link add BBB type vxlan id 42 group 239.1.1.1 dev eth1"
+    When "unmanaged" is visible with command "nmcli device show BBB"
+    * Execute "ip link set dev BBB up"
+    Then "connected" is visible with command "nmcli device show BBB" in "10" seconds
+    Then vxlan device "BBB" check
