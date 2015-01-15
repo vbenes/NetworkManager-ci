@@ -25,6 +25,14 @@ def dump_status(context, when):
 
 def before_scenario(context, scenario):
     try:
+
+        if '1000' in scenario.tags:
+            print "---------------------------"
+            print "installing pip and pyroute2"
+            if not os.path.isfile('/usr/bin/pip'):
+                call('sudo easy_install pip', shell=True)
+            call('pip install pyroute2', shell=True)
+
         if 'veth' in scenario.tags:
             if os.path.isfile('/tmp/nm_veth_configured'):
                 import sys
@@ -167,6 +175,12 @@ def after_scenario(context, scenario):
         dump_status(context, 'after %s' % scenario.name)
         context.log.close ()
         context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
+
+        if '1000' in scenario.tags:
+            print "---------------------------"
+            print "deleting bridge0 and 1000 dummy devices"
+            call("ip link del bridge0", shell=True)
+            call("for i in $(seq 0 1000); do ip link del port$i ; done", shell=True)
 
         if 'ipv4' in scenario.tags:
             print "---------------------------"

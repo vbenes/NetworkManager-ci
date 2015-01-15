@@ -103,6 +103,16 @@ def open_slave_connection(context, master, device, name):
     sleep(2)
 
 
+@step(u'Autocomplete "{cmd}" in bash and execute')
+def autocomplete_command(context, cmd):
+    bash = pexpect.spawn("bash")
+    bash.send(cmd)
+    bash.send('\t')
+    sleep(1)
+    bash.send('\r\n')
+    sleep(1)
+    bash.sendeof()
+
 
 @step(u'Autoconnect warning is shown')
 def autoconnect_warning(context):
@@ -427,6 +437,120 @@ def config_dhcp(context, subnet, lease):
     for line in config:
         f.write(line+'\n')
     f.close()
+
+
+
+@step(u'Compare kernel and NM devices')
+def compare_devices(context):
+    # A tool that gets devices from Route Netlink & NetworkManager and
+    # finds differencies (errors in NetworkManager external change tracking)
+    #
+    # Currently only takes master-slave relationships into account.
+    # Could be easily extended...
+    #
+    # Lubomir Rintel <lrintel@redhat.com>
+
+    from gi.repository import NM
+    from pyroute2 import IPRoute
+
+    def nm_devices():
+        """
+        Query devices from NetworkManager
+        """
+
+        client = NM.Client.new (None)
+
+        devs = client.get_devices()
+        devices = {}
+
+        for c in devs:
+            iface = c.get_iface()
+            if iface:
+                devices[c.get_iface()] = {}
+
+        # Enslave devices
+        for c in devs:
+            typ = type(c).__name__
+
+            if typ == 'DeviceBridge':
+                slaves = c.get_slaves()
+            elif typ == 'DeviceBond':
+                slaves = c.get_slaves()
+            elif typ == 'DeviceTeam':
+                slaves = c.get_slaves()
+            else:
+                slaves = []
+
+            for s in slaves:
+                devices[s.get_iface()]['master'] = c.get_iface()
+
+        return devices
+
+
+    def rtnl_devices():
+        """
+        Query devices from route netlink
+        """
+
+        ip = IPRoute()
+        devs = ip.get_links()
+        ip.close()
+
+        names = {}
+        devices = {}
+
+        for l in devs:
+            names[l['index']] = l.get_attr('IFLA_IFNAME')
+
+        for l in devs:
+            master = l.get_attr('IFLA_MASTER')
+            name = names[l['index']]
+
+            devices[name] = {}
+            if master:
+                devices[name]['master'] = names[master]
+
+        return devices
+
+    def deep_compare(a_desc, a, b_desc, b):
+        """
+        Deeply compare structures
+        """
+
+        ret = True;
+
+        a_type = type(a).__name__
+        b_type = type(b).__name__
+
+        if a_type != b_type:
+            print ('%s is a %s whereas %s is a %s' % (a_desc, a_type,
+                                                      b_desc, b_type))
+            return False
+
+        if a_type == 'dict':
+            for a_key in a.keys():
+                if b.has_key(a_key):
+                    if not deep_compare(a_desc + '.' + a_key, a[a_key],
+                                b_desc + '.' + a_key, b[a_key]):
+                        ret = False
+                else:
+                    print ('%s does not have %s' % (b_desc, a_key))
+                    ret = False
+
+            for b_key in b.keys():
+                if not a.has_key(b_key):
+                    print ('%s does not have %s' % (a_desc, b_key))
+                    ret = False
+        else:
+            if a != b:
+                print ('%s == %s while %s == %s' % (a_desc, a,
+                                                    b_desc, b))
+                ret = False
+
+        return ret
+
+    assert deep_compare ('NM', nm_devices(), 'RTNL', rtnl_devices()), \
+            "Kernel and NetworkManager's device lists are different"
 
 
 @step(u'Connect device "{device}"')
@@ -1132,14 +1256,3 @@ def write_dispatcher_file(context, path, params=None):
 @step(u'Wrong bond options message shown in editor')
 def wrong_bond_options_in_editor(context):
     context.prompt.expect("Error: failed to set 'options' property:")
-
-
-@step(u'Autocomplete "{cmd}" in bash and execute')
-def autocomplete_command(context, cmd):
-    bash = pexpect.spawn("bash")
-    bash.send(cmd)
-    bash.send('\t')
-    sleep(1)
-    bash.send('\r\n')
-    sleep(1)
-    bash.sendeof()

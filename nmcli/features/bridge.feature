@@ -1,9 +1,6 @@
 @testplan
 Feature: nmcli - bridge
 
- # Background:
- #   * Close Evolution and cleanup data
-
 	@cleanbridge
     Scenario: Clean bridge
     * "eth0" is visible with command "ifconfig"
@@ -302,6 +299,17 @@ Feature: nmcli - bridge
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
     * Create 300 bridges and delete them
     Then "active \(running\)" is visible with command "service NetworkManager status"
+
+
+    @bridge_manipulation_with_1000_slaves
+    @1000
+    Scenario: NM - bridge - manipulation with 1000 slaves bridge
+    * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
+    * Execute "for i in $(seq 0 1000); do ip link add port$i type dummy; ip link set port$i master bridge0; done"
+    * Delete connection "bridge0"
+    Then Compare kernel and NM devices
+    Then "Too many netlink events. Need to resynchronize platform cache" is not visible with "cat /var/log/messages"
+    Then "GENERAL.DEVICE:\s+port999" is visible with command "nmcli device show port999"
 
 
     @bridge_assumed_connection_no_firewalld_zone
