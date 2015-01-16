@@ -280,16 +280,16 @@ Feature: nmcli - bridge
     @dummy
     @bridge_reflect_changes_from_outside_of_NM
     Scenario: nmcli - bridge - reflect changes from outside of NM
-    * Finish "ip link add br0 type bridge"
+    * Execute "ip link add br0 type bridge"
     When "br0\s+bridge\s+unmanaged" is visible with command "nmcli d"
-    * Finish "ip link set dev br0 up"
+    * Execute "ip link set dev br0 up"
     When "br0\s+bridge\s+disconnected" is visible with command "nmcli d"
-    * Finish "ip link add dummy0 type dummy"
+    * Execute "ip link add dummy0 type dummy"
     When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
-    * Finish "ip link set dev dummy0 up"
-    * Finish "ip addr add 1.1.1.1/24 dev br0"
+    * Execute "ip link set dev dummy0 up"
+    * Execute "ip addr add 1.1.1.1/24 dev br0"
     When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d"
-    * Finish "brctl addif br0 dummy0"
+    * Execute "brctl addif br0 dummy0"
     When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
     Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
 
@@ -316,8 +316,26 @@ Feature: nmcli - bridge
     @firewall
     @dummy
     Scenario: NM - bridge - no firewalld zone for bridge assumed connection
-    * Finish "sudo ip link add br0 type bridge"
-    * Finish "sudo ip link set dev br0 up"
-    * Finish "sudo ip addr add 1.1.1.2/24 dev br0"
+    * Execute "sudo ip link add br0 type bridge"
+    * Execute "sudo ip link set dev br0 up"
+    * Execute "sudo ip addr add 1.1.1.2/24 dev br0"
     When "IP4.ADDRESS\[1\]:\s+1.1.1.2\/24" is visible with command "nmcli con show br0"
     Then "br0" is not visible with command "firewall-cmd --get-active-zones"
+
+
+    @bridge_assumed_connection_ip_methods
+    @dummy
+    Scenario: NM - bridge - Layer2 changes for bridge assumed connection
+    * Execute "sudo ip link add br0 type bridge"
+    * Execute "sudo ip link set dev br0 up"
+    * Execute "sudo ip link add dummy0 type dummy"
+    * Execute "sudo ip link set dummy0 master br0"
+    When "ipv4.method:\s+disabled.*ipv6.method:\s+ignore" is visible with command "nmcli connection show br0"
+    * Execute "sudo ip link set dev dummy0 up"
+    * Execute "sudo ip addr add 1.1.1.2/24 dev dummy0"
+    When "ipv4.method:\s+disabled.*ipv6.method:\s+link-local" is visible with command "nmcli connection show br0"
+    * Execute "sudo ip addr add 1::3/128 dev br0"
+    * Execute "sudo ip addr add 1.1.1.3/24 dev br0"
+    Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0"
+
+
