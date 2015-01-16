@@ -330,12 +330,12 @@ Feature: nmcli - bridge
     * Execute "sudo ip link set dev br0 up"
     * Execute "sudo ip link add dummy0 type dummy"
     * Execute "sudo ip link set dummy0 master br0"
-    When "ipv4.method:\s+disabled.*ipv6.method:\s+ignore" is visible with command "nmcli connection show br0"
+    When "ipv4.method:\s+disabled.*ipv6.method:\s+ignore" is visible with command "nmcli connection show br0" in "5" seconds
     * Execute "sudo ip link set dev dummy0 up"
     * Execute "sudo ip addr add 1.1.1.2/24 dev dummy0"
-    When "ipv4.method:\s+disabled.*ipv6.method:\s+link-local" is visible with command "nmcli connection show br0"
+    When "ipv4.method:\s+disabled.*ipv6.method:\s+link-local" is visible with command "nmcli connection show br0" in "5" seconds
     * Execute "sudo ip addr add 1::3/128 dev br0"
     * Execute "sudo ip addr add 1.1.1.3/24 dev br0"
-    Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0"
+    Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0" in "5" seconds
 
 
