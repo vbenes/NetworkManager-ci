@@ -147,6 +147,11 @@ def before_scenario(context, scenario):
             print "backing up NetworkManager.conf"
             call('sudo cp -f /etc/NetworkManager/NetworkManager.conf /tmp/bckp_nm.conf', shell=True)
 
+        if 'ipv6_keep_connectivity_on_assuming_connection_profile' in scenario.tags:
+            print "---------------------------"
+            print "removing testeth10 profile"
+            call('sudo nmcli connection delete testeth10', shell=True)
+
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
         dump_status(context, 'before %s' % scenario.name)
@@ -523,10 +528,16 @@ def after_scenario(context, scenario):
             call('sudo rm -f /etc/sysconfig/network-scripts/ifcfg-testeth1', shell=True)
             call('sudo nmcli connection reload', shell=True)
             call('nmcli connection add type ethernet ifname eth1 con-name testeth1 autoconnect no', shell=True)
+
         if 'nmcli_general_multiword_autocompletion' in scenario.tags:
             print "---------------------------"
             print "deleting profile in case of test failure"
             call('nmcli connection delete "Bondy connection 1"', shell=True)
+
+        if 'ipv6_keep_connectivity_on_assuming_connection_profile' in scenario.tags:
+            print "---------------------------"
+            print "restoring testeth10 profile"
+            call('sudo nmcli connection add type ethernet con-name testeth10 ifname eth10 autoconnect no', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)

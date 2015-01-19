@@ -655,7 +655,7 @@ Feature: nmcli: ipv6
     @ipv6_take_manually_created_ifcfg
     @veth
     @ipv6
-    # covering https://bugzilla.redhat.com/show_bug.cgi?id=1073824
+    @rhbz1073824
     Scenario: ifcfg - ipv6 - use manually created link-local profile
     * Append "DEVICE='eth10'" to ifcfg file "ethie"
     * Append "ONBOOT=yes" to ifcfg file "ethie"
@@ -668,7 +668,7 @@ Feature: nmcli: ipv6
     Then "aa17d688-a38d-481d-888d-6d69cca781b8" is visible with command "nmcli -f UUID connection show -a"
 
 
-    # covering https://bugzilla.redhat.com/show_bug.cgi?id=1083283
+    @rhbz1083283
     @ipv6_lifetime_set_from_network
     @scapy
     Scenario: NM - ipv6 - set lifetime from network
@@ -680,6 +680,16 @@ Feature: nmcli: ipv6
     * Finish "sleep 1"
     * Send lifetime scapy packet
     Then Lifetimes are slightly smaller than "3600" and "1800" for device "test11"
+
+
+    @rhbz1170530
+    @ipv6_keep_connectivity_on_assuming_connection_profile
+    @ipv6
+    Scenario: NM - ipv6 - keep connectivity on assuming connection profile
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth10 autoconnect no"
+    * Bring up connection "ethie"
+    * Wait for at least "10" seconds
+    Then Check ipv6 connectivity is stable on assuming connection profile "ethie" for device "eth10"
 
 
     @ipv6_describe

@@ -232,6 +232,20 @@ def bring_down_connection_ignoring(context, connection):
         raise Exception('nmcli connection down %s timed out (180s)' % connection)
 
 
+@step(u'Check ipv6 connectivity is stable on assuming connection profile "{profile}" for device "{device}"')
+def check_ipv6_connectivity_on_assumal(context, profile, device):
+    address = command_output(context, "ip -6 a s %s | grep dynamic | awk '{print $2}' | cut -d '/' -f1" % device)
+    assert command_code(context, 'systemctl stop NetworkManager.service') == 0
+    assert command_code(context, "sed -i 's/UUID=/#UUID=/' /etc/sysconfig/network-scripts/ifcfg-%s" % profile)  == 0
+    ping = pexpect.spawn('ping6 %s -i 0.2 -c 50' % address, logfile=context.log)
+    sleep(1)
+    assert command_code(context, 'systemctl start NetworkManager.service') == 0
+    sleep(12)
+    r = ping.expect(["0% packet loss", pexpect.EOF, pexpect.TIMEOUT])
+    if r != 0:
+        raise Exception('Had packet loss on pinging the address!')
+
+
 @step(u'Check device route and prefix for "{dev}"')
 def check_slaac_setup(context, dev):
     cmd = "sudo radvdump > /tmp/radvdump.txt"
