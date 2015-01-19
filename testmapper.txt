@@ -53,6 +53,7 @@ dispatcher_serialization, ., nmcli/./runtest.sh dispatcher_serialization, Networ
 #vpn
 vpn_add_profile, ., nmcli/./runtest.sh vpn_add_profile, NetworkManager
 vpn_describe, ., nmcli/./runtest.sh vpn_describe, NetworkManager
+vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data, NetworkManager
 
 #vpn_end
 #connection_start
