@@ -740,6 +740,18 @@ Feature: nmcli: ipv4
     Then "ipv4.addresses:\s+192.168.100.1/24" is visible with command "nmcli con show ethie"
 
 
+    @rhbz1172780
+    @ipv4_do_not_remove_second_ip_route
+    @ipv4
+    Scenario: nmcli - ipv4 - do not remove secondary ip subnet route
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth1 autoconnect no"
+    * Bring up connection "ethie"
+    * "192.168" is visible with command "ip a s eth1" in "10" seconds
+    * "dev eth1  proto kernel  scope link" is visible with command "ip route"
+    * Add a secondary address to device "eth1" within the same subnet
+    Then "dev eth1  proto kernel  scope link" is visible with command "ip route" for full "80" seconds
+
+
     @testcase_304241
     @ipv4
     Scenario: nmcli - ipv4 - describe

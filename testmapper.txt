@@ -171,6 +171,7 @@ testcase_304241, ., nmcli/./runtest.sh testcase_304241, NetworkManager
 set_mtu_from_DHCP, ., nmcli/./runtest.sh set_mtu_from_DHCP, NetworkManager
 renewal_gw_after_dhcp_outage, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage, NetworkManager;dhcp
 custom_shared_range_preserves_restart, ., nmcli/./runtest.sh custom_shared_range_preserves_restart, NetworkManager;dhcp
+ipv4_do_not_remove_second_ip_route, ., nmcli/./runtest.sh ipv4_do_not_remove_second_ip_route, NetworkManager;dhcp
 #ipv4_end
 
 #team_start

@@ -59,6 +59,17 @@ def append_to_ifcfg(context, line, name):
 #     sleep(1)
 
 
+@step(u'Add a secondary address to device "{device}" within the same subnet')
+def add_secondary_addr_same_subnet(context, device):
+    from netaddr import IPNetwork
+    primary_ipn = IPNetwork(command_output(context, "ip a s %s | grep dynamic | awk '{print $2}'" % device))
+    if str(primary_ipn.ip).split('.')[2] == str(primary_ipn.ip+1).split('.')[2]:
+        secondary_ip = primary_ipn.ip+1
+    else:
+        secondary_ip = primary_ipn.ip-1
+    assert command_code(context, 'ip addr add dev %s %s/%d' % (device, str(secondary_ip), primary_ipn.prefixlen)) == 0
+
+
 @step(u'Add connection type "{typ}" named "{name}" for device "{ifname}"')
 def add_connection_for_iface(context, typ, name, ifname):
     cli = pexpect.spawn('nmcli connection add type %s con-name %s ifname %s' % (typ, name, ifname), logfile=context.log)
@@ -868,24 +879,41 @@ def check_pattern_visible_with_command(context, pattern, command):
 @step(u'"{pattern}" is visible with command "{command}" in "{seconds}" seconds')
 def check_pattern_visible_with_command_in_time(context, pattern, command, seconds):
     seconds = int(seconds)
+    orig_seconds = seconds
     while seconds > 0:
         ifconfig = pexpect.spawn(command, timeout = 180, logfile=context.log)
         if ifconfig.expect([pattern, pexpect.EOF]) == 0:
             return True
         seconds = seconds - 1
         sleep(1)
-    raise Exception('Did not see the pattern %s in %d seconds' % (pattern, seconds))
+    raise Exception('Did not see the pattern %s in %d seconds' % (pattern, orig_seconds))
+
+
+@step(u'"{pattern}" is visible with command "{command}" for full "{seconds}" seconds')
+def check_pattern_visible_with_command_fortime(context, pattern, command, seconds):
+    seconds = int(seconds)
+    orig_seconds = seconds
+    while seconds > 0:
+        ifconfig = pexpect.spawn(command, timeout = 180, logfile=context.log)
+        if ifconfig.expect([pattern, pexpect.EOF]) == 0:
+            pass
+        else:
+            raise Exception('Pattern %s disappeared after %d seconds' % (pattern, orig_seconds-seconds))
+        seconds = seconds - 1
+        sleep(1)
+
 
 @step(u'"{pattern}" is not visible with command "{command}" in "{seconds}" seconds')
 def check_pattern_not_visible_with_command_in_time(context, pattern, command, seconds):
     seconds = int(seconds)
+    orig_seconds = seconds
     while seconds > 0:
         ifconfig = pexpect.spawn(command, timeout = 180, logfile=context.log)
         if ifconfig.expect([pattern, pexpect.EOF]) != 0:
             return True
         seconds = seconds - 1
         sleep(1)
-    raise Exception('Did still see the pattern %s after %d seconds' % (pattern, seconds))
+    raise Exception('Did still see the pattern %s after %d seconds' % (pattern, orig_seconds))
 
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
