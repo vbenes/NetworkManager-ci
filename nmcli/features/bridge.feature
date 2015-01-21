@@ -344,4 +344,4 @@ Feature: nmcli - bridge
     Scenario: NM - ipv4 - renewal gw after DHCP outage
     * Prepare veth pairs "test1" bridged over "vethbr"
     * Restart NM
-    Then "vethbr.*port1p" is visible with command "brctl show vethbr" in "5" seconds
+    Then "vethbr.*test1p" is visible with command "brctl show vethbr" in "5" seconds
