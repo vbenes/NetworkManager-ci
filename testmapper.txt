@@ -241,6 +241,7 @@ bridge_assumed_connection_race, ., nmcli/./runtest.sh  bridge_assumed_connection
 bridge_assumed_connection_no_firewalld_zone, ., nmcli/./runtest.sh bridge_assumed_connection_no_firewalld_zone, NetworkManager;bridge-utils
 bridge_manipulation_with_1000_slaves, ., nmcli/./runtest.sh bridge_manipulation_with_1000_slaves, NetworkManager;bridge-utils
 bridge_assumed_connection_ip_methods, ., nmcli/./runtest.sh bridge_assumed_connection_ip_methods, NetworkManager;bridge-utils
+outer_bridge_restart_persistence, ., nmcli/./runtest.sh outer_bridge_restart_persistence, NetworkManager;bridge-utils
 #bridge_end
 
 #ethernet_start
