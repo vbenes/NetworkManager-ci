@@ -339,9 +339,10 @@ Feature: nmcli - bridge
     Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0" in "5" seconds
 
 
+    @rhbz1169936
     @outer_bridge_restart_persistence
     @two_bridged_veths
-    Scenario: NM - ipv4 - renewal gw after DHCP outage
+    Scenario: NM - bridge - bridge restart persistence
     * Prepare veth pairs "test1" bridged over "vethbr"
     * Restart NM
     Then "vethbr.*test1p" is visible with command "brctl show vethbr" in "5" seconds
