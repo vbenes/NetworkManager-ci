@@ -806,6 +806,22 @@
     Then "bond0.*bond\s+nm-bond" is visible with command "nmcli connection"
 
 
+    @rhbz1171009
+    @slaves
+    @bond
+    Scenario: NM - bond - ifcfg - mode set by number
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Execute "sed -i 's/BONDING_OPTS=mode=balance-rr/BONDING_OPTS=mode=5/' /etc/sysconfig/network-scripts/ifcfg-bond0"
+     * Execute "sudo nmcli connection reload"
+     * Bring "up" connection "bond0"
+     * Bring "up" connection "bond0.0"
+     * Bring "up" connection "bond0.1"
+     Then "Bonding Mode: transmit load balancing" is visible with command "cat /proc/net/bonding/nm-bond"
+     Then Check bond "nm-bond" state is "up"
+
+
     @testcase_281154
     @bond
     Scenario: nmcli - bond - describe bond

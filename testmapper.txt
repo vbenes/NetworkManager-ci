@@ -308,6 +308,7 @@ nmcli_novice_mode_create_bond_with_arp_monitor_values, ., nmcli/./runtest.sh nmc
 nmcli_novice_mode_create_bond-slave_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond-slave_with_default_options, NetworkManager
 bond_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bond_reflect_changes_from_outside_of_NM, NetworkManager
 bond_dbus_creation, ., nmcli/./runtest.sh bond_dbus_creation, NetworkManager
+bond_mode_by_number_in_ifcfg, ., nmcli/./runtest.sh bond_mode_by_number_in_ifcfg, NetworkManager
 #bond_end
 
 #wifi_start
