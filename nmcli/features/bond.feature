@@ -809,6 +809,7 @@
     @rhbz1171009
     @slaves
     @bond
+    @bond_mode_by_number_in_ifcfg
     Scenario: NM - bond - ifcfg - mode set by number
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
