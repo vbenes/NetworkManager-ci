@@ -277,6 +277,7 @@ Feature: nmcli - bridge
     Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
 
 
+    @rhbz1030947
     @dummy
     @bridge_reflect_changes_from_outside_of_NM
     Scenario: nmcli - bridge - reflect changes from outside of NM

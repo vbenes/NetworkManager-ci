@@ -798,6 +798,13 @@
 
 #FIXME: more tests with arp and conflicts with load balancing can be written
 
+    @rhbz1133544
+    @bond_dbus_creation
+    @bond
+    Scenario: NM - bond - dbus api bond setting
+    * Execute "python tmp/dbus-set-bond.py"
+    Then "bond0.*bond\s+nm-bond" is visible with command "nmcli connection"
+
 
     @testcase_281154
     @bond
