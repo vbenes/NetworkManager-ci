@@ -70,6 +70,16 @@ def before_scenario(context, scenario):
             if call('pip list |grep python-dbusmock', shell=True) != 0:
                 call("sudo pip install python-dbusmock", shell=True)
 
+        if 'IPy' in scenario.tags:
+            print "---------------------------"
+            print "installing dbus-x11, pip, and IPy"
+            if call('rpm -q --quiet dbus-x11', shell=True) != 0:
+                call('yum -y install dbus-x11', shell=True)
+            if not os.path.isfile('/usr/bin/pip'):
+                call('sudo easy_install pip', shell=True)
+            if call('pip list |grep IPy', shell=True) != 0:
+                call("sudo pip install IPy", shell=True)
+
         if 'dhcpd' in scenario.tags:
             print "---------------------------"
             print "installing dhcp"

@@ -380,6 +380,7 @@ Feature: nmcli - general
     @rhbz1170199
     @general
     @ethernet
+    @IPy
     @nmcli_general_dbus_set_gateway
     Scenario: nmcli - general - dbus api gateway setting
     * Execute "python tmp/dbus-set-gw.py"

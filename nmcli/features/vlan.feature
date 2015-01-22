@@ -208,7 +208,7 @@ Feature: nmcli - vlan
     * Execute "yum -y install wireshark"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"
     * "eth1.80:" is visible with command "ifconfig"
-    * Spawn process "ping -I eth1.80 8.8.8.8"
+    * Spawn "ping -I eth1.80 8.8.8.8"
     Then "ID: 80" is visible with command "tshark -i eth1 -T fields -e vlan"
     Then Terminate spawned process "ping -I eth1.80 8.8.8.8"
 
