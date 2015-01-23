@@ -40,6 +40,7 @@ nmcli_novice_mode_readline, ., nmcli/./runtest.sh nmcli_novice_mode_readline, Ne
 nmcli_device_wifi_with_two_devices, ., nmcli/./runtest.sh nmcli_device_wifi_with_two_devices, NetworkManager
 vxlan_interface_recognition, ., nmcli/./runtest.sh vxlan_interface_recognition, NetworkManager
 veth_goes_to_unmanaged_state, ., nmcli/./runtest.sh veth_goes_to_unmanaged_state, NetworkManager
+nat_from_shared_network, ., nmcli/./runtest.sh nat_from_shared_network, NetworkManager
 #general_end
 
 #dispatcher

@@ -417,3 +417,24 @@ Feature: nmcli - general
     Scenario: NM - general - veth in unmanaged state
     * Execute "ip link add test1 type veth peer name test1p"
     Then "test1\s+ethernet\s+unmanaged.*test1p\s+ethernet\s+unmanaged" is visible with command "nmcli device"
+
+
+    @two_bridged_veths
+    @rhbz1067299
+    @peers_ns
+    @nat_from_shared_network
+    Scenario: NM - general - NAT_dhcp from shared networks
+    * Execute "ip link add test1 type veth peer name test1p"
+    * Add a new connection of type "bridge" and options "ifname vethbr con-name vethbr"
+    * Execute "nmcli connection modify vethbr ipv4.method shared"
+    * Execute "nmcli connection modify vethbr ipv4.address 172.16.0.1/24"
+    * Bring "up" connection "vethbr"
+    * Execute "brctl addif vethbr test1p"
+    * Execute "ip link set dev test1p up"
+    * Execute "ip netns add peers"
+    * Execute "ip link set test1 netns peers"
+    * Execute "ip netns exec peers ip link set dev test1 up"
+    * Execute "ip netns exec peers ip addr add 172.16.0.111/24 dev test1"
+    * Execute "ip netns exec peers ip route add default via 172.16.0.1"
+    Then Execute "ip netns exec peers ping -c 2 -I test1 8.8.8.8"
+    Then Unable to ping "172.16.0.111" from "eth0" device

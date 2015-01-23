@@ -347,6 +347,12 @@ def after_scenario(context, scenario):
             call("nmcli connection delete id profie", shell=True)
             #sleep(TIMER)
 
+        if 'peers_ns' in scenario.tags:
+            print "---------------------------"
+            print "deleting peers namespace"
+            call("ip netns del peers", shell=True)
+            #sleep(TIMER)
+
         if 'ipv6' in scenario.tags or 'ipv6_2' in scenario.tags:
             print "---------------------------"
             print "deleting connections"
