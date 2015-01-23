@@ -399,6 +399,8 @@ testcase_309443, ., nmcli/./runtest.sh testcase_309443, NetworkManager;iw;pexpec
 nmcli_wifi_keep_secrets_after_modification, ., nmcli/./runtest.sh nmcli_wifi_keep_secrets_after_modification, NetworkManager;iw;pexpect
 nmcli_wifi_wpa_ask_passwd, ., nmcli/./runtest.sh nmcli_wifi_wpa_ask_passwd, NetworkManager;iw;pexpect
 nmcli_wifi_wep_ask_passwd, ., nmcli/./runtest.sh nmcli_wifi_wep_ask_passwd, NetworkManager;iw;pexpect
+nmcli_wifi_add_certificate_as_blob, ., nmcli/./runtest.sh nmcli_wifi_add_certificate_as_blob, NetworkManager;iw;pexpect
+nmcli_wifi_dbus_invalid_cert_input, ., nmcli/./runtest.sh nmcli_wifi_dbus_invalid_cert_input, NetworkManager;iw;pexpect
 #wifi_end
 
 #alias

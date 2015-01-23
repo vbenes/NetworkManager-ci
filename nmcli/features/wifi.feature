@@ -1385,3 +1385,18 @@ Feature: nmcli - wifi
     * Submit "testing123456"
     Then "\*\s+qe-wep" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "45" seconds
     Then "qe-wep" is visible with command "iw dev wlan0 link"
+
+
+    @rhbz1115564
+    @wifi
+    @nmcli_wifi_add_certificate_as_blob
+    Scenario: nmcli - wifi - connect WEP network asking for password
+    * Execute "python tmp/dbus-set-wifi-tls-blob.py"
+    Then "802-1x.client-cert:\s+3330383230" is visible with command "nmcli connection show wifi-wlan0"
+
+
+    @rhbz1182567
+    @wifi
+    @nmcli_wifi_dbus_invalid_cert_input
+    Scenario: nmcli - wifi - dbus invalid certificate input
+    Then "Connection.InvalidProperty" is visible with command "python tmp/dbus-set-wifi-bad-cert.py"

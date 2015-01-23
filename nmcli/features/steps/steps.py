@@ -1148,13 +1148,9 @@ def submit_team_command_in_editor(context, command):
 @step(u'Spawn "{command}" command')
 def spawn_command(context, command):
     context.prompt = pexpect.spawn(command, logfile=context.log)
-
-
-@step(u'Spawn process "{command}"')
-def spawn_process(context, command):
     if not hasattr(context, 'spawned_processes'):
         context.spawned_processes = {}
-    context.spawned_processes[command] = pexpect.spawn(command, logfile=context.log)
+    context.spawned_processes[command] = context.prompt
 
 
 @step(u'Start generic connection "{connection}" for "{device}"')
