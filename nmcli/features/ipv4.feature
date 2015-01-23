@@ -732,7 +732,7 @@ Feature: nmcli: ipv4
 
 
     @custom_shared_range_preserves_restart
-    @ethie
+    @eth
     Scenario: nmcli - ipv4 - shared custom range preserves restart
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Execute "nmcli connection modify ethie ipv4.addresses 192.168.100.1/24 ipv4.method shared"

@@ -409,3 +409,11 @@ Feature: nmcli - general
     * Execute "ip link set dev BBB up"
     Then "connected" is visible with command "nmcli device show BBB" in "10" seconds
     Then vxlan device "BBB" check
+
+
+    @two_bridged_veths
+    @rhbz1109426
+    @veth_goes_to_unmanaged_state
+    Scenario: NM - general - veth in unmanaged state
+    * Execute "ip link add test1 type veth peer name test1p"
+    Then "test1\s+ethernet\s+unmanaged.*test1p\s+ethernet\s+unmanaged" is visible with command "nmcli device"

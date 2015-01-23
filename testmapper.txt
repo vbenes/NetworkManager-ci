@@ -39,6 +39,7 @@ nmcli_general_correct_profile_activated_after_restart, ., nmcli/./runtest.sh nmc
 nmcli_novice_mode_readline, ., nmcli/./runtest.sh nmcli_novice_mode_readline, NetworkManager
 nmcli_device_wifi_with_two_devices, ., nmcli/./runtest.sh nmcli_device_wifi_with_two_devices, NetworkManager
 vxlan_interface_recognition, ., nmcli/./runtest.sh vxlan_interface_recognition, NetworkManager
+veth_goes_to_unmanaged_state, ., nmcli/./runtest.sh veth_goes_to_unmanaged_state, NetworkManager
 #general_end
 
 #dispatcher
@@ -309,6 +310,7 @@ nmcli_novice_mode_create_bond-slave_with_default_options, ., nmcli/./runtest.sh 
 bond_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bond_reflect_changes_from_outside_of_NM, NetworkManager
 bond_dbus_creation, ., nmcli/./runtest.sh bond_dbus_creation, NetworkManager
 bond_mode_by_number_in_ifcfg, ., nmcli/./runtest.sh bond_mode_by_number_in_ifcfg, NetworkManager
+bond_device_rename, ., nmcli/./runtest.sh bond_device_rename, NetworkManager
 #bond_end
 
 #wifi_start
