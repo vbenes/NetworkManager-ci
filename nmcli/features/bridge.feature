@@ -273,8 +273,8 @@ Feature: nmcli - bridge
     * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
     * Bring up connection "bridge-slave-eth1"
     Then "bridge0.*eth1" is visible with command "brctl show" in "10" seconds
-    Then "eth1.*master bridge0.*eth2" is visible with command "ip a"
-    Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
+    Then "eth1.*master bridge0" is visible with command "ip a s eth1"
+    Then "bridge0:.*192.168" is visible with command "ip a s bridge0" in "45" seconds
 
 
     @rhbz1030947
