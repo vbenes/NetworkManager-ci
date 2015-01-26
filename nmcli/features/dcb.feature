@@ -44,10 +44,9 @@
     * Quit editor
     * Bring "up" connection "dcb"
     * Disconnect device "enp4s0f0"
-    * Finish "sleep 5"
     # dcb off
-    Then "DCB State:\s+off" is visible with command "dcbtool gc enp4s0f0 dcb"
-    Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pg"
+    #Then "DCB State:\s+off" is visible with command "dcbtool gc enp4s0f0 dcb"
+    Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pg" in "5" seconds
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 pfc"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 app:fcoe"
     Then "Enable:\s+false" is visible with command "dcbtool gc enp4s0f0 app:iscsi"
@@ -87,7 +86,7 @@
     Then "appcfg:\s+04" is visible with command "dcbtool gc enp4s0f0 app:fip"
 
 
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1080510
+    @rhbz1080510
     @dcb_error_shown
     @dcb
     Scenario: nmcli - dcb - error shown
