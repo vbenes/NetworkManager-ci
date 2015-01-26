@@ -370,6 +370,8 @@ def after_scenario(context, scenario):
             call("systemctl start NetworkManager", shell=True)
             call("nmcli device disconnect eth10", shell=True)
             call("nmcli connection delete ethie", shell=True)
+            call("nmcli connection up testeth0", shell=True)
+
 
         if 'ipv6' in scenario.tags or 'ipv6_2' in scenario.tags:
             print "---------------------------"

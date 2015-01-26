@@ -448,7 +448,7 @@ Feature: nmcli - general
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
     * Execute "nmcli connection modify ethie ipv4.addresses 1.2.3.4/24 ipv4.may-fail no ipv6.addresses 1::128/128 ipv6.may-fail no connection.autoconnect yes"
     * Bring "up" connection "ethie"
-    * Device disconnect "eth10"
+    * Disconnect device "eth10"
     * Execute "systemctl stop NetworkManager"
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
