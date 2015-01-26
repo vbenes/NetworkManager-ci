@@ -693,6 +693,14 @@ def wait_for_process(context, command):
     sleep(0.1)
 
 
+@step(u'Force renew IPv6 for "{device}"')
+def force_renew_ipv6(context, device):
+    mac = command_output(context, "ip a s %s |grep fe80 |awk '{print $2}'" % device)
+    command_code(context, "echo 1 >  /proc/sys/net/ipv6/conf/%s/disable_ipv6" % device)
+    command_code(context, "echo 0 >  /proc/sys/net/ipv6/conf/%s/disable_ipv6" % device)
+    command_code(context, "ip addr add %s dev %s" %(mac, device))
+
+
 @step(u'Global temporary ip is not based on mac of device "{dev}"')
 def global_tem_address_check(context, dev):
     cmd = "ip a s %s" %dev

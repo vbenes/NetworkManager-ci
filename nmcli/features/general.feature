@@ -441,9 +441,8 @@ Feature: nmcli - general
 
 
     @rhbz1083683
-    @run_once_new_connection_with_ipv4_ipv6
-    @run_once
-    @add_testeth10
+    @run_once_new_connection
+    @runonce
     Scenario: NM - general - run once and quit start new ipv4 and ipv6 connection
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
     * Execute "nmcli connection modify ethie ipv4.addresses 1.2.3.4/24 ipv4.may-fail no ipv6.addresses 1::128/128 ipv6.may-fail no connection.autoconnect yes"
@@ -466,4 +465,38 @@ Feature: nmcli - general
     Then "Active:\s+inactive" is visible with command "systemctl status NetworkManager"
 
 
+    @rhbz1083683
+    @run_once_ip4_renewal
+    @runonce
+    Scenario: NM - general - run once and quit ipv4 renewal
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie"
+    * Bring "up" connection "ethie"
+    * Disconnect device "eth1"
+    * Execute "systemctl stop NetworkManager"
+    When "state DOWN" is visible with command "ip a s eth1" in "5" seconds
+    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "systemctl start NetworkManager"
+    * Execute "sleep 5"
+    Then "192.168.100" is visible with command " ip a s eth1 |grep 'inet '|grep dynamic" for full "200" seconds
+    Then "192.168.100.0/24 dev eth1" is visible with command "ip r"
+
+
+    @rhbz1083683
+    @run_once_ip6_renewal
+    @runonce
+    Scenario: NM - general - run once and quit ipv6 renewal
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
+    * Bring "up" connection "ethie"
+    * Disconnect device "eth10"
+    * Execute "systemctl stop NetworkManager"
+    When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
+    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "systemctl start NetworkManager"
+    * Force renew IPv6 for "eth10"
+    When "2620:" is not visible with command "ip a s eth10"
+    Then "2620:" is visible with command "ip a s eth10" in "10" seconds
 

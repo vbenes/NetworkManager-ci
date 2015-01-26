@@ -147,11 +147,10 @@ def before_scenario(context, scenario):
             print "saving original hostname"
             context.original_hostname = check_output('cat /etc/hostname', shell=True).strip()
 
-        if 'run_once' in scenario.tags:
+        if 'runonce' in scenario.tags:
             print "---------------------------"
             print "stop all networking services and prepare configuration"
             call("systemctl stop network", shell=True)
-            call("nmcli connection delete testeth10", shell=True)
             call("nmcli device disconnect eth0", shell=True)
             call("pkill -9 dhclient", shell=True)
             call("pkill -9 nm-iface-helper", shell=True)
@@ -362,13 +361,12 @@ def after_scenario(context, scenario):
             call("ip netns del peers", shell=True)
             #sleep(TIMER)
 
-        if 'run_once' in scenario.tags:
+        if 'runonce' in scenario.tags:
             print "---------------------------"
             print "delete profiles and start NM"
             call("pkill -9 nm-iface-helper", shell=True)
             call("rm -rf /etc/NetworkManager/conf.d/00-run-once.conf", shell=True)
             call("systemctl start NetworkManager", shell=True)
-            call("nmcli device disconnect eth10", shell=True)
             call("nmcli connection delete ethie", shell=True)
             call("nmcli connection up testeth0", shell=True)
 
