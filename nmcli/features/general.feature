@@ -438,3 +438,32 @@ Feature: nmcli - general
     * Execute "ip netns exec peers ip route add default via 172.16.0.1"
     Then Execute "ip netns exec peers ping -c 2 -I test1 8.8.8.8"
     Then Unable to ping "172.16.0.111" from "eth0" device
+
+
+    @rhbz1083683
+    @run_once_new_connection_with_ipv4_ipv6
+    @run_once
+    @add_testeth10
+    Scenario: NM - general - run once and quit start new ipv4 and ipv6 connection
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
+    * Execute "nmcli connection modify ethie ipv4.addresses 1.2.3.4/24 ipv4.may-fail no ipv6.addresses 1::128/128 ipv6.may-fail no connection.autoconnect yes"
+    * Bring "up" connection "ethie"
+    * Device disconnect "eth10"
+    * Execute "systemctl stop NetworkManager"
+    When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
+    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "systemctl start NetworkManager"
+    Then "10.16." is visible with command " ip a s eth10 |grep 'inet '|grep dynamic" in "5" seconds
+    Then "1.2.3.4\/24" is visible with command "ip a s eth10 |grep 'inet '|grep -v dynamic" in "5" seconds
+    Then "2620:" is visible with command "ip a s eth10 |grep 'inet6'|grep  dynamic" in "5" seconds
+    Then "1::128\/128" is visible with command "ip a s eth10 |grep 'inet6'" in "5" seconds
+    Then "default via 10.16" is visible with command "ip r |grep eth10" in "5" seconds
+    Then "1.2.3.0\/24 dev eth10" is visible with command "ip r |grep eth10" in "5" seconds
+    Then "1::128 dev eth10" is visible with command "ip -6 r |grep eth10" in "5" seconds
+    Then "nm-iface-helper --ifname eth10" is visible with command "ps aux|grep helper"
+    Then "Active:\s+inactive" is visible with command "systemctl status NetworkManager"
+
+
+

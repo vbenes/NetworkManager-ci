@@ -147,6 +147,15 @@ def before_scenario(context, scenario):
             print "saving original hostname"
             context.original_hostname = check_output('cat /etc/hostname', shell=True).strip()
 
+        if 'run_once' in scenario.tags:
+            print "---------------------------"
+            print "stop all networking services and prepare configuration"
+            call("systemctl stop network", shell=True)
+            call("nmcli connection delete testeth10", shell=True)
+            call("nmcli device disconnect eth0", shell=True)
+            call("pkill -9 dhclient", shell=True)
+            call("pkill -9 nm-iface-helper", shell=True)
+
         if 'openvswitch' in scenario.tags:
             print "---------------------------"
             print "deleting eth1 and eth2 for openswitch tests"
@@ -353,6 +362,15 @@ def after_scenario(context, scenario):
             call("ip netns del peers", shell=True)
             #sleep(TIMER)
 
+        if 'run_once' in scenario.tags:
+            print "---------------------------"
+            print "delete profiles and start NM"
+            call("pkill -9 nm-iface-helper", shell=True)
+            call("rm -rf /etc/NetworkManager/conf.d/00-run-once.conf", shell=True)
+            call("systemctl start NetworkManager", shell=True)
+            call("nmcli device disconnect eth10", shell=True)
+            call("nmcli connection delete ethie", shell=True)
+
         if 'ipv6' in scenario.tags or 'ipv6_2' in scenario.tags:
             print "---------------------------"
             print "deleting connections"
@@ -536,7 +554,6 @@ def after_scenario(context, scenario):
             call('sudo ip link del dnt', shell=True)
             call('sudo ip link del bond0', shell=True)
 
-
         if 'nmcli_general_keep_slave_device_unmanaged' in scenario.tags:
             print "---------------------------"
             print "restoring the testeth1 profile to managed state / removing slave"
@@ -550,10 +567,11 @@ def after_scenario(context, scenario):
             print "deleting profile in case of test failure"
             call('nmcli connection delete "Bondy connection 1"', shell=True)
 
-        if 'ipv6_keep_connectivity_on_assuming_connection_profile' in scenario.tags:
+        if 'add_testeth10' in scenario.tags:
             print "---------------------------"
             print "restoring testeth10 profile"
             call('sudo nmcli connection add type ethernet con-name testeth10 ifname eth10 autoconnect no', shell=True)
+            call('sudo nmcli connection delete eth10', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)

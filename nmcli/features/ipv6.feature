@@ -683,6 +683,7 @@ Feature: nmcli: ipv6
 
 
     @rhbz1170530
+    @add_testeth10
     @ipv6_keep_connectivity_on_assuming_connection_profile
     @ipv6
     Scenario: NM - ipv6 - keep connectivity on assuming connection profile
