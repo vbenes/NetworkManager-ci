@@ -92,6 +92,11 @@ def before_scenario(context, scenario):
             call("ip link add dummy0 type dummy", shell=True)
             call("ip link delete dummy0", shell=True)
 
+        if 'delete_testeth0' in scenario.tags:
+            print "---------------------------"
+            print "delete testeth0"
+            call("nmcli connection delete id testeth0", shell=True)
+
         if 'firewall' in scenario.tags:
             print "---------------------------"
             print "starting firewall"
@@ -296,11 +301,6 @@ def after_scenario(context, scenario):
 
             call("nmcli connection up id testeth0", shell=True)
             sleep(2)
-
-        if 'delete_testeth0' in scenario.tags:
-            print "---------------------------"
-            print "delete testeth0"
-            call("nmcli connection delete id testeth0", shell=True)
 
         if 'time' in scenario.tags:
             print "---------------------------"

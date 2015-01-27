@@ -513,8 +513,6 @@ Feature: nmcli - general
     * Execute "systemctl stop NetworkManager"
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
     * Execute "systemctl start NetworkManager"
-    * Execute "sleep 0.5"
-    When "10.16" is not visible with command "ip a s eth10"
     When "2620:" is not visible with command "ip a s eth10"
     * Execute "/usr/bin/nm-online -s -q --timeout=30"
     When "10.16" is visible with command "ip a s eth10"
