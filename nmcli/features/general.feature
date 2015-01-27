@@ -503,7 +503,7 @@ Feature: nmcli - general
 
     @rhbz1086906
     @wait-online-for-both-ips
-    @ethie
+    @eth
     @delete_testeth0
     Scenario: NM - general - wait-online - for both ipv4 and ipv6
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
