@@ -500,3 +500,20 @@ Feature: nmcli - general
     When "2620:" is not visible with command "ip a s eth10"
     Then "2620:" is visible with command "ip a s eth10" in "10" seconds
 
+
+    @rhbz1086906
+    @wait-online-for-both-ips
+    @ethie
+    @delete_testeth0
+    Scenario: NM - general - wait-online - for both ipv4 and ipv6
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
+    * Execute "nmcli con modify ethie ipv4.may-fail no ipv6.may-fail no"
+    * Bring "up" connection "ethie"
+    * Disconnect device "eth10"
+    * Execute "systemctl stop NetworkManager"
+    When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
+    * Execute "systemctl start NetworkManager"
+    * Execute "sleep 0.5"
+    When "2620:" is not visible with command "ip a s eth10"
+    * Execute "/usr/bin/nm-online -s -q --timeout=30"
+    Then "2620:" is visible with command "ip a s eth10"

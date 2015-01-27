@@ -44,6 +44,7 @@ nat_from_shared_network, ., nmcli/./runtest.sh nat_from_shared_network, NetworkM
 run_once_new_connection_with_ipv4_ipv6, ., nmcli/./runtest.sh run_once_new_connection_with_ipv4_ipv6, NetworkManager
 run_once_ip4_renewal, ., nmcli/./runtest.sh run_once_ip4_renewal, NetworkManager
 run_once_ip6_renewal, ., nmcli/./runtest.sh run_once_ip6_renewal, NetworkManager
+wait-online-for-both-ips, ., nmcli/./runtest.sh wait-online-for-both-ips, NetworkManager
 #general_end
 
 #dispatcher

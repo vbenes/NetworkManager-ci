@@ -297,6 +297,11 @@ def after_scenario(context, scenario):
             call("nmcli connection up id testeth0", shell=True)
             sleep(2)
 
+        if 'delete_testeth0' in scenario.tags:
+            print "---------------------------"
+            print "delete testeth0"
+            call("nmcli connection delete id testeth0", shell=True)
+
         if 'time' in scenario.tags:
             print "---------------------------"
             print "time connection delete"
@@ -366,7 +371,7 @@ def after_scenario(context, scenario):
             print "delete profiles and start NM"
             call("pkill -9 nm-iface-helper", shell=True)
             call("rm -rf /etc/NetworkManager/conf.d/00-run-once.conf", shell=True)
-            call("systemctl start NetworkManager", shell=True)
+            call("systemctl restart  NetworkManager", shell=True)
             call("nmcli connection delete ethie", shell=True)
             call("nmcli connection up testeth0", shell=True)
 
@@ -572,6 +577,12 @@ def after_scenario(context, scenario):
             print "restoring testeth10 profile"
             call('sudo nmcli connection add type ethernet con-name testeth10 ifname eth10 autoconnect no', shell=True)
             call('sudo nmcli connection delete eth10', shell=True)
+
+        if 'delete_testeth0' in scenario.tags:
+            print "---------------------------"
+            print "restoring testeth0 profile"
+            call("nmcli connection add type ethernet con-name testeth0 ifname eth0", shell=True)
+            call('sudo nmcli connection delete eth0', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
