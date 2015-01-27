@@ -578,6 +578,11 @@ def after_scenario(context, scenario):
             call('sudo nmcli connection add type ethernet con-name testeth10 ifname eth10 autoconnect no', shell=True)
             call('sudo nmcli connection delete eth10', shell=True)
 
+        if 'eth1_disconnect' in scenario.tags:
+            print "---------------------------"
+            print "disconnecting eth1 device"
+            call('sudo nmcli device disconnect eth1', shell=True)
+
         if 'delete_testeth0' in scenario.tags:
             print "---------------------------"
             print "restoring testeth0 profile"
