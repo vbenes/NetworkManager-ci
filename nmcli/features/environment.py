@@ -589,6 +589,13 @@ def after_scenario(context, scenario):
             call("nmcli connection add type ethernet con-name testeth0 ifname eth0", shell=True)
             call('sudo nmcli connection delete eth0', shell=True)
 
+        if 'delete_rules' in scenario.tags:
+            print "---------------------------"
+            print "deleting ethie rules"
+            call("rm -rf /etc/sysconfig/network-scripts/rule-ethie", shell=True)
+            call('rm -rf /etc/sysconfig/network-scripts/route-ethie', shell=True)
+
+
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
 

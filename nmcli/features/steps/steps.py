@@ -446,6 +446,17 @@ def create_delete_bridges(context):
         Popen('ip link delete dev br0' , shell=True).wait()
         i += 1
 
+@step(u'Create PBR files for profile "{profile}" and "{dev}" device in table "{table}"')
+def create_policy_based_routing_files(context, profile, dev, table):
+    ips = command_output(context, "nmcli connection sh %s |grep IP4.ADDRESS |awk '{print $2}'" % profile)
+    ip_slash_prefix = ips.split('\n')[0]
+    ip = ip_slash_prefix.split('/')[0]
+    gw = command_output(context, "nmcli connection sh %s |grep IP4.GATEWAY |awk '{print $2}'" % profile).strip()
+    command_code(context, "echo '%s dev %s table %s' > /etc/sysconfig/network-scripts/route-%s" % (ip_slash_prefix, dev, table, profile))
+    command_code(context, "echo 'default via %s dev %s table %s' >> /etc/sysconfig/network-scripts/route-%s" % (gw, dev, table, profile))
+
+    command_code(context, "echo 'iif %s table %s' > /etc/sysconfig/network-scripts/rule-%s" % (dev, table, profile))
+    command_code(context, "echo 'from %s table %s' >> /etc/sysconfig/network-scripts/rule-%s" % (ip, table, profile))
 
 @step(u'Configure dhcp server for subnet "{subnet}" with lease time "{lease}"')
 def config_dhcp(context, subnet, lease):

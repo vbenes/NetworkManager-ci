@@ -517,3 +517,20 @@ Feature: nmcli - general
     * Execute "/usr/bin/nm-online -s -q --timeout=30"
     When "10.16" is visible with command "ip a s eth10"
     Then "2620:" is visible with command "ip a s eth10"
+
+
+    @rhbz1160013
+    @policy_based_routing
+    @eth
+    @delete_rules
+    Scenario: NM - general - policy based routing
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie"
+    * Bring "up" connection "ethie"
+    * Create PBR files for profile "ethie" and "eth1" device in table "1"
+    * Bring "up" connection "ethie"
+    Then "32764:\s+from 192.168.100.174 lookup 1.*32765:\s+from all iif eth1 lookup 1" is visible with command "ip rule"
+    Then "default via 192.168.100.1 dev eth1" is visible with command "ip r s table 1"
+    * Bring "down" connection "ethie"
+    Then "32764:\s+from 192.168.100.174 lookup 1.*32765:\s+from all iif eth1 lookup 1" is not visible with command "ip rule"
+    Then "default via 192.168.100.1 dev eth1" is not visible with command "ip r s table 1"
+
