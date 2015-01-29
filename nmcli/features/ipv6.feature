@@ -680,7 +680,7 @@ Feature: nmcli: ipv6
     * Finish "ip link set dev test10 up"
     * Finish "ip link set dev test11 up"
     * Execute "sleep 1"
-    When "ethernet-test11" is visible with command "nmcli con sh -a"
+    When "ethernet-test10" is visible with command "nmcli con sh -a"
     When "ethernet-test11" is visible with command "nmcli con sh -a"
     * Send lifetime scapy packet
     Then Lifetimes are slightly smaller than "3600" and "1800" for device "test11"
