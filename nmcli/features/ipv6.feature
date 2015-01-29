@@ -706,7 +706,7 @@ Feature: nmcli: ipv6
     * Execute "ip -6 addr add 2001::dead:beef:01/64 dev eth1"
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth1/disable_ipv6"
     Then "inet6 2001::dead:beef:1/64 scope global" is visible with command "ip a s eth1"
-    Then "inet6 fe80::5054:ff:fe49:99d6/64" is visible with command "ip a s eth1"
+    Then "inet6 fe80" is visible with command "ip a s eth1"
     # the assumed connection is created
     Then "eth1\s+ethernet\s+connected\s+eth1" is visible with command "nmcli device"
 
