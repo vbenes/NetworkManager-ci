@@ -79,8 +79,8 @@ Feature: NM: dispatcher
     * Write dispatcher "99-disp" file with params "if [ "$2" == "up" ]; then echo "quick$1" >> /tmp/dispatcher.txt; fi"
     * Bring "up" connection "testeth1"
     * Bring "up" connection "testeth2"
-    Then "eth1\s+up" is not visible with command "cat /tmp/dispatcher.txt"
-    Then "eth2\s+up" is not visible with command "cat /tmp/dispatcher.txt"
+    #Then "eth1\s+up" is not visible with command "cat /tmp/dispatcher.txt"
+    #Then "eth2\s+up" is not visible with command "cat /tmp/dispatcher.txt"
     Then "eth1\s+up\s+quicketh1\s+up\s+eth2\s+up\s+quicketh2\s+up" is visible with command "cat /tmp/dispatcher.txt" in "50" seconds
 
 
