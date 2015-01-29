@@ -755,7 +755,7 @@ def correct_lifetime(context, valid_lft, pref_lft, device):
     command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $2}'" % device
     valid = command_output(context, command)
     if valid.find('sec') == -1:
-        sleep 2
+        sleep(2)
     command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $2}'" % device
     valid = command_output(context, command)
     command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $4}'" % device
