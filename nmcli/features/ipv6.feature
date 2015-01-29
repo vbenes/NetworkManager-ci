@@ -673,13 +673,18 @@ Feature: nmcli: ipv6
     @scapy
     Scenario: NM - ipv6 - set lifetime from network
     * Finish "ip link add test10 type veth peer name test11"
-    * Finish "ip link set dev test10 up"
-    * Finish "ip link set dev test11 up"
     * Finish "nmcli c add type ethernet ifname test10"
     * Finish "nmcli c add type ethernet ifname test11"
-    * Finish "sleep 1"
+    * Execute "nmcli con modify ethernet-test10 ipv4.method disabled ipv6.method auto"
+    * Execute "nmcli con modify ethernet-test11 ipv4.method disabled ipv6.method auto"
+    * Finish "ip link set dev test10 up"
+    * Finish "ip link set dev test11 up"
+    * Execute "sleep 1"
+    When "ethernet-test11" is visible with command "nmcli con sh -a"
+    When "ethernet-test11" is visible with command "nmcli con sh -a"
     * Send lifetime scapy packet
     Then Lifetimes are slightly smaller than "3600" and "1800" for device "test11"
+
 
 
     @rhbz1170530

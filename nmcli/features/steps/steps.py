@@ -754,10 +754,6 @@ def ifcfg_doesnt_exist(context, con_name):
 def correct_lifetime(context, valid_lft, pref_lft, device):
     command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $2}'" % device
     valid = command_output(context, command)
-    if valid.find('sec') == -1:
-        sleep(2)
-    command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $2}'" % device
-    valid = command_output(context, command)
     command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $4}'" % device
     pref = command_output(context, command)
     valid = valid.strip()
@@ -765,8 +761,8 @@ def correct_lifetime(context, valid_lft, pref_lft, device):
     pref = pref.strip()
     pref = pref.replace('sec', '')
     assert int(valid) != int(pref)
-    assert int(valid) <= int(valid_lft) and int(valid_lft) >= int(valid)-20
-    assert int(pref) <= int(pref_lft) and int(pref_lft) >= int(pref)-20
+    assert int(valid) <= int(valid_lft)+3 and int(valid_lft) >= int(valid)-20
+    assert int(pref) <= int(pref_lft)+3 and int(pref_lft) >= int(pref)-20
 
 
 @step(u'Look for "{content}" in tailed file')
