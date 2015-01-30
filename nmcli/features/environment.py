@@ -257,7 +257,7 @@ def after_scenario(context, scenario):
             #sleep(TIMER)
             print os.system('ls /proc/net/bonding')
 
-        if 'con'jas in scenario.tags:
+        if 'con' in scenario.tags:
             print "---------------------------"
             print "deleting connie"
             call("nmcli connection delete id connie", shell=True)
