@@ -15,13 +15,22 @@ TIMER = 0.5
 # 4. after tag
 
 def dump_status(context, when):
+    context.log.write("\n\n\n=================================================================================")
     context.log.write("Network configuration %s:\n\n" % when)
-    for cmd in ['ip addr', 'ip -4 route', 'ip -6 route',
-        'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w']:
-             context.log.write("--- %s ---\n" % cmd)
-             context.log.flush()
-             call(cmd, shell=True, stdout=context.log)
-             context.log.write("\n")
+    f = open(os.devnull, 'w')
+    if call('systemctl status NetworkManager', shell=True, stdout=f) != 0:
+        for cmd in ['ip addr', 'ip -4 route', 'ip -6 route']:
+            context.log.write("--- %s ---\n" % cmd)
+            context.log.flush()
+            call(cmd, shell=True, stdout=context.log)
+    else:
+        for cmd in ['ip addr', 'ip -4 route', 'ip -6 route',
+            'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w']:
+                context.log.write("--- %s ---\n" % cmd)
+                context.log.flush()
+                call(cmd, shell=True, stdout=context.log)
+    context.log.write("==================================================================================\n\n\n")
+
 
 def before_scenario(context, scenario):
     try:
@@ -248,7 +257,7 @@ def after_scenario(context, scenario):
             #sleep(TIMER)
             print os.system('ls /proc/net/bonding')
 
-        if 'con' in scenario.tags:
+        if 'con'jas in scenario.tags:
             print "---------------------------"
             print "deleting connie"
             call("nmcli connection delete id connie", shell=True)
@@ -372,9 +381,10 @@ def after_scenario(context, scenario):
             call("pkill -9 nm-iface-helper", shell=True)
             call("rm -rf /etc/NetworkManager/conf.d/00-run-once.conf", shell=True)
             call("systemctl restart  NetworkManager", shell=True)
+            sleep (2)
             call("nmcli connection delete ethie", shell=True)
             call("nmcli connection up testeth0", shell=True)
-
+            call("nmcli device disconnect eth10", shell=True)
 
         if 'ipv6' in scenario.tags or 'ipv6_2' in scenario.tags:
             print "---------------------------"

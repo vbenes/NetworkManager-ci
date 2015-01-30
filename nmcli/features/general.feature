@@ -461,7 +461,7 @@ Feature: nmcli - general
     Then "default via 10.16" is visible with command "ip r |grep eth10" in "5" seconds
     Then "1.2.3.0\/24 dev eth10" is visible with command "ip r |grep eth10" in "5" seconds
     Then "1::128 dev eth10" is visible with command "ip -6 r |grep eth10" in "5" seconds
-    Then "nm-iface-helper --ifname eth10" is visible with command "ps aux|grep helper"
+    Then "nm-iface-helper --ifname eth10" is visible with command "ps aux|grep helper" in "5" seconds
     Then "Active:\s+inactive" is visible with command "systemctl status NetworkManager"
 
 
