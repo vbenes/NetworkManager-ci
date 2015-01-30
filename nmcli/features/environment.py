@@ -15,7 +15,7 @@ TIMER = 0.5
 # 4. after tag
 
 def dump_status(context, when):
-    context.log.write("\n\n\n=================================================================================")
+    context.log.write("\n\n\n=================================================================================\n")
     context.log.write("Network configuration %s:\n\n" % when)
     f = open(os.devnull, 'w')
     if call('systemctl status NetworkManager', shell=True, stdout=f) != 0:
