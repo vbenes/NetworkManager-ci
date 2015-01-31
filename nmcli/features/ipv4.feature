@@ -476,13 +476,13 @@ Feature: nmcli: ipv4
     * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
     When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-hostname RHX" in editor
+    * Submit "set ipv4.dhcp-hostname RHA" in editor
     #* Submit "set ipv4.send-hostname yes" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
-    Then "RHX" is visible with command "cat /tmp/tshark.log"
+    Then "RHA" is visible with command "cat /tmp/tshark.log"
 
 
     @testcase_303669
@@ -491,7 +491,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-hostname - remove dhcp-hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-hostname RHX" in editor
+    * Submit "set ipv4.dhcp-hostname RHB" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -504,7 +504,7 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 2;sudo kill -9 $(pidof tshark)"
-   Then "RHX" is not visible with command "cat /tmp/tshark.log"
+   Then "RHB" is not visible with command "cat /tmp/tshark.log"
 
 
     @testcase_303670
@@ -516,13 +516,13 @@ Feature: nmcli: ipv4
     * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/hostname.log"
     When "Proto" is visible with command "cat /tmp/hostname.log" in "30" seconds
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-hostname RHY" in editor
+    * Submit "set ipv4.dhcp-hostname RHC" in editor
     * Submit "set ipv4.dhcp-send-hostname no" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
-    Then "RHY" is not visible with command "cat /tmp/hostname.log"
+    Then "RHC" is not visible with command "cat /tmp/hostname.log"
 
 
     @testcase_303671
@@ -614,7 +614,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dhcp-client-id - remove client id
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dhcp-client-id RHX" in editor
+    * Submit "set ipv4.dhcp-client-id RHD" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -628,7 +628,7 @@ Feature: nmcli: ipv4
     When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
     * Bring "up" connection "ethie"
     * Run child "sleep 2; sudo kill -9 $(pidof tshark)"
-    Then "RHX" is not visible with command "cat /tmp/tshark.log"
+    Then "RHD" is not visible with command "cat /tmp/tshark.log"
 
 
     @testcase_304237

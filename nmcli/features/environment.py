@@ -378,10 +378,11 @@ def after_scenario(context, scenario):
         if 'runonce' in scenario.tags:
             print "---------------------------"
             print "delete profiles and start NM"
-            call("pkill -9 nm-iface-helper", shell=True)
+            call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
             call("rm -rf /etc/NetworkManager/conf.d/00-run-once.conf", shell=True)
+            sleep (1)
             call("systemctl restart  NetworkManager", shell=True)
-            sleep (2)
+            sleep (1)
             call("nmcli connection delete ethie", shell=True)
             call("nmcli connection up testeth0", shell=True)
             call("nmcli device disconnect eth10", shell=True)

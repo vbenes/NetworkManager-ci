@@ -705,7 +705,7 @@ Feature: nmcli: ipv6
     @eth1_disconnect
     Scenario: NM - ipv6 - add a static address manually to non-active interface
     Given "testeth1" is visible with command "nmcli connection"
-    Given "eth1\s+ethernet\s+disconnected" is visible with command "nmcli device"
+    Given "eth1\s+ethernet\s+connected" is not visible with command "nmcli device"
     Given "state UP" is visible with command "ip a s eth1"
     * "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth1/disable_ipv6"
     * Execute "ip -6 addr add 2001::dead:beef:01/64 dev eth1"
