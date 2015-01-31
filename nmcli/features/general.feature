@@ -441,6 +441,7 @@ Feature: nmcli - general
 
 
     @rhbz1083683
+    @veth
     @run_once_new_connection
     @runonce
     Scenario: NM - general - run once and quit start new ipv4 and ipv6 connection
@@ -466,6 +467,7 @@ Feature: nmcli - general
 
 
     @rhbz1083683
+    @veth
     @run_once_ip4_renewal
     @runonce
     Scenario: NM - general - run once and quit ipv4 renewal
@@ -484,6 +486,7 @@ Feature: nmcli - general
 
 
     @rhbz1083683
+    @veth
     @run_once_ip6_renewal
     @runonce
     Scenario: NM - general - run once and quit ipv6 renewal
@@ -502,6 +505,7 @@ Feature: nmcli - general
 
 
     @rhbz1086906
+    @veth
     @wait-online-for-both-ips
     @eth
     @delete_testeth0

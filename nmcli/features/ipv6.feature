@@ -701,6 +701,7 @@ Feature: nmcli: ipv6
     @rhbz1083133
     @rhbz1098319
     @rhbz1127718
+    @veth
     @ipv6_add_static_address_manually_not_active
     @eth1_disconnect
     Scenario: NM - ipv6 - add a static address manually to non-active interface
