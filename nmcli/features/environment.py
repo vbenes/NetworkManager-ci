@@ -189,6 +189,11 @@ def before_scenario(context, scenario):
             print "removing testeth10 profile"
             call('sudo nmcli connection delete testeth10', shell=True)
 
+        if 'pppoe' in scenario.tags:
+            print "---------------------------"
+            print "removing testeth10 profile"
+            call('yum -y install NetworkManager-adsl rp-pppoe', shell=True)
+
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
         dump_status(context, 'before %s' % scenario.name)
@@ -607,10 +612,21 @@ def after_scenario(context, scenario):
 
         if 'policy_based_routing' in scenario.tags:
             print "---------------------------"
-            print "install dispatcher scripts"
+            print "remove dispatcher scripts"
             call("yum -y remove NetworkManager-config-routing-rules ", shell=True)
             call("rm -rf /etc/sysconfig/network-scripts/rule-ethie", shell=True)
             call('rm -rf /etc/sysconfig/network-scripts/route-ethie', shell=True)
+
+        if 'pppoe' in scenario.tags:
+            print "---------------------------"
+            print "kill pppoe server"
+            call('kill -9 $(pidof pppoe-server)', shell=True)
+            call('nmcli con del ppp', shell=True)
+
+        if 'del_test1112_veths' in scenario.tags:
+            print "---------------------------"
+            print "removing testeth10 profile"
+            call('ip link del test11', shell=True)
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)

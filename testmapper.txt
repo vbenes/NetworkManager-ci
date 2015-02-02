@@ -61,8 +61,8 @@ dispatcher_serialization, ., nmcli/./runtest.sh dispatcher_serialization, Networ
 vpn_add_profile, ., nmcli/./runtest.sh vpn_add_profile, NetworkManager
 vpn_describe, ., nmcli/./runtest.sh vpn_describe, NetworkManager
 vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data, NetworkManager
-
 #vpn_end
+
 #connection_start
 connection_restricted_to_single_device, ., nmcli/./runtest.sh connection_restricted_to_single_device, NetworkManager
 connection_help, ., nmcli/./runtest.sh connection_help, NetworkManager
@@ -435,6 +435,12 @@ dcb_disable_connection, ., nmcli/./runtest.sh dcb_disable_connection, NetworkMan
 dcb_enable_after_reboot, ., nmcli/./runtest.sh dcb_enable_after_reboot, NetworkManager
 dcb_error_shown, ., nmcli/./runtest.sh dcb_error_shown, NetworkManager
 #dcb_end
+
+#ppp
+connect_to_pppeo_via_pap, ., nmtui/./runtest.sh connect_to_pppeo_via_pap, NetworkManager
+connect_to_pppeo_via_chap, ., nmtui/./runtest.sh connect_to_pppeo_via_chap, NetworkManager
+disconnect_from_pppeo, ., nmtui/./runtest.sh disconnect_from_pppeo, NetworkManager
+#ppp_end
 
 #### NMTUI TESTS ####
 nmtui_general_start_nmtui, ., nmtui/./runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
