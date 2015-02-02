@@ -1004,11 +1004,11 @@ def prepare_connection(context):
     """)
 
 
-@step(u'Prepare pppoe server for user "user" with "passwd" password and IP "ip" authenticated via "{auth}"')
+@step(u'Prepare pppoe server for user "{user}" with "{passwd}" password and IP "{ip}" authenticated via "{auth}"')
 def prepare_pppoe_server(context, user, passwd, ip, auth):
-    call("sed -i 's/require.*/require-%s/' /etc/ppp/pppoe-server-options" %auth, shell=True)
-    call("echo -e 'require-%s\nlogin\nlcp-echo-interval 10\nlcp-echo-failure 2\nms-dns 8.8.8.8\nms-dns 8.8.4.4\nnetmask 255.255.255.0\ndefaultroute\nnoipdefault\nusepeerdns' > /etc/ppp/%s-secrets""" %(auth, user, passwd, ip, auth), shell=True)
-    call("echo '%s-253' > /etc/ppp/allip" % ip, shell=True)
+    command_code(context, "echo -e 'require-%s\nlogin\nlcp-echo-interval 10\nlcp-echo-failure 2\nms-dns 8.8.8.8\nms-dns 8.8.4.4\nnetmask 255.255.255.0\ndefaultroute\nnoipdefault\nusepeerdns' > /etc/ppp/pppoe-server-options" %auth)
+    command_code(context, "echo '%s * %s %s' > /etc/ppp/%s-secrets" %(user, passwd, ip, auth))
+    command_code(context, "echo '%s-253' > /etc/ppp/allip" % ip)
 
 
 @step(u'Prepare veth pairs "{pairs_array}" bridged over "{bridge}"')
@@ -1154,7 +1154,7 @@ def set_default_dcb(context):
 
 @step(u'Start pppoe server with "{name}" and IP "{ip}" on device "{dev}"')
 def start_pppoe_server(context, name, ip, dev):
-    command_code("ip link set dev %s up" %dev, shell=True)
+    command_code("ip link set dev %s up" %dev)
     Popen("kill -9 $(pidof pppoe-server); pppoe-server -S %s -C %s -L %s -p /etc/ppp/allip -I %s" %(name, name, ip, dev), shell=True)
     sleep(0.5)
 

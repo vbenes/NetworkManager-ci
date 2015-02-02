@@ -191,8 +191,8 @@ def before_scenario(context, scenario):
 
         if 'pppoe' in scenario.tags:
             print "---------------------------"
-            print "removing testeth10 profile"
-            call('yum -y install NetworkManager-adsl rp-pppoe', shell=True)
+            print "installing pppeo dependencies"
+            call('yum -y install NetworkManager-adsl NetworkManager-glib rp-pppoe', shell=True)
 
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
@@ -619,13 +619,13 @@ def after_scenario(context, scenario):
 
         if 'pppoe' in scenario.tags:
             print "---------------------------"
-            print "kill pppoe server"
+            print "kill pppoe server and remove ppp connection"
             call('kill -9 $(pidof pppoe-server)', shell=True)
             call('nmcli con del ppp', shell=True)
 
         if 'del_test1112_veths' in scenario.tags:
             print "---------------------------"
-            print "removing testeth10 profile"
+            print "removing test11 device"
             call('ip link del test11', shell=True)
 
     except Exception as e:

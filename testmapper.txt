@@ -437,9 +437,9 @@ dcb_error_shown, ., nmcli/./runtest.sh dcb_error_shown, NetworkManager
 #dcb_end
 
 #ppp
-connect_to_pppeo_via_pap, ., nmtui/./runtest.sh connect_to_pppeo_via_pap, NetworkManager
-connect_to_pppeo_via_chap, ., nmtui/./runtest.sh connect_to_pppeo_via_chap, NetworkManager
-disconnect_from_pppeo, ., nmtui/./runtest.sh disconnect_from_pppeo, NetworkManager
+connect_to_pppeo_via_pap, ., nmcli/./runtest.sh connect_to_pppeo_via_pap, NetworkManager
+connect_to_pppeo_via_chap, ., nmcli/./runtest.sh connect_to_pppeo_via_chap, NetworkManager
+disconnect_from_pppeo, ., nmcli/./runtest.sh disconnect_from_pppeo, NetworkManager
 #ppp_end
 
 #### NMTUI TESTS ####
