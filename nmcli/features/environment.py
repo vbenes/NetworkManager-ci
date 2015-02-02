@@ -384,7 +384,7 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "delete profiles and start NM"
             call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
-            call("rm -rf /etc/NetworkManager/conf.d/00-run-once.conf", shell=True)
+            call("rm -rf /etc/NetworkManager/conf.d/01-run-once.conf", shell=True)
             sleep (1)
             call("systemctl restart  NetworkManager", shell=True)
             sleep (1)
