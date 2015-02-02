@@ -193,6 +193,7 @@ def before_scenario(context, scenario):
             print "---------------------------"
             print "installing pppeo dependencies"
             call('yum -y install NetworkManager-adsl NetworkManager-glib rp-pppoe', shell=True)
+            call('systemctl restart NetworkManager.service', shell=True)
 
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())

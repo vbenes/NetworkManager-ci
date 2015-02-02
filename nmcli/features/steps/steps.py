@@ -1154,7 +1154,7 @@ def set_default_dcb(context):
 
 @step(u'Start pppoe server with "{name}" and IP "{ip}" on device "{dev}"')
 def start_pppoe_server(context, name, ip, dev):
-    command_code("ip link set dev %s up" %dev)
+    command_code(context, "ip link set dev %s up" %dev)
     Popen("kill -9 $(pidof pppoe-server); pppoe-server -S %s -C %s -L %s -p /etc/ppp/allip -I %s" %(name, name, ip, dev), shell=True)
     sleep(0.5)
 
