@@ -106,6 +106,11 @@ def before_scenario(context, scenario):
             print "delete testeth0"
             call("nmcli connection delete id testeth0", shell=True)
 
+        if 'policy_based_routing' in scenario.tags:
+            print "---------------------------"
+            print "install dispatcher scripts"
+            call("yum -y install NetworkManager-config-routing-rules ", shell=True)
+
         if 'firewall' in scenario.tags:
             print "---------------------------"
             print "starting firewall"
@@ -600,12 +605,12 @@ def after_scenario(context, scenario):
             call('sudo nmcli connection delete eth0', shell=True)
             call("nmcli connection add type ethernet con-name testeth0 ifname eth0", shell=True)
 
-        if 'delete_rules' in scenario.tags:
+        if 'policy_based_routing' in scenario.tags:
             print "---------------------------"
-            print "deleting ethie rules"
+            print "install dispatcher scripts"
+            call("yum -y remove NetworkManager-config-routing-rules ", shell=True)
             call("rm -rf /etc/sysconfig/network-scripts/rule-ethie", shell=True)
             call('rm -rf /etc/sysconfig/network-scripts/route-ethie', shell=True)
-
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)

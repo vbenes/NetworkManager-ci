@@ -526,7 +526,6 @@ Feature: nmcli - general
     @rhbz1160013
     @policy_based_routing
     @eth
-    @delete_rules
     Scenario: NM - general - policy based routing
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie"
     * Bring "up" connection "ethie"
