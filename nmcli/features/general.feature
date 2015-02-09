@@ -453,7 +453,7 @@ Feature: nmcli - general
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
-    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "systemctl start NetworkManager"
     Then "10.16." is visible with command " ip a s eth10 |grep 'inet '|grep dynamic" in "5" seconds
     Then "1.2.3.4\/24" is visible with command "ip a s eth10 |grep 'inet '|grep -v dynamic" in "5" seconds
@@ -478,7 +478,7 @@ Feature: nmcli - general
     When "state DOWN" is visible with command "ip a s eth1" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
-    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "systemctl start NetworkManager"
     * Execute "sleep 5"
     Then "192.168.100" is visible with command " ip a s eth1 |grep 'inet '|grep dynamic" for full "200" seconds
