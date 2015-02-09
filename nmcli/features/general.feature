@@ -451,8 +451,8 @@ Feature: nmcli - general
     * Disconnect device "eth10"
     * Execute "systemctl stop NetworkManager"
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
-    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
-    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
+    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "systemctl start NetworkManager"
     Then "10.16." is visible with command " ip a s eth10 |grep 'inet '|grep dynamic" in "5" seconds
@@ -476,8 +476,8 @@ Feature: nmcli - general
     * Disconnect device "eth1"
     * Execute "systemctl stop NetworkManager"
     When "state DOWN" is visible with command "ip a s eth1" in "5" seconds
-    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/00-run-once.conf"
-    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/00-run-once.conf"
+    * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
+    * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "systemctl start NetworkManager"
     * Execute "sleep 5"
