@@ -394,6 +394,7 @@ def after_scenario(context, scenario):
             sleep (1)
             call("systemctl restart  NetworkManager", shell=True)
             sleep (1)
+            call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
             call("nmcli connection delete ethie", shell=True)
             call("nmcli connection up testeth0", shell=True)
             call("nmcli device disconnect eth10", shell=True)
