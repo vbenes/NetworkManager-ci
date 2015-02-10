@@ -1,6 +1,8 @@
 import dbus
 import IPy
 import uuid
+import socket
+import struct
 
 def ip_to_str(ip):
     return '.'.join(reversed(str(IPy.IP(ip)).split('.')))
@@ -8,6 +10,12 @@ def ip_to_str(ip):
 def print_ipv4(setting):
     for address in setting["ipv4"]["addresses"]:
         print ip_to_str(address[0]), address[1], ip_to_str(address[2])
+
+def ip_to_int(ip_string):
+    return struct.unpack("=I", socket.inet_aton(ip_string))[0]
+
+def int_to_ip(ip_int):
+    return socket.inet_ntoa(struct.pack("=I", ip_int))
 
 bus = dbus.SystemBus()
 
@@ -21,7 +29,7 @@ s = dbus.Dictionary({
     },
     'ipv4': {
         'addresses': dbus.Array([
-            [16885952, 24, 0]
+            [ip_to_int('192.168.1.1'), dbus.UInt32(24L), 0]
         ], signature='au'),
         'method': 'manual'
     },
@@ -38,7 +46,7 @@ print "Original state: 1 address without gateway"
 print_ipv4(setting)
 print
 
-setting["ipv4"]["addresses"].append([16885952, 24, 1677830336])
+setting["ipv4"]["addresses"].append([ip_to_int('192.168.1.1'), dbus.UInt32(24L), ip_to_int('192.168.1.100')])
 
 print "Updating: add address with gateway"
 print_ipv4(setting)

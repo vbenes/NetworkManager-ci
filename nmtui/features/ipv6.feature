@@ -52,7 +52,7 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * In "Addresses" property add "dead:beef::1/24"
     * Confirm the connection settings
-    Then "dynamic" is visible with command "ip -6 a s eth10" in "10" seconds
+    Then "dynamic" is visible with command "ip -6 a s eth10" in "30" seconds
     Then "inet6 dead:beef" is visible with command "ip -6 a s eth10"
 
 

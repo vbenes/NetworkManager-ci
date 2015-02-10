@@ -511,6 +511,7 @@ def check_pattern_not_visible_with_command(context, pattern, command):
 
 @step(u'Check ifcfg-name file created for connection "{con_name}"')
 def check_ifcfg_exists_given_device(context, con_name):
+    sleep(1)
     cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name)
     cat.expect('NAME=%s' % con_name)
 
