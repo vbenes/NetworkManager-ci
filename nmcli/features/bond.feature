@@ -210,6 +210,7 @@
      * Bring "up" connection "bond0.0"
      Then Check bond "nm-bond" state is "up"
      * Delete connection "bond0"
+     * Execute "sleep 3"
      Then Check bond "nm-bond" state is "down"
 
 
