@@ -279,6 +279,7 @@
      * Submit "activate" in editor
      * Enter in editor
      * Quit editor
+     * Execute "sleep 3"
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" not in bond "nm-bond" in proc
