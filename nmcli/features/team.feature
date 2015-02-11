@@ -192,6 +192,7 @@
      * Enter in editor
      * Save in editor
      * Quit editor
+     * Execute "sleep 3"
     Then Check slave "eth1" in team "nm-team" is "up"
     Then Check slave "eth2" in team "nm-team" is "down"
 
