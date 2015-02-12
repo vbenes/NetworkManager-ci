@@ -269,10 +269,12 @@ testcase_286589, ., nmcli/./runtest.sh testcase_286589, NetworkManager
 testcase_286590, ., nmcli/./runtest.sh testcase_286590, NetworkManager
 ethernet_create_ifname_generic_connection, ., nmcli/./runtest.sh ethernet_create_ifname_generic_connection, NetworkManager
 ethernet_reactivate_generic_connection_on_different_device, ., nmcli/./runtest.sh ethernet_reactivate_generic_connection_on_different_device, NetworkManager
+nmcli_ethernet_no_ip, ., nmcli/./runtest.sh nmcli_ethernet_no_ip, NetworkManager
 openvswitch_interface_recognized, ., nmcli/./runtest.sh openvswitch_interface_recognized, NetworkManager
 openvswitch_ignore_ovs_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_network_setup, NetworkManager
 openvswitch_ignore_ovs_vlan_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_vlan_network_setup, NetworkManager
 openvswitch_ignore_ovs_bond_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_bond_network_setup, NetworkManager
+
 #ethernet_end
 
 #bond_start
