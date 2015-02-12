@@ -490,8 +490,8 @@ nmtui_ipv4_routes_several_default_routes_metrics, ., nmtui/./runtest.sh nmtui_ip
 nmtui_ipv4_routes_set_invalid_route_destination, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_invalid_route_destination, NetworkManager-tui
 nmtui_ipv4_routes_set_invalid_route_hop, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_invalid_route_hop, NetworkManager-tui
 nmtui_ipv4_routes_set_unreachable_route, ., nmtui/./runtest.sh nmtui_ipv4_routes_set_unreachable_route, NetworkManager-tui
-nmtui_ipv4_dns_method_static_+_IP_+_dns, ., nmtuinmtui_ipv4_dns_method_static_runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
-nmtui_ipv4_dns_method_auto_+_dns, ., nmtui/./runtestnmtui_ipv4_dns_method_auto_sh nmtui_general_start_nmtui, NetworkManager-tui
+nmtui_ipv4_dns_method_static_+_IP_+_dns, ., nmtui/./runtest.sh nmtui_ipv4_dns_method_static_runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
+nmtui_ipv4_dns_method_auto_+_dns, ., nmtui/./runtest.sh nmtui_ipv4_dns_method_auto_sh nmtui_general_start_nmtui, NetworkManager-tui
 nmtui_ipv4_dns_add_dns_when_one_already_set, ., nmtui/./runtest.sh nmtui_ipv4_dns_add_dns_when_one_already_set, NetworkManager-tui
 nmtui_ipv4_dns_method_auto_then_delete_all_dns, ., nmtui/./runtest.sh nmtui_ipv4_dns_method_auto_then_delete_all_dns, NetworkManager-tui
 nmtui_ipv4_dns_search_add_dns_search, ., nmtui/./runtest.sh nmtui_ipv4_dns_search_add_dns_search, NetworkManager-tui
