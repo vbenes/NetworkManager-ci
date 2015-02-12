@@ -206,6 +206,7 @@ config_loadbalance, ., nmcli/./runtest.sh config_loadbalance, NetworkManager
 config_broadcast, ., nmcli/./runtest.sh config_broadcast, NetworkManager
 config_invalid, ., nmcli/./runtest.sh config_invalid, NetworkManager
 remove_config, ., nmcli/./runtest.sh remove_config, NetworkManager
+team_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh team_reflect_changes_from_outside_of_NM, NetworkManager
 describe, ., nmcli/./runtest.sh describe, NetworkManager
 #team_end
 
