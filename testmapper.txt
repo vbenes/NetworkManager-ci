@@ -507,6 +507,7 @@ nmtui_ipv4_invalid_gateway, ., nmtui/./runtest.sh nmtui_ipv4_invalid_gateway, Ne
 nmtui_ipv4_invalid_dns, ., nmtui/./runtest.sh nmtui_ipv4_invalid_dns, NetworkManager-tui
 nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, ., nmtui/./runtest.sh nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, NetworkManager-tui
 nmtui_ipv4_addresses_can_add_after_removing_invalid, ., nmtui/./runtest.sh nmtui_ipv4_addresses_can_add_after_removing_invalid, NetworkManager-tui
+nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, ., nmtui/./runtest.sh nmtui_ipv4_addresses_gateway_ip_prefix_nonzero_form, NetworkManager-tui
 
 nmtui_ipv6_addresses_static_no_address, ., nmtui/./runtest.sh nmtui_ipv6_addresses_static_no_address, NetworkManager-tui
 nmtui_ipv6_addresses_static_no_mask, ., nmtui/./runtest.sh nmtui_ipv6_addresses_static_no_mask, NetworkManager-tui
@@ -523,8 +524,8 @@ nmtui_ipv6_routes_set_device_route, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_
 nmtui_ipv6_routes_several_default_routes_metrics, ., nmtui/./runtest.sh nmtui_ipv6_routes_several_default_routes_metrics, NetworkManager-tui
 nmtui_ipv6_routes_set_invalid_route_destination, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_invalid_route_destination, NetworkManager-tui
 nmtui_ipv6_routes_set_invalid_route_hop, ., nmtui/./runtest.sh nmtui_ipv6_routes_set_invalid_route_hop, NetworkManager-tui
-nmtui_ipv6_dns_method_static_+_IP_+_dns, ., nmtuinmtui_ipv6_dns_method_static_runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
-nmtui_ipv6_dns_method_auto_+_dns, ., nmtui/./runtestnmtui_ipv6_dns_method_auto_sh nmtui_general_start_nmtui, NetworkManager-tui
+nmtui_ipv6_dns_method_static_+_IP_+_dns, ., nmtui/./runtest.sh nmtui_ipv6_dns_method_static_runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
+nmtui_ipv6_dns_method_auto_+_dns, ., nmtui/./runtest.sh nmtui_ipv6_dns_method_auto_sh nmtui_general_start_nmtui, NetworkManager-tui
 nmtui_ipv6_dns_add_dns_when_one_already_set, ., nmtui/./runtest.sh nmtui_ipv6_dns_add_dns_when_one_already_set, NetworkManager-tui
 nmtui_ipv6_dns_method_auto_then_delete_all_dns, ., nmtui/./runtest.sh nmtui_ipv6_dns_method_auto_then_delete_all_dns, NetworkManager-tui
 nmtui_ipv6_dns_search_add_dns_search, ., nmtui/./runtest.sh nmtui_ipv6_dns_search_add_dns_search, NetworkManager-tui
@@ -592,6 +593,7 @@ nmtui_bond_add_mode_broadcast, ., nmtui/./runtest.sh nmtui_bond_add_mode_broadca
 nmtui_bond_add_mode_8023ad, ., nmtui/./runtest.sh nmtui_bond_add_mode_8023ad, NetworkManager-tui
 nmtui_bond_add_mode_balance_tlb, ., nmtui/./runtest.sh nmtui_bond_add_mode_balance_tlb, NetworkManager-tui
 nmtui_bond_add_mode_balance_alb, ., nmtui/./runtest.sh nmtui_bond_add_mode_balance_alb, NetworkManager-tui
+nmtui_bond_change_mode_ac_to_rr, ., nmtui/./runtest.sh nmtui_bond_change_mode_ac_to_rr, NetworkManager-tui
 
 nmtui_team_add_default_team, ., nmtui/./runtest.sh nmtui_team_add_default_team, NetworkManager-tui
 nmtui_team_add_connection_wo_autoconnect, ., nmtui/./runtest.sh nmtui_team_add_connection_wo_autoconnect, NetworkManager-tui
