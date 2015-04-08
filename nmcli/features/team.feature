@@ -433,12 +433,15 @@
     @team_reflect_changes_from_outside_of_NM
     Scenario: nmcli - team - reflect changes from outside of NM
     * Finish "ip link add type team"
-    * Finish "ip link add dummy0 type dummy"
+    When "team0\s+team\s+unmanaged" is visible with command "nmcli d"
+   * Finish "ip link set dev team0 up"
     When "team0\s+team\s+disconnected" is visible with command "nmcli d"
-    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip link add dummy0 type dummy"
+    * Finish "ip link set dev dummy0 up"
     * Finish "ip addr add 1.1.1.1/24 dev team0"
     * Finish "sleep 2"
     When "team0\s+team\s+connected\s+team0" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
     * Finish "teamdctl team0 port add dummy0"
     When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
     Then "TEAM.SLAVES:\s+dummy0" is visible with command "nmcli -f team.slaves dev show team0"

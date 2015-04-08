@@ -13,10 +13,10 @@ Feature: nmcli - ppp
     * Bring "up" connection "ppp"
     * Execute "sleep 20"
     Then "nameserver 8.8.8.8\s+nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "inet 192.168.111.2 peer 192.168.111.254/32 scope global ppp0" is visible with command "ip a s ppp0"
-    Then "inet 192.168.111.254 peer 192.168.111.2/32 scope global ppp1" is visible with command "ip a s ppp1"
-    Then "192.168.111.2 dev ppp1  proto kernel  scope link  src 192.168.111.254" is visible with command "ip r"
-    Then "default via 192.168.111.254 dev ppp0  proto static  metric" is visible with command "ip r"
+    Then "inet 192.168.111.2 peer 192.168.111.254/32 scope global ppp" is visible with command "ip a s"
+    Then "inet 192.168.111.254 peer 192.168.111.2/32 scope global ppp" is visible with command "ip a s"
+    Then "192.168.111.2 dev ppp.*  proto kernel  scope link  src 192.168.111.254" is visible with command "ip r"
+    Then "default via 192.168.111.254 dev ppp.*  proto static  metric" is visible with command "ip r"
 
 
     @connect_to_pppoe_via_chap
@@ -30,10 +30,10 @@ Feature: nmcli - ppp
     * Execute "ip link set dev test11 up"
     * Bring "up" connection "ppp"
     Then "nameserver 8.8.8.8\s+nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then "inet 192.168.111.2 peer 192.168.111.254/32 scope global ppp0" is visible with command "ip a s ppp0"
-    Then "inet 192.168.111.254 peer 192.168.111.2/32 scope global ppp1" is visible with command "ip a s ppp1"
-    Then "192.168.111.2 dev ppp1  proto kernel  scope link  src 192.168.111.254" is visible with command "ip r"
-    Then "default via 192.168.111.254 dev ppp0  proto static  metric" is visible with command "ip r"
+    Then "inet 192.168.111.2 peer 192.168.111.254/32 scope global ppp.*" is visible with command "ip a s"
+    Then "inet 192.168.111.254 peer 192.168.111.2/32 scope global ppp.*" is visible with command "ip a s"
+    Then "192.168.111.2 dev ppp.*  proto kernel  scope link  src 192.168.111.254" is visible with command "ip r"
+    Then "default via 192.168.111.254 dev ppp.*  proto static  metric" is visible with command "ip r"
 
 
     @disconnect_from_pppoe
@@ -48,6 +48,6 @@ Feature: nmcli - ppp
     * Bring "up" connection "ppp"
     * Bring "down" connection "ppp"
     Then "nameserver 8.8.8.8\s+nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
-    Then "inet 192.168.111.2 peer 192.168.111.254/32 scope global ppp0" is not visible with command "ip a s ppp0"
-    Then "default via 192.168.111.254 dev ppp0  proto static  metric" is not visible with command "ip r"
+    Then "inet 192.168.111.2 peer 192.168.111.254/32 scope global ppp" is not visible with command "ip a s"
+    Then "default via 192.168.111.254 dev ppp.*  proto static  metric" is not visible with command "ip r"
 
