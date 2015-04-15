@@ -2,6 +2,8 @@
 
 import os
 import pexpect
+import sys
+import traceback
 from subprocess import call, check_output
 from time import sleep, localtime, strftime
 
@@ -632,6 +634,7 @@ def after_scenario(context, scenario):
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
+        traceback.print_exc(file=sys.stdout)
 
 
 
