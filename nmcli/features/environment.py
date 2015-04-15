@@ -421,6 +421,10 @@ def after_scenario(context, scenario):
             call('nmcli connection delete id team0 team', shell=True)
             #sleep(TIMER)
 
+        if 'teamd' in scenario.tags:
+            call("systemctl stop teamd", shell=True)
+            call("systemctl reset-failed teamd", shell=True)
+
         if 'ethernet' in scenario.tags:
             print "---------------------------"
             print "removing ethernet profiles"
