@@ -206,13 +206,12 @@ if [ ! -e /tmp/nm_eth_configured ]; then
                 #nmcli connection modify testeth0 ipv6.method ignore
                 nmcli connection up id testeth0
                 nmcli con show -a
-            fi
                 for X in $(seq 1 10); do
                     nmcli connection add type ethernet con-name testeth$X ifname eth$X autoconnect no
                     nmcli connection delete eth$X
                 done
                 nmcli connection modify testeth10 ipv6.method auto
-
+            fi
         fi
         if [ $wlan -eq 1 ]; then
             # we need to do this to have the device rescan networks after the renaming
