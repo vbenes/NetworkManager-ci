@@ -91,6 +91,16 @@ def before_scenario(context, scenario):
             if call('pip list |grep IPy', shell=True) != 0:
                 call("sudo pip install IPy", shell=True)
 
+        if 'inf' in scenario.tags:
+            print "---------------------------"
+            print "deleting infiniband connections"
+            call("nmcli device disconnect mlx4_ib1", shell=True)
+            call("nmcli device disconnect mlx4_ib1.8005", shell=True)
+            call("nmcli connection delete id inf", shell=True)
+            call("nmcli connection delete id infiniband-mlx4_ib1", shell=True)
+            call("nmcli connection delete id inf.8005", shell=True)
+            call("nmcli connection delete id infiniband-mlx4_ib1.8005", shell=True)
+
         if 'dhcpd' in scenario.tags:
             print "---------------------------"
             print "installing dhcp"
@@ -367,14 +377,14 @@ def after_scenario(context, scenario):
         if 'inf' in scenario.tags:
             print "---------------------------"
             print "deleting infiniband connections"
-            call("nmcli device disconnect mlx4_ib1", shell=True)
-            call("nmcli device disconnect mlx4_ib1.8003", shell=True)
-            call("nmcli connection delete id inf", shell=True)
-            call("nmcli connection delete id infiniband-mlx4_ib1", shell=True)
-            call("nmcli connection delete id inf.8003", shell=True)
-            call("nmcli connection delete id infiniband-mlx4_ib1.8003", shell=True)
+            #call("nmcli device disconnect mlx4_ib1", shell=True)
+            #call("nmcli device disconnect mlx4_ib1.8005", shell=True)
+            #call("nmcli connection delete id inf", shell=True)
+            #call("nmcli connection delete id infiniband-mlx4_ib1", shell=True)
+            #call("nmcli connection delete id inf.8005", shell=True)
+            #call("nmcli connection delete id infiniband-mlx4_ib1.8005", shell=True)
             call("nmcli connection up id tg3_1", shell=True)
-            sleep(10*TIMER)
+            call("nmcli device connect mlx4_ib1.8005", shell=True)
 
         if 'profie' in scenario.tags:
             print "---------------------------"

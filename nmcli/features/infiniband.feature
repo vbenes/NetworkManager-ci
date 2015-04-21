@@ -37,10 +37,10 @@
     @inf
     Scenario: nmcli - inf - create port connection
     * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
-    * Add infiniband port named "inf.8003" for device "mlx4_ib1.8003" with parent "mlx4_ib1" and p-key "0x8003"
+    * Add infiniband port named "inf.8005" for device "mlx4_ib1.8005" with parent "mlx4_ib1" and p-key "0x8005"
     * Bring "up" connection "inf"
-    * Bring "up" connection "inf.8003"
-    Then "inet 172" is visible with command "ip a s mlx4_ib1.8003"
+    * Bring "up" connection "inf.8005"
+    Then "inet 172" is visible with command "ip a s mlx4_ib1.8005"
 
 
     @inf_create_port_novice_mode
@@ -52,7 +52,7 @@
      * Expect "Connection type"
      * Submit "infiniband" in editor
      * Expect "Interface name"
-     * Submit "mlx4_ib1.8003" in editor
+     * Submit "mlx4_ib1.8005" in editor
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
      * Submit "yes" in editor
      * Expect "MTU"
@@ -64,35 +64,33 @@
      * Expect "Parent interface"
      * Submit "mlx4_ib1" in editor
      * Expect "P_KEY"
-     * Submit "0x8003" in editor
+     * Submit "0x8005" in editor
      * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
      * Submit "no" in editor
      * Bring "up" connection "inf"
-     * Bring "up" connection "infiniband-mlx4_ib1.8003"
-    Then "inet 172" is visible with command "ip a s mlx4_ib1.8003"
+     * Bring "up" connection "infiniband-mlx4_ib1.8005"
+    Then "inet 172" is visible with command "ip a s mlx4_ib1.8005"
 
 
     @inf_disable_port
     @inf
     Scenario: nmcli - inf - disable port connection
     * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
-    * Add infiniband port named "inf.8003" for device "mlx4_ib1.8003" with parent "mlx4_ib1" and p-key "0x8003"
+    * Add infiniband port named "inf.8005" for device "mlx4_ib1.8005" with parent "mlx4_ib1" and p-key "0x8005"
     * Bring "up" connection "inf"
-    * Bring "up" connection "inf.8003"
-    * Bring "down" connection "inf.8003"
+    * Bring "up" connection "inf.8005"
+    * Bring "down" connection "inf.8005"
     Then "inet 172" is visible with command "ip a s mlx4_ib1"
-    Then "inet 172" is not visible with command "ip a s mlx4_ib1.8003"
+    Then "inet 172" is not visible with command "ip a s mlx4_ib1.8005"
 
 
     @inf_enable_after_reboot
     @inf
     Scenario: nmcli - inf - enable after reboot
     * Add connection type "infiniband" named "inf" for device "mlx4_ib1"
-    * Add infiniband port named "inf.8003" for device "mlx4_ib1.8003" with parent "mlx4_ib1" and p-key "0x8003"
+    * Add infiniband port named "inf.8005" for device "mlx4_ib1.8005" with parent "mlx4_ib1" and p-key "0x8005"
     * Bring "up" connection "inf"
-    * Bring "up" connection "inf.8003"
+    * Bring "up" connection "inf.8005"
     * Reboot
     Then "inet 172" is visible with command "ip a s mlx4_ib1"
-    Then "inet 172" is visible with command "ip a s mlx4_ib1.8003"
-
-
+    Then "inet 172" is visible with command "ip a s mlx4_ib1.8005"

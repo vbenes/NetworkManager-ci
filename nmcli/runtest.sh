@@ -245,10 +245,10 @@ fi
 if [[ $1 == *inf_* ]]; then
     if [ ! -e /tmp/inf_configured ]; then
         nmcli dev disconnect mlx4_ib1
-        nmcli dev disconnect mlx4_ib1.8003
+        nmcli dev disconnect mlx4_ib1.8005
         sleep 5
         nmcli connection delete mlx4_ib1
-        nmcli connection delete mlx4_ib1.8003
+        nmcli connection delete mlx4_ib1.8005
         sleep 5
 
         touch /tmp/inf_configured
