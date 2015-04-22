@@ -259,8 +259,8 @@ Feature: nmcli - general
     @general
     @dns_none
     Scenario: NM - dns none setting
-    * Execute "sudo sed -i 's/plugins=ifcfg-rh/plugins=ifcfg-rh\ndns=none/' /etc/NetworkManager/NetworkManager.conf"
-    * Execute "sudo echo 'nameserver 1.2.3.4' > /etc/resolv.conf"
+    * Execute "printf '[main]\ndns=none\n' | sudo tee /etc/NetworkManager/conf.d/90-test-dns-none.conf"
+    * Execute "echo 'nameserver 1.2.3.4' | sudo bash -c 'cat > /etc/resolv.conf'"
     * Execute "cat /etc/resolv.conf"
     * Restart NM
     * Bring "up" connection "testeth0"
@@ -272,7 +272,7 @@ Feature: nmcli - general
     @remove_dns_none
     Scenario: NM - dns  none removal
     When "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
-    * Execute "sudo sed -i 's/dns=none/\n/' /etc/NetworkManager/NetworkManager.conf"
+    * Execute "sudo rm -rf /etc/NetworkManager/conf.d/90-test-dns-none.conf"
     * Restart NM
     * Bring "up" connection "testeth0"
     Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv.conf"
