@@ -349,7 +349,9 @@ Feature: Bond TUI tests
     * Choose to "<Edit...>" a connection
     * Set "Mode" dropdown to "Round-robin"
     * Confirm the connection settings
+    # Outside of veth form autoconnect logic, using special step
     * Execute "nmcli connection up bond0"
+    * If on veth setup execute "nmcli connection up bond-slave-eth2"
     Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/bond0"
     Then "192.168" is visible with command "ip a s bond0" in "10" seconds
     Then Check bond "bond0" state is "up"

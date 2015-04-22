@@ -470,6 +470,14 @@ def execute_command(context, command):
     os.system(command)
 
 
+@step(u'If on veth setup execute "{command}"')
+def if_veth_execute_command(context, command):
+    if os.path.isfile('/tmp/nm_veth_configured'):
+        os.system(command)
+    else:
+        pass
+
+
 @step(u'Note the output of "{command}"')
 def note_the_output_of(context, command):
     context.noted_value = subprocess.check_output(command, shell=True).strip() # kill the \n
