@@ -118,6 +118,11 @@ def before_scenario(context, scenario):
             print "delete testeth0"
             call("nmcli connection delete id testeth0", shell=True)
 
+        if 'eth1_disconnect' in scenario.tags:
+            print "---------------------------"
+            print "disconnecting eth1 device"
+            call('sudo nmcli device disconnect eth1', shell=True)
+
         if 'policy_based_routing' in scenario.tags:
             print "---------------------------"
             print "install dispatcher scripts"

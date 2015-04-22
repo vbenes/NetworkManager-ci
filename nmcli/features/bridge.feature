@@ -210,9 +210,9 @@ Feature: nmcli - bridge
 
 
     @bridge
+    @eth1_disconnect
     @bridge_dhcp_config_with_ethernet_port
     Scenario: nmcli - bridge - dhcp config with ethernet port
-    * Disconnect device "eth1"
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
     * Check ifcfg-name file created for connection "bridge0"
     * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
@@ -223,9 +223,9 @@ Feature: nmcli - bridge
 
 
     @bridge
+    @eth1_disconnect
     @bridge_dhcp_config_with_multiple_ethernet_ports
     Scenario: nmcli - bridge - dhcp config with multiple ethernet ports
-    * Disconnect device "eth1"
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
     * Check ifcfg-name file created for connection "bridge0"
     * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
@@ -240,9 +240,9 @@ Feature: nmcli - bridge
 
 
     @bridge
+    @eth1_disconnect
     @bridge_static_config_with_multiple_ethernet_ports
     Scenario: nmcli - bridge - dhcp config with multiple ethernet ports
-    * Disconnect device "eth1"
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0 autoconnect no"
     * Open editor for connection "bridge0"
     * Set a property named "ipv4.method" to "manual" in editor
