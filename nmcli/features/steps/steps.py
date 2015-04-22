@@ -640,7 +640,12 @@ def delete_connection_with_enter(context, name):
 
 @step(u'Disconnect device "{name}"')
 def disconnect_connection(context, name):
-    cli = pexpect.spawn('nmcli device disconnect %s' % name, logfile=context.log,  timeout=180)
+    if os.path.isfile('/tmp/nm_veth_configured'):
+        cli = pexpect.spawn('nmcli --wait 20 device disconnect %s' % name, logfile=context.log,  timeout=180)
+
+    else:
+        cli = pexpect.spawn('nmcli device disconnect %s' % name, logfile=context.log,  timeout=180)
+
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while disconnecting device %s' % name)
