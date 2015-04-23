@@ -70,7 +70,7 @@ Feature: nmcli - general
     @restart
     @testcase_290428
     Scenario: nmcli - general - not running
-    * Execute "sudo service NetworkManager stop"
+    * Stop NM
     * Wait for at least "2" seconds
     Then "NetworkManager is not running" is visible with command "nmcli general"
 
@@ -452,7 +452,7 @@ Feature: nmcli - general
     * Execute "nmcli connection modify ethie ipv4.addresses 1.2.3.4/24 ipv4.may-fail no ipv6.addresses 1::128/128 ipv6.may-fail no connection.autoconnect yes"
     * Bring "up" connection "ethie"
     * Disconnect device "eth10"
-    * Execute "systemctl stop NetworkManager"
+    * Stop NM
     When "state DOWN" is visible with command "ip a s eth10" in "15" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
@@ -477,7 +477,7 @@ Feature: nmcli - general
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie"
     * Bring "up" connection "ethie"
     * Disconnect device "eth1"
-    * Execute "systemctl stop NetworkManager"
+    * Stop NM
     When "state DOWN" is visible with command "ip a s eth1" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
@@ -496,7 +496,7 @@ Feature: nmcli - general
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
     * Bring "up" connection "ethie"
     * Disconnect device "eth10"
-    * Execute "systemctl stop NetworkManager"
+    * Stop NM
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
@@ -517,7 +517,7 @@ Feature: nmcli - general
     * Execute "nmcli con modify ethie ipv4.may-fail no ipv6.may-fail no"
     * Bring "up" connection "ethie"
     * Disconnect device "eth10"
-    * Execute "systemctl stop NetworkManager"
+    * Stop NM
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
     * Execute "systemctl start NetworkManager"
     #When "2620:" is not visible with command "ip a s eth10"

@@ -1104,6 +1104,10 @@ def restart_NM(context):
     sleep(4)
 
 
+@step(u'Stop NM')
+def stop_NM(context):
+    assert command_code(context, "sudo systemctl stop NetworkManager.service") == 0
+
 
 @step(u'Run child "{command}"')
 def run_child_process(context, command):
