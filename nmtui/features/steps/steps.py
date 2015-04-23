@@ -587,6 +587,7 @@ def reboot(context):
     os.system("nmcli device disconnect bond0")
     os.system("nmcli device disconnect team0")
     sleep(2)
+    context.nm_restarted = True
     os.system("sudo service NetworkManager restart")
     sleep(10)
 

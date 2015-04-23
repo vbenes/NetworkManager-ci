@@ -292,6 +292,12 @@ def before_scenario(context, scenario):
             call('yum -y install NetworkManager-adsl NetworkManager-glib rp-pppoe', shell=True)
             call('systemctl restart NetworkManager.service', shell=True)
 
+        try:
+            context.nm_pid = subprocess.check_output(['pgrep','NetworkManager']);
+        except subprocess.CalledProcessError, e:
+            context.nm_pid = None
+        print("NetworkManager process id before: %s", context.nm_pid)
+
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
         dump_status(context, 'before %s' % scenario.name)
@@ -309,7 +315,14 @@ def after_step(context, step):
 def after_scenario(context, scenario):
     """
     """
+    nm_pid = None
     try:
+        try:
+            nm_pid = subprocess.check_output(['pgrep','NetworkManager']);
+        except subprocess.CalledProcessError, e:
+            nm_pid = None
+        print("NetworkManager process id after: %s (was %s)", nm_pid, context.nm_pid)
+
         # Attach journalctl logs
         os.system("sudo journalctl -u NetworkManager --no-pager -o cat %s > /tmp/journal-nm.log" % context.log_cursor)
         data = open("/tmp/journal-nm.log", 'r').read()
@@ -743,6 +756,12 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "removing test11 device"
             call('ip link del test11', shell=True)
+
+        assert nm_pid is not None
+        assert context.nm_pid is not None
+        assert getattr(context, 'nm_restarted', False) or \
+               'restart' in scenario.tags or \
+               nm_pid == context.nm_pid
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)

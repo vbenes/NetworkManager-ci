@@ -270,6 +270,7 @@ def bring_down_connection_ignoring(context, connection):
 @step(u'Check ipv6 connectivity is stable on assuming connection profile "{profile}" for device "{device}"')
 def check_ipv6_connectivity_on_assumal(context, profile, device):
     address = command_output(context, "ip -6 a s %s | grep dynamic | awk '{print $2; exit}' | cut -d '/' -f1" % device)
+    context.nm_restarted = True
     assert command_code(context, 'systemctl stop NetworkManager.service') == 0
     assert command_code(context, "sed -i 's/UUID=/#UUID=/' /etc/sysconfig/network-scripts/ifcfg-%s" % profile)  == 0
     ping = pexpect.spawn('ping6 %s -i 0.2 -c 50' % address, logfile=context.log)
@@ -1080,18 +1081,21 @@ def reboot(context):
     command_code(context, "nmcli device disconnect nm-bond")
     command_code(context, "nmcli device disconnect nm-team")
     sleep(4)
+    context.nm_restarted = True
     assert command_code(context, "sudo service NetworkManager restart") == 0
     sleep(4)
 
 
 @step(u'Start NM')
 def start_NM(context):
+    context.nm_restarted = True
     assert command_code(context, "sudo systemctl start NetworkManager.service") == 0
 
 
 @step(u'Restart NM')
 def restart_NM(context):
     sleep(1)
+    context.nm_restarted = True
     command_code(context, "service NetworkManager restart") == 0
     if os.path.isfile('/tmp/nm_veth_configured'):
         command_code(context, 'ip link set dev eth0 up')
@@ -1111,6 +1115,7 @@ def restart_NM(context):
 
 @step(u'Stop NM')
 def stop_NM(context):
+    context.nm_restarted = True
     assert command_code(context, "sudo systemctl stop NetworkManager.service") == 0
 
 
