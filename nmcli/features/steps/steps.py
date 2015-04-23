@@ -1084,6 +1084,11 @@ def reboot(context):
     sleep(4)
 
 
+@step(u'Start NM')
+def start_NM(context):
+    assert command_code(context, "sudo systemctl start NetworkManager.service") == 0
+
+
 @step(u'Restart NM')
 def restart_NM(context):
     sleep(1)

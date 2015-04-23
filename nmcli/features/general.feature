@@ -457,7 +457,7 @@ Feature: nmcli - general
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
-    * Execute "systemctl start NetworkManager"
+    * Start NM
     Then "10.16." is visible with command " ip a s eth10 |grep 'inet '|grep dynamic" in "15" seconds
     Then "1.2.3.4\/24" is visible with command "ip a s eth10 |grep 'inet '|grep -v dynamic" in "15" seconds
     Then "2620:" is visible with command "ip a s eth10 |grep 'inet6'|grep  dynamic" in "15" seconds
@@ -482,7 +482,7 @@ Feature: nmcli - general
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
-    * Execute "systemctl start NetworkManager"
+    * Start NM
     * Execute "sleep 5"
     Then "192.168.100" is visible with command " ip a s eth1 |grep 'inet '|grep dynamic" for full "200" seconds
     Then "192.168.100.0/24 dev eth1" is visible with command "ip r"
@@ -501,7 +501,7 @@ Feature: nmcli - general
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
-    * Execute "systemctl start NetworkManager"
+    * Start NM
     * Force renew IPv6 for "eth10"
     When "2620:" is not visible with command "ip a s eth10"
     Then "2620:" is visible with command "ip a s eth10" in "10" seconds
@@ -519,7 +519,7 @@ Feature: nmcli - general
     * Disconnect device "eth10"
     * Stop NM
     When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
-    * Execute "systemctl start NetworkManager"
+    * Start NM
     #When "2620:" is not visible with command "ip a s eth10"
     * Execute "/usr/bin/nm-online -s -q --timeout=30"
     When "10.16" is visible with command "ip a s eth10"
