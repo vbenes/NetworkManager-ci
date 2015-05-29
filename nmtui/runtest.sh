@@ -31,6 +31,11 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     echo "Setting root password to 'redhat'"
     echo "redhat" | passwd root --stdin
 
+    #set the anti-colors wrapper (should be temporary solution)
+    mv /usr/bin/nmcli /usr/bin/nmcli_colors
+    cp ./wrapper /usr/bin/nmcli
+    hash -r
+
     #adding ntp and syncing time
     yum -y install ntp
     service ntpd restart
