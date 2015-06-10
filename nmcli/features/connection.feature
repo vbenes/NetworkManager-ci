@@ -44,7 +44,9 @@ Feature: nmcli: connection
     Scenario: nmcli - connection - restriction to single device
      * Add connection type "ethernet" named "connie" for device "*"
      * Start generic connection "connie" for "eth1"
-    Then Fail up connection "connie" for "eth2"
+     * Start generic connection "connie" for "eth2"
+    Then "eth1\s+ethernet\s+disconnected" is visible with command "nmcli device"
+    Then "eth2\s+ethernet\s+connected\s+connie" is visible with command "nmcli device"
 
 
     @connection_secondaries_restricted_to_vpn
