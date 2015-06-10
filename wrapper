@@ -1,2 +1,2 @@
 #!/bin/bash
-nmcli_colors -c no $@
+nmcli_colors -c no "$@"
