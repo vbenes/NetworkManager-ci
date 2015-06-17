@@ -1083,7 +1083,7 @@ Feature: nmcli - wifi
     * Check value saved message showed in editor
     * Quit editor
     * Start following journal
-    Then "Error" is visible with command "nmcli connection up qe-wpa2-psk"
+    Then "Error" is visible with command "nmcli connection up qe-wpa2-psk ifname wlan0"
     Then Look for "added 'pairwise' value 'TKIP'" in journal
     Then "\*\s+qe-wpa2-psk" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -1142,7 +1142,7 @@ Feature: nmcli - wifi
     * Check value saved message showed in editor
     * Quit editor
     * Start following journal
-    Then "Error" is visible with command "nmcli connection up qe-wpa2-psk"
+    Then "Error" is visible with command "nmcli connection up qe-wpa2-psk ifname wlan0"
     Then Look for "added 'group' value 'TKIP'" in journal
     Then "\*\s+qe-wpa2-psk" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
