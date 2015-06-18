@@ -121,7 +121,7 @@ Feature: nmcli - ethernet
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
-    Then "Connection activation failed:" is visible with command "nmcli connection up ethernet"
+    Then "requires an existing device" is visible with command "nmcli connection up ethernet"
 
 
     @ethernet
