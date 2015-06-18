@@ -444,7 +444,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
     Then "virtual" is not visible with command "cat /etc/resolv.conf"
-    Then "No nameservers found" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver" is not visible with command "cat /etc/resolv.conf"
 
 
     @ipv6_ignore-auto-dns_set-generic
