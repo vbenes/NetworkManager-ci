@@ -408,6 +408,7 @@ Feature: nmcli - general
     * Execute "/sbin/ip link add BBB type vxlan id 42 group 239.1.1.1 dev eth1"
     When "unmanaged" is visible with command "nmcli device show BBB"
     * Execute "ip link set dev BBB up"
+    * Execute "ip addr add fd00::666/8 dev BBB"
     Then "connected" is visible with command "nmcli device show BBB" in "10" seconds
     Then vxlan device "BBB" check
 
