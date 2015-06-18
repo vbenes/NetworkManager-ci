@@ -325,6 +325,7 @@ Feature: nmcli - general
     * "dnt\s+bond\s+disconnected" is visible with command "nmcli device"
     # Add a config rule to unmanage the device
     * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:dnt > /etc/NetworkManager/NetworkManager.conf"
+    * Execute "pkill -HUP NetworkManager"
     * Wait for at least "5" seconds
     # Now the device should be listed as unmanaged
     Then "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
