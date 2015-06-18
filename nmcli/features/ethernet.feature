@@ -40,20 +40,6 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @ethernet_reactivate_generic_connection_on_different_device
-    # NM did not allowed re-activating a connection on a different device
-    # This is allowed now: https://bugzilla.gnome.org/show_bug.cgi?id=730492
-    Scenario: nmcli - ethernet - reactivate generic connection on different device
-    * Add a new connection of type "ethernet" and options "ifname * con-name ethos autoconnect no"
-    * Check ifcfg-name file created for connection "ethos"
-    * Bring up connection "ethos" for "eth1" device
-    Then "eth1\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
-    * Bring up connection "ethos" for "eth2" device
-    Then "eth1\s+ethernet\s+disconnected" is visible with command "nmcli device"
-    Then "eth2\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
-
-
-    @ethernet
     @testcase_286579
     Scenario: nmcli - ethernet - up
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
