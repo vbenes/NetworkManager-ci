@@ -292,6 +292,7 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0"
+     * Bring "down" connection "team0"
      * Reboot
     Then Check slave "eth2" in team "nm-team" is "up"
     Then Check slave "eth1" in team "nm-team" is "down"
