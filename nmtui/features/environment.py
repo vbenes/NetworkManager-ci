@@ -142,12 +142,17 @@ def after_scenario(context, scenario):
                 context.embed('text/plain', data)
         if 'bridge' in scenario.tags:
             os.system("sudo nmcli connection delete id bridge0 bridge-slave-eth1 bridge-slave-eth2")
+            os.system("sudo ip link del bridge0")
         if 'vlan' in scenario.tags:
             os.system("sudo nmcli connection delete id vlan eth1.99")
+            os.system("sudo ip link del eth1.99")
+            os.system("sudo ip link del eth2.88")
         if 'bond' in scenario.tags:
             os.system("sudo nmcli connection delete id bond0 bond-slave-eth1 bond-slave-eth2")
+            os.system("sudo ip link del bond0")
         if 'team' in scenario.tags:
             os.system("sudo nmcli connection delete id team0 team-slave-eth1 team-slave-eth2")
+            os.system("sudo ip link del team0")
         if 'inf' in scenario.tags:
             os.system("sudo nmcli connection delete id infiniband0 infiniband0-port")
         if 'dsl' in scenario.tags:
