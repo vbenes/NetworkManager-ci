@@ -282,6 +282,7 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "deleting bond profile"
             call('nmcli connection delete id bond0 bond', shell=True)
+            call('ip link del nm-bond', shell=True)
 
             #sleep(TIMER)
             print os.system('ls /proc/net/bonding')
@@ -435,6 +436,7 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "deleting team masters"
             call('nmcli connection delete id team0 team', shell=True)
+            call('ip link del nm-team', shell=True)
             #sleep(TIMER)
 
         if 'teamd' in scenario.tags:
@@ -457,6 +459,7 @@ def after_scenario(context, scenario):
                 for item in ["vlan","eth1.99","eth1.299","eth1.399","eth1.65","eth1.165","eth1.265","eth1.499","eth1.80","eth1.90"]:
                     call('ip link delete %s' % item, shell=True)
             call("nmcli connection down testeth1", shell=True)
+            call('ip link del bridge0', shell=True)
 
         if 'vpn' in scenario.tags:
             print "---------------------------"
