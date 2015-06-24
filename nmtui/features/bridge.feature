@@ -248,6 +248,7 @@ Feature: Bridge TUI tests
 
 
     @bridge
+    @vlan
     @nmtui_bridge_over_vlans
     Scenario: nmtui - bridge - over vlans
     * Prepare new connection of type "Bridge" named "bridge0"
@@ -271,6 +272,7 @@ Feature: Bridge TUI tests
 
 
     @bridge
+    @vlan
     @nmtui_bridge_over_vlans_no_stp
     Scenario: nmtui - bridge - over vlans no stp
     * Prepare new connection of type "Bridge" named "bridge0"
@@ -311,6 +313,7 @@ Feature: Bridge TUI tests
 
 
     @bridge
+    @vlan
     @nmtui_bridge_over_ethernet_and_vlan
     Scenario: nmtui - bridge - over ethernet and vlan
     * Prepare new connection of type "Bridge" named "bridge0"
