@@ -160,14 +160,14 @@ Feature: nmcli: ipv6
     @ipv6_2
     @eth0
     Scenario: nmcli - ipv6 - routes - set basic route
-     * Add connection type "ethernet" named "ethie" for device "eth1"
+     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie autoconnect no"
      * Open editor for connection "ethie"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2000::2/126" in editor
      * Submit "set ipv6.routes 1010::1/128 2000::1 1" in editor
      * Save in editor
      * Quit editor
-     * Add connection type "ethernet" named "ethie2" for device "eth2"
+     * Add a new connection of type "ethernet" and options "ifname eth2 con-name ethie2 autoconnect no"
      * Open editor for connection "ethie2"
      * Submit "set ipv6.method static" in editor
      * Submit "set ipv6.addresses 2001::1/126" in editor
