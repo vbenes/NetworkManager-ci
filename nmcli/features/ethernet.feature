@@ -121,7 +121,7 @@ Feature: nmcli - ethernet
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
-    Then "no device found" is visible with command "nmcli connection up ethernet"
+    Then "Connection activation failed:" is visible with command "nmcli connection up ethernet"
 
 
     @ethernet
