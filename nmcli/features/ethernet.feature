@@ -41,17 +41,16 @@ Feature: nmcli - ethernet
 
     @ethernet
     @ethernet_reactivate_generic_connection_on_different_device
-    # currenlty NM, does not allow you to re-activate a connection on a different device
-    # This behavior should to change: https://bugzilla.gnome.org/show_bug.cgi?id=730492
+    # NM did not allowed re-activating a connection on a different device
+    # This is allowed now: https://bugzilla.gnome.org/show_bug.cgi?id=730492
     Scenario: nmcli - ethernet - reactivate generic connection on different device
     * Add a new connection of type "ethernet" and options "ifname * con-name ethos autoconnect no"
     * Check ifcfg-name file created for connection "ethos"
     * Bring up connection "ethos" for "eth1" device
     Then "eth1\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
-    Then "Error: Connection activation failed: Connection 'ethos' is already active on eth1" is visible with command "nmcli connection up id ethos"
-    Then "Error: Connection activation failed: Connection 'ethos' is already active on eth1" is visible with command "nmcli connection up id ethos ifname eth2"
-    Then "Connection successfully activated" is visible with command "nmcli connection up id ethos ifname eth1"
-    Then "eth1\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
+    * Bring up connection "ethos" for "eth2" device
+    Then "eth1\s+ethernet\s+disconnected" is visible with command "nmcli device"
+    Then "eth2\s+ethernet\s+connected\s+ethos" is visible with command "nmcli device"
 
 
     @ethernet
@@ -122,7 +121,7 @@ Feature: nmcli - ethernet
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
-    Then "no device found" is visible with command "nmcli connection up ethernet"
+    Then "Connection activation failed:" is visible with command "nmcli connection up ethernet"
 
 
     @ethernet
