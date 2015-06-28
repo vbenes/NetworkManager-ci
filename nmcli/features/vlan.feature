@@ -23,7 +23,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.299 dev eth1 id 299"
     * Open editor for connection "eth1.299"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
@@ -41,7 +40,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect no dev eth1 id 99"
     * Open editor for connection "eth1.99"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -58,7 +56,6 @@ Feature: nmcli - vlan
     Then "eth1.99" is visible with command "ifconfig"
     * Open editor for connection "eth1.99"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
@@ -74,7 +71,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.399 dev eth1 id 399"
     * Open editor for connection "eth1.399"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Set a property named "connection.autoconnect" to "no" in editor
     * Save in editor
     * Check value saved message showed in editor
@@ -91,7 +87,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.399 dev eth1 id 399"
     * Open editor for connection "eth1.399"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
@@ -107,7 +102,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.65 autoconnect no dev eth1 id 65"
     * Open editor for connection "eth1.65"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * Quit editor
     * Check value saved message showed in editor
@@ -128,7 +122,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.165 autoconnect no dev eth1 id 165"
     * Open editor for connection "eth1.165"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * No error appeared in editor
     * Save in editor
     * Quit editor
@@ -174,7 +167,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.399 dev eth1 id 399"
     * Open editor for connection "eth1.399"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Set a property named "connection.autoconnect" to "no" in editor
     * Save in editor
     * Check value saved message showed in editor
@@ -192,7 +184,6 @@ Feature: nmcli - vlan
     * Add a new connection of type "vlan" and options "con-name eth1.499 dev eth1 id 499"
     * Open editor for connection "eth1.499"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor

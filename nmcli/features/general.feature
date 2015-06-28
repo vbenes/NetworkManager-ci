@@ -149,7 +149,6 @@ Feature: nmcli - general
     * Open editor for connection "ethernet"
     * Set a property named "ipv4.method" to "manual" in editor
     * Set a property named "ipv4.addresses" to "192.168.1.10/24" in editor
-    * Set a property named "ipv6.method" to "ignore" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
