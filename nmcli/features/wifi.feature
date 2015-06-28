@@ -365,7 +365,7 @@ Feature: nmcli - wifi
     * Check value saved message showed in editor
     * No error appeared in editor
     * Quit editor
-    Then "requires an existing device" is visible with command "nmcli connection up qe-open"
+    Then "No suitable device found for this connection" is visible with command "nmcli connection up qe-open"
 
 
     @wifi
