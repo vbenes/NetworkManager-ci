@@ -14,7 +14,7 @@ Feature: Ethernet TUI tests
     * Set "Profile name" field to "ethernet"
     * Confirm the connection settings
     Then Check ifcfg-name file created for connection "ethernet"
-    Then "inet 192." is visible with command "ip a s eth1" in "60" seconds
+    Then "inet 192." is visible with command "ip a" in "60" seconds
     Then "connected\s+ethernet" is visible with command "nmcli device"
 
 
