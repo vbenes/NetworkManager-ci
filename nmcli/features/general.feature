@@ -451,19 +451,19 @@ Feature: nmcli - general
     * Bring "up" connection "ethie"
     * Disconnect device "eth10"
     * Execute "systemctl stop NetworkManager"
-    When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
+    When "state DOWN" is visible with command "ip a s eth10" in "15" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "systemctl start NetworkManager"
-    Then "10.16." is visible with command " ip a s eth10 |grep 'inet '|grep dynamic" in "5" seconds
-    Then "1.2.3.4\/24" is visible with command "ip a s eth10 |grep 'inet '|grep -v dynamic" in "5" seconds
-    Then "2620:" is visible with command "ip a s eth10 |grep 'inet6'|grep  dynamic" in "5" seconds
-    Then "1::128\/128" is visible with command "ip a s eth10 |grep 'inet6'" in "5" seconds
-    Then "default via 10.16" is visible with command "ip r |grep eth10" in "5" seconds
-    Then "1.2.3.0\/24 dev eth10" is visible with command "ip r |grep eth10" in "5" seconds
-    Then "1::128 dev eth10" is visible with command "ip -6 r |grep eth10" in "5" seconds
-    Then "nm-iface-helper --ifname eth10" is visible with command "ps aux|grep helper" in "5" seconds
+    Then "10.16." is visible with command " ip a s eth10 |grep 'inet '|grep dynamic" in "15" seconds
+    Then "1.2.3.4\/24" is visible with command "ip a s eth10 |grep 'inet '|grep -v dynamic" in "15" seconds
+    Then "2620:" is visible with command "ip a s eth10 |grep 'inet6'|grep  dynamic" in "15" seconds
+    Then "1::128\/128" is visible with command "ip a s eth10 |grep 'inet6'" in "15" seconds
+    Then "default via 10.16" is visible with command "ip r |grep eth10" in "15" seconds
+    Then "1.2.3.0\/24 dev eth10" is visible with command "ip r |grep eth10" in "15" seconds
+    Then "1::128 dev eth10" is visible with command "ip -6 r |grep eth10" in "15" seconds
+    Then "nm-iface-helper --ifname eth10" is visible with command "ps aux|grep helper" in "15" seconds
     Then "Active:\s+inactive" is visible with command "systemctl status NetworkManager"
 
 
