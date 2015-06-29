@@ -562,7 +562,7 @@ Feature: nmcli: ipv4
     @ipv4
     @eth0
     Scenario: nmcli - ipv4 - dns-search - dns-search + ignore auto obtained routes
-    * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
     * Open editor for connection "ethie"
     * Submit "set ipv6.method ignore" in editor
     * Submit "set ipv6.ignore-auto-dns yes" in editor
@@ -578,7 +578,7 @@ Feature: nmcli: ipv4
     @testcase_304234
     @ipv4
     Scenario: nmcli - ipv4 - method - link-local
-    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie autoconnect no"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method link-local" in editor
     * Submit "set ipv6.method ignore" in editor
@@ -634,7 +634,7 @@ Feature: nmcli: ipv4
     @testcase_304237
     @ipv4
     Scenario: nmcli - ipv4 - may-fail - set true
-    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie autoconnect no"
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-client-id 1" in editor
     * Submit "set ipv4.may-fail yes" in editor
@@ -648,7 +648,7 @@ Feature: nmcli: ipv4
     @testcase_304238
     @ipv4
     Scenario: nmcli - ipv4 - method - disabled
-    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie autoconnect no"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.method manual" in editor
