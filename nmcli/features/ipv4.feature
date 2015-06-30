@@ -734,8 +734,8 @@ Feature: nmcli: ipv4
     @custom_shared_range_preserves_restart
     @eth
     Scenario: nmcli - ipv4 - shared custom range preserves restart
-    * Add connection type "ethernet" named "ethie" for device "eth1"
-    * Execute "nmcli connection modify ethie ipv4.addresses 192.168.100.1/24 ipv4.method shared"
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth1 autoconnect no"
+    * Execute "nmcli connection modify ethie ipv4.addresses 192.168.100.1/24 ipv4.method shared connection.autoconnect yes"
     * Restart NM
     Then "ipv4.addresses:\s+192.168.100.1/24" is visible with command "nmcli con show ethie"
 

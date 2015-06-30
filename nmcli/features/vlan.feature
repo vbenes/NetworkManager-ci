@@ -20,7 +20,7 @@ Feature: nmcli - vlan
     @testcase_281263
     Scenario: nmcli - vlan - remove connection
     Given "inet 10.42." is not visible with command "ifconfig"
-    * Add a new connection of type "vlan" and options "con-name eth1.299 dev eth1 id 299"
+    * Add a new connection of type "vlan" and options "con-name eth1.299 autoconnect no dev eth1 id 299"
     * Open editor for connection "eth1.299"
     * Set a property named "ipv4.method" to "shared" in editor
     * Save in editor
@@ -53,7 +53,7 @@ Feature: nmcli - vlan
     @testcase_284356
     Scenario: nmcli - vlan - connection up while up
     * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect yes dev eth1 id 99"
-    Then "eth1.99" is visible with command "ifconfig"
+    Then "eth1.99\s+vlan\s+connected" is visible with command "nmcli device" in "30" seconds
     * Open editor for connection "eth1.99"
     * Set a property named "ipv4.method" to "shared" in editor
     * Save in editor
@@ -68,10 +68,9 @@ Feature: nmcli - vlan
     @testcase_281271
     Scenario: nmcli - vlan - connection down
     * "inet 10.42." is not visible with command "ifconfig"
-    * Add a new connection of type "vlan" and options "con-name eth1.399 dev eth1 id 399"
+    * Add a new connection of type "vlan" and options "con-name eth1.399 autoconnect no dev eth1 id 399"
     * Open editor for connection "eth1.399"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "connection.autoconnect" to "no" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
@@ -84,10 +83,12 @@ Feature: nmcli - vlan
     @testcase_281264
     Scenario: nmcli - vlan - connection down (autoconnect on)
     * "inet 10.42." is not visible with command "ifconfig"
-    * Add a new connection of type "vlan" and options "con-name eth1.399 dev eth1 id 399"
+    * Add a new connection of type "vlan" and options "con-name eth1.399 autoconnect no dev eth1 id 399"
     * Open editor for connection "eth1.399"
+    * Set a property named "connection.autoconnect" to "yes" in editor
     * Set a property named "ipv4.method" to "shared" in editor
     * Save in editor
+    * Submit "yes" in editor
     * Check value saved message showed in editor
     * Quit editor
     * Bring up connection "eth1.399"
@@ -164,10 +165,9 @@ Feature: nmcli - vlan
     @testcase_284358
     Scenario: nmcli - vlan - disconnect device
     * "inet 10.42." is not visible with command "ifconfig"
-    * Add a new connection of type "vlan" and options "con-name eth1.399 dev eth1 id 399"
+    * Add a new connection of type "vlan" and options "con-name eth1.399 autoconnect no dev eth1 id 399"
     * Open editor for connection "eth1.399"
     * Set a property named "ipv4.method" to "shared" in editor
-    * Set a property named "connection.autoconnect" to "no" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
@@ -181,10 +181,12 @@ Feature: nmcli - vlan
     @testcase_284359
     Scenario: nmcli - vlan - disconnect device (with autoconnect)
     * "inet 10.42." is not visible with command "ifconfig"
-    * Add a new connection of type "vlan" and options "con-name eth1.499 dev eth1 id 499"
+    * Add a new connection of type "vlan" and options "con-name eth1.499 autoconnect no dev eth1 id 499"
     * Open editor for connection "eth1.499"
+    * Set a property named "connection.autoconnect" to "yes" in editor
     * Set a property named "ipv4.method" to "shared" in editor
     * Save in editor
+    * Submit "yes" in editor
     * Check value saved message showed in editor
     * Quit editor
     * Bring up connection "eth1.499"

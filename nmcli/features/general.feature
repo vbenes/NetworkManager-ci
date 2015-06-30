@@ -428,7 +428,7 @@ Feature: nmcli - general
     @nat_from_shared_network
     Scenario: NM - general - NAT_dhcp from shared networks
     * Execute "ip link add test1 type veth peer name test1p"
-    * Add a new connection of type "bridge" and options "ifname vethbr con-name vethbr"
+    * Add a new connection of type "bridge" and options "ifname vethbr con-name vethbr autoconnect no"
     * Execute "nmcli connection modify vethbr ipv4.method shared"
     * Execute "nmcli connection modify vethbr ipv4.address 172.16.0.1/24"
     * Bring "up" connection "vethbr"

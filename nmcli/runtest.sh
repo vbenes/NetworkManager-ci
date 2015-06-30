@@ -152,7 +152,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
         brctl addif isobr eth99p
 
         # creating shared profile (dnsmasq dhcp server)
-        nmcli c add type ethernet con-name dhcp-srv ifname eth99
+        nmcli c add type ethernet con-name dhcp-srv autoconnect no ifname eth99
         nmcli c modify dhcp-srv ipv4.method shared
         nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24
 
