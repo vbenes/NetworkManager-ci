@@ -275,8 +275,8 @@ Feature: nmcli: connection
     @eth
     @rhbz663730
     Scenario: nmcli - connection - route priorities
-     * Add connection type "ethernet" named "ethie" for device "eth0"
-     * Add connection type "ethernet" named "connie" for device "eth10"
+     * Add a new connection of type "ethernet" and options "ifname eth0 con-name ethie autoconnect no"
+     * Add a new connection of type "ethernet" and options "ifname eth10 con-name connie autoconnect no"
      * Bring "up" connection "ethie"
      * Bring "up" connection "connie"
      When "metric 100" is visible with command "ip r |grep default |grep eth0"
