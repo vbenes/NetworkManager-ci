@@ -262,7 +262,9 @@ Feature: nmcli - general
     * Execute "echo 'nameserver 1.2.3.4' | sudo bash -c 'cat > /etc/resolv.conf'"
     * Execute "cat /etc/resolv.conf"
     * Restart NM
+    * Execute "systemctl mask sendmail"
     * Bring "up" connection "testeth0"
+    * Execute "systemctl unmask sendmail"
     Then "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 10" is not visible with command "cat /etc/resolv.conf"
 
