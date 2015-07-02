@@ -1,6 +1,8 @@
 #!/bin/bash
 set -x
 
+logger -t $0 "Running test $1"
+
 if [ -e /tmp/nm_veth_configured ]; then
     if ! nmcli con s -a |grep dhcp-srv; then
         ip link set dev eth99 up
@@ -240,6 +242,8 @@ echo "--------- /tmp/report_$TEST.log ---------"
 cat /tmp/report_$TEST.log
 
 rhts-report-result $TEST $RESULT "/tmp/report_$TEST.log"
+
+logger -t $0 "Test $1 finished with result $RESULT: $rc"
 
 echo "------------ Test result: $RESULT ------------"
 exit $rc
