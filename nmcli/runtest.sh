@@ -1,6 +1,8 @@
 #!/bin/bash
 set -x
 
+logger -t $0 "Running test $1"
+
 if [ -e /tmp/nm_veth_configured ]; then
     # check if macs aren't the same again
     if [ `ip a s par0 |grep link/ether | awk '{print $2}'` == `ip a s eth0 |grep link/ether | awk '{print $2}'` ]; then
@@ -272,6 +274,8 @@ fi
 
 rhts-report-result $TEST $RESULT "/tmp/report_$TEST.html"
 #rhts-submit-log -T $TEST -l "/tmp/log_$TEST.html"
+
+logger -t $0 "Test $1 finished with result $RESULT: $rc"
 
 echo "------------ Test result: $RESULT ------------"
 exit $rc
