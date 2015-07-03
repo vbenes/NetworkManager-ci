@@ -68,9 +68,9 @@ Feature: nmcli: connection
      * Finish "sudo ip link add name BBB type bridge"
      * Finish "ip link set dev BBB up"
      * Finish "ip addr add 192.168.201.3/24 dev BBB"
-     When "BBB" is visible with command "nmcli -f NAME connection show --active"
+     When "BBB" is visible with command "nmcli -f NAME connection show --active" in "5" seconds
      * Finish "sudo ip link del BBB"
-     Then "BBB" is not visible with command "nmcli -f NAME connection show --active"
+     Then "BBB" is not visible with command "nmcli -f NAME connection show --active" in "5" seconds
 
 
     @connection_down

@@ -276,16 +276,16 @@ Feature: nmcli - bridge
     @bridge_reflect_changes_from_outside_of_NM
     Scenario: nmcli - bridge - reflect changes from outside of NM
     * Execute "ip link add br0 type bridge"
-    When "br0\s+bridge\s+unmanaged" is visible with command "nmcli d"
+    When "br0\s+bridge\s+unmanaged" is visible with command "nmcli d" in "5" seconds
     * Execute "ip link set dev br0 up"
-    When "br0\s+bridge\s+disconnected" is visible with command "nmcli d"
+    When "br0\s+bridge\s+disconnected" is visible with command "nmcli d" in "5" seconds
     * Execute "ip link add dummy0 type dummy"
-    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d" in "5" seconds
     * Execute "ip link set dev dummy0 up"
     * Execute "ip addr add 1.1.1.1/24 dev br0"
-    When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d"
+    When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d" in "5" seconds
     * Execute "brctl addif br0 dummy0"
-    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d" in "5" seconds
     Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
 
 
@@ -313,8 +313,8 @@ Feature: nmcli - bridge
     * Execute "sudo ip link add br0 type bridge"
     * Execute "sudo ip link set dev br0 up"
     * Execute "sudo ip addr add 1.1.1.2/24 dev br0"
-    When "IP4.ADDRESS\[1\]:\s+1.1.1.2\/24" is visible with command "nmcli con show br0"
-    Then "br0" is not visible with command "firewall-cmd --get-active-zones"
+    When "IP4.ADDRESS\[1\]:\s+1.1.1.2\/24" is visible with command "nmcli con show br0" in "5" seconds
+    Then "br0" is not visible with command "firewall-cmd --get-active-zones" in "5" seconds
 
 
     @bridge_assumed_connection_ip_methods

@@ -441,8 +441,7 @@
     When "team0\s+team\s+disconnected" is visible with command "nmcli d"
     * Finish "ip link add dummy0 type dummy"
     * Finish "ip addr add 1.1.1.1/24 dev team0"
-    * Finish "sleep 2"
-    When "team0\s+team\s+connected\s+team0" is visible with command "nmcli d"
+    When "team0\s+team\s+connected\s+team0" is visible with command "nmcli d" in "5" seconds
     When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
     * Finish "teamdctl team0 port add dummy0"
     When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
