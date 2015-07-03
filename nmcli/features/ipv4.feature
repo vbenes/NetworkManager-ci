@@ -512,6 +512,7 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - don't send
     * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Execute "nmcli con modify ethie ipv4.may-fail no"
     * Bring "up" connection "ethie"
     * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/hostname.log"
     When "Proto" is visible with command "cat /tmp/hostname.log" in "30" seconds
@@ -530,6 +531,7 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Execute "nmcli con modify ethie ipv4.may-fail no"
     * Bring "up" connection "ethie"
     * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
     When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
@@ -546,6 +548,7 @@ Feature: nmcli: ipv4
     @ipv4
     Scenario: nmcli - ipv4 - dhcp-send-hostname - ignore sending real hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Execute "nmcli con modify ethie ipv4.may-fail no"
     * Bring "up" connection "ethie"
     * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/real.log"
     Then "Proto" is visible with command "cat /tmp/real.log" in "30" seconds
