@@ -214,7 +214,7 @@ def before_scenario(context, scenario):
             call('systemctl restart NetworkManager.service', shell=True)
 
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
-        context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
+        context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
         dump_status(context, 'before %s' % scenario.name)
 
     except Exception as e:
@@ -233,7 +233,7 @@ def after_scenario(context, scenario):
     """
     try:
         # Attach journalctl logs
-        os.system("sudo journalctl -u NetworkManager --no-pager -o cat --since='%s' > /tmp/journal-nm.log" % context.log_start_time)
+        os.system("sudo journalctl -u NetworkManager --no-pager -o cat %s > /tmp/journal-nm.log" % context.log_cursor)
         data = open("/tmp/journal-nm.log", 'r').read()
         if data:
             context.embed('text/plain', data)

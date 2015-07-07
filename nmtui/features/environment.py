@@ -4,7 +4,7 @@ import os
 import sys
 import traceback
 from time import sleep, localtime, strftime
-from subprocess import call
+from subprocess import call, check_output
 
 def get_cursored_screen(screen):
     myscreen_display = screen.display
@@ -48,8 +48,8 @@ def before_all(context):
         # Kill initial setup
         os.system("sudo pkill nmtui")
 
-        # Store scenario start time for session logs
-        context.log_start_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
+        # Store scenario start cursor for session logs
+        context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
     except Exception:
         print("Error in before_all:")
         traceback.print_exc(file=sys.stdout)
@@ -136,7 +136,7 @@ def after_scenario(context, scenario):
         os.remove('/tmp/nmtui.out')
         # Attach journalctl logs
         if hasattr(context, "embed"):
-            os.system("sudo journalctl /usr/sbin/NetworkManager --no-pager -o cat --since='%s'> /tmp/journal-session.log" % context.log_start_time)
+            os.system("sudo journalctl -u NetworkManager --no-pager -o cat %s > /tmp/journal-session.log" % context.log_cursor)
             data = open("/tmp/journal-session.log", 'r').read()
             if data:
                 context.embed('text/plain', data)
