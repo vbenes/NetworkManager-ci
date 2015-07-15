@@ -231,7 +231,7 @@ Feature: nmcli - bridge
     * Bring up connection "bridge-slave-eth3"
     Then "bridge0.*eth1.*eth2.*eth3" is visible with command "brctl show" in "10" seconds
     Then "eth1.*master bridge0.*eth2.*master bridge0.*eth3.*master bridge0" is visible with command "ip a"
-    Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
+    Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "60" seconds
 
 
     @bridge
