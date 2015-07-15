@@ -7,6 +7,7 @@ import exceptions
 import re
 import subprocess
 from subprocess import Popen
+from glob import glob
 
 # Helpers for the steps that leave the execution trace
 
@@ -74,6 +75,14 @@ def add_secondary_addr_same_subnet(context, device):
     else:
         secondary_ip = primary_ipn.ip-1
     assert command_code(context, 'ip addr add dev %s %s/%d' % (device, str(secondary_ip), primary_ipn.prefixlen)) == 0
+
+@given(u'Use certificate "{cert}" with key "{key}" and authority "{ca}" for gateway "{gateway}" on OpenVPN connection "{name}"')
+def set_openvpn_connection(context, cert, key, ca, gateway, name):
+    samples = glob('/usr/share/doc/openvpn-*/sample/')[0]
+    cli = pexpect.spawn('nmcli c modify %s vpn.data "key = %s, connection-type = tls, ca = %s, cert = %s, remote = %s, cert-pass-flags = 0"' % (name, samples + key, samples + ca, samples + cert, gateway))
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while editing %s connection data' % (name))
 
 @step(u'Add connection type "{typ}" named "{name}" for device "{ifname}"')
 def add_connection_for_iface(context, typ, name, ifname):
