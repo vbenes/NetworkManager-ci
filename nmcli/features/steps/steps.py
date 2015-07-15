@@ -58,6 +58,12 @@ def append_to_ifcfg(context, line, name):
 #         raise Exception('Got an Error while adding %s connection %s' % (typ, name))
 #     sleep(1)
 
+@step(u'Add a connection named "{name}" for device "{ifname}" to "{vpn}" VPN')
+def add_vpnc_connection_for_iface(context, name, ifname, vpn):
+    cli = pexpect.spawn('nmcli connection add con-name %s type vpn ifname %s vpn-type %s' % (name, ifname, vpn), logfile=context.log)
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while adding %s connection %s for device %s' % (vpn, name, ifname))
 
 @step(u'Add a secondary address to device "{device}" within the same subnet')
 def add_secondary_addr_same_subnet(context, device):
@@ -68,7 +74,6 @@ def add_secondary_addr_same_subnet(context, device):
     else:
         secondary_ip = primary_ipn.ip-1
     assert command_code(context, 'ip addr add dev %s %s/%d' % (device, str(secondary_ip), primary_ipn.prefixlen)) == 0
-
 
 @step(u'Add connection type "{typ}" named "{name}" for device "{ifname}"')
 def add_connection_for_iface(context, typ, name, ifname):
@@ -113,6 +118,16 @@ def open_slave_connection(context, master, device, name):
         raise Exception('Got an Error while adding slave connection %s on device %s for master %s' % (name, device, master))
     sleep(2)
 
+@step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on VPNC connection "{name}"')
+def set_vpnc_connection(context, user, password, group, secret, gateway, name):
+    cli = pexpect.spawn('nmcli c modify %s vpn.data "NAT Traversal Mode=natt, ipsec-secret-type=save, IPSec secret-flags=0, xauth-password-type=save, Vendor=cisco, Xauth username=%s, IPSec gateway=%s, Xauth password-flags=0, IPSec ID=%s, Perfect Forward Secrecy=server, IKE DH Group=dh2, Local Port=0"' % (name, user, gateway, group))
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while editing %s connection data' % (name))
+    cli = pexpect.spawn('nmcli c modify %s vpn.secrets "IPSec secret=%s, Xauth password=%s"' % (name, secret, password))
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while editing %s connection secrets' % (name))
 
 @step(u'Autocomplete "{cmd}" in bash and execute')
 def autocomplete_command(context, cmd):
