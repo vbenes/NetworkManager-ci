@@ -45,7 +45,7 @@
      * Submit "team-slave" in editor
      * Expect "Interface name"
      * Submit "eth1" in editor
-     * Expect "Team master"
+     * Expect "Master"
      * Submit "nm-team" in editor
      * Expect "There is 1 optional argument"
      * Submit "no" in editor

@@ -102,7 +102,7 @@
      * Submit "bond-slave" in editor
      * Expect "Interface name"
      * Submit "eth1" in editor
-     * Expect "Bond master"
+     * Expect "Master"
      * Submit "nm-bond" in editor
     * Bring "up" connection "bond-slave-eth1"
     Then Check bond "nm-bond" state is "up"
