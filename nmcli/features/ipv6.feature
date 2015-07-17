@@ -245,7 +245,9 @@ Feature: nmcli: ipv6
     @ipv6
     @eth0
     Scenario: NM - ipv6 - correct slaac setting
-     * Add connection type "ethernet" named "ethie" for device "eth10"
+     * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
+     * Execute "nmcli connection modify ethie ipv6.may-fail no"
+     * Run child "radvdump > /tmp/radvdump.txt"
      * Bring "up" connection "ethie"
     Then Check device route and prefix for "eth10"
 

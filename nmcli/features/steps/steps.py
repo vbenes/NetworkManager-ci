@@ -284,9 +284,9 @@ def check_ipv6_connectivity_on_assumal(context, profile, device):
 
 @step(u'Check device route and prefix for "{dev}"')
 def check_slaac_setup(context, dev):
-    cmd = "sudo radvdump > /tmp/radvdump.txt"
-    proc = Popen(cmd, shell=True)
-    sleep(200)
+    # cmd = "sudo radvdump > /tmp/radvdump.txt"
+    # proc = Popen(cmd, shell=True)
+    # sleep(200)
     cmd = "sudo pkill -9 radvdump"
     command_code(context, cmd)
     dump = open("/tmp/radvdump.txt", "r")
