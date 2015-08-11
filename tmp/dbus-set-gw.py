@@ -51,5 +51,5 @@ setting["ipv4"]["addresses"].append([ip_to_int('192.168.1.1'), dbus.UInt32(24L),
 print "Updating: add address with gateway"
 print_ipv4(setting)
 print
-o.Update(setting)
+o.Update(setting, dbus_interface='org.freedesktop.NetworkManager.Settings.Connection')
 
