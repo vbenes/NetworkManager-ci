@@ -4,7 +4,7 @@ import os
 import pexpect
 import sys
 import traceback
-from subprocess import call, Popen, PIPE, check_output
+from subprocess import call, Popen, PIPE, check_output, CalledProcessError
 from time import sleep, localtime, strftime
 from glob import glob
 
@@ -293,8 +293,8 @@ def before_scenario(context, scenario):
             call('systemctl restart NetworkManager.service', shell=True)
 
         try:
-            context.nm_pid = subprocess.check_output(['pgrep','NetworkManager']);
-        except subprocess.CalledProcessError, e:
+            context.nm_pid = check_output(['pgrep','NetworkManager'])
+        except CalledProcessError, e:
             context.nm_pid = None
         print("NetworkManager process id before: %s", context.nm_pid)
 
@@ -318,8 +318,8 @@ def after_scenario(context, scenario):
     nm_pid = None
     try:
         try:
-            nm_pid = subprocess.check_output(['pgrep','NetworkManager']);
-        except subprocess.CalledProcessError, e:
+            nm_pid = check_output(['pgrep','NetworkManager']);
+        except CalledProcessError, e:
             nm_pid = None
         print("NetworkManager process id after: %s (was %s)", nm_pid, context.nm_pid)
 
