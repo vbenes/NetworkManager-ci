@@ -289,6 +289,32 @@ def before_scenario(context, scenario):
             cfg.close()
             call("sudo systemctl restart openvpn@trest-server", shell=True)
 
+        if 'pptp' in scenario.tags:
+            print "---------------------------"
+            print "setting up pptpd"
+            call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+            call("[ -x /usr/sbin/pptpd ] || sudo yum -y install /usr/sbin/pptpd", shell=True)
+            call("rpm -q NetworkManager-pptp || sudo yum -y install NetworkManager-pptp", shell=True)
+
+            cfg = Popen("sudo sh -c 'cat >/etc/pptpd.conf'", stdin=PIPE, shell=True).stdin
+            cfg.write('# pptpd configuration for client testing')
+            cfg.write("\n" + 'option /etc/ppp/options.pptpd')
+            cfg.write("\n" + 'logwtmp')
+            cfg.write("\n" + 'localip 172.31.66.6')
+            cfg.write("\n" + 'remoteip 172.31.66.60-69')
+            cfg.write("\n" + 'ms-dns 8.8.8.8')
+            cfg.write("\n" + 'ms-dns 8.8.4.4')
+            cfg.write("\n")
+            cfg.close()
+
+            call("sudo rm -f /etc/ppp/ppp-secrets", shell=True)
+            psk = Popen("sudo sh -c 'cat >/etc/ppp/chap-secrets'", stdin=PIPE, shell=True).stdin
+            psk.write("budulinek pptpd passwd *\n")
+            psk.close()
+
+            call("sudo systemctl unmask pptpd", shell=True)
+            call("sudo systemctl restart pptpd", shell=True)
+
         if 'restore_hostname' in scenario.tags:
             print "---------------------------"
             print "saving original hostname"
@@ -583,6 +609,11 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "deleting openvpn profile"
             call('nmcli connection delete openvpn', shell=True)
+
+        if 'pptp' in scenario.tags:
+            print "---------------------------"
+            print "deleting pptp profile"
+            call('nmcli connection delete pptp', shell=True)
 
         if 'ethernet' in scenario.tags:
             print "---------------------------"
