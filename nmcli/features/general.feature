@@ -259,9 +259,8 @@ Feature: nmcli - general
     @dns_none
     Scenario: NM - dns none setting
     * Execute "printf '[main]\ndns=none\n' | sudo tee /etc/NetworkManager/conf.d/90-test-dns-none.conf"
-    * Execute "echo 'nameserver 1.2.3.4' | sudo bash -c 'cat > /etc/resolv.conf'"
-    * Execute "cat /etc/resolv.conf"
     * Restart NM
+    * Execute "echo 'nameserver 1.2.3.4' | sudo bash -c 'cat > /etc/resolv.conf'"
     * Execute "systemctl mask sendmail"
     * Bring "up" connection "testeth0"
     * Execute "systemctl unmask sendmail"
