@@ -77,14 +77,33 @@ def setup_racoon():
     cfg.close()
 
     psk = Popen("sudo sh -c 'cat >/etc/racoon/psk.txt'", stdin=PIPE, shell=True).stdin
-    psk.write("127.0.0.1 ipsecret\n")
+    psk.write("172.31.70.2 ipsecret\n")
     psk.close()
 
     call("sudo userdel -r budulinek", shell=True)
     call("sudo useradd -s /sbin/nologin -p yO9FLHPGuPUfg budulinek", shell=True)
 
-    call("sudo systemctl unmask racoon", shell=True)
-    call("sudo systemctl restart racoon", shell=True)
+    call("sudo ip netns add racoon", shell=True)
+    call("sudo ip link add racoon0 type veth peer name racoon1", shell=True)
+    # IPv6 on a veth confuses pluto. Sigh.
+    # ERROR: bind() for 80/80 fe80::94bf:8cff:fe1b:7620:500 in process_raw_ifaces(). Errno 22: Invalid argument
+    call("sysctl -w net.ipv6.conf.racoon1.disable_ipv6=1", shell=True)
+    call("sudo ip addr add dev racoon1 172.31.70.2/24", shell=True)
+    call("sudo ip link set racoon0 netns racoon", shell=True)
+    call("sudo ip netns exec racoon ip link set lo up", shell=True)
+    call("sudo ip netns exec racoon ip addr add dev racoon0 172.31.70.1/24", shell=True)
+    call("sudo ip netns exec racoon ip link set racoon0 up", shell=True)
+    # For some reason the peer needs to initiate the arp otherwise it won't respond
+    # and we'll end up in a stale entry in a neighbor cache
+    call("sudo ip link set racoon1 up", shell=True)
+    call("sudo ip netns exec racoon ping -c1 172.31.70.2", shell=True)
+    call("ping -c1 172.31.70.1", shell=True)
+    call("sudo systemd-run --unit nm-racoon ip netns exec racoon racoon -F", shell=True)
+
+def teardown_racoon():
+    call("systemctl stop nm-racoon", shell=True)
+    call("systemctl reset-failed nm-racoon", shell=True)
+    call("sudo ip netns del racoon", shell=True)
 
 def before_scenario(context, scenario):
     try:
@@ -542,6 +561,7 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "deleting vpnc profile"
             call('nmcli connection delete vpnc', shell=True)
+            teardown_racoon ()
 
         if 'openvpn' in scenario.tags:
             print "---------------------------"
