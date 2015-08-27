@@ -34,7 +34,7 @@ def dump_status(context, when):
                 call(cmd, shell=True, stdout=context.log)
     context.log.write("==================================================================================\n\n\n")
 
-def setup_racoon():
+def setup_racoon(dh_group):
     print "setting up racoon"
     call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
     call("[ -x /usr/sbin/racoon ] || sudo yum -y install /usr/sbin/racoon", shell=True)
@@ -55,6 +55,7 @@ def setup_racoon():
     cfg.write("\n" + 'remote anonymous {')
     cfg.write("\n" + '        exchange_mode aggressive;')
     cfg.write("\n" + '        proposal_check obey;')
+    cfg.write("\n" + '        mode_cfg on;')
     cfg.write("\n" + '')
     cfg.write("\n" + '        generate_policy on;')
     cfg.write("\n" + '        dpd_delay 20;')
@@ -63,12 +64,14 @@ def setup_racoon():
     cfg.write("\n" + '                encryption_algorithm aes;')
     cfg.write("\n" + '                hash_algorithm sha1;')
     cfg.write("\n" + '                authentication_method xauth_psk_server;')
-    cfg.write("\n" + '                dh_group 2;')
+    cfg.write("\n" + '                dh_group %d;' % dh_group)
     cfg.write("\n" + '        }')
     cfg.write("\n" + '}')
     cfg.write("\n" + '')
     cfg.write("\n" + 'mode_cfg {')
     cfg.write("\n" + '        network4 172.31.60.2;')
+    cfg.write("\n" + '        default_domain "trolofon";')
+    cfg.write("\n" + '        dns4 8.8.8.8;')
     cfg.write("\n" + '        pool_size 20;')
     cfg.write("\n" + '        banner "/etc/os-release";')
     cfg.write("\n" + '        auth_source pam;')
@@ -254,7 +257,7 @@ def before_scenario(context, scenario):
             print "---------------------------"
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
-            setup_racoon ()
+            setup_racoon (dh_group=2)
 
         if 'openvpn' in scenario.tags:
             print "---------------------------"
