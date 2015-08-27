@@ -127,6 +127,17 @@ def open_slave_connection(context, master, device, name):
         raise Exception('Got an Error while adding slave connection %s on device %s for master %s' % (name, device, master))
     sleep(2)
 
+@step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on Libreswan connection "{name}"')
+def set_vpnc_connection(context, user, password, group, secret, gateway, name):
+    cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 0, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while editing %s connection data' % (name))
+    cli = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s, xauthpassword = %s"' % (name, secret, password))
+    r = cli.expect(['Error', pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while editing %s connection secrets' % (name))
+
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on VPNC connection "{name}"')
 def set_vpnc_connection(context, user, password, group, secret, gateway, name):
     cli = pexpect.spawn('nmcli c modify %s vpn.data "NAT Traversal Mode=natt, ipsec-secret-type=save, IPSec secret-flags=0, xauth-password-type=save, Vendor=cisco, Xauth username=%s, IPSec gateway=%s, Xauth password-flags=0, IPSec ID=%s, Perfect Forward Secrecy=server, IKE DH Group=dh2, Local Port=0"' % (name, user, gateway, group))

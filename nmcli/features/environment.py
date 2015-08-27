@@ -40,7 +40,7 @@ def setup_racoon(dh_group):
     call("[ -x /usr/sbin/racoon ] || sudo yum -y install /usr/sbin/racoon", shell=True)
 
     cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
-    cfg.write('# Racoon configuration for Cisco VPN client testing')
+    cfg.write('# Racoon configuration for Libreswan client testing')
     cfg.write("\n" + 'path include "/etc/racoon";')
     cfg.write("\n" + 'path pre_shared_key "/etc/racoon/psk.txt";')
     cfg.write("\n" + 'path certificate "/etc/racoon/certs";')
@@ -258,6 +258,12 @@ def before_scenario(context, scenario):
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
             setup_racoon (dh_group=2)
+
+        if 'libreswan' in scenario.tags:
+            print "---------------------------"
+            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
+            setup_racoon (dh_group=5)
+            call("ip route add default via 172.31.70.1", shell=True)
 
         if 'openvpn' in scenario.tags:
             print "---------------------------"
@@ -564,6 +570,13 @@ def after_scenario(context, scenario):
             print "---------------------------"
             print "deleting vpnc profile"
             call('nmcli connection delete vpnc', shell=True)
+            teardown_racoon ()
+
+        if 'libreswan' in scenario.tags:
+            print "---------------------------"
+            print "deleting libreswan profile"
+            call("ip route del default via 172.31.70.1", shell=True)
+            call('nmcli connection delete libreswan', shell=True)
             teardown_racoon ()
 
         if 'openvpn' in scenario.tags:
