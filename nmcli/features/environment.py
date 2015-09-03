@@ -70,6 +70,7 @@ def setup_racoon(dh_group):
     cfg.write("\n" + '')
     cfg.write("\n" + 'mode_cfg {')
     cfg.write("\n" + '        network4 172.31.60.2;')
+    cfg.write("\n" + '        split_network include 172.31.80.0/24;')
     cfg.write("\n" + '        default_domain "trolofon";')
     cfg.write("\n" + '        dns4 8.8.8.8;')
     cfg.write("\n" + '        pool_size 20;')
