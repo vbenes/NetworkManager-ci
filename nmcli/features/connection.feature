@@ -5,7 +5,7 @@ Feature: nmcli: connection
     Scenario: nmcli - connection - help and autocompletion
     Then "COMMAND :=  { show | up | down | add | modify | edit | delete | reload | load }\s+show\s+up\s+down\s+add\s+modify\s+edit\s+edit\s+delete\s+reload\s+load" is visible with command "nmcli connection help"
     Then "--active" is visible with tab after "nmcli connection show "
-    Then "autoconnect\s+con\-name\s+help\s+ifname\s+master\s+slave-type\s+type" is visible with tab after "nmcli connection add "
+    Then "autoconnect\s+help\s+master\s+type\s+con\-name\s+ifname\s+slave-type" is visible with tab after "nmcli connection add "
     Then "add|delete|down|edit|help|load|modify|reload|show|up" is visible with tab after "nmcli connection "
     Then "Usage: nmcli connection add { OPTIONS | help }\s+OPTIONS \:= COMMON_OPTIONS TYPE_SPECIFIC_OPTIONS IP_OPTIONS\s+COMMON_OPTIONS:\s+type <type>\s+ifname <interface name> |\s+ethernet\:\s+wifi:\s+ssid <SSID>\s+gsm:\s+apn <APN>\s+cdma:\s+infiniband:\s+bluetooth:\s+vlan:\s+dev <parent device \(connection  UUID, ifname, or MAC\)>\s+bond:\s+bond-slave:\s+master <master \(ifname or connection UUID\)>\s+team:\s+team-slave:\s+master <master \(ifname or connection UUID\)>\s+bridge:\s+bridge-slave:\s+master <master \(ifname or connection UUID\)>\svpn:\s+vpn-type vpnc|openvpn|pptp|openconnect|openswan\s+olpc-mesh:\s+ssid" is visible with command "nmcli connection add help"
 
