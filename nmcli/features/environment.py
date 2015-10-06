@@ -102,7 +102,7 @@ def setup_racoon(dh_group):
     call("sudo ip link set racoon1 up", shell=True)
     call("sudo ip netns exec racoon ping -c1 172.31.70.2", shell=True)
     call("ping -c1 172.31.70.1", shell=True)
-    call("sudo systemd-run --unit nm-racoon ip netns exec racoon racoon -F", shell=True)
+    call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
 
 def teardown_racoon():
     call("systemctl stop nm-racoon", shell=True)
