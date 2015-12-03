@@ -88,7 +88,6 @@ Feature: General TUI tests
     * Execute "nmcli c a type bridge con-name bridge0 ifname bridge0"
     * Start nmtui
     * Choose to "Activate a connection" from main screen
-    Then ".* \* testeth0.*" is visible on screen
     Then ".* \* ethernet1.*" is visible on screen
     Then ".*   ethernet2.*" is visible on screen
     Then Select connection "bridge" in the list
@@ -163,7 +162,7 @@ Feature: General TUI tests
     * Set "Device" field to "eth2"
     * Confirm the slave settings
     * Confirm the connection settings
-    * "team0\s+team\s+connected" is visible with command "nmcli device" in "30" seconds
+    * "team0\s+team\s+connected" is visible with command "nmcli device" in "60" seconds
     * ".*team-slave-eth1.*" is not visible on screen
     * ".*team-slave-eth2.*" is not visible on screen
     # Removing master via CLI does not affect the slaves (opposed to TUI)
@@ -171,3 +170,15 @@ Feature: General TUI tests
     * Wait for at least "3" seconds
     Then ".*team-slave-eth1.*" is visible on screen
     Then ".*team-slave-eth2.*" is visible on screen
+
+
+    @bz1197203
+    @general
+    @nmtui_general_activate_screen_no_connections
+    Scenario: nmtui - general - active screen without connections
+    * Start nmtui
+    * Main screen is visible
+    * Choose to "Activate a connection" from main screen
+    * Nmtui process is running
+    Then ".*<Quit>.*" is visible on screen
+    Then ".*testeth.*" is not visible on screen

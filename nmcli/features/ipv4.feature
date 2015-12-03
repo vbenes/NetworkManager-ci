@@ -211,6 +211,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.route-metric 21" in editor
     * Save in editor
     * Quit editor
+    * Bring "up" connection "ethie"
     * Add connection type "ethernet" named "ethie2" for device "eth2"
     * Open editor for connection "ethie2"
     * Submit "set ipv4.method static" in editor
@@ -220,8 +221,6 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.route-metric 22" in editor
     * Save in editor
     * Quit editor
-    #* Bring "down" connection "eth0"
-    * Bring "up" connection "ethie"
     * Bring "up" connection "ethie2"
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric" is visible with command "ip route"
@@ -229,12 +228,12 @@ Feature: nmcli: ipv4
     Then "192.168.4.1 dev eth1  proto static  scope link  metric 21" is visible with command "ip route"
     Then "192.168.4.1 dev eth2  proto static  scope link  metric 22" is visible with command "ip route"
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric" is visible with command "ip route"
-    #* Bring "up" connection "eth0"
 
 
+    @1164441
     @testcase_303657
     @ipv4_2
-    @eth0
+    #@eth0
     Scenario: nmcli - ipv4 - routes - remove basic route
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
@@ -242,7 +241,6 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.3.10/24" in editor
     * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
-    * Submit "set ipv4.route-metric 21" in editor
     * Save in editor
     * Quit editor
     * Add connection type "ethernet" named "ethie2" for device "eth2"
@@ -251,7 +249,6 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.1.10/24" in editor
     * Submit "set ipv4.gateway 192.168.4.1" in editor
     * Submit "set ipv4.routes 192.168.2.0/24 192.168.1.11 2" in editor
-    * Submit "set ipv4.route-metric 22" in editor
     * Save in editor
     * Quit editor
     * Open editor for connection "ethie"
@@ -259,18 +256,20 @@ Feature: nmcli: ipv4
     * Enter in editor
     * Save in editor
     * Quit editor
+    * Bring "up" connection "ethie"
     * Open editor for connection "ethie2"
     * Submit "set ipv4.routes" in editor
     * Enter in editor
     * Save in editor
     * Quit editor
-    * Bring "up" connection "ethie"
     * Bring "up" connection "ethie2"
+    Then "default via 192.168.4.1 dev eth1  proto static  metric 10[1-2]" is visible with command "ip route" in "5" seconds
+    Then "default via 192.168.4.1 dev eth2  proto static  metric 10[1-2]" is visible with command "ip route" in "5" seconds
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
-    Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric 1" is not visible with command "ip route"
+    Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric 2" is not visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
-    Then "192.168.4.1 dev eth1  proto static  scope link  metric 21" is visible with command "ip route"
-    Then "192.168.4.1 dev eth2  proto static  scope link  metric 22" is visible with command "ip route"
+    Then "192.168.4.1 dev eth1  proto static  scope link  metric 10[0-1]" is visible with command "ip route"
+    Then "192.168.4.1 dev eth2  proto static  scope link  metric 10[0-1]" is visible with command "ip route"
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric 1" is not visible with command "ip route"
 
 
@@ -291,6 +290,19 @@ Feature: nmcli: ipv4
     Then "192.168.1.0/24 dev eth10  proto static  scope link  metric" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.122.5 dev eth10  proto static  metric" is visible with command "ip route"
     Then "192.168.122.0/24 dev eth10  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
+
+
+    @dummy
+    @preserve_route_to_generic_device
+    Scenario: nmcli - ipv4 - routes - preserve generic device route
+    * Execute "ip link add dummy0 type dummy"
+    * Execute "ip link set dev dummy0 up"
+    * Execute "ip r add default via 0.0.0.0 dev dummy0"
+    * Execute "ip a add 1.2.3.4/24 dev dummy0"
+    Then "default dev dummy0" is visible with command "ip route"
+    Then "1.2.3.0/24 dev dummy0\s+proto kernel\s+scope link\s+src 1.2.3.4" is visible with command "ip route"
+    Then "IP4.ADDRESS\[1\]:\s+1.2.3.4/24" is visible with command "nmcli con show dummy0" in "10" seconds
+    Then "IP4.GATEWAY:\s+0.0.0.0" is visible with command "nmcli con show dummy0"
 
 
     @testcase_303659
@@ -430,6 +442,28 @@ Feature: nmcli: ipv4
     Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
 
 
+    @ipv4
+    @reload_dns
+    Scenario: nmcli - ipv4 - dns - reload
+    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.dns 8.8.8.8, 8.8.4.4" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    When "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
+    When "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
+    * Execute "echo 'INVALID_DNS' > /etc/resolv.conf"
+    When "nameserver 8.8.8.8" is not visible with command "cat /etc/resolv.conf"
+    When "nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
+    Then Unable to ping "nix.cz"
+    * Execute "sudo kill -SIGUSR1 $(pidof NetworkManager)"
+    Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "10" seconds
+    Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
+    Then Ping "nix.cz"
+
+
+    @newveth
     @testcase_303666
     @ipv4
     @eth0
@@ -445,6 +479,7 @@ Feature: nmcli: ipv4
     Then Ping "brewweb.devel.redhat.com"
 
 
+    @newveth
     @testcase_303667
     @ipv4
     @eth0
@@ -481,7 +516,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 10; sudo pkill tshark"
     Then "RHA" is visible with command "cat /tmp/tshark.log"
 
 
@@ -503,7 +538,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2;sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 10; sudo pkill tshark"
    Then "RHB" is not visible with command "cat /tmp/tshark.log"
 
 
@@ -522,7 +557,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 10; sudo pkill tshark"
     Then "RHC" is not visible with command "cat /tmp/hostname.log"
 
 
@@ -539,7 +574,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 10; sudo pkill tshark"
     Then Hostname is visible in log "/tmp/tshark.log"
 
 
@@ -557,7 +592,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 10; sudo pkill tshark"
     Then Hostname is not visible in log "/tmp/real.log"
 
 
@@ -604,7 +639,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2; sudo kill -9 $(pidof tshark)"
+    * Finish "sleep 10; sudo pkill tshark"
     Then "RHC" is visible with command "cat /tmp/tshark.log"
     #Then "walderon" is visible with command "cat /var/lib/NetworkManager/dhclient-eth10.conf"
     #VVV verify bug 999503
@@ -630,7 +665,7 @@ Feature: nmcli: ipv4
     * Run child "sudo tshark -l -O bootp -i eth10 -x > /tmp/tshark.log"
     When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
     * Bring "up" connection "ethie"
-    * Run child "sleep 2; sudo kill -9 $(pidof tshark)"
+    * Execute "sleep 10; sudo pkill tshark"
     Then "RHD" is not visible with command "cat /tmp/tshark.log"
 
 
@@ -713,25 +748,94 @@ Feature: nmcli: ipv4
     Then "mtu 1800" is visible with command "ip a s test2"
 
 
+    @eth
+    @teardown_testveth
     @renewal_gw_after_dhcp_outage
     @two_bridged_veths
     @dhcpd
     Scenario: NM - ipv4 - renewal gw after DHCP outage
-    * Prepare veth pairs "test1,test2" bridged over "vethbr"
-    * Add a new connection of type "ethernet" and options "con-name tc1 ifname test1 ip4 192.168.10.1/24"
-    * Add a new connection of type "ethernet" and options "con-name tc2 ifname test2"
-    * Execute "nmcli connection modify tc2 ipv4.may-fail no"
-    * Execute "nmcli connection modify tc1 ipv4.never-default yes"
-    * Bring "up" connection "tc1"
-    * Configure dhcp server for subnet "192.168.10" with lease time "20"
-    * Execute "service dhcpd restart"
-    * Bring "up" connection "tc2"
-    When "default" is visible with command "ip r"
-    * Execute "service dhcpd stop"
-    When "default" is not visible with command "ip r |grep test2" in "50" seconds
-    When "tc2" is not visible with command "nmcli connection s -a" in "200" seconds
-    * Execute "service dhcpd restart"
-    Then "routers = 192.168.10.1" is visible with command "nmcli con show tc2" in "400" seconds
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Execute "nmcli connection modify ethie ipv4.may-fail no"
+    * Bring "up" connection "ethie"
+    * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
+    When "default" is not visible with command "ip r |grep testX" in "130" seconds
+    When "ethie" is not visible with command "nmcli connection s -a" in "200" seconds
+    * Execute "ip netns exec testX_ns kill -SIGCONT $(cat /tmp/testX_ns.pid)"
+    Then "routers = 192.168.99.1" is visible with command "nmcli con show ethie" in "400" seconds
+    Then "default via 192.168.99.1 dev testX" is visible with command "ip r"
+
+
+    @rhbz1246496
+    @eth
+    @teardown_testveth
+    @renewal_gw_after_dhcp_outage_for_assumed_var0
+    Scenario: NM - ipv4 - assumed address renewal after DHCP outage for on-disk assumed
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Bring "up" connection "ethie"
+    When "default" is visible with command "ip r |grep testX" in "30" seconds
+    When "inet 192" is visible with command "ip a s |grep testX" in "30" seconds
+    * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
+    * Restart NM
+    When "ethie" is visible with command "nmcli con sh -a" in "30" seconds
+    When "default" is not visible with command "ip r |grep testX" in "130" seconds
+    When "inet 192.168.99" is not visible with command "ip a s testX" in "10" seconds
+    * Execute "ip netns exec testX_ns kill -SIGCONT $(cat /tmp/testX_ns.pid)"
+    Then "routers = 192.168.99.1" is visible with command "nmcli con show ethie" in "60" seconds
+    Then "default" is visible with command "ip r| grep testX"
+    When "inet 192.168.99" is visible with command "ip a s testX"
+
+
+    # @rhbz1265239
+    # @teardown_testveth
+    # @renewal_gw_after_dhcp_outage_for_assumed_var1
+    # Scenario: NM - ipv4 - assumed address renewal after DHCP outage for in-memory assumed
+    # * Prepare simulated test "testX" device
+    # * Add connection type "ethernet" named "ethie" for device "testX"
+    # * Bring "up" connection "ethie"
+    # When "default" is visible with command "ip r |grep testX" in "30" seconds
+    # When "inet 192" is visible with command "ip a s |grep testX" in "30" seconds
+    # * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
+    # * Execute "systemctl stop NetworkManager"
+    # * Execute "sudo rm -rf /etc/sysconfig/network-scripts/ifcfg-ethie"
+    # * Execute "systemctl start NetworkManager"
+    # When "default" is not visible with command "ip r |grep testX" in "130" seconds
+    # When "inet 192.168.99" is not visible with command "ip a s testX" in "10" seconds
+    # * Execute "ip netns exec testX_ns kill -SIGCONT $(cat /tmp/testX_ns.pid)"
+    # Then "routers = 192.168.99.1" is visible with command "nmcli con show testX" in "400" seconds
+    # Then "default" is visible with command "ip r| grep testX" in "150" seconds
+    # When "inet 192.168.99" is visible with command "ip a s testX" in "10" seconds
+
+
+    @rhbz1205405
+    @eth
+    @teardown_testveth
+    @manual_routes_preserved_when_never-default_yes
+    Scenario: NM - ipv4 - don't touch manual route with never-default
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Execute "nmcli connection modify ethie ipv4.may-fail no"
+    * Execute "nmcli connection modify ethie ipv4.never-default yes"
+    * Bring "up" connection "ethie"
+    When "default" is not visible with command "ip r |grep testX"
+    * Execute "ip route add default via 192.168.99.1 dev testX metric 666"
+    * Execute "sleep 70"
+    Then "default via 192.168.99.1 dev testX  metric 666" is visible with command "ip r"
+
+
+    @rhbz1205405
+    @teardown_testveth
+    @eth
+    @manual_routes_removed_when_never-default_no
+    Scenario: NM - ipv4 - rewrite manual route with dhcp renewal
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Execute "nmcli connection modify ethie ipv4.may-fail no"
+    * Execute "nmcli connection modify ethie ipv4.never-default no"
+    * Bring "up" connection "ethie"
+    * Execute "ip route add default via 192.168.99.1 dev testX metric 666"
+    Then "default via 192.168.99.1 dev testX  metric 666" is not visible with command "ip r" in "70" seconds
 
 
     @custom_shared_range_preserves_restart

@@ -204,6 +204,24 @@ Feature: nmcli - bridge
     Then Disconnect device "br10"
 
 
+    @rhbz1158529
+    @bridge
+    @bridge_slaves_start_via_master
+    Scenario: nmcli - bridge - start slave via master
+    * Add a new connection of type "bridge" and options "con-name br10 ifname br10"
+    * Add a new connection of type "bridge-slave" and options "con-name br10-slave autoconnect no ifname eth1 master br10"
+    * Open editor for connection "br10"
+    * Set a property named "ipv4.method" to "manual" in editor
+    * Set a property named "ipv4.addresses" to "192.168.1.19/24" in editor
+    * Set a property named "connection.autoconnect-slaves" to "1" in editor
+    * Save in editor
+    * Quit editor
+    Then Disconnect device "br10"
+    * Bring up connection "br10"
+    Then  "br10.*eth1" is visible with command "brctl show"
+    Then Disconnect device "br10"
+
+
     @bridge
     @eth1_disconnect
     @bridge_dhcp_config_with_ethernet_port
@@ -257,10 +275,9 @@ Feature: nmcli - bridge
 
 
     @bridge
+    @need_config_server
     @bridge_server_ingore_carrier_with_dhcp
     Scenario: nmcli - bridge - server ingore carrier with_dhcp
-    * Execute "sudo yum -y install NetworkManager-config-server"
-    * Restart NM
     * Disconnect device "eth1"
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
     * Check ifcfg-name file created for connection "bridge0"
@@ -321,9 +338,10 @@ Feature: nmcli - bridge
     @dummy
     Scenario: NM - bridge - Layer2 changes for bridge assumed connection
     * Execute "sudo ip link add br0 type bridge"
-    * Execute "sudo ip link set dev br0 up"
     * Execute "sudo ip link add dummy0 type dummy"
     * Execute "sudo ip link set dummy0 master br0"
+    When "br0" is not visible with command "nmcli con"
+    * Execute "sudo ip link set dev br0 up"
     When "ipv4.method:\s+disabled.*ipv6.method:\s+ignore" is visible with command "nmcli connection show br0" in "5" seconds
     * Execute "sudo ip link set dev dummy0 up"
     * Execute "sudo ip addr add 1.1.1.2/24 dev dummy0"
@@ -331,6 +349,15 @@ Feature: nmcli - bridge
     * Execute "sudo ip addr add 1::3/128 dev br0"
     * Execute "sudo ip addr add 1.1.1.3/24 dev br0"
     Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0" in "5" seconds
+
+
+    @rhbz1269199
+    @dummy
+    @restart
+    @bridge_external_unmanaged
+    Scenario: bridge_external_unmanaged: add external bridge, ensure is unmanaged
+    * Execute "sudo sh -c 'nmcli general logging level DEBUG'"
+    Then Externally created bridge has IP when NM overtakes it repeated "30" times
 
 
     @rhbz1169936

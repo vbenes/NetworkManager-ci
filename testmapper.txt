@@ -1,7 +1,8 @@
 #Testname , Relative workdir under component, Command and args , Pkg Dependencies
 
-#general_start
+#@general_start
 logging, ., nmcli/./runtest.sh logging, NetworkManager
+reduce_logging, ., nmcli/./runtest.sh reduce_logging, NetworkManager
 hostname_change, ., nmcli/./runtest.sh hostname_change, NetworkManager
 testcase_290423, ., nmcli/./runtest.sh testcase_290423, NetworkManager
 testcase_290424, ., nmcli/./runtest.sh testcase_290424, NetworkManager
@@ -26,6 +27,8 @@ nmcli_general_ifcfg_tailing_whitespace, ., nmcli/./runtest.sh nmcli_general_ifcf
 nmcli_general_keep_slave_device_unmanaged, ., nmcli/./runtest.sh nmcli_general_keep_slave_device_unmanaged, NetworkManager
 no_error_when_firewald_restarted, ., nmcli/./runtest.sh no_error_when_firewald_restarted, NetworkManager
 nmcli_general_dbus_set_gateway, ., nmcli/./runtest.sh nmcli_general_dbus_set_gateway, NetworkManager
+preserve_failed_assumed_connections, ., nmcli/./runtest.sh preserve_failed_assumed_connections, NetworkManager
+nmcli_general_profile_pickup_doesnt_break_network, ., nmcli/./runtest.sh nmcli_general_profile_pickup_doesnt_break_network, NetworkManager
 
 #### vv KEEP THESE TWO TESTS ALWAYS TOGETHER!
 dns_none, ., nmcli/./runtest.sh dns_none, NetworkManager
@@ -44,31 +47,60 @@ nat_from_shared_network, ., nmcli/./runtest.sh nat_from_shared_network, NetworkM
 run_once_new_connection, ., nmcli/./runtest.sh run_once_new_connection, NetworkManager
 run_once_ip4_renewal, ., nmcli/./runtest.sh run_once_ip4_renewal, NetworkManager
 run_once_ip6_renewal, ., nmcli/./runtest.sh run_once_ip6_renewal, NetworkManager
-wait-online-for-both-ips, ., nmcli/./runtest.sh wait-online-for-both-ips, NetworkManager
+run_once_helper_for_localhost_localdomain, ., nmcli/./runtest.sh  run_once_helper_for_localhost_localdomain
+wait-online-for-both-ips, ., nmcli/./runtest.sh wait-online-for-both-ips, NetworkManager, NetworkManager
 policy_based_routing, ., nmcli/./runtest.sh policy_based_routing, NetworkManager
-#general_end
+nmcli_general_dhcp_profiles_general_gateway, ., nmcli/./runtest.sh nmcli_general_dhcp_profiles_general_gateway, NetworkManager
+allow_wired_connections, ., nmcli/./runtest.sh allow_wired_connections, NetworkManager
+ctc_device_recognition, ., nmcli/./runtest.sh ctc_device_recognition, NetworkManager
+nmcli_general_wait_for_carrier_on_new_device_request, ., nmcli/./runtest.sh nmcli_general_wait_for_carrier_on_new_device_request, NetworkManager
+nmcli_general_activate_static_connection_carrier_ignored, ., nmcli/./runtest.sh nmcli_general_activate_static_connection_carrier_ignored, NetworkManager
+nmcli_general_activate_static_connection_carrier_not_ignored, ., nmcli/./runtest.sh nmcli_general_activate_static_connection_carrier_not_ignored, NetworkManager
+#@general_end
 
-#dispatcher
+#@dispatcher_start
 dispatcher_preup_and_up, ., nmcli/./runtest.sh dispatcher_preup_and_up, NetworkManager
 dispatcher_predown_and_down, ., nmcli/./runtest.sh dispatcher_predown_and_down, NetworkManager
 dispatcher_hostname, ., nmcli/./runtest.sh dispatcher_hostname, NetworkManager
 dispatcher_synchronicity, ., nmcli/./runtest.sh dispatcher_synchronicity, NetworkManager
 dispatcher_synchronicity_with_predown, ., nmcli/./runtest.sh dispatcher_synchronicity_with_predown, NetworkManager
 dispatcher_serialization, ., nmcli/./runtest.sh dispatcher_serialization, NetworkManager
-#dispatcher_end
+#@dispatcher_end
 
-#vpn
-vpn_add_profile, ., nmcli/./runtest.sh vpn_add_profile, NetworkManager
+#@adsl_start
+add_adsl_connection_novice_mode, ., nmcli/./runtest.sh add_adsl_connection_novice_mode, NetworkManager
+add_adsl_connection, ., nmcli/./runtest.sh add_adsl_connection, NetworkManager
+#@adsl_end
+
+#@libreswan_start
+libreswan_add_profile, ., nmcli/./runtest.sh libreswan_add_profile, NetworkManager
+libreswan_terminate, ., nmcli/./runtest.sh libreswan_terminate, NetworkManager
+libreswan_delete_active_profile, ., nmcli/./runtest.sh libreswan_delete_active_profile, NetworkManager
+libreswan_start_as_secondary, ., nmcli/./runtest.sh libreswan_start_as_secondary, NetworkManager
+libreswan_connection_renewal, ., nmcli/./runtest.sh libreswan_connection_renewal, NetworkManager
 vpn_describe, ., nmcli/./runtest.sh vpn_describe, NetworkManager
 vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data, NetworkManager
-#vpn_end
+#@libreswan_end
 
-#connection_start
+#@openvpn_start
+openvpn_ipv4, ., nmcli/./runtest.sh openvpn_ipv4, NetworkManager
+openvpn_ipv6, ., nmcli/./runtest.sh openvpn_ipv6, NetworkManager
+openvpn_set_mtu, ., nmcli/./runtest.sh openvpn_set_mtu, NetworkManager
+openvpn_set_firewall_zone, ., nmcli/./runtest.sh openvpn_set_firewall_zone, NetworkManager
+openvpn_terminate, ., nmcli/./runtest.sh openvpn_terminate, NetworkManager
+openvpn_delete_active_connection, ., nmcli/./runtest.sh openvpn_delete_active_connection, NetworkManager
+openvpn_persist, ., nmcli/./runtest.sh openvpn_persist, NetworkManager
+#@openvpn_end
+
+#@connection_start
 connection_restricted_to_single_device, ., nmcli/./runtest.sh connection_restricted_to_single_device, NetworkManager
 connection_help, ., nmcli/./runtest.sh connection_help, NetworkManager
 connection_names_autocompletion, ., nmcli/./runtest.sh connection_names_autocompletion, NetworkManager
 connection_no_error, ., nmcli/./runtest.sh connection_no_error, NetworkManager
 connection_secondaries_restricted_to_vpn, ., nmcli/./runtest.sh connection_secondaries_restricted_to_vpn, NetworkManager
+connection_double_delete, ., nmcli/./runtest.sh connection_double_delete, NetworkManager
+connection_profile_duplication, ., nmcli/./runtest.sh connection_profile_duplication, NetworkManager
+connection_veth_profile_duplication, ., nmcli/./runtest.sh connection_veth_profile_duplication, NetworkManager
 connection_delete_while_editing, ., nmcli/./runtest.sh connection_delete_while_editing, NetworkManager
 connection_removal_of_disapperared_device, ., nmcli/./runtest.sh connection_removal_of_disapperared_device, NetworkManager
 connection_down, ., nmcli/./runtest.sh connection_down, NetworkManager
@@ -85,13 +117,18 @@ testcase_300564, ., nmcli/./runtest.sh testcase_300564, NetworkManager
 testcase_300565, ., nmcli/./runtest.sh testcase_300565, NetworkManager
 #testcase_300566, ., nmcli/./runtest.sh testcase_300566, NetworkManager
 testcase_300567, ., nmcli/./runtest.sh testcase_300567, NetworkManager
+connection_metered_manual_no, ., nmcli/./runtest.sh connection_metered_manual_no, NetworkManager
+connection_metered_manual_yes, ., nmcli/./runtest.sh connection_metered_manual_yes, NetworkManager
+connection_metered_guess_no, ., nmcli/./runtest.sh connection_metered_guess_no, NetworkManager
+connection_metered_guess_yes, ., nmcli/./runtest.sh connection_metered_guess_yes, NetworkManager
 testcase_300568, ., nmcli/./runtest.sh testcase_300568, NetworkManager
 route_priorities, ., nmcli/./runtest.sh route_priorities, NetworkManager
 profile_priorities, ., nmcli/./runtest.sh profile_priorities, NetworkManager
 nmcli_general_multiword_autocompletion, ., nmcli/./runtest.sh nmcli_general_multiword_autocompletion, NetworkManager
-#connection_end
+display_allowed_values, ., nmcli/./runtest.sh display_allowed_values, NetworkManager
+#@connection_end
 
-#ipv6_start
+#@ipv6_start
 ipv6_block_just_routing_RA, ., nmcli/./runtest.sh ipv6_block_just_routing_RA, NetworkManager
 ipv6_limited_router_solicitation, ., nmcli/./runtest.sh ipv6_limited_router_solicitation, NetworkManager
 ipv6_correct_slaac_setting, ., nmcli/./runtest.sh ipv6_correct_slaac_setting, NetworkManager
@@ -127,17 +164,27 @@ ipv6_never-default_set_true, ., nmcli/./runtest.sh ipv6_never-default_set_true, 
 ipv6_never-default_remove, ., nmcli/./runtest.sh ipv6_never-default_remove, NetworkManager
 ipv6_dhcp-hostname_set, ., nmcli/./runtest.sh ipv6_dhcp-hostname_set, NetworkManager
 ipv6_dhcp-hostname_remove, ., nmcli/./runtest.sh ipv6_dhcp-hostname_remove, NetworkManager
+ipv6_send_fqdn.fqdn_to_dhcpv6, ., nmcli/./runtest.sh ipv6_send_fqdn.fqdn_to_dhcpv6, NetworkManager
+ipv6_secondary_address, ., nmcli/./runtest.sh ipv6_secondary_address, NetworkManager
 ipv6_ip6-privacy_0, ., nmcli/./runtest.sh ipv6_ip6-privacy_0, NetworkManager
 ipv6_ip6-privacy_1, ., nmcli/./runtest.sh ipv6_ip6-privacy_1, NetworkManager
 ipv6_ip6-privacy_2, ., nmcli/./runtest.sh ipv6_ip6-privacy_2, NetworkManager
+ipv6_ip6-default_privacy, ., nmcli/./runtest.sh ipv6_ip6-default_privacy, NetworkManager
 ipv6_ip6-privacy_incorrect_value, ., nmcli/./runtest.sh ipv6_ip6-privacy_incorrect_value, NetworkManager
 ipv6_lifetime_set_from_network, ., nmcli/./runtest.sh ipv6_lifetime_set_from_network, NetworkManager
 ipv6_keep_connectivity_on_assuming_connection_profile, ., nmcli/./runtest.sh ipv6_keep_connectivity_on_assuming_connection_profile, NetworkManager
 ipv6_add_static_address_manually_not_active, ., nmcli/./runtest.sh ipv6_add_static_address_manually_not_active, NetworkManager
+ipv6_no_assumed_connection_for_ipv6ll_only, ., nmcli/./runtest.sh ipv6_no_assumed_connection_for_ipv6ll_only, NetworkManager
+ipv6_set_ra_announced_mtu, ., nmcli/./runtest.sh ipv6_set_ra_announced_mtu, NetworkManager
+ipv6_shared_connection_error, ., nmcli/./runtest.sh ipv6_shared_connection_error, NetworkManager
+ipv6_tunnel_module_removal, ., nmcli/./runtest.sh ipv6_tunnel_module_removal, NetworkManager
+ipv6_no_activation_schedule_error_in_logs, ., nmcli/./runtest.sh ipv6_no_activation_schedule_error_in_logs, NetworkManager
+ipv6_NM_stable_with_internal_DHCPv6, ., nmcli/./runtest.sh ipv6_NM_stable_with_internal_DHCPv6, NetworkManager
+persistent_default_ipv6_gw, ., nmcli/./runtest.sh persistent_default_ipv6_gw, NetworkManager
 ipv6_describe, ., nmcli/./runtest.sh ipv6_describe, NetworkManager
-#ipv6_end
+#@ipv6_end
 
-#ipv4_start
+#@ipv4_start
 ipv4_take_manually_created_ifcfg_with_ip, ., nmcli/ipv4/./runtest.sh ipv4_take_manually_created_ifcfg_with_ip, NetworkManager
 testcase_303647, ., nmcli/./runtest.sh testcase_303647, NetworkManager
 testcase_303648, ., nmcli/./runtest.sh testcase_303648, NetworkManager
@@ -152,6 +199,7 @@ testcase_303655, ., nmcli/./runtest.sh testcase_303655, NetworkManager
 testcase_303656, ., nmcli/./runtest.sh testcase_303656, NetworkManager
 testcase_303657, ., nmcli/./runtest.sh testcase_303657, NetworkManager
 testcase_303658, ., nmcli/./runtest.sh testcase_303658, NetworkManager
+preserve_route_to_generic_device, ., nmcli/./runtest.sh preserve_route_to_generic_device, NetworkManager
 testcase_303659, ., nmcli/./runtest.sh testcase_303659, NetworkManager
 testcase_303660, ., nmcli/./runtest.sh testcase_303660, NetworkManager
 ipv4_routes_not_reachable, ., nmcli/./runtest.sh ipv4_routes_not_reachable, NetworkManager
@@ -160,6 +208,7 @@ testcase_303662, ., nmcli/./runtest.sh testcase_303662, NetworkManager
 testcase_303663, ., nmcli/./runtest.sh testcase_303663, NetworkManager
 testcase_303664, ., nmcli/./runtest.sh testcase_303664, NetworkManager
 testcase_303665, ., nmcli/./runtest.sh testcase_303665, NetworkManager
+reload_dns, ., nmcli/./runtest.sh reload_dns, NetworkManager
 testcase_303666, ., nmcli/./runtest.sh testcase_303666, NetworkManager
 testcase_303667, ., nmcli/./runtest.sh testcase_303667, NetworkManager
 testcase_303668, ., nmcli/./runtest.sh testcase_303668, NetworkManager
@@ -177,12 +226,16 @@ testcase_304239, ., nmcli/./runtest.sh testcase_304239, NetworkManager
 testcase_304240, ., nmcli/./runtest.sh testcase_304240, NetworkManager
 testcase_304241, ., nmcli/./runtest.sh testcase_304241, NetworkManager
 set_mtu_from_DHCP, ., nmcli/./runtest.sh set_mtu_from_DHCP, NetworkManager
-renewal_gw_after_dhcp_outage, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage, NetworkManager;dhcp
+renewal_gw_after_dhcp_outage, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage, NetworkManager
+renewal_gw_after_dhcp_outage_for_assumed_var0, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage_for_assumed_var0, NetworkManager
+renewal_gw_after_dhcp_outage_for_assumed_var1, ., nmcli/./runtest.sh renewal_gw_after_dhcp_outage_for_assumed_var1, NetworkManager
+manual_routes_preserved_when_never-default_yes, ., nmcli/./runtest.sh manual_routes_preserved_when_never-default_yes, NetworkManager
+manual_routes_removed_when_never-default_no, ., nmcli/./runtest.sh manual_routes_removed_when_never-default_no, NetworkManager
 custom_shared_range_preserves_restart, ., nmcli/./runtest.sh custom_shared_range_preserves_restart, NetworkManager;dhcp
 ipv4_do_not_remove_second_ip_route, ., nmcli/./runtest.sh ipv4_do_not_remove_second_ip_route, NetworkManager;dhcp
-#ipv4_end
+#@ipv4_end
 
-#team_start
+#@team_start
 add_default_team, ., nmcli/./runtest.sh add_default_team, NetworkManager
 ifcfg_team_slave_device_type, ., nmcli/./runtest.sh ifcfg_team_slave_device_type, NetworkManager
 nmcli_novice_mode_create_team, ., nmcli/./runtest.sh nmcli_novice_mode_create_team, NetworkManager
@@ -196,6 +249,7 @@ remove_active_team_profile, ., nmcli/./runtest.sh remove_active_team_profile, Ne
 disconnect_active_team, ., nmcli/./runtest.sh disconnect_active_team, NetworkManager
 team_start_by_hand_no_slaves, ., nmcli/./runtest.sh team_start_by_hand_no_slaves, NetworkManager
 team_activate, ., nmcli/./runtest.sh team_activate, NetworkManager
+team_slaves_start_via_master, ., nmcli/./runtest.sh  team_slaves_start_via_master, NetworkManager
 start_team_by_hand_all_auto, ., nmcli/./runtest.sh start_team_by_hand_all_auto, NetworkManager
 start_team_by_hand_one_auto, ., nmcli/./runtest.sh start_team_by_hand_one_auto, NetworkManager
 start_team_on_boot, ., nmcli/./runtest.sh start_team_on_boot, NetworkManager
@@ -206,12 +260,16 @@ config_loadbalance, ., nmcli/./runtest.sh config_loadbalance, NetworkManager
 config_broadcast, ., nmcli/./runtest.sh config_broadcast, NetworkManager
 config_invalid, ., nmcli/./runtest.sh config_invalid, NetworkManager
 remove_config, ., nmcli/./runtest.sh remove_config, NetworkManager
+team_set_mtu, ., nmcli/./runtest.sh team_set_mtu, NetworkManager
 team_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh team_reflect_changes_from_outside_of_NM, NetworkManager
+kill_teamd, ., nmcli/./runtest.sh  kill_teamd, NetworkManager
+team_enslave_to_bridge, ., nmcli/./runtest.sh team_enslave_to_bridge, NetworkManager;bridge-utils
 describe, ., nmcli/./runtest.sh describe, NetworkManager
-#team_end
+#@team_end
 
-#vlan_start
+#@vlan_start
 testcase_281205, ., nmcli/./runtest.sh testcase_281205, NetworkManager
+nmcli_vlan_restart_persistence, ., nmcli/./runtest.sh nmcli_vlan_restart_persistence, NetworkManager
 testcase_281211, ., nmcli/./runtest.sh testcase_281211, NetworkManager
 testcase_281326, ., nmcli/./runtest.sh testcase_281326, NetworkManager
 testcase_284356, ., nmcli/./runtest.sh testcase_284536, NetworkManager
@@ -225,9 +283,11 @@ testcase_281332, ., nmcli/./runtest.sh testcase_281332, NetworkManager
 testcase_281282, ., nmcli/./runtest.sh testcase_281282, NetworkManager
 testcase_284357, ., nmcli/./runtest.sh testcase_284357, NetworkManager
 vlan_on_bridge, ., nmcli/./runtest.sh vlan_on_bridge, NetworkManager
-#vlan_end
+assertion_failure, ., nmcli/./runtest.sh  assertion_failure, NetworkManager
+vlan_update_mac_from_bond, ., nmcli/./runtest.sh  vlan_update_mac_from_bond, NetworkManager
+#@vlan_end
 
-#bridge_start
+#@bridge_start
 testcase_285528, ., nmcli/./runtest.sh testcase_285528, NetworkManager;bridge-utils
 testcase_285529, ., nmcli/./runtest.sh testcase_285529, NetworkManager;bridge-utils
 testcase_285530, ., nmcli/./runtest.sh testcase_285530, NetworkManager;bridge-utils
@@ -241,6 +301,7 @@ testcase_285537, ., nmcli/./runtest.sh testcase_285537, NetworkManager;bridge-ut
 testcase_285538, ., nmcli/./runtest.sh testcase_285538, NetworkManager;bridge-utils
 testcase_285539, ., nmcli/./runtest.sh testcase_285539, NetworkManager;bridge-utils
 testcase_285540, ., nmcli/./runtest.sh testcase_285540, NetworkManager;bridge-utils
+bridge_slaves_start_via_master, ., nmcli/./runtest.sh  bridge_slaves_start_via_master, NetworkManager
 bridge_dhcp_config_with_ethernet_port, ., nmcli/./runtest.sh bridge_dhcp_config_with_ethernet_port, NetworkManager;bridge-utils
 bridge_dhcp_config_with_multiple_ethernet_ports, ., nmcli/./runtest.sh bridge_dhcp_config_with_multiple_ethernet_ports, NetworkManager;bridge-utils
 bridge_static_config_with_multiple_ethernet_ports, ., nmcli/./runtest.sh bridge_static_config_with_multiple_ethernet_ports, NetworkManager;bridge-utils
@@ -252,9 +313,10 @@ bridge_manipulation_with_1000_slaves, ., nmcli/./runtest.sh bridge_manipulation_
 bridge_assumed_connection_ip_methods, ., nmcli/./runtest.sh bridge_assumed_connection_ip_methods, NetworkManager;bridge-utils
 outer_bridge_restart_persistence, ., nmcli/./runtest.sh outer_bridge_restart_persistence, NetworkManager;bridge-utils
 bridge_set_mac, ., nmcli/./runtest.sh bridge_set_mac, NetworkManager;bridge-utils
-#bridge_end
+bridge_external_unmanaged, ., nmcli/./runtest.sh bridge_external_unmanaged, NetworkManager;bridge-utils
+#@bridge_end
 
-#ethernet_start
+#@ethernet_start
 testcase_286577, ., nmcli/./runtest.sh testcase_286577, NetworkManager
 testcase_286578, ., nmcli/./runtest.sh testcase_286578, NetworkManager
 testcase_286579, ., nmcli/./runtest.sh testcase_286579, NetworkManager
@@ -266,20 +328,25 @@ testcase_286584, ., nmcli/./runtest.sh testcase_286584, NetworkManager
 testcase_286585, ., nmcli/./runtest.sh testcase_286585, NetworkManager
 testcase_286586, ., nmcli/./runtest.sh testcase_286586, NetworkManager
 testcase_286587, ., nmcli/./runtest.sh testcase_286587, NetworkManager
+nmcli_set_mtu_lower_limit, ., nmcli/./runtest.sh  nmcli_set_mtu_lower_limit, NetworkManager
 testcase_286588, ., nmcli/./runtest.sh testcase_286588, NetworkManager
 testcase_286589, ., nmcli/./runtest.sh testcase_286589, NetworkManager
 testcase_286590, ., nmcli/./runtest.sh testcase_286590, NetworkManager
 ethernet_create_ifname_generic_connection, ., nmcli/./runtest.sh ethernet_create_ifname_generic_connection, NetworkManager
-ethernet_reactivate_generic_connection_on_different_device, ., nmcli/./runtest.sh ethernet_reactivate_generic_connection_on_different_device, NetworkManager
 nmcli_ethernet_no_ip, ., nmcli/./runtest.sh nmcli_ethernet_no_ip, NetworkManager
+nmcli_ethernet_wol_from_file_to_default, ., nmcli/./runtest.sh nmcli_ethernet_wol_from_file_to_default, NetworkManager
+nmcli_ethernet_wol_from_file, ., nmcli/./runtest.sh nmcli_ethernet_wol_from_file, NetworkManager
+nmcli_ethernet_wol_disable, ., nmcli/./runtest.sh nmcli_ethernet_wol_disable, NetworkManager
+nmcli_ethernet_wol_enable_magic, ., nmcli/./runtest.sh nmcli_ethernet_wol_enable_magic, NetworkManager
+nmcli_ethernet_wol_default, ., nmcli/./runtest.sh nmcli_ethernet_wol_default, NetworkManager
+no_assumed_connection_for_veth, ., nmcli/./runtest.sh no_assumed_connection_for_veth, NetworkManager
 openvswitch_interface_recognized, ., nmcli/./runtest.sh openvswitch_interface_recognized, NetworkManager
 openvswitch_ignore_ovs_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_network_setup, NetworkManager
 openvswitch_ignore_ovs_vlan_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_vlan_network_setup, NetworkManager
 openvswitch_ignore_ovs_bond_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_bond_network_setup, NetworkManager
+#@ethernet_end
 
-#ethernet_end
-
-#bond_start
+#@bond_start
 testcase_281207, ., nmcli/./runtest.sh testcase_281207, NetworkManager
 testcase_281210, ., nmcli/./runtest.sh testcase_281210, NetworkManager
 testcase_280562, ., nmcli/./runtest.sh testcase_280562, NetworkManager
@@ -305,6 +372,7 @@ testcase_280613, ., nmcli/./runtest.sh testcase_280613, NetworkManager
 bond_active-backup_primary_set, ., nmcli/./runtest.sh bond_active-backup_primary_set, NetworkManager
 testcase_281146, ., nmcli/./runtest.sh testcase_281146, NetworkManager
 testcase_281149, ., nmcli/./runtest.sh testcase_281149, NetworkManager
+bond_slaves_start_via_master, ., nmcli/./runtest.sh  bond_slaves_start_via_master, NetworkManager
 bond_start_on_boot_with_nothing_auto, ., nmcli/./runtest.sh bond_start_on_boot_with_nothing_auto, NetworkManager
 bond_start_by_hand_with_one_auto_only, ., nmcli/./runtest.sh bond_start_by_hand_with_one_auto_only, NetworkManager
 bond_start_on_boot_with_one_auto_only, ., nmcli/./runtest.sh bond_start_on_boot_with_one_auto_only, NetworkManager
@@ -313,7 +381,9 @@ testcase_281150, ., nmcli/./runtest.sh testcase_281150, NetworkManager
 bond_8023ad_with_lacp_rate_fast, ., nmcli/./runtest.sh bond_8023ad_with_lacp_rate_fast, NetworkManager
 testcase_281151, ., nmcli/./runtest.sh testcase_281151, NetworkManager
 testcase_281153, ., nmcli/./runtest.sh testcase_281153, NetworkManager
+bond_set_mtu, ., nmcli/./runtest.sh bond_set_mtu, NetworkManager
 testcase_281154, ., nmcli/./runtest.sh testcase_281154, NetworkManager
+delete_addrgenmode_bond, ., nmcli/./runtest.sh delete_addrgenmode_bond, NetworkManager
 nmcli_novice_mode_create_bond_with_mii_monitor_values, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond_with_mii_monitor_values, NetworkManager
 nmcli_novice_mode_create_bond_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond_with_default_options, NetworkManager
 nmcli_novice_mode_create_bond_with_arp_monitor_values, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond_with_arp_monitor_values, NetworkManager
@@ -322,9 +392,10 @@ bond_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bond_reflect_chan
 bond_dbus_creation, ., nmcli/./runtest.sh bond_dbus_creation, NetworkManager
 bond_mode_by_number_in_ifcfg, ., nmcli/./runtest.sh bond_mode_by_number_in_ifcfg, NetworkManager
 bond_device_rename, ., nmcli/./runtest.sh bond_device_rename, NetworkManager
-#bond_end
+bond_enslave_to_bridge, ., nmcli/./runtest.sh bond_enslave_to_bridge, NetworkManager
+#@bond_end
 
-#wifi_start
+#@wifi_start
 testcase_306548, ., nmcli/./runtest.sh testcase_306548, NetworkManager;iw;pexpect
 testcase_306549, ., nmcli/./runtest.sh testcase_306549, NetworkManager;iw;pexpect
 testcase_306550, ., nmcli/./runtest.sh testcase_306550, NetworkManager;iw;pexpect
@@ -336,7 +407,9 @@ testcase_306554, ., nmcli/./runtest.sh testcase_306554, NetworkManager;iw;pexpec
 testcase_306555, ., nmcli/./runtest.sh testcase_306555, NetworkManager;iw;pexpect
 testcase_306556, ., nmcli/./runtest.sh testcase_306556, NetworkManager;iw;pexpect
 testcase_306557, ., nmcli/./runtest.sh testcase_306557, NetworkManager;iw;pexpect
+nmcli_wifi_ap, ., nmcli/./runtest.sh nmcli_wifi_ap, NetworkManager;iw;pexpect
 testcase_306558, ., nmcli/./runtest.sh testcase_306558, NetworkManager;iw;pexpect
+nmcli_wifi_right_band_80211a, ., nmcli/./runtest.sh nmcli_wifi_right_band_80211a, NetworkManager;iw;pexpect
 testcase_306559, ., nmcli/./runtest.sh testcase_306559, NetworkManager;iw;pexpect
 testcase_306560, ., nmcli/./runtest.sh testcase_306560, NetworkManager;iw;pexpect
 testcase_306561, ., nmcli/./runtest.sh testcase_306561, NetworkManager;iw;pexpect
@@ -412,18 +485,19 @@ nmcli_wifi_wpa_ask_passwd, ., nmcli/./runtest.sh nmcli_wifi_wpa_ask_passwd, Netw
 nmcli_wifi_wep_ask_passwd, ., nmcli/./runtest.sh nmcli_wifi_wep_ask_passwd, NetworkManager;iw;pexpect
 nmcli_wifi_add_certificate_as_blob, ., nmcli/./runtest.sh nmcli_wifi_add_certificate_as_blob, NetworkManager;iw;pexpect
 nmcli_wifi_dbus_invalid_cert_input, ., nmcli/./runtest.sh nmcli_wifi_dbus_invalid_cert_input, NetworkManager;iw;pexpect
-#wifi_end
+nmcli_wifi_indicate_wifi_band_caps, ., nmcli/./runtest.sh nmcli_wifi_indicate_wifi_band_caps, NetworkManager;iw;pexpect
+#@wifi_end
 
-#alias
+#@alias_start
 alias_ifcfg_add_single_alias, ., nmcli/./runtest.sh alias_ifcfg_add_single_alias, NetworkManager
 alias_ifcfg_add_multiple_aliases, ., nmcli/./runtest.sh alias_ifcfg_add_multiple_aliases, NetworkManager
 alias_ifcfg_remove_single_alias, ., nmcli/./runtest.sh alias_ifcfg_remove_single_alias, NetworkManager
 alias_ifcfg_connection_restart, ., nmcli/./runtest.sh alias_ifcfg_connection_restart, NetworkManager
 alias_ifcfg_remove_all_aliases, ., nmcli/./runtest.sh alias_ifcfg_remove_all_aliases, NetworkManager
 alias_ifcfg_reboot, ., nmcli/./runtest.sh alias_ifcfg_reboot, NetworkManager
-#alias_end
+#@alias_end
 
-#infiniband
+#@infiniband_start
 inf_create_connection, ., nmcli/./runtest.sh inf_create_connection, NetworkManager
 inf_create_connection_novice_mode, ., nmcli/./runtest.sh inf_create_connection_novice_mode, NetworkManager
 inf_disable_connection, ., nmcli/./runtest.sh inf_disable_connection, NetworkManager
@@ -431,22 +505,22 @@ inf_create_port_connection, ., nmcli/./runtest.sh inf_create_port_connection, Ne
 inf_create_port_novice_mode, ., nmcli/./runtest.sh inf_create_port_novice_mode, NetworkManager
 inf_disable_port, ., nmcli/./runtest.sh inf_disable_port, NetworkManager
 inf_enable_after_reboot, ., nmcli/./runtest.sh inf_enable_after_reboot, NetworkManager
-#infiniband_end
+#@infiniband_end
 
-#dcb
+#@dcb_start
 dcb_enable_connection, ., nmcli/./runtest.sh dcb_enable_connection, NetworkManager
 dcb_disable_connection, ., nmcli/./runtest.sh dcb_disable_connection, NetworkManager
 dcb_enable_after_reboot, ., nmcli/./runtest.sh dcb_enable_after_reboot, NetworkManager
 dcb_error_shown, ., nmcli/./runtest.sh dcb_error_shown, NetworkManager
-#dcb_end
+#@dcb_end
 
-#ppp
-connect_to_pppoe_via_pap, ., nmcli/./runtest.sh connect_to_pppoe_via_pap, NetworkManager
-connect_to_pppoe_via_chap, ., nmcli/./runtest.sh connect_to_pppoe_via_chap, NetworkManager
-disconnect_from_pppoe, ., nmcli/./runtest.sh disconnect_from_pppoe, NetworkManager
-#ppp_end
+#@ppp_start
+connect_to_pppoe_via_pap, ., nmcli/./runtest.sh connect_to_pppoe_via_pap, NetworkManager;NetworkManager-adsl
+connect_to_pppoe_via_chap, ., nmcli/./runtest.sh connect_to_pppoe_via_chap, NetworkManager;NetworkManager-adsl
+disconnect_from_pppoe, ., nmcli/./runtest.sh disconnect_from_pppoe, NetworkManager;NetworkManager-adsl
+#@ppp_end
 
-#### NMTUI TESTS ####
+#@nmtui_start
 nmtui_general_start_nmtui, ., nmtui/./runtest.sh nmtui_general_start_nmtui, NetworkManager-tui
 nmtui_general_exit_nmtui, ., nmtui/./runtest.sh nmtui_general_exit_nmtui, NetworkManager-tui
 nmtui_general_open_edit_menu, ., nmtui/./runtest.sh nmtui_general_open_edit_menu, NetworkManager-tui
@@ -460,6 +534,7 @@ nmtui_general_realtime_refresh_activate_screen_wo_autoconnect, ., nmtui/./runtes
 nmtui_general_realtime_refresh_activate_screen, ., nmtui/./runtest.sh nmtui_general_realtime_refresh_activate_screen, NetworkManager-tui
 nmtui_dsl_create_default_connection, ., nmtui/./runtest.sh nmtui_dsl_create_default_connection, NetworkManager-tui
 nmtui_general_show_orphaned_slaves, ., nmtui/./runtest.sh nmtui_general_show_orphaned_slaves, NetworkManager-tui
+nmtui_general_activate_screen_no_connections, ., nmtui/./runtest.sh nmtui_general_activate_screen_no_connections, NetworkManager-tui
 
 nmtui_ethernet_create_default_connection, ., nmtui/./runtest.sh nmtui_ethernet_create_default_connection, NetworkManager-tui
 nmtui_ethernet_create_device_bound_connection, ., nmtui/./runtest.sh nmtui_ethernet_create_device_bound_connection, NetworkManager-tui
@@ -578,6 +653,7 @@ nmtui_bond_add_custom_bond_mii, ., nmtui/./runtest.sh nmtui_bond_add_custom_bond
 nmtui_bond_add_custom_bond_arp, ., nmtui/./runtest.sh nmtui_bond_add_custom_bond_arp, NetworkManager-tui
 nmtui_bond_add_connection_wo_autoconnect, ., nmtui/./runtest.sh nmtui_bond_add_connection_wo_autoconnect, NetworkManager-tui
 nmtui_bond_activate_wo_autoconnect, ., nmtui/./runtest.sh nmtui_bond_activate_wo_autoconnect, NetworkManager-tui
+#nmtui_bond_add_mode_active_backup_no_primary, ., nmtui/./runtest.sh nmtui_bond_add_mode_active_backup_no_primary, NetworkManager-tui
 nmtui_bond_activate_with_autoconnect, ., nmtui/./runtest.sh nmtui_bond_activate_with_autoconnect, NetworkManager-tui
 nmtui_bond_deactivate_connection, ., nmtui/./runtest.sh nmtui_bond_deactivate_connection, NetworkManager-tui
 nmtui_bond_delete_connection_up, ., nmtui/./runtest.sh nmtui_bond_delete_connection_up, NetworkManager-tui
@@ -619,9 +695,9 @@ nmtui_inf_delete_connection, ., nmtui/./runtest.sh nmtui_inf_delete_connection, 
 nmtui_inf_set_mtu, ., nmtui/./runtest.sh nmtui_inf_set_mtu, NetworkManager-tui
 nmtui_inf_datagram_mode, ., nmtui/./runtest.sh nmtui_inf_datagram_mode, NetworkManager-tui
 nmtui_inf_connected_mode, ., nmtui/./runtest.sh nmtui_inf_connected_mode, NetworkManager-tui
+#@nmtui_end
 
-#### TUI WIFI  #####
-
+#@nmtui-wifi_start
 nmtui_wifi_see_all_networks, ., nmtui/./runtest.sh nmtui_wifi_see_all_networks, NetworkManager-tui
 nmtui_wifi_connect_to_open_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_open_network, NetworkManager-tui
 nmtui_wifi_connect_to_wpa1psk_network, ., nmtui/./runtest.sh nmtui_wifi_connect_to_wpa1psk_network, NetworkManager-tui
@@ -655,3 +731,7 @@ nmtui_wifi_wep_passphrase_connection, ., nmtui/./runtest.sh nmtui_wifi_wep_passp
 nmtui_wifi_leap_connection, ., nmtui/./runtest.sh nmtui_wifi_leap_connection, NetworkManager-tui
 nmtui_wifi_show_password, ., nmtui/./runtest.sh nmtui_wifi_show_password, NetworkManager-tui
 nmtui_wifi_connect_to_network_after_dismissal, ., nmtui/./runtest.sh nmtui_wifi_connect_to_network_after_dismissal, NetworkManager-tui
+#@nmtui-wifi_end
+
+#sanitize_beah
+sanitize_beah, .,./sanitize_beah.sh,

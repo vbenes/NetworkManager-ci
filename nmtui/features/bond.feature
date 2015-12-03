@@ -230,7 +230,7 @@ Feature: Bond TUI tests
     * Confirm the slave settings
     * Confirm the connection settings
     Then Check bond "bond0" state is "up"
-    Then "bond0\s+bond\s+connected" is visible with command "nmcli device" in "30" seconds
+    Then "bond0\s+bond\s+connected" is visible with command "nmcli device" in "45" seconds
     Then "eth1\s+ethernet\s+connected\s+bond-slave-eth1" is visible with command "nmcli device"
     Then "eth2\s+ethernet\s+connected\s+bond-slave-eth2" is visible with command "nmcli device"
     Then "192.168" is visible with command "ip a s bond0"
@@ -305,20 +305,20 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "Active Backup"
     * Set "Primary" field to "eth2"
     * Confirm the connection settings
-    Then "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/bond0" in "10" seconds
+    Then "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/bond0" in "45" seconds
     Then "Primary Slave: eth2" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "45" seconds
     Then Check bond "bond0" state is "up"
 
 
-    #bz1142864
-    @bond
-    @nmtui_bond_add_mode_active_backup_no_primary
-    Scenario: nmtui - bond - mode - active backup without primary
-    * Prepare new connection of type "Bond" named "bond0"
-    * Set "Device" field to "bond0"
-    * Set "Mode" dropdown to "Active Backup"
-    Then Cannot confirm the connection settings
+    # #bz1142864
+    # @bond
+    # @nmtui_bond_add_mode_active_backup_no_primary
+    # Scenario: nmtui - bond - mode - active backup without primary
+    # * Prepare new connection of type "Bond" named "bond0"
+    # * Set "Device" field to "bond0"
+    # * Set "Mode" dropdown to "Active Backup"
+    # Then Cannot confirm the connection settings
 
 
     #bz1142864
@@ -341,19 +341,17 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "Active Backup"
     * Set "Primary" field to "eth2"
     * Confirm the connection settings
-    * "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/bond0" in "10" seconds
+    * "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/bond0" in "45" seconds
     * "Primary Slave: eth2" is visible with command "cat /proc/net/bonding/bond0"
-    * "192.168" is visible with command "ip a s bond0" in "10" seconds
+    * "192.168" is visible with command "ip a s bond0" in "45" seconds
     * Check bond "bond0" state is "up"
     * Select connection "bond0" in the list
     * Choose to "<Edit...>" a connection
     * Set "Mode" dropdown to "Round-robin"
     * Confirm the connection settings
-    # Outside of veth form autoconnect logic, using special step
     * Execute "nmcli connection up bond0"
-    * If on veth setup execute "nmcli connection up bond-slave-eth2"
     Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "45" seconds
     Then Check bond "bond0" state is "up"
 
 
@@ -377,7 +375,7 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "Round-robin"
     * Confirm the connection settings
     Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "60" seconds
     Then Check bond "bond0" state is "up"
 
 
@@ -400,7 +398,7 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "XOR"
     * Confirm the connection settings
     Then "Bonding Mode: load balancing \(xor\)" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "60" seconds
     Then Check bond "bond0" state is "up"
 
 
@@ -423,7 +421,7 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "Broadcast"
     * Confirm the connection settings
     Then "Bonding Mode: fault-tolerance \(broadcast\)" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "60" seconds
     Then Check bond "bond0" state is "up"
 
 
@@ -446,7 +444,7 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "802.3ad"
     * Confirm the connection settings
     Then "Bonding Mode: IEEE 802.3ad Dynamic link aggregation" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "60" seconds
     Then Check bond "bond0" state is "up"
 
 
@@ -469,7 +467,7 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "Adaptive Transmit Load Balancing \(tlb\)"
     * Confirm the connection settings
     Then "Bonding Mode: transmit load balancing" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "60" seconds
     Then Check bond "bond0" state is "up"
 
 
@@ -492,5 +490,5 @@ Feature: Bond TUI tests
     * Set "Mode" dropdown to "Adaptive Load Balancing \(alb\)"
     * Confirm the connection settings
     Then "Bonding Mode: adaptive load balancing" is visible with command "cat /proc/net/bonding/bond0"
-    Then "192.168" is visible with command "ip a s bond0" in "10" seconds
+    Then "192.168" is visible with command "ip a s bond0" in "60" seconds
     Then Check bond "bond0" state is "up"

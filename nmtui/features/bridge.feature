@@ -224,6 +224,29 @@ Feature: Bridge TUI tests
     Then "192.168" is visible with command "ip a s bridge0"
 
 
+    # @bridge
+    # @nmtui_bridge_over_ethernet_devices_no_stp
+    # Scenario: nmtui - bridge - over ethernet devices no stp
+    # * Prepare new connection of type "Bridge" named "bridge0"
+    # * Set "Device" field to "bridge0"
+    # * Choose to "<Add>" a slave
+    # * Choose the connection type "Ethernet"
+    # * Set "Profile name" field to "bridge-slave-eth1"
+    # * Set "Device" field to "eth1"
+    # * Confirm the slave settings
+    # * Choose to "<Add>" a slave
+    # * Choose the connection type "Ethernet"
+    # * Set "Profile name" field to "bridge-slave-eth2"
+    # * Set "Device" field to "eth2"
+    # * Confirm the slave settings
+    # * Ensure "Enable STP" is not checked
+    # * Confirm the connection settings
+    # Then "bridge0\s+bridge\s+connected" is visible with command "nmcli device" in "60" seconds
+    # Then "eth1\s+ethernet\s+connected\s+bridge-slave-eth1" is visible with command "nmcli device"
+    # Then "eth2\s+ethernet\s+connected\s+bridge-slave-eth2" is visible with command "nmcli device"
+    # Then "192.168" is visible with command "ip a s bridge0"
+
+
     @bridge
     @nmtui_bridge_over_ethernet_devices_no_stp
     Scenario: nmtui - bridge - over ethernet devices no stp
@@ -237,14 +260,14 @@ Feature: Bridge TUI tests
     * Choose to "<Add>" a slave
     * Choose the connection type "Ethernet"
     * Set "Profile name" field to "bridge-slave-eth2"
-    * Set "Device" field to "eth2"
+    * Set "Device" field to "eth10"
     * Confirm the slave settings
     * Ensure "Enable STP" is not checked
     * Confirm the connection settings
     Then "bridge0\s+bridge\s+connected" is visible with command "nmcli device" in "60" seconds
     Then "eth1\s+ethernet\s+connected\s+bridge-slave-eth1" is visible with command "nmcli device"
-    Then "eth2\s+ethernet\s+connected\s+bridge-slave-eth2" is visible with command "nmcli device"
-    Then "192.168" is visible with command "ip a s bridge0"
+    Then "eth10\s+ethernet\s+connected\s+bridge-slave-eth2" is visible with command "nmcli device"
+    Then "inet 1" is visible with command "ip a s bridge0"
 
 
     @bridge

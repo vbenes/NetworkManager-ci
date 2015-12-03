@@ -84,10 +84,11 @@ Feature: nmcli - ethernet
     Then Check "\[s390-options\]" are present in describe output for object "802-3-ethernet.s390-options"
 
 
+    @rhbz1264024
     @ethernet
     @testcase_286583
     Scenario: nmcli - ethernet - set matching mac adress
-    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
+    * Add a new connection of type "ethernet" and options "ifname * con-name ethernet autoconnect no"
     * Note the "ether" property from ifconfig output for device "eth1"
     * Open editor for connection "ethernet"
     * Set a property named "802-3-ethernet.mac-address" to "noted-value" in editor
@@ -95,7 +96,19 @@ Feature: nmcli - ethernet
     * Check value saved message showed in editor
     * Quit editor
     * Bring up connection "ethernet"
-    Then "inet 192." is visible with command "ifconfig eth1"
+    Then "eth1:connected:ethernet" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+    Then "inet 192." is visible with command "ip a s eth1"
+
+
+    @ethernet
+    @teardown_testveth
+    @no_assumed_connection_for_veth
+    Scenario: NM - ethernet - no assumed connection for veth
+    * Prepare simulated test "testX" device
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethernet autoconnect no"
+    * Bring up connection "ethernet"
+    * Restart NM
+    Then "testX" is not visible with command "nmcli -f NAME c" in "50" seconds
 
 
     @ethernet
@@ -107,9 +120,10 @@ Feature: nmcli - ethernet
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
-    Then "Connection activation failed:" is visible with command "nmcli connection up ethernet"
+    Then "No suitable device found for this connection" is visible with command "nmcli connection up ethernet"
 
 
+    @rhbz1264024
     @ethernet
     @testcase_286585
     Scenario: nmcli - ethernet - set blacklisted mac adress
@@ -148,6 +162,19 @@ Feature: nmcli - ethernet
     * Bring up connection "ethernet"
     Then "MTU=64" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
     Then "inet 192." is visible with command "ifconfig eth1"
+
+
+    @ethernet
+    @mtu
+    @nmcli_set_mtu_lower_limit
+    Scenario: nmcli - ethernet - set lower limit mtu
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
+    * Open editor for connection "ethernet"
+    * Set a property named "802-3-ethernet.mtu" to "666" in editor
+    * Save in editor
+    * Quit editor
+    * Bring up connection "ethernet"
+    Then "1280" is visible with command "ip a s eth1"
 
 
     @ethernet
@@ -208,6 +235,82 @@ Feature: nmcli - ethernet
     * Quit editor
     * Bring up connection "ethernet"
     Then "eth1\s+ethernet\s+connected" is visible with command "nmcli device"
+
+
+    @rhbz1141417
+    @ethernet
+    @restart
+    @nmcli_ethernet_wol_default
+    Scenario: nmcli - ethernet - wake-on-lan default
+    * Execute "systemctl stop NetworkManager"
+    * Execute "modprobe -r e1000e && modprobe e1000e && sleep 5"
+    * Note the output of "ethtool eno1 |grep Wake-on |grep Supports | awk '{print $3}'" as value "wol_supports"
+    * Note the output of "ethtool eno1 |grep Wake-on |grep -v Supports | awk '{print $2}'" as value "wol_orig"
+    * Restart NM
+    * Add connection type "ethernet" named "ethernet" for device "eno1"
+    * Execute "nmcli c modify ethernet 802-3-ethernet.wake-on-lan phy,unicast,multicast,broadcast,magic"
+    * Bring up connection "ethernet"
+    * Note the output of "ethtool eno1 |grep Wake-on |grep -v Supports | awk '{print $2}'" as value "wol_now"
+    When Check noted values "wol_now" and "wol_supports" are the same
+    * Execute "nmcli c modify ethernet 802-3-ethernet.wake-on-lan default"
+    * Execute "modprobe -r e1000e && modprobe e1000e && sleep 5"
+    * Restart NM
+    * Bring up connection "ethernet"
+    * Note the output of "ethtool eno1 |grep Wake-on |grep -v Supports | awk '{print $2}'" as value "wol_now"
+    Then Check noted values "wol_now" and "wol_orig" are the same
+
+
+    @rhbz1141417
+    @ethernet
+    @nmcli_ethernet_wol_enable_magic
+    Scenario: nmcli - ethernet - wake-on-lan magic
+    * Add connection type "ethernet" named "ethernet" for device "eno1"
+    * Execute "nmcli c modify ethernet 802-3-ethernet.wake-on-lan magic"
+    * Bring up connection "ethernet"
+    Then "Wake-on: g" is visible with command "ethtool eno1"
+
+
+    @rhbz1141417
+    @ethernet
+    @nmcli_ethernet_wol_disable
+    Scenario: nmcli - ethernet - wake-on-lan disable
+    * Add connection type "ethernet" named "ethernet" for device "eno1"
+    * Execute "nmcli c modify ethernet 802-3-ethernet.wake-on-lan none"
+    * Bring up connection "ethernet"
+    Then "Wake-on: d" is visible with command "ethtool eno1"
+
+
+    @rhbz1141417
+    @ethernet
+    @nmcli_ethernet_wol_from_file
+    Scenario: nmcli - ethernet - wake-on-lan from file
+    * Add connection type "ethernet" named "ethernet" for device "eno1"
+    * Append "ETHTOOL_OPTS=\"wol g\"" to ifcfg file "ethernet"
+    * Execute "nmcli con reload"
+    * Bring up connection "ethernet"
+    Then "Wake-on: g" is visible with command "ethtool eno1"
+    Then "magic" is visible with command "nmcli con show ethernet |grep wake-on-lan"
+
+
+    @rhbz1141417
+    @ethernet
+    @nmcli_ethernet_wol_from_file_to_default
+    Scenario: nmcli - ethernet - wake-on-lan from file and back
+    * Add connection type "ethernet" named "ethernet" for device "eno1"
+    * Note the output of "ethtool eno1 |grep Wake-on |grep -v Supports | awk '{print $2}'" as value "wol_orig"
+    * Append "ETHTOOL_OPTS=\"wol g\"" to ifcfg file "ethernet"
+    * Execute "nmcli con reload"
+    * Bring up connection "ethernet"
+    Then "Wake-on: g" is visible with command "ethtool eno1"
+    Then "magic" is visible with command "nmcli con show ethernet |grep wake-on-lan"
+    * Open editor for connection "ethernet"
+    * Submit "set 802-3-ethernet.wake-on-lan default" in editor
+    * Save in editor
+    * Quit editor
+    * Bring up connection "ethernet"
+    Then "ETHTOOL_OPTS" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
+    * Note the output of "ethtool eno1 |grep Wake-on |grep -v Supports | awk '{print $2}'" as value "wol_new"
+    Then Check noted values "wol_new" and "wol_orig" are the same
 
 
     @openvswitch

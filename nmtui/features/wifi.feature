@@ -242,6 +242,7 @@ Feature: WIFI TUI tests
     @wifi
     @nmtui_wifi_adhoc_network
     Scenario: nmtui - wifi - adhoc network
+    Given Flag "NM_802_11_DEVICE_CAP_ADHOC" is set in WirelessCapabilites
     * Prepare new connection of type "Wi-Fi" named "wifi1"
     * Set "Device" field to "wlan0"
     * Set "SSID" field to "qe-adhoc"
@@ -255,6 +256,7 @@ Feature: WIFI TUI tests
     @wifi
     @nmtui_wifi_ap
     Scenario: nmtui - wifi - ap
+    Given Flag "NM_802_11_DEVICE_CAP_AP" is set in WirelessCapabilites
     * Prepare new connection of type "Wi-Fi" named "wifi1"
     * Set "Device" field to "wlan0"
     * Set "SSID" field to "qe-ap"
@@ -290,10 +292,10 @@ Feature: WIFI TUI tests
     * Prepare new connection of type "Wi-Fi" named "wifi1"
     * Set "Device" field to "wlan0"
     * Set "SSID" field to "qe-open"
-    * Set "BSSID" field to "F4:0F:1B:0E:E8:A1"
+    * Set "BSSID" field to "74:26:AC:2C:65:E0"
     * Confirm the connection settings
-    Then "BSSID=F4:0F:1B:0E:E8:A1" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-wifi1"
-    Then "Connected to f4:0f:1b:0e:e8:a1" is visible with command "iw dev wlan0 link" in "30" seconds
+    Then "BSSID=74:26:AC:2C:65:E0" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-wifi1"
+    Then "Connected to 74:26:ac:2c:65:e0" is visible with command "iw dev wlan0 link" in "30" seconds
 
 
     @wifi

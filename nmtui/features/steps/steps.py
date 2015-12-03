@@ -200,8 +200,6 @@ def press_password_dialog_button(context, button):
 
 @step(u'Select connection "{con_name}" in the list')
 def select_con_in_list(context, con_name):
-    if os.path.isfile('/tmp/nm_veth_configured'):
-        context.last_con_name = con_name
     match = re.match('.*Delete.*', get_screen_string(context.screen), re.UNICODE | re.DOTALL)
     if match is not None:
         context.tui.send(keys['LEFTARROW']*8)
@@ -219,18 +217,6 @@ def back_to_con_list(context):
 @step(u'Choose to "{action}" a slave')
 @step(u'Choose to "{action}" a connection')
 def choose_connection_action(context, action):
-    if os.path.isfile('/tmp/nm_veth_configured') and action == '<Activate>':
-        if not hasattr(context, 'last_con_name'):
-            assert False, 'veth mod: Did not have the name of conection to ip link up its device'
-        else:
-            if hasattr(context, 'is_virtual') and context.is_virtual is True:
-                print("veth mod: activating virtal device, upping eth1 and eth2 devices (ip link...)")
-                subprocess.call("ip link set dev eth1 up", shell=True)
-                subprocess.call("ip link set dev eth2 up", shell=True)
-            else:
-                device = subprocess.check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % context.last_con_name, shell=True).strip()
-                subprocess.call('ip link set dev %s up' % device, shell=True)
-            sleep(0.2)
     assert go_until_pattern_matches_aftercursor_text(context,keys['TAB'],r'%s.*' % action) is not None, "Could not go to action '%s' on screen!" % action
     context.tui.send(keys['ENTER'])
     sleep(0.5)
@@ -238,11 +224,6 @@ def choose_connection_action(context, action):
 
 @step(u'Bring up connection "{connection}"')
 def bring_up_connection(context, connection):
-    method = subprocess.check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
-    if method in ["auto","disabled","link-local"]:
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            device = subprocess.check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
-            subprocess.call('ip link set dev %s up' % device, shell=True)
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180)
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
@@ -253,11 +234,6 @@ def bring_up_connection(context, connection):
 
 @step(u'Bring up connection "{connection}" ignoring everything')
 def bring_up_connection_ignore_everything(context, connection):
-    method = subprocess.check_output("nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection, shell=True).strip()
-    if method in ["auto","disabled","link-local"]:
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            device = subprocess.check_output("nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection, shell=True).strip()
-            subprocess.call('ip link set dev %s up' % device, shell=True)
     subprocess.Popen('nmcli connection up %s' % connection, shell=True)
     sleep(1)
 
@@ -279,8 +255,6 @@ def confirm_slave_screen(context):
     context.stream.feed(open(OUTPUT, 'r').read())
     match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
     assert match is not None, "Could not get to the <OK> button! (In form? Segfault?)"
-    if hasattr(context, 'is_slave_now') and os.path.isfile('/tmp/nm_veth_configured'):
-        del context.is_slave_now
     context.tui.send(keys['ENTER'])
 
 
@@ -292,26 +266,7 @@ def confirm_connection_screen(context):
     match = re.match(r'^<OK>.*', context.screen.display[context.screen.cursor.y][context.screen.cursor.x-1:], re.UNICODE)
     assert match is not None, "Could not get to the <OK> button! (In form? Segfault?)"
     context.tui.send(keys['ENTER'])
-    if hasattr(context, 'no_autoconnect'):
-        del context.no_autoconnect
-    elif not hasattr(context, 'no_autoconnect') and hasattr(context, 'last_profile_name') and os.path.isfile('/tmp/nm_veth_configured'):
-        sleep(0.5)
-        if hasattr(context, 'is_virtual') and context.is_virtual is True:
-            context.execute_steps('''* Bring up connection "%s" ignoring everything''' % context.last_profile_name)
-        else:
-            context.execute_steps('''* Bring up connection "%s"''' % context.last_profile_name)
-        print 'veth mod: brought profile online: %s' % context.last_profile_name
-        del context.last_profile_name
-        if hasattr(context, 'slave_profile_names'):
-            for name in context.slave_profile_names:
-                if hasattr(context, 'no_autoconnect_slaves') and name in context.no_autoconnect_slaves:
-                    pass
-                else:
-                    context.execute_steps('''* Bring up connection "%s" ignoring everything''' % name)
-                    print 'veth mod: brought slave profile online: %s' % name
-            if hasattr(context, 'no_autoconnect_slaves'):
-                del context.no_autoconnect_slaves
-            del context.slave_profile_names
+
 
 @step(u'Cannot confirm the connection settings')
 def cannot_confirm_connection_screen(context):
@@ -345,14 +300,6 @@ def set_specific_field_to(context, field, value):
     assert go_until_pattern_matches_line(context,keys['DOWNARROW'],u'^[\u2500-\u2599\s]+%s.*' % field) is not None, "Could not go to option '%s' on screen!" % field
     context.tui.send(keys['BACKSPACE']*100)
     context.tui.send(value)
-    if os.path.isfile('/tmp/nm_veth_configured') and field == 'Profile name':
-        if 'slave' in value:
-            if not hasattr(context, 'slave_profile_names'):
-                context.slave_profile_names = []
-            context.slave_profile_names.append(value)
-            context.is_slave_now = True
-        else:
-            context.last_profile_name = value
 
 
 @step(u'Empty the field "{field}"')
@@ -456,26 +403,11 @@ def ensure_toggle_is_checked(context, toggle, n=None):
         context.tui.send(' ')
     elif match.group(1) == u'[X]' and n is not None:
         context.tui.send(' ')
-    if toggle == 'Automatically connect' and n is not None and os.path.isfile('/tmp/nm_veth_configured'):
-        if hasattr(context, 'is_slave_now'):
-            if not hasattr(context, 'no_autoconnect_slaves'):
-                context.no_autoconnect_slaves = []
-            context.no_autoconnect_slaves.append(context.slave_profile_names[-1])
-        else:
-            context.no_autoconnect = True
 
 
 @step(u'Execute "{command}"')
 def execute_command(context, command):
     os.system(command)
-
-
-@step(u'If on veth setup execute "{command}"')
-def if_veth_execute_command(context, command):
-    if os.path.isfile('/tmp/nm_veth_configured'):
-        os.system(command)
-    else:
-        pass
 
 
 @step(u'Note the output of "{command}"')
@@ -485,7 +417,9 @@ def note_the_output_of(context, command):
 
 @step(u'Restore hostname from the noted value')
 def restore_hostname(context):
-    os.system('nmcli gen hostname %s' % context.noted_value)
+    os.system('systemctl unmask systemd-hostnamed.service')
+    os.system('systemctl restart NetworkManager')
+    os.system('hostnamectl set-hostname %s' % context.noted_value)
 
 
 @step(u'"{pattern}" is visible with command "{command}"')
@@ -546,7 +480,13 @@ def check_bond_in_proc(context, bond):
 
 @step(u'Check slave "{slave}" in bond "{bond}" in proc')
 def check_slave_in_bond_in_proc(context, slave, bond):
-    child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond))
+    i = 5
+    while i > 0:
+        child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond))
+        if child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) == 0:
+            return 0
+        sleep(1)
+        i -= 1
     assert child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) == 0, "Slave %s is not in %s" % (slave, bond)
 
 
@@ -561,7 +501,13 @@ def check_slave_present_in_bond_in_proc(context, slave, bond):
 
 @step(u'Check slave "{slave}" not in bond "{bond}" in proc')
 def check_slave_not_in_bond_in_proc(context, slave, bond):
-    child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond))
+    i = 5
+    while i > 0:
+        child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond))
+        if child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) != 0:
+            return 0
+        sleep(1)
+        i -= 1
     assert child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) != 0, "Slave %s is in %s" % (slave, bond)
 
 
@@ -594,33 +540,36 @@ def reboot(context):
 
 @step(u'Team "{team}" is down')
 def team_is_down(context, team):
+    sleep(2)
     assert os.system('teamdctl %s state dump' % team) != 0, 'team "%s" exists' % (team)
 
 
 @step(u'Team "{team}" is up')
 def team_is_up(context, team):
+    sleep(2)
     assert os.system('teamdctl %s state dump' % team) == 0, 'team "%s" does not exist' % (team)
 
 
 @step(u'Check slave "{slave}" in team "{team}" is "{state}"')
 def check_slave_in_team_is_up(context, slave, team, state):
-    sleep(2)
-    child = pexpect.spawn('sudo teamdctl %s state dump' % (team),  maxread=10000)
-    if state == "up":
-        found = '"ifname"\: "%s"' % slave
-        r = child.expect([found, 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-        if r != 0:
-            raise Exception('Device %s was not found in dump of team %s' % (slave, team))
+    i = 20
+    while i > 0:
+        r = subprocess.call('sudo teamdctl %s port present %s' %(team, slave), shell=True)
+        if state == "up":
+            if r == 0:
+                return 0
 
-        r = child.expect(['"up"\: true', '"ifname"', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-        if r != 0:
-            raise Exception('Got an Error while %sing connection %s' % (state, team))
+        if state == "down":
+            if r != 0:
+                return 0
+        i -= 1
+        sleep(1)
+
+    if state == "up":
+        raise Exception('Device %s was not found in dump of team %s' % (slave, team))
 
     if state == "down":
-        r = child.expect([slave, 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-        if r == 0:
-            raise Exception('Device %s was found in dump of team %s' % (slave, team))
-
+        raise Exception('Device %s was found in dump of team %s' % (slave, team))
 
 @step(u'Set team json config to "{value}"')
 def set_team_json(context, value):
@@ -640,3 +589,59 @@ def set_team_json(context, value):
     sleep(5)
     context.tui.send('\r\n')
     sleep(5)
+
+
+def get_device_dbus_path(device):
+    import dbus
+    bus = dbus.SystemBus()
+    proxy = bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+    manager = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+    dpath = None
+    devices = manager.GetDevices()
+    for d in devices:
+        dev_proxy = bus.get_object("org.freedesktop.NetworkManager", d)
+        prop_iface = dbus.Interface(dev_proxy, "org.freedesktop.DBus.Properties")
+        iface = prop_iface.Get("org.freedesktop.NetworkManager.Device", "Interface")
+        if iface == device:
+            dpath = d
+            break
+    if not dpath or not len(dpath):
+        raise Exception("NetworkManager knows nothing about %s" % device)
+    return dpath
+
+
+@step(u'Flag "{flag}" is {n} set in WirelessCapabilites')
+@step(u'Flag "{flag}" is set in WirelessCapabilites')
+def flag_cap_set(context, flag, n=None, device='wlan0', giveexception=True):
+    wcaps = {}
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_WEP40'] = 0x1
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_WEP104'] = 0x2
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_TKIP'] = 0x4
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_CCMP'] = 0x8
+    wcaps['NM_802_11_DEVICE_CAP_WPA'] = 0x10
+    wcaps['NM_802_11_DEVICE_CAP_RSN'] = 0x20
+    wcaps['NM_802_11_DEVICE_CAP_AP'] = 0x40
+    wcaps['NM_802_11_DEVICE_CAP_ADHOC'] = 0x80
+    wcaps['NM_802_11_DEVICE_CAP_FREQ_VALID'] = 0x100
+    wcaps['NM_802_11_DEVICE_CAP_FREQ_2GHZ'] = 0x200
+    wcaps['NM_802_11_DEVICE_CAP_FREQ_5GHZ'] = 0x400
+
+    path = get_device_dbus_path(device)
+    cmd = '''dbus-send --system --print-reply \
+            --dest=org.freedesktop.NetworkManager \
+            %s \
+            org.freedesktop.DBus.Properties.Get \
+            string:"org.freedesktop.NetworkManager.Device.Wireless" \
+            string:"WirelessCapabilities" | grep variant | awk '{print $3}' ''' % path
+    ret = int(subprocess.check_output(cmd, shell=True).strip())
+
+    if n is None:
+        if wcaps[flag] & ret == wcaps[flag]:
+            return True
+        elif giveexception:
+            raise AssertionError("The flag is unset! WirelessCapabilities: %d" % ret)
+        else:
+            return False
+    else:
+        if wcaps[flag] & ret == wcaps[flag]:
+            raise AssertionError("The flag is set! WirelessCapabilities: %d" % ret)

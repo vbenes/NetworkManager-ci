@@ -44,7 +44,7 @@ Feature: Team TUI tests
     * Choose to "Activate a connection" from main screen
     * Select connection "team0" in the list
     * Choose to "<Activate>" a connection
-    Then "team0" is visible with command "nmcli device" in "10" seconds
+    Then "team0" is visible with command "nmcli device" in "45" seconds
     Then Team "team0" is up
 
 
@@ -203,7 +203,7 @@ Feature: Team TUI tests
     * Ensure "Automatically connect" is checked
     * Confirm the slave settings
     * Confirm the connection settings
-    Then "team0\s+team\s+connected" is visible with command "nmcli device" in "30" seconds
+    Then "team0\s+team\s+connected" is visible with command "nmcli device" in "60" seconds
     Then Team "team0" is up
     Then Check slave "eth1" in team "team0" is "up"
     Then Check slave "eth2" in team "team0" is "up"
@@ -229,7 +229,7 @@ Feature: Team TUI tests
     * Set "Device" field to "eth2"
     * Confirm the slave settings
     * Confirm the connection settings
-    * "team0\s+team\s+connected" is visible with command "nmcli device" in "30" seconds
+    * "team0\s+team\s+connected" is visible with command "nmcli device" in "60" seconds
     * Select connection "team0" in the list
     * Choose to "<Delete>" a connection
     * Press "Delete" button in the dialog

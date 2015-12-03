@@ -230,6 +230,7 @@ Feature: IPv6 TUI tests
 
 
     @ipv6
+    @eth0
     @nmtui_ipv6_routes_several_default_routes_metrics
     Scenario: nmtui - ipv6 - addresses - several default gateways and metrics
     * Prepare new connection of type "Ethernet" named "ethernet1"
@@ -250,10 +251,10 @@ Feature: IPv6 TUI tests
     * Confirm the connection settings
     Then "inet6 fc01::1:5/68" is visible with command "ip a s eth1" in "10" seconds
     Then "inet6 fc05::1:5/68" is visible with command "ip a s eth2" in "10" seconds
-    Then "default via fc01::1:1 dev eth1  proto static  metric 101" is visible with command "ip -6 route"
-    Then "default via fc05::1:1 dev eth2  proto static  metric 102" is visible with command "ip -6 route"
-    Then "fc01::/68 dev eth1  proto kernel" is visible with command "ip -6 route"
-    Then "fc05::/68 dev eth2  proto kernel" is visible with command "ip -6 route"
+    Then "default via fc01::1:1 dev eth1  proto static  metric 100" is visible with command "ip -6 route" in "10" seconds
+    Then "default via fc05::1:1 dev eth2  proto static  metric 101" is visible with command "ip -6 route" in "10" seconds
+    Then "fc01::/68 dev eth1  proto kernel" is visible with command "ip -6 route" in "10" seconds
+    Then "fc05::/68 dev eth2  proto kernel" is visible with command "ip -6 route" in "10" seconds
 
 
     @ipv6
@@ -371,9 +372,9 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Set "Device" field to "eth1"
     * Come in "IPv6 CONFIGURATION" category
-    * In "Search domains" property add "redhat.com"
+    * In "Search domains" property add "heaven.com"
     * Confirm the connection settings
-    Then " redhat.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
+    Then " heaven.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
 
 
     @ipv6
@@ -382,16 +383,16 @@ Feature: IPv6 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Set "Device" field to "eth1"
     * Come in "IPv6 CONFIGURATION" category
-    * In "Search domains" property add "redhat.com"
+    * In "Search domains" property add "heaven.com"
     * Confirm the connection settings
-    * " redhat.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
+    * " heaven.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
     * Select connection "ethernet1" in the list
     * Choose to "<Edit...>" a connection
     * Come in "IPv6 CONFIGURATION" category
     * Remove all "Search domains" property items
     * Confirm the connection settings
     * Bring up connection "ethernet1"
-    Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then " heaven.com" is not visible with command "cat /etc/resolv.conf"
 
 
     @ipv6

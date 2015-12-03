@@ -21,7 +21,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "2607:f0d0:1002:51::4/64" is visible with command "ip a s eth1"
+    Then "2607:f0d0:1002:51::4/64" is visible with command "ip a s eth1" in "5" seconds
     Then "1050::5:600:300c:326b/128" is visible with command "ip a s eth1"
 
 
@@ -35,7 +35,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "2607:f0d0:1002:51::4/128" is visible with command "ip a s eth1"
+    Then "2607:f0d0:1002:51::4/128" is visible with command "ip a s eth1" in "5" seconds
     Then "1050::5:600:300c:326b/128" is visible with command "ip a s eth1"
 
 
@@ -49,7 +49,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "2607:f0d0:1002:51::4/63" is visible with command "ip a s eth1"
+    Then "2607:f0d0:1002:51::4/63" is visible with command "ip a s eth1" in "5" seconds
     Then "1050::5:600:300c:326b/121" is visible with command "ip a s eth1"
     # reproducer for 997759
     Then "IPV6_DEFAULTGW" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethie"
@@ -65,8 +65,8 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-     Then "inet6 dead:beaf" is visible with command "ip a s eth10"
-     Then "inet6 2620" is not visible with command "ip a s eth10"
+     Then "inet6 dead:beaf" is visible with command "ip a s eth10" in "5" seconds
+     Then "inet6 2620" is not visible with command "ip a s eth10" in "5" seconds
 
 
     @ipv6_addresses_no_when_static_switch_asked
@@ -79,8 +79,8 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-     Then "inet6 dead:beaf" is visible with command "ip a s eth10"
-     Then "inet6 2620" is visible with command "ip a s eth10"
+     Then "inet6 dead:beaf" is visible with command "ip a s eth10" in "5" seconds
+     Then "inet6 2620" is visible with command "ip a s eth10" in "5" seconds
 
 
     @ipv6_addresses_invalid_netmask
@@ -107,7 +107,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "2607:f0d0:1002:51::4/64" is visible with command "ip a s eth1"
+    Then "2607:f0d0:1002:51::4/64" is visible with command "ip a s eth1" in "5" seconds
     Then "default via 2607:f0d0:1002:51::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
 
 
@@ -124,7 +124,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "fc02::1:21/96" is visible with command "ip a s eth1"
+    Then "fc02::1:21/96" is visible with command "ip a s eth1" in "5" seconds
     Then "fc01::1:5/68" is visible with command "ip a s eth1"
     Then "fb01::1:6/112" is visible with command "ip a s eth1"
     Then "default via fc01::1:1 dev eth1" is visible with command "ip -6 route"
@@ -151,7 +151,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "fc01::1:5/68" is not visible with command "ip a s eth10"
+    Then "fc01::1:5/68" is not visible with command "ip a s eth10" in "5" seconds
     Then "default via fc01::1:1 dev eth1" is not visible with command "ip -6 route"
     Then "2620:52:0:" is visible with command "ip a s eth10"
 
@@ -176,7 +176,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "ethie"
      * Bring "up" connection "ethie2"
-    Then "1010::1 via 2000::1 dev eth1  proto static  metric 1" is visible with command "ip -6 route"
+    Then "1010::1 via 2000::1 dev eth1  proto static  metric 1" is visible with command "ip -6 route" in "5" seconds
     Then "2000::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "2001::/126 dev eth2  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "3030::1 via 2001::2 dev eth2  proto static  metric 1" is visible with command "ip -6 route"
@@ -217,7 +217,7 @@ Feature: nmcli: ipv6
     Then "2000::2/126" is visible with command "ip a s eth1"
     Then "2001::1/126" is visible with command "ip a s eth2"
     Then "1010::1 via 2000::1 dev eth1  proto static  metric 1" is not visible with command "ip -6 route"
-    Then "2000::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
+    Then "2000::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route" in "5" seconds
     Then "2001::/126 dev eth2  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "3030::1 via 2001::2 dev eth2  proto static  metric 1" is not visible with command "ip -6 route"
 
@@ -235,7 +235,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "default via 4000::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
+    Then "default via 4000::1 dev eth1  proto static  metric" is visible with command "ip -6 route" in "5" seconds
     Then "3030::1 via 2001::2 dev eth1  proto static  metric 2" is visible with command "ip -6 route"
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "1010::1 dev eth1  proto static  metric 3" is visible with command "ip -6 route"
@@ -243,13 +243,12 @@ Feature: nmcli: ipv6
 
     @ipv6_correct_slaac_setting
     @ipv6
-    @eth0
     Scenario: NM - ipv6 - correct slaac setting
      * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
      * Execute "nmcli connection modify ethie ipv6.may-fail no"
-     * Run child "radvdump > /tmp/radvdump.txt"
      * Bring "up" connection "ethie"
-    Then Check device route and prefix for "eth10"
+    Then "2620:52:0:1086::/64 dev eth10  proto ra" is visible with command "ip -6 r" in "20" seconds
+    Then "2620:52:0:1086" is visible with command "ip -6 a s eth10 |grep 'global noprefix'" in "20" seconds
 
 
     @ipv6_limited_router_solicitation
@@ -268,7 +267,7 @@ Feature: nmcli: ipv6
     Scenario: NM - ipv6 - block just routing RA
      * Add connection type "ethernet" named "ethie" for device "eth10"
      * Bring "up" connection "ethie"
-    Then "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra"
+    Then "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra" in "5" seconds
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra_defrtr"
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra_rtr_pref"
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/accept_ra_pinfo"
@@ -299,7 +298,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "default via 4000::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
+    Then "default via 4000::1 dev eth1  proto static  metric" is visible with command "ip -6 route" in "5" seconds
     Then "2001::/126 dev eth1  proto kernel  metric 256" is visible with command "ip -6 route"
     Then "1010::1 dev eth1  proto static  metric" is visible with command "ip -6 route"
 
@@ -317,7 +316,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf" in "5" seconds
     Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 10." is visible with command "cat /etc/resolv.conf"
 
@@ -333,7 +332,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf" in "5" seconds
     Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 192.168.100.1" is visible with command "cat /etc/resolv.conf"
 
@@ -348,7 +347,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf" in "5" seconds
     Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
 
 
@@ -370,7 +369,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 4000::1" is visible with command "cat /etc/resolv.conf" in "5" seconds
     Then "nameserver 5000::1" is visible with command "cat /etc/resolv.conf"
     Then "nameserver 2000::1" is visible with command "cat /etc/resolv.conf"
 
@@ -407,7 +406,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "redhat.com" is visible with command "cat /etc/resolv.conf"
+    Then "redhat.com" is visible with command "cat /etc/resolv.conf" in "5" seconds
 
 
     @ipv6_dns-search_remove
@@ -446,7 +445,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
     Then "virtual" is not visible with command "cat /etc/resolv.conf"
-    Then "nameserver" is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver " is not visible with command "cat /etc/resolv.conf" in "5" seconds
 
 
     @ipv6_ignore-auto-dns_set-generic
@@ -464,7 +463,7 @@ Feature: nmcli: ipv6
      * Bring "up" connection "ethie"
     Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
     Then "virtual" is not visible with command "cat /etc/resolv.conf"
-    Then "nameserver " is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver " is not visible with command "cat /etc/resolv.conf" in "5" seconds
 
 
     @ipv6_method_link-local
@@ -496,7 +495,6 @@ Feature: nmcli: ipv6
     @ipv6
     Scenario: nmcli - ipv6 - method - ignored
      * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie autoconnect no"
-     Then Bring "up" connection "ethie"
      * Open editor for connection "ethie"
      * Submit "set ipv4.method static" in editor
      * Submit "set ipv4.addresses 192.168.122.253/24" in editor
@@ -506,7 +504,7 @@ Feature: nmcli: ipv6
     Then Bring "up" connection "ethie"
     # VVV commented out because of fe80 is still on by kernel very likely
     # Then "scope link" is not visible with command "ip -6 a s eth10"
-    Then "scope global" is not visible with command "ip a -6 s eth10"
+    Then "scope global" is not visible with command "ip a -6 s eth10" in "5" seconds
     # reproducer for 1004255
     Then Bring "down" connection "ethie"
     Then "eth10 " is not visible with command "ip -6 route |grep -v fe80"
@@ -523,7 +521,7 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "testeth10"
      * Bring "up" connection "ethie"
-    Then "default via " is not visible with command "ip -6 route |grep eth2"
+    Then "default via " is not visible with command "ip -6 route |grep eth2" in "5" seconds
 
 
     @ipv6_never-default_remove
@@ -543,16 +541,16 @@ Feature: nmcli: ipv6
      * Quit editor
      * Bring "up" connection "testeth10"
      * Bring "up" connection "ethie"
-    Then "default via " is not visible with command "ip -6 route |grep eth2"
+    Then "default via " is not visible with command "ip -6 route |grep eth2" in "5" seconds
 
 
-    @ipv6_dhcp-hostname_set
-    @veth
+    @not_under_internal_DHCP
     @profie
+    @ipv6_dhcp-hostname_set
     Scenario: nmcli - ipv6 - dhcp-hostname - set dhcp-hostname
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name profie autoconnect no"
     * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
-    * Finish "sleep 2"
+    * Finish "sleep 10"
     * Open editor for connection "profie"
     * Submit "set ipv6.may-fail true" in editor
     * Submit "set ipv6.method dhcp" in editor
@@ -560,15 +558,14 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "profie"
-    * Finish "sleep 5"
-    * Run child "sudo kill -9 $(pidof tshark)"
-    #Then "walderon" is visible with command "sudo cat /var/lib/NetworkManager/dhclient6-eth10.conf"
-    Then "r.cx" is visible with command "grep r.cx /tmp/ipv6-hostname.log"
+    * Finish "sleep 10"
+    * Execute "sudo pkill tshark"
+    Then "r.cx" is visible with command "grep r.cx /tmp/ipv6-hostname.log" in "5" seconds
 
 
-    @ipv6_dhcp-hostname_remove
-    @veth
+    @not_under_internal_DHCP
     @ipv4
+    @ipv6_dhcp-hostname_remove
     Scenario: nmcli - ipv6 - dhcp-hostname - remove dhcp-hostname
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
@@ -585,8 +582,35 @@ Feature: nmcli: ipv6
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 5"
-    * Run child "sudo kill -9 $(pidof tshark)"
-    Then "r.cx" is not visible with command "cat /tmp/tshark.log"
+    * Execute "sudo pkill tshark"
+    Then "r.cx" is not visible with command "cat /tmp/tshark.log" in "5" seconds
+
+
+    @restore_hostname
+    @profie
+    @ipv6_send_fqdn.fqdn_to_dhcpv6
+    Scenario: NM - ipv6 - - send fqdn.fqdn to dhcpv6
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name profie autoconnect no"
+    * Execute "hostnamectl set-hostname dacan.local"
+    * Run child "sudo tshark -i eth10 -f 'port 546' -V -x > /tmp/ipv6-hostname.log"
+    * Finish "sleep 10"
+    * Open editor for connection "profie"
+    * Submit "set ipv6.method dhcp" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "profie"
+    * Finish "sleep 10"
+    * Execute "sudo pkill tshark"
+    Then "Domain: dacan.local" is visible with command "cat /tmp/ipv6-hostname.log" in "5" seconds
+    Then "0. = O bit" is visible with command "cat /tmp/ipv6-hostname.log" in "5" seconds
+
+
+    @ipv6
+    @ipv6_secondary_address
+    Scenario: nmcli - ipv6 - secondary
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
+    * Bring "up" connection "ethie"
+    Then "2" is visible with command "ip a s eth10 |grep 'inet6 .* global' |wc -l" in "10" seconds
 
 
     @ipv6_ip6-privacy_0
@@ -607,7 +631,7 @@ Feature: nmcli: ipv6
     * Bring "up" connection "ethie"
     * Finish "sleep 2"
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
-    Then "global temporary dynamic" is not visible with command "ip a s eth10"
+    Then "global temporary dynamic" is not visible with command "ip a s eth10" in "5" seconds
 
 
     @ipv6_ip6-privacy_1
@@ -637,9 +661,25 @@ Feature: nmcli: ipv6
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 2"
-    Then "2" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
+    Then "2" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr" in "5" seconds
     Then Global temporary ip is not based on mac of device "eth10"
 
+
+    @rhbz1187525
+    @ipv6_ip6-default_privacy
+    @ipv6
+    @privacy
+    Scenario: nmcli - ipv6 - ip6_privacy - default value
+    * Execute "echo 1 > /proc/sys/net/ipv6/conf/default/use_tempaddr"
+    * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Bring "up" connection "ethie"
+    When "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
+    * Execute "echo '[connection.ip6-privacy]' > /etc/NetworkManager/conf.d/01-default-ip6-privacy.conf"
+    * Execute "echo 'ipv6.ip6-privacy=2' >> /etc/NetworkManager/conf.d/01-default-ip6-privacy.conf"
+    * Restart NM
+    * Bring "down" connection "ethie"
+    * Bring "up" connection "ethie"
+    When "2" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
 
 
     @ipv6_ip6-privacy_incorrect_value
@@ -671,8 +711,8 @@ Feature: nmcli: ipv6
 
 
     @rhbz1083283
-    @ipv6_lifetime_set_from_network
     @scapy
+    @ipv6_lifetime_set_from_network
     Scenario: NM - ipv6 - set lifetime from network
     * Finish "ip link add test10 type veth peer name test11"
     * Finish "nmcli c add type ethernet ifname test10"
@@ -687,7 +727,7 @@ Feature: nmcli: ipv6
     When "ethernet-test10" is visible with command "nmcli con sh -a"
     When "ethernet-test11" is visible with command "nmcli con sh -a"
     * Send lifetime scapy packet
-    Then Lifetimes are slightly smaller than "3600" and "1800" for device "test11"
+    Then "IPv6" lifetimes are slightly smaller than "3600" and "1800" for device "test11"
 
 
 
@@ -698,7 +738,7 @@ Feature: nmcli: ipv6
     Scenario: NM - ipv6 - keep connectivity on assuming connection profile
     * Add a new connection of type "ethernet" and options "con-name ethie ifname eth10 autoconnect no"
     * Bring up connection "ethie"
-    * Wait for at least "10" seconds
+    * Wait for at least "20" seconds
     Then Check ipv6 connectivity is stable on assuming connection profile "ethie" for device "eth10"
 
 
@@ -719,6 +759,109 @@ Feature: nmcli: ipv6
     Then "inet6 fe80" is visible with command "ip a s eth1"
     # the assumed connection is created
     Then "eth1\s+ethernet\s+connected\s+eth1" is visible with command "nmcli device"
+
+
+    @rhbz1138426
+    @restart
+    @add_testeth10
+    @ipv6_no_assumed_connection_for_ipv6ll_only
+    Scenario: NM - ipv6 - no assumed connection on IPv6LL only device
+    * Delete connection "testeth10"
+    * Execute "systemctl stop NetworkManager.service"
+    * Execute "ip a flush dev eth10; ip l set eth10 down; ip l set eth10 up"
+    When "fe80" is visible with command "ip a s eth10" in "5" seconds
+    * Execute "systemctl start NetworkManager.service"
+    Then "Wired.*eth10" is visible with command "nmcli con" in "5" seconds
+    Then "eth10.*eth10" is not visible with command "nmcli con"
+
+
+    @rhbz1194007
+    @mtu
+    @ipv6_set_ra_announced_mtu
+    Scenario: NM - ipv6 - set RA received MTU
+    * Finish "ip link add test1 type veth peer name test1p"
+    * Finish "ip link add test2 type veth peer name test2p"
+    * Finish "brctl addbr vethbr"
+    * Finish "ip link set dev vethbr up"
+    * Finish "brctl addif vethbr test1p test2p"
+    * Finish "ip link set dev test1 up"
+    * Finish "ip link set dev test1p up"
+    * Finish "ip link set dev test2 up"
+    * Finish "ip link set dev test2p up"
+    * Finish "nmcli connection add type ethernet con-name tc1 ifname test1 mtu 1300 ip4 192.168.99.1/24 ip6 2620:52:0:beef::1/64"
+    * Finish "nmcli connection add type ethernet con-name tc2 ifname test2"
+    * Bring "up" connection "tc1"
+    * Execute "/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=192.168.99.1 --dhcp-range=192.168.99.10,192.168.99.254,60m --dhcp-option=option:router,192.168.99.1 --dhcp-lease-max=50 --dhcp-range=2620:52:0:beef::100,2620:52:0:beef::1ff,slaac,64 --enable-ra --interface=test1 &"
+    * Bring "up" connection "tc2"
+    Then "1300" is visible with command "sysctl net.ipv6.conf.test2.mtu" in "30" seconds
+
+
+    @rhbz1183015
+    @ipv6
+    @ipv6_shared_connection_error
+    Scenario: NM - ipv6 - shared connection
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth1 autoconnect no"
+    * Execute "nmcli con modify ethie ipv4.method disabled ipv6.method shared"
+    Then "Sharing IPv6 connections is not supported yet" is visible with command "nmcli connection up id ethie"
+
+
+    @rhbz1247156
+    @ipv6_tunnel_module_removal
+    Scenario: NM - ipv6 - ip6_tunnel module removal
+    * Execute "modprobe ip6_tunnel"
+    When "ip6_tunnel" is visible with command "lsmod |grep ip"
+    * Execute "modprobe -r ip6_tunnel"
+    Then "ip6_tunnel" is not visible with command "lsmod |grep ip" in "2" seconds
+
+
+    @rhbz1269520
+    @eth
+    @connect_testeth0
+    @ipv6_no_activation_schedule_error_in_logs
+    Scenario: NM - ipv6 - no activation scheduled error
+    * Add connection type "ethernet" named "ethie" for device "eth0"
+    * Execute "nmcli connection modify ethie ipv6.may-fail no ipv4.method disabled"
+    * Bring "up" connection "ethie"
+    * Bring "up" connection "ethie"
+    * Bring "up" connection "ethie"
+    * Bring "up" connection "ethie"
+    Then "activation_source_schedule" is not visible with command "journalctl --since -4m|grep error"
+
+
+    @rhbz1268866
+    @eth
+    @internal_DHCP
+    @ipv6_NM_stable_with_internal_DHCPv6
+    Scenario: NM - ipv6 - stable with internal DHCPv6
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.method disabled" in editor
+    * Submit "set ipv6.method dhcp" in editor
+    * Save in editor
+    * Quit editor
+    * Execute "nmcli con up id ethie" for "100" times
+
+
+    @eth
+    @restart
+    @selinux_allow_ifup
+    @teardown_testveth
+    @persistent_default_ipv6_gw
+    Scenario: NM - ipv6 - persistent default ipv6 gw
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie"
+    * Wait for at least "3" seconds
+    * Execute "systemctl stop NetworkManager"
+    * Prepare simulated test "testX" device
+    * Execute "sysctl net.ipv6.conf.testX.accept_ra_defrtr=1"
+    * Execute "sysctl net.ipv6.conf.testX.accept_ra_pinfo=1"
+    * Execute "ifup testX"
+    * Wait for at least "10" seconds
+    * Execute "ip r del 169.254.0.0/16"
+    When "default" is visible with command "ip -6 r |grep testX" in "20" seconds
+    And "default" is visible with command "ip -6 r |grep testX |grep expire" in "5" seconds
+    * Restart NM
+    Then "default via fe" is visible with command "ip -6 r |grep testX |grep 'metric 10[0-1]'" in "50" seconds
+    And "default via fe" is not visible with command "ip -6 r |grep testX |grep expire" in "5" seconds
 
 
     @ipv6_describe

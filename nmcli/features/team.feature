@@ -1,6 +1,6 @@
  Feature: nmcli: team
 
-
+    @1257195
     @add_default_team
     @team
     Scenario: nmcli - team - add default team
@@ -53,6 +53,7 @@
     Then Check slave "eth1" in team "nm-team" is "up"
 
 
+    @1257237
     @add_two_slaves_to_team
     @team_slaves
     @team
@@ -113,6 +114,8 @@
      * Open editor for connection "team0.0"
      * Set a property named "connection.slave-type" to "team" in editor
      * Set a property named "connection.master" to "nm-team" in editor
+     * Submit "yes" in editor
+     * Submit "verify fix" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "team0.0"
@@ -157,6 +160,24 @@
     Then Team "nm-team" is down
      * Bring up connection "team0" ignoring error
     Then "nm-team" is visible with command "sudo teamdctl nm-team state dump"
+
+
+    @rhbz1158529
+    @team_slaves
+    @team
+    @team_slaves_start_via_master
+    Scenario: nmcli - team - start slaves via master
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+     * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
+     * Disconnect device "nm-team"
+     * Open editor for connection "team0"
+     * Submit "set connection.autoconnect-slaves 1" in editor
+     * Save in editor
+     * Quit editor
+     * Bring "up" connection "team0"
+    Then Check slave "eth1" in team "nm-team" is "up"
+    Then Check slave "eth2" in team "nm-team" is "up"
 
 
     @start_team_by_hand_all_auto
@@ -398,6 +419,39 @@
     Then Team "nm-team" is down
 
 
+    @rhbz1255927
+    @team_slaves
+    @team
+    @team_set_mtu
+    Scenario: nmcli - team - set mtu
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+     * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
+     * Open editor for connection "team0.0"
+     * Set a property named "802-3-ethernet.mtu" to "9000" in editor
+     * Save in editor
+     * Quit editor
+     * Open editor for connection "team0.1"
+     * Set a property named "802-3-ethernet.mtu" to "9000" in editor
+     * Save in editor
+     * Quit editor
+     * Open editor for connection "team0"
+     * Set a property named "802-3-ethernet.mtu" to "9000" in editor
+     * Set a property named "ipv4.method" to "manual" in editor
+     * Set a property named "ipv4.addresses" to "1.1.1.2/24" in editor
+     * Save in editor
+     * Quit editor
+     * Disconnect device "nm-team"
+     * Bring "up" connection "team0"
+     * Bring "up" connection "team0.1"
+     * Bring "up" connection "team0.0"
+    Then Check slave "eth1" in team "nm-team" is "up"
+    Then Check slave "eth2" in team "nm-team" is "up"
+    Then "mtu 9000" is visible with command "ip a s eth1 |grep mtu" in "25" seconds
+    Then "mtu 9000" is visible with command "ip a s eth2 |grep mtu"
+    Then "mtu 9000" is visible with command "ip a s nm-team |grep mtu"
+
+
     @remove_config
     @team_slaves
     @team
@@ -448,6 +502,18 @@
     Then "TEAM.SLAVES:\s+dummy0" is visible with command "nmcli -f team.slaves dev show team0"
 
 
+
+    @rhbz1145988
+    @team_slaves
+    @team
+    @kill_teamd
+    Scenario: NM - team - kill teamd
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Execute "sleep 6"
+     * Execute "killall -9 teamd; sleep 2"
+    Then "teamd -o -n -U -D -N -t nm-team" is visible with command "ps aux|grep -v grep| grep teamd"
+
+
     @describe
     @team
     Scenario: nmcli - team - describe team
@@ -459,3 +525,16 @@
       * Submit "g c" in editor
      Then Check "The JSON configuration for the team network interface.  The property should contain raw JSON configuration data suitable for teamd, because the value is passed directly to teamd. If not specified, the default configuration is used.  See man teamd.conf for the format details." are present in describe output for object " "
 
+
+    @rhbz1183444
+    @veth
+    @team
+    @bridge
+    @team_enslave_to_bridge
+    Scenario: nmcli - team - enslave team device to bridge
+     * Add a new connection of type "team" and options "con-name team0 autoconnect no ifname nm-team"
+     * Add a new connection of type "bridge" and options "con-name br10 autoconnect no ifname bridge0 ip4 192.168.177.100/24 gw4 192.168.177.1"
+     * Execute "nmcli connection modify id team0 connection.master bridge0 connection.slave-type bridge"
+     * Bring "up" connection "team0"
+    Then "bridge0:bridge:connected:br10" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
+    Then "nm-team:team:connected:team0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds

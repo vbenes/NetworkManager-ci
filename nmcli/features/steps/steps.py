@@ -6,7 +6,7 @@ import os
 import exceptions
 import re
 import subprocess
-from subprocess import Popen
+from subprocess import Popen, check_output
 from glob import glob
 
 # Helpers for the steps that leave the execution trace
@@ -79,10 +79,11 @@ def add_secondary_addr_same_subnet(context, device):
 @given(u'Use certificate "{cert}" with key "{key}" and authority "{ca}" for gateway "{gateway}" on OpenVPN connection "{name}"')
 def set_openvpn_connection(context, cert, key, ca, gateway, name):
     samples = glob('/usr/share/doc/openvpn-*/sample/')[0]
-    cli = pexpect.spawn('nmcli c modify %s vpn.data "key = %s, connection-type = tls, ca = %s, cert = %s, remote = %s, cert-pass-flags = 0"' % (name, samples + key, samples + ca, samples + cert, gateway))
+    cli = pexpect.spawn('nmcli c modify %s vpn.data "tunnel-mtu = 1400, key = %s, connection-type = tls, ca = %s, cert = %s, remote = %s, cert-pass-flags = 0"' % (name, samples + key, samples + ca, samples + cert, gateway))
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection data' % (name))
+    sleep(1)
 
 @step(u'Add connection type "{typ}" named "{name}" for device "{ifname}"')
 def add_connection_for_iface(context, typ, name, ifname):
@@ -103,7 +104,7 @@ def add_new_default_connection_without_ifname(context, typ, options):
     cli = pexpect.spawn('nmcli connection add type %s %s' % (typ, options), logfile=context.log)
     if cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF]) == 0:
         raise Exception('Got an Error while creating connection of type %s with options %s' % (typ,options))
-
+    sleep(1)
 
 @step(u'Add infiniband port named "{name}" for device "{ifname}" with parent "{parent}" and p-key "{pkey}"')
 def add_port(context, name, ifname, parent, pkey):
@@ -125,7 +126,7 @@ def open_slave_connection(context, master, device, name):
 
     if r == 0:
         raise Exception('Got an Error while adding slave connection %s on device %s for master %s' % (name, device, master))
-    sleep(2)
+    sleep(1)
 
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on Libreswan connection "{name}"')
 def set_vpnc_connection(context, user, password, group, secret, gateway, name):
@@ -133,10 +134,12 @@ def set_vpnc_connection(context, user, password, group, secret, gateway, name):
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection data' % (name))
+    sleep(1)
     cli = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s, xauthpassword = %s"' % (name, secret, password))
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection secrets' % (name))
+    sleep(1)
 
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on VPNC connection "{name}"')
 def set_vpnc_connection(context, user, password, group, secret, gateway, name):
@@ -144,10 +147,12 @@ def set_vpnc_connection(context, user, password, group, secret, gateway, name):
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection data' % (name))
+    sleep(1)
     cli = pexpect.spawn('nmcli c modify %s vpn.secrets "IPSec secret=%s, Xauth password=%s"' % (name, secret, password))
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection secrets' % (name))
+    sleep(1)
 
 @step(u'Use user "{user}" with password "{password}" and MPPE set to "{mppe}" for gateway "{gateway}" on PPTP connection "{name}"')
 def set_vpnc_connection(context, user, password, mppe, gateway, name):
@@ -155,17 +160,19 @@ def set_vpnc_connection(context, user, password, mppe, gateway, name):
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection data' % (name))
+    sleep(1)
     cli = pexpect.spawn('nmcli c modify %s vpn.secrets "password = %s"' % (name, password))
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection secrets' % (name))
+    sleep(1)
 
 @step(u'Autocomplete "{cmd}" in bash and execute')
 def autocomplete_command(context, cmd):
     bash = pexpect.spawn("bash")
     bash.send(cmd)
     bash.send('\t')
-    sleep(4)
+    sleep(1)
     bash.send('\r\n')
     sleep(1)
     bash.sendeof()
@@ -197,36 +204,22 @@ def clear_text_typed(context):
 def start_stop_connection(context, action, name):
     if action == "down":
         if command_code(context, "nmcli connection show --active |grep %s" %name) != 0:
-            print "Warning: Connection is down no need to down it again"
+            print ("Warning: Connection is down no need to down it again")
             return
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name).strip()
-    if action == "up" and method in ["auto","disabled","link-local"]:
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            device = command_output(context, "nmcli connection s %s |grep interface-name |awk '{print $2}'" % name).strip()
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
 
     cli = pexpect.spawn('nmcli connection %s id %s' % (action, name), logfile=context.log,  timeout=180)
 
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
-    sleep(2)
     if r == 0:
         raise Exception('Got an Error while %sing connection %s' % (action, name))
     elif r == 1:
         raise Exception('nmcli connection %s %s timed out (90s)' % (action, name))
     elif r == 2:
         raise Exception('nmcli connection %s %s timed out (180s)' % (action, name))
-    sleep(4)
 
 
 @step(u'Bring up connection "{name}" for "{device}" device')
 def start_connection_for_device(context, name, device):
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %name).strip()
-    if method in ["auto","disabled","link-local"]:
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
-
     cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
@@ -240,13 +233,6 @@ def start_connection_for_device(context, name, device):
 
 @step(u'Bring up connection "{connection}"')
 def bring_up_connection(context, connection):
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection).strip()
-    if method in ["auto","disabled","link-local"]:
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            device = command_output(context, "nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection).strip()
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
-
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
@@ -257,13 +243,6 @@ def bring_up_connection(context, connection):
 
 @step(u'Bring up connection "{connection}" ignoring error')
 def bring_up_connection_ignore_error(context, connection):
-    method = command_output(context, "nmcli connection show %s|grep ipv4.method|awk '{print $2}'" %connection).strip()
-    if method in ["auto","disabled","link-local"]:
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            device = command_output(context, "nmcli connection s %s |grep interface-name |awk '{print $2}'" % connection).strip()
-            command_code(context, 'ip link set dev %s up' % device)
-            #command_code(context, 'ip link set dev %sp up' % device)
-
     cli = pexpect.spawn('nmcli connection up %s' % connection, timeout = 180, logfile=context.log)
     r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
     if r == 1:
@@ -292,7 +271,6 @@ def bring_down_connection_ignoring(context, connection):
 @step(u'Check ipv6 connectivity is stable on assuming connection profile "{profile}" for device "{device}"')
 def check_ipv6_connectivity_on_assumal(context, profile, device):
     address = command_output(context, "ip -6 a s %s | grep dynamic | awk '{print $2; exit}' | cut -d '/' -f1" % device)
-    context.nm_restarted = True
     assert command_code(context, 'systemctl stop NetworkManager.service') == 0
     assert command_code(context, "sed -i 's/UUID=/#UUID=/' /etc/sysconfig/network-scripts/ifcfg-%s" % profile)  == 0
     ping = pexpect.spawn('ping6 %s -i 0.2 -c 50' % address, logfile=context.log)
@@ -304,41 +282,41 @@ def check_ipv6_connectivity_on_assumal(context, profile, device):
         raise Exception('Had packet loss on pinging the address!')
 
 
-@step(u'Check device route and prefix for "{dev}"')
-def check_slaac_setup(context, dev):
-    # cmd = "sudo radvdump > /tmp/radvdump.txt"
-    # proc = Popen(cmd, shell=True)
-    # sleep(200)
-    cmd = "sudo pkill -9 radvdump"
-    command_code(context, cmd)
-    dump = open("/tmp/radvdump.txt", "r")
-    prefix = ""
-    for line in dump.readlines():
-        if line.find('prefix 2') != -1:
-            prefix = line.split(' ')[1].strip()
-            break
+# @step(u'Check device route and prefix for "{dev}"')
+# def check_slaac_setup(context, dev):
+#     cmd = "sudo pkill radvdump"
+#     command_code(context, cmd)
+#     dump = open("/tmp/radvdump.txt", "r")
+#     prefix = ""
+#     for line in dump.readlines():
+#         if line.find('prefix 2') != -1:
+#             prefix = line.split(' ')[1].strip()
+#             break
 
-    cmd = "ip -6 route |grep %s" %prefix
-    search = ""
-    for line in command_output(context, cmd).split('\n'):
-        if line.find(dev) != -1:
-            search = line
-            break
+#     cmd = "ip -6 route |grep %s" %prefix
+#     search = ""
+#     for line in command_output(context, cmd).split('\n'):
+#         if line.find(dev) != -1:
+#             search = line
+#             break
 
-    device_route = "%s dev %s" %(prefix, dev)
+#     device_route = "%s dev %s" %(prefix, dev)
 
-    assert search.find(device_route) != -1, "Device route %s wasn't found. Just this was found %s" %(device_route, search)
+#     assert search.find(device_route) != -1, "Device route %s wasn't found. Just this was found %s" %(device_route, search)
 
-    device_prefix = prefix.split('::')[1]
-    cmd = 'ip a s %s |grep inet6| grep "scope global"' %dev
-    ipv6_line = ""
-    for line in command_output(context, cmd).split('\n'):
-        if line.find('inet6'):
-            ipv6_line = line
-            break
+#     device_prefix = prefix.split('::')[1]
+#     cmd = 'ip -6 a s %s |grep inet6 | grep "scope global" | grep %s' % (dev, device_prefix)
+#     assert command_code(context, cmd) == 0, "Prefix %s wasn't found on the IPv6 address" % (device_prefix)
 
-    assert line.find(device_prefix) != -1, "Prefix %s wasn't found in %s" %(device_prefix, line)
-
+@step(u'Check "{options}" are shown for object "{obj}"')
+def check_describe_output_in_editor(context, options, obj):
+    options = options.split('|')
+    for opt in options:
+        context.prompt.sendcontrol('c')
+        sleep(0.4)
+        context.prompt.send('set %s \t\t' % obj)
+        a =  context.prompt.expect(["%s" % opt, pexpect.TIMEOUT], timeout=5)
+        assert a == 0 , "Option %s was not shown!" % opt
 
 @step(u'Check "{options}" are present in describe output for object "{obj}"')
 def check_describe_output_in_editor(context, options, obj):
@@ -350,7 +328,8 @@ def check_describe_output_in_editor(context, options, obj):
 
 @step(u'Check noted values "{i1}" and "{i2}" are the same')
 def check_same_noted_values(context, i1, i2):
-    assert context.noted[i1].strip() == context.noted[i2].strip(), "Noted values do not match!"
+    assert context.noted[i1].strip() == context.noted[i2].strip(), \
+     "Noted values: %s != %s !" % (context.noted[i1].strip(), context.noted[i2].strip())
 
 
 @step(u'Check noted output contains "{pattern}"')
@@ -366,10 +345,10 @@ def value_printed(context, item, value):
         t_int = int(time())
         t_str = str(t_int)
         value = t_str[:-3]
-        print value
+        print (value)
 
     context.prompt.expect('%s\s+%s' %(item, value))
-    print context.prompt
+    print (context.prompt)
 
 
 @step(u'Check if "{name}" is active connection')
@@ -398,6 +377,19 @@ def check_ifcfg_exists(context):
 def check_ifcfg_exists_given_device(context, con_name):
     cat = pexpect.spawn('cat /etc/sysconfig/network-scripts/ifcfg-%s' % con_name, logfile=context.log)
     cat.expect('NAME=%s' % con_name)
+
+
+@step(u'Check "{flag}" band cap flag set if device supported')
+def band_cap_set_if_supported(context, flag, device='wlan0'):
+    try:
+        if flag == 'NM_802_11_DEVICE_CAP_FREQ_2GHZ':
+            context.execute_steps(u'''* "2... MHz" is visible with command "nmcli -f FREQ d w"''')
+        elif flag == 'NM_802_11_DEVICE_CAP_FREQ_5GHZ':
+            context.execute_steps(u'''* "5... MHz" is visible with command "nmcli -f FREQ d w"''')
+    except AssertionError:
+        assert not flag_cap_set(context, flag=flag, device=device, giveexception=False), "The flag is set, though we don't see any such network!"
+        return
+    assert flag_cap_set(context, flag=flag, device=device, giveexception=False), "Device supports the band, but the flag is unset!"
 
 
 @step(u'Check bond "{bond}" in proc')
@@ -687,11 +679,7 @@ def delete_connection_with_enter(context, name):
 
 @step(u'Disconnect device "{name}"')
 def disconnect_connection(context, name):
-    if os.path.isfile('/tmp/nm_veth_configured'):
-        cli = pexpect.spawn('nmcli --wait 20 device disconnect %s' % name, logfile=context.log,  timeout=180)
-
-    else:
-        cli = pexpect.spawn('nmcli device disconnect %s' % name, logfile=context.log,  timeout=180)
+    cli = pexpect.spawn('nmcli device disconnect %s' % name, logfile=context.log,  timeout=180)
 
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
@@ -737,12 +725,33 @@ def execute_command(context, command):
 def execute_command(context, command):
     Popen(command, shell=True)
 
+@step(u'Execute "{command}" for "{number}" times')
+def execute_multiple_times(context, command, number):
+    orig_nm_pid = check_output('pidof NetworkManager', shell=True)
+
+    i = 0
+    while i < int(number):
+        command_code(context, command)
+        curr_nm_pid = check_output('pidof NetworkManager', shell=True)
+        assert curr_nm_pid == orig_nm_pid, 'NM crashed as original pid was %s but now is %s' %(orig_nm_pid, curr_nm_pid)
+        i += 1
+
+@step(u'Externally created bridge has IP when NM overtakes it repeated "{number}" times')
+def external_bridge_check(context, number):
+    i = 0
+    while i < int(number):
+        context.execute_steps(u"""
+            * "br0" is not visible with command "nmcli device"
+            * Execute "sudo sh -c 'brctl addbr br0 ; ip addr add 10.1.1.1/24 dev br0 ; ip link set br0 up'"
+            * "10.1.1.1/24" is visible with command "ip addr show br0" in "4" seconds
+            * "GENERAL.STATE:\s+100 \(connected\)" is visible with command "nmcli device show br0" in "4" seconds
+            * "IP4.ADDRESS.+10.1.1.1/24" is visible with command "nmcli device show br0"
+            * Execute "sudo sh -c 'ip link del br0'"
+        """)
+        i += 1
 
 @step(u'Fail up connection "{name}" for "{device}"')
 def fail_up_connection_for_device(context, name, device):
-    if os.path.isfile('/tmp/nm_veth_configured'):
-        command_code(context, 'ip link set dev %s up' %device)
-
     cli = pexpect.spawn('nmcli connection up id %s ifname %s' % (name, device), logfile=context.log,  timeout=180)
     r = cli.expect(['Error', 'Timeout', pexpect.TIMEOUT, pexpect.EOF])
     if r == 3:
@@ -754,6 +763,62 @@ def fail_up_connection_for_device(context, name, device):
 def wait_for_process(context, command):
     assert command_code(context, command) == 0
     sleep(0.1)
+
+
+def get_device_dbus_path(device):
+    import dbus
+    bus = dbus.SystemBus()
+    proxy = bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+    manager = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+    dpath = None
+    devices = manager.GetDevices()
+    for d in devices:
+        dev_proxy = bus.get_object("org.freedesktop.NetworkManager", d)
+        prop_iface = dbus.Interface(dev_proxy, "org.freedesktop.DBus.Properties")
+        iface = prop_iface.Get("org.freedesktop.NetworkManager.Device", "Interface")
+        if iface == device:
+            dpath = d
+            break
+    if not dpath or not len(dpath):
+        raise Exception("NetworkManager knows nothing about %s" % device)
+    return dpath
+
+
+@step(u'Flag "{flag}" is {n} set in WirelessCapabilites')
+@step(u'Flag "{flag}" is set in WirelessCapabilites')
+def flag_cap_set(context, flag, n=None, device='wlan0', giveexception=True):
+    wcaps = {}
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_WEP40'] = 0x1
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_WEP104'] = 0x2
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_TKIP'] = 0x4
+    wcaps['NM_802_11_DEVICE_CAP_CIPHER_CCMP'] = 0x8
+    wcaps['NM_802_11_DEVICE_CAP_WPA'] = 0x10
+    wcaps['NM_802_11_DEVICE_CAP_RSN'] = 0x20
+    wcaps['NM_802_11_DEVICE_CAP_AP'] = 0x40
+    wcaps['NM_802_11_DEVICE_CAP_ADHOC'] = 0x80
+    wcaps['NM_802_11_DEVICE_CAP_FREQ_VALID'] = 0x100
+    wcaps['NM_802_11_DEVICE_CAP_FREQ_2GHZ'] = 0x200
+    wcaps['NM_802_11_DEVICE_CAP_FREQ_5GHZ'] = 0x400
+
+    path = get_device_dbus_path(device)
+    cmd = '''dbus-send --system --print-reply \
+            --dest=org.freedesktop.NetworkManager \
+            %s \
+            org.freedesktop.DBus.Properties.Get \
+            string:"org.freedesktop.NetworkManager.Device.Wireless" \
+            string:"WirelessCapabilities" | grep variant | awk '{print $3}' ''' % path
+    ret = int(check_output(cmd, shell=True).strip())
+
+    if n is None:
+        if wcaps[flag] & ret == wcaps[flag]:
+            return True
+        elif giveexception:
+            raise AssertionError("The flag is unset! WirelessCapabilities: %d" % ret)
+        else:
+            return False
+    else:
+        if wcaps[flag] & ret == wcaps[flag]:
+            raise AssertionError("The flag is set! WirelessCapabilities: %d" % ret)
 
 
 @step(u'Force renew IPv6 for "{device}"')
@@ -802,19 +867,25 @@ def ifcfg_doesnt_exist(context, con_name):
     assert cat.expect('No such file') == 0, 'Ifcfg-%s exists!' % con_name
 
 
-@step(u'Lifetimes are slightly smaller than "{valid_lft}" and "{pref_lft}" for device "{device}"')
-def correct_lifetime(context, valid_lft, pref_lft, device):
-    command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $2}'" % device
-    valid = command_output(context, command)
-    command = "ip a s %s |grep -A 2 inet6| grep -A 2 dynamic |grep valid_lft |awk '{print $4}'" % device
-    pref = command_output(context, command)
+@step(u'"{typ}" lifetimes are slightly smaller than "{valid_lft}" and "{pref_lft}" for device "{device}"')
+def correct_lifetime(context, typ, valid_lft, pref_lft, device):
+    if typ == 'IPv6':
+        inet = "inet6"
+    if typ == 'IPv4':
+        inet = "inet"
+
+    valid_cmd = "ip a s %s |grep -A 2 %s| grep -A 2 dynamic |grep valid_lft |awk '{print $2}'" % (device, inet)
+    pref_cmd = "ip a s %s |grep -A 2 %s| grep -A 2 dynamic |grep valid_lft |awk '{print $4}'" % (device, inet)
+
+    valid = command_output(context, valid_cmd)
+    pref = command_output(context, pref_cmd)
+
     valid = valid.strip()
     valid = valid.replace('sec', '')
     pref = pref.strip()
     pref = pref.replace('sec', '')
-    assert int(valid) != int(pref)
-    assert int(valid) <= int(valid_lft)+3 and int(valid_lft) >= int(valid)-20
-    assert int(pref) <= int(pref_lft)+3 and int(pref_lft) >= int(pref)-20
+    assert int(valid) <= int(valid_lft)+20 and int(valid_lft) >= int(valid)-50
+    assert int(pref) <= int(pref_lft)+20 and int(pref_lft) >= int(pref)-50
 
 
 @step(u'Look for "{content}" in tailed file')
@@ -827,6 +898,23 @@ def find_tailing(context, content):
 def mode_missing_in_editor(context):
     context.prompt.expect("Error: connection verification failed: bond.options: mandatory option 'mode' is missing")
 
+
+@step(u'Modify connection "{name}" changing options "{options}"')
+def modify_connection(context, name, options):
+    cli = pexpect.spawn('nmcli connection modify %s %s' % (name, options), logfile=context.log)
+    if cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF]) == 0:
+        raise Exception('Got an Error while modifying %s options %s' % (name,options))
+
+
+@step(u'Metered status is "{value}"')
+def check_metered_status(context, value):
+    cmd = 'dbus-send --system --print-reply --dest=org.freedesktop.NetworkManager \
+                                                /org/freedesktop/NetworkManager \
+                                                org.freedesktop.DBus.Properties.Get \
+                                                string:"org.freedesktop.NetworkManager" \
+                                                string:"Metered" |grep variant| awk \'{print $3}\''
+    ret = check_output(cmd, shell=True).strip()
+    assert ret == value, "Metered value is %s but should be %s" %(ret, value)
 
 @step(u'Network trafic "{state}" dropped')
 def network_dropped(context, state):
@@ -846,9 +934,11 @@ def network_dropped_two(context, state, device):
 
 @step(u'No error appeared in editor')
 def no_error_appeared_in_editor(context):
-    r = context.prompt.expect([pexpect.TIMEOUT, pexpect.EOF, 'Error'], timeout=5)
+    r = context.prompt.expect([pexpect.TIMEOUT, pexpect.EOF, 'Error', 'CRITICAL'], timeout=5)
     if r == 2:
         raise Exception('Got an Error in editor')
+    if r == 3:
+        raise Exception('Got a CRITICAL warning in editor')
 
 
 @step(u'Note the "{prop}" property from editor print output')
@@ -857,7 +947,7 @@ def note_print_property(context, prop):
     context.prompt.sendline('print %s' % category)
     context.prompt.expect('%s.%s:\s+(\S+)' % (category, item))
     context.noted = context.prompt.match.group(1)
-    print context.noted
+    print (context.noted)
 
 
 @step(u'Note the "{prop}" property from ifconfig output for device "{device}"')
@@ -865,7 +955,7 @@ def note_print_property(context, prop, device):
     ifc = pexpect.spawn('ifconfig %s' % device, logfile=context.log)
     ifc.expect('%s\s(\S+)' % prop)
     context.noted = ifc.match.group(1)
-    print context.noted
+    print (context.noted)
 
 
 @step(u'Noted value contains "{pattern}"')
@@ -1078,6 +1168,86 @@ def prepare_veths(context, pairs_array, bridge):
         command_code(context, "ip link set dev %sp up" % pair)
 
 
+@step(u'Prepare simulated test "{device}" device with "{ipv4}" ipv4 and "{ipv6}" ipv6 dhcp address prefix and dhcp option "{option}"')
+@step(u'Prepare simulated test "{device}" device with "{ipv4}" ipv4 and "{ipv6}" ipv6 dhcp address prefix')
+@step(u'Prepare simulated test "{device}" device')
+def prepare_simdev(context, device, ipv4=None, ipv6=None, option=None):
+    if ipv4 is None:
+        ipv4 = "192.168.99"
+    if ipv6 is None:
+        ipv6 = "2620:dead:beaf"
+    if not hasattr(context, 'testvethns'):
+        os.system('''echo 'ENV{ID_NET_DRIVER}=="veth", ENV{INTERFACE}=="test*", ENV{NM_UNMANAGED}="0"' >/etc/udev/rules.d/88-lr.rules''')
+        command_code(context, "udevadm control --reload-rules")
+        command_code(context, "udevadm settle")
+        command_code(context, "sleep 1")
+    command_code(context, "ip netns add {device}_ns".format(device=device))
+    command_code(context, "ip link add {device} type veth peer name {device}p".format(device=device))
+    command_code(context, "ip link set {device}p netns {device}_ns".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip link set {device}p up".format(device=device))
+    command_code(context, "ip link set {device} up".format(device=device))
+    command_code(context, "ip netns exec {device}_ns brctl addbr {device}_bridge".format(device=device))
+    command_code(context, "ip netns exec {device}_ns brctl addif {device}_bridge {device}p".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip addr add {ip}.1/24 dev {device}_bridge".format(device=device, ip=ipv4))
+    command_code(context, "ip netns exec {device}_ns ip -6 addr add {ip}::1/64 dev {device}_bridge".format(device=device, ip=ipv6))
+    command_code(context, "ip netns exec {device}_ns ip link set {device}_bridge up".format(device=device))
+    sleep(3)
+    if option is None:
+        command_code(context, "ip netns exec {device}_ns dnsmasq \
+                                            --pid-file=/tmp/{device}_ns.pid \
+                                            --dhcp-leasefile=/tmp/{device}_ns.lease \
+                                            --dhcp-range={ipv4}.10,{ipv4}.15,2m \
+                                            --dhcp-range={ipv6}::100,{ipv6}::1ff,slaac,64,2m \
+                                            --enable-ra --interface={device}_bridge \
+                                            --bind-interfaces".format(device=device, ipv4=ipv4, ipv6=ipv6))
+    else:
+        command_code(context, "ip netns exec {device}_ns dnsmasq \
+                                            --pid-file=/tmp/{device}_ns.pid \
+                                            --dhcp-leasefile=/tmp/{device}_ns.lease \
+                                            --dhcp-range={ipv4}.10,{ipv4}.15,2m \
+                                            --dhcp-range={ipv6}::100,{ipv6}::1ff,slaac,64,2m \
+                                            --enable-ra --interface={device}_bridge \
+                                            --dhcp-option-force={option} \
+                                            --bind-interfaces".format(device=device, ipv4=ipv4, ipv6=ipv6, option=option))
+
+    if not hasattr(context, 'testvethns'):
+        context.testvethns = []
+    context.testvethns.append("%s_ns" % device)
+
+
+@step(u'Prepare simulated veth device "{device}" wihout carrier')
+def prepare_simdev_no_carrier(context, device):
+    ipv4 = "192.168.99"
+    ipv6 = "2620:dead:beaf"
+    if not hasattr(context, 'testvethns'):
+        os.system('''echo 'ENV{ID_NET_DRIVER}=="veth", ENV{INTERFACE}=="test*", ENV{NM_UNMANAGED}="0"' >/etc/udev/rules.d/88-lr.rules''')
+        command_code(context, "udevadm control --reload-rules")
+        command_code(context, "udevadm settle")
+        command_code(context, "sleep 1")
+    command_code(context, "ip netns add {device}_ns".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip link add {device} type veth peer name {device}p".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip link set {device}p up".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip link set {device} up".format(device=device))
+    command_code(context, "ip netns exec {device}_ns brctl addbr {device}_bridge".format(device=device))
+    command_code(context, "ip netns exec {device}_ns brctl addif {device}_bridge {device}p".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip addr add {ip}.1/24 dev {device}_bridge".format(device=device, ip=ipv4))
+    command_code(context, "ip netns exec {device}_ns ip -6 addr add {ip}::1/64 dev {device}_bridge".format(device=device, ip=ipv6))
+    command_code(context, "ip netns exec {device}_ns ip link set {device}_bridge up".format(device=device))
+    command_code(context, "ip netns exec {device}_ns ip link set {device}p down".format(device=device))
+    sleep(3)
+    command_code(context, "ip netns exec {device}_ns dnsmasq \
+                                            --pid-file=/tmp/{device}_ns.pid \
+                                            --dhcp-leasefile=/tmp/{device}_ns.lease \
+                                            --dhcp-range={ipv4}.10,{ipv4}.15,2m \
+                                            --dhcp-range={ipv6}::100,{ipv6}::1ff,slaac,64,2m \
+                                            --enable-ra --interface={device}_bridge \
+                                            --bind-interfaces".format(device=device, ipv4=ipv4, ipv6=ipv6))
+    command_code(context, "ip netns exec {device}_ns ip link set {device} netns 1".format(device=device))
+    if not hasattr(context, 'testvethns'):
+        context.testvethns = []
+    context.testvethns.append("%s_ns" % device)
+
+
 @step(u'Print in editor')
 def print_in_editor(context):
     context.prompt.sendline('print')
@@ -1119,19 +1289,6 @@ def restart_NM(context):
     sleep(1)
     context.nm_restarted = True
     command_code(context, "service NetworkManager restart") == 0
-    if os.path.isfile('/tmp/nm_veth_configured'):
-        command_code(context, 'ip link set dev eth0 up')
-        command_code(context, 'ip link set dev eth0p up')
-        command_code(context, 'ip link set dev eth99 up')
-        command_code(context, 'ip link set dev eth99p up')
-        command_code(context, 'ip link set dev eth99p up')
-        command_code(context, 'ip link set dev outbr up')
-        command_code(context, 'ip link set dev isobr up')
-        command_code(context, 'nmcli c modify dhcp-srv ipv4.method shared')
-        command_code(context, 'nmcli c modify dhcp-srv ipv4.addresses 192.168.100.1/24')
-        command_code(context, 'nmcli con up dhcp-srv')
-        command_code(context, 'nmcli con up testeth0')
-
     sleep(4)
 
 
@@ -1254,9 +1411,6 @@ def spawn_command(context, command):
 
 @step(u'Start generic connection "{connection}" for "{device}"')
 def start_generic_connection(context, connection, device):
-    if os.path.isfile('/tmp/nm_veth_configured'):
-        command_code(context, 'ip link set dev %s up' %device)
-
     cli = pexpect.spawn('nmcli connection up %s ifname %s' % (connection, device), timeout = 180, logfile=context.log)
     r = cli.expect([pexpect.EOF, pexpect.TIMEOUT])
     if r != 0:
@@ -1285,7 +1439,7 @@ def find_tailing_journal(context, content):
 @step(u'Team "{team}" is down')
 def team_is_down(context, team):
     cmd = pexpect.spawn('teamdctl %s state dump' %team, logfile=context.log)
-    print command_code(context, 'teamdctl %s state dump' %team)
+    print (command_code(context, 'teamdctl %s state dump' %team))
     assert command_code(context, 'teamdctl %s state dump' %team) != 0, 'team "%s" exists' % (team)
 
 

@@ -114,6 +114,7 @@ Feature: nmcli - wifi
     @wifi
     @testcase_306557
     Scenario: nmcli - wifi - adhoc open network
+    Given Flag "NM_802_11_DEVICE_CAP_ADHOC" is set in WirelessCapabilites
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-adhoc autoconnect off ssid qe-adhoc"
     * Check ifcfg-name file created for connection "qe-adhoc"
     * Open editor for connection "qe-adhoc"
@@ -124,8 +125,25 @@ Feature: nmcli - wifi
     * Check value saved message showed in editor
     * Quit editor
     * Execute "nmcli connection up qe-adhoc"
-    Then "qe-adhoc" is visible with command "iw dev wlan0 link" in "30" seconds
-    Then "Joined IBSS" is visible with command "iw dev wlan0 link" in "30" seconds
+    Then "qe-adhoc" is visible with command "iw dev wlan0 info" in "30" seconds
+    Then "type IBSS" is visible with command "iw dev wlan0 info" in "30" seconds
+
+
+    @wifi
+    @nmcli_wifi_ap
+    Scenario: nmcli - wifi - ap open network
+    Given Flag "NM_802_11_DEVICE_CAP_AP" is set in WirelessCapabilites
+    * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-ap autoconnect off ssid qe-ap"
+    * Check ifcfg-name file created for connection "qe-ap"
+    * Open editor for connection "qe-ap"
+    * Set a property named "802-11-wireless.mode" to "ap" in editor
+    * Set a property named "ipv4.method" to "shared" in editor
+    * Save in editor
+    * Check value saved message showed in editor
+    * Quit editor
+    * Execute "nmcli connection up qe-ap"
+    Then "qe-ap" is visible with command "iw dev wlan0 info" in "30" seconds
+    Then "type AP" is visible with command "iw dev wlan0 info" in "30" seconds
 
 
     @wifi
@@ -144,8 +162,9 @@ Feature: nmcli - wifi
 
 
     @wifi
-    @testcase_306559
-    Scenario: nmcli - wifi - different than network's band
+    @nmcli_wifi_right_band_80211a
+    Scenario: nmcli - wifi - right band - 802.11a
+    Given Flag "NM_802_11_DEVICE_CAP_FREQ_5GHZ" is set in WirelessCapabilites
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
     * Check ifcfg-name file created for connection "qe-open"
     * Open editor for connection "qe-open"
@@ -153,7 +172,24 @@ Feature: nmcli - wifi
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
-    * Bring up connection "qe-open" ignoring error
+    * Bring up connection "qe-open"
+    Then "qe-open" is visible with command "iw dev wlan0 link"
+    Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
+
+
+    @wifi
+    @rhbz1254461
+    @testcase_306559
+    Scenario: nmcli - wifi - different than network's band
+    Given Flag "NM_802_11_DEVICE_CAP_FREQ_5GHZ" is not set in WirelessCapabilites
+    * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
+    * Check ifcfg-name file created for connection "qe-open"
+    * Open editor for connection "qe-open"
+    * Set a property named "802-11-wireless.band" to "a" in editor
+    * Save in editor
+    * Check value saved message showed in editor
+    * Quit editor
+    * "Error: Connection activation failed" is visible with command "nmcli con up qe-open"
     Then "qe-open" is not visible with command "iw dev wlan0 link"
     Then "\*\s+qe-open" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
@@ -185,7 +221,7 @@ Feature: nmcli - wifi
     * Check ifcfg-name file created for connection "qe-open"
     * Open editor for connection "qe-open"
     * Set a property named "802-11-wireless.band" to "bg" in editor
-    * Set a property named "802-11-wireless.channel" to "6" in editor
+    * Set a property named "802-11-wireless.channel" to "1" in editor
     * Save in editor
     * Check value saved message showed in editor
     * Quit editor
@@ -425,6 +461,7 @@ Feature: nmcli - wifi
     Then "\*\s+qe-open" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
+    @mtu_wlan0
     @wifi
     @testcase_306580
     Scenario: nmcli - wifi - set mtu
@@ -440,6 +477,7 @@ Feature: nmcli - wifi
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
+    @rhbz1094298
     @wifi
     @testcase_306581
     Scenario: nmcli - wifi - seen bssids
@@ -1400,3 +1438,12 @@ Feature: nmcli - wifi
     @nmcli_wifi_dbus_invalid_cert_input
     Scenario: nmcli - wifi - dbus invalid certificate input
     Then "Connection.InvalidProperty" is visible with command "python tmp/dbus-set-wifi-bad-cert.py"
+
+
+    @rhbz1200451
+    @wifi
+    @nmcli_wifi_indicate_wifi_band_caps
+    Scenario: nmcli - wifi - indicate wireless band capabilities
+    Given Flag "NM_802_11_DEVICE_CAP_FREQ_VALID" is set in WirelessCapabilites
+    Then Check "NM_802_11_DEVICE_CAP_FREQ_2GHZ" band cap flag set if device supported
+    Then Check "NM_802_11_DEVICE_CAP_FREQ_5GHZ" band cap flag set if device supported

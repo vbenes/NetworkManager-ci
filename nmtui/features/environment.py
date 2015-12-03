@@ -16,7 +16,7 @@ def get_cursored_screen(screen):
 def print_screen(screen):
     cursored_screen = get_cursored_screen(screen)
     for i in range(len(cursored_screen)):
-        print cursored_screen[i].encode('utf-8')
+        print (cursored_screen[i].encode('utf-8'))
 
 def log_screen(stepname, screen, path):
     cursored_screen = get_cursored_screen(screen)
@@ -33,7 +33,7 @@ def stripped(x):
 def dump_status(fd, when):
     fd.write("Network configuration %s scenario:\n----------------------------------\n" % when)
     for cmd in ['ip link', 'ip addr', 'ip -4 route', 'ip -6 route',
-        'nmcli g', 'nmcli c', 'nmcli d']:
+        'nmcli g', 'nmcli c', 'nmcli d', 'nmcli d w l']:
              fd.write("--- %s ---\n" % cmd)
              fd.flush()
              call(cmd, shell=True, stdout=fd)
@@ -64,40 +64,47 @@ def before_scenario(context, scenario):
         fd.write('Screen recordings after each step:' + '\n----------------------------------\n')
         fd.flush()
         fd.close()
+        if 'newveth' in scenario.tags:
+            if os.path.isfile('/tmp/nm_newveth_configured'):
+                if os.path.isfile('/tmp/tui-screen.log'):
+                    os.remove('/tmp/tui-screen.log')
+                f = open('/tmp/tui-screen.log', 'a+')
+                f.write('INFO: VETH SETUP: this test has been disabled in VETH setup')
+                f.flush()
+                f.close()
+                import sys
+                sys.exit(0)
+        if 'veth' in scenario.tags:
+            if os.path.isfile('/tmp/nm_veth_configured'):
+                if os.path.isfile('/tmp/tui-screen.log'):
+                    os.remove('/tmp/tui-screen.log')
+                f = open('/tmp/tui-screen.log', 'a+')
+                f.write('INFO: VETH mod: this test has been disabled in VETH setup')
+                f.flush()
+                f.close()
+                import sys
+                sys.exit(0)
+        if 'eth0' in scenario.tags:
+            print ("---------------------------")
+            print ("eth0")# and eth10 disconnect"
+            os.system("nmcli connection down id testeth0")
+            sleep(4)
+            if os.system("nmcli -f NAME c sh -a |grep eth0") == 0:
+                print ("shutting down eth0 once more as it is not down")
+                os.system("nmcli device disconnect eth0")
+                sleep(2)
+            print ("---------------------------")
+        if 'wifi' in scenario.tags:
+            print("Commencing wireless network rescan")
+            os.system("sudo nmcli device wifi rescan")
+        if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
+            print ("Moving all connection profiles to temp dir")
+            os.system("mkdir /tmp/backup_profiles")
+            os.system("mv -f /etc/sysconfig/network-scripts/ifcfg-* /tmp/backup_profiles")
+            os.system("nmcli con reload")
     except Exception:
         print("Error in before_scenario:")
         traceback.print_exc(file=sys.stdout)
-
-def before_tag(context, tag):
-    #try:
-    if tag == 'veth':
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            if os.path.isfile('/tmp/tui-screen.log'):
-                os.remove('/tmp/tui-screen.log')
-            f = open('/tmp/tui-screen.log', 'a+')
-            f.write('INFO: VETH mod: this test has been disabled in VETH setup')
-            f.flush()
-            f.close()
-            import sys
-            sys.exit(0)
-    if tag in ('vlan','bridge','bond','team', 'inf'):
-        if os.path.isfile('/tmp/nm_veth_configured'):
-            context.is_virtual = True
-            call("ip link set dev eth1 up", shell=True)
-            call("ip link set dev eth1p up", shell=True)
-            call("ip link set dev eth2 up", shell=True)
-            call("ip link set dev eth2p up", shell=True)
-        sleep(1)
-    if tag == 'eth0':
-        print "---------------------------"
-        print "eth0"# and eth10 disconnect"
-        os.system("nmcli connection down id eth0")
-        sleep(4)
-        if os.system("nmcli -f NAME c sh -a |grep eth0") == 0:
-            print "shutting down eth0 once more as it is not down"
-            os.system("nmcli device disconnect eth0")
-            sleep(2)
-        print "---------------------------"
 
 def after_step(context, step):
     """Teardown after each step.
@@ -110,6 +117,19 @@ def after_step(context, step):
         print_screen(context.screen)
         log_screen(step.name, context.screen, '/tmp/tui-screen.log')
 
+        if (step.name == 'Flag "NM_802_11_DEVICE_CAP_AP" is set in WirelessCapabilites' or \
+           step.name == 'Flag "NM_802_11_DEVICE_CAP_ADHOC" is set in WirelessCapabilites') and \
+           step.status == 'failed' and step.step_type == 'given':
+            print("Omiting the test as device does not support AP/ADHOC mode")
+            if os.path.isfile('/tmp/tui-screen.log'):
+                os.remove('/tmp/tui-screen.log')
+            f = open('/tmp/tui-screen.log', 'a+')
+            f.write('INFO: Skiped the test as device does not support AP/ADHOC mode')
+            f.flush()
+            f.close()
+            import sys
+            sys.exit(0)
+
         if step.status == 'failed':
             # Test debugging - set DEBUG_ON_FAILURE to drop to ipdb on step failure
             if os.environ.get('DEBUG_ON_FAILURE'):
@@ -118,7 +138,6 @@ def after_step(context, step):
     except Exception:
         print("Error in after_step:")
         traceback.print_exc(file=sys.stdout)
-
 
 def after_scenario(context, scenario):
     """Teardown for each scenario
@@ -159,7 +178,7 @@ def after_scenario(context, scenario):
             os.system("sudo nmcli connection delete id dsl0")
         if 'wifi' in scenario.tags:
             os.system("sudo nmcli connection delete id wifi wifi1 qe-open qe-wpa1-psk qe-wpa2-psk qe-wep")
-            os.system("sudo service NetworkManager restart") # debug restart to overcome the nmcli d w l flickering
+            #os.system("sudo service NetworkManager restart") # debug restart to overcome the nmcli d w l flickering
         if ('ethernet' in scenario.tags) or ('ipv4' in scenario.tags) or ('ipv6' in scenario.tags):
             os.system("sudo nmcli connection delete id ethernet ethernet1 ethernet2")
         if ("nmtui_general_display_proper_hostname" in scenario.tags) or ("nmtui_general_set_new_hostname" in scenario.tags):
@@ -177,10 +196,20 @@ def after_scenario(context, scenario):
                       " team-slave-eth6 team-slave-eth7 team-slave-eth8 team-slave-eth9")
         if 'nmtui_ethernet_set_mtu' in scenario.tags:
             os.system("ip link set mtu 1500 dev eth1")
+        if 'nmtui_wifi_ap' in scenario.tags:
+            os.system("sudo service NetworkManager restart")
+            sleep(5)
+            os.system("sudo nmcli device wifi rescan")
+            sleep(10)
+        if 'nmtui_general_activate_screen_no_connections' in scenario.tags:
+            print ("Restoring all connection profiles from temp dir")
+            os.system("cp -f /tmp/backup_profiles/* /etc/sysconfig/network-scripts/")
+            os.system("rm -rf /tmp/backup_profiles")
+            os.system("nmcli con reload")
         if "eth0" in scenario.tags:
-            print "---------------------------"
-            print "upping eth0"
-            os.system("nmcli connection up id eth0")
+            print ("---------------------------")
+            print ("upping testeth0")
+            os.system("nmcli connection up id testeth0")
             sleep(5)
         # Make some pause after scenario
         sleep(1)
@@ -194,10 +223,8 @@ def after_scenario(context, scenario):
 def after_tag(context, tag):
     try:
         if 'invalid_address' in tag:
-            call('sudo kill -9 $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)
-            sleep(1)
-            os.system('beah-beaker-backend &')
-            sleep(20)
+            call('sh sanitize_beah.sh', shell=True)
+
         if tag in ('vlan','bridge','bond','team', 'inf'):
             if hasattr(context, 'is_virtual'):
                 context.is_virtual = False

@@ -121,7 +121,7 @@
 
     * Finish "sudo nmcli connection reload"
     * Bring "up" connection "eth7"
-    * Run child "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:0"
+    * Execute "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:0"
     * Finish "sudo nmcli connection reload"
     * Bring "up" connection "eth7"
 
@@ -159,9 +159,15 @@
 
     * Finish "sudo nmcli connection reload"
     * Bring "up" connection "eth7"
-    * Run child "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:0"
-    * Run child "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:1"
-    * Run child "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:2"
+
+    * "inet 192.168.0.100" is visible with command "ip a s eth7"
+    * "inet 192.168.0.101" is visible with command "ip a s eth7"
+    * "inet 192.168.0.102" is visible with command "ip a s eth7"
+    * "inet 192.168.0.103" is visible with command "ip a s eth7"
+
+    * Execute "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:0"
+    * Execute "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:1"
+    * Execute "sudo rm -f /etc/sysconfig/network-scripts/ifcfg-eth7:2"
     * Finish "sudo nmcli connection reload"
     * Bring "up" connection "eth7"
 

@@ -390,9 +390,9 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Set "Device" field to "eth1"
     * Come in "IPv4 CONFIGURATION" category
-    * In "Search domains" property add "redhat.com"
+    * In "Search domains" property add "heaven.com"
     * Confirm the connection settings
-    Then " redhat.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
+    Then " heaven.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
 
 
     @ipv4
@@ -401,16 +401,16 @@ Feature: IPv4 TUI tests
     * Prepare new connection of type "Ethernet" named "ethernet1"
     * Set "Device" field to "eth1"
     * Come in "IPv4 CONFIGURATION" category
-    * In "Search domains" property add "redhat.com"
+    * In "Search domains" property add "heaven.com"
     * Confirm the connection settings
-    * " redhat.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
+    * " heaven.com" is visible with command "cat /etc/resolv.conf" in "10" seconds
     * Select connection "ethernet1" in the list
     * Choose to "<Edit...>" a connection
     * Come in "IPv4 CONFIGURATION" category
     * Remove all "Search domains" property items
     * Confirm the connection settings
     * Bring up connection "ethernet1"
-    Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then " heaven.com" is not visible with command "cat /etc/resolv.conf"
 
 
     @ipv4

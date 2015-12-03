@@ -104,7 +104,7 @@
      * Submit "eth1" in editor
      * Expect "Master"
      * Submit "nm-bond" in editor
-    * Bring "up" connection "bond-slave-eth1"
+    Then "activated" is visible with command "nmcli c show bond-slave-eth1" in "45" seconds
     Then Check bond "nm-bond" state is "up"
     Then Check slave "eth1" in bond "nm-bond" in proc
 
@@ -167,10 +167,9 @@
      * Open editor for connection "bond0.0"
      * Set a property named "connection.slave-type" to "bond" in editor
      * Set a property named "connection.master" to "nm-bond" in editor
-     * Submit "remove ipv4" in editor
-     * Submit "remove ipv6" in editor
+     * Submit "yes" in editor
+     * Submit "verify fix" in editor
      * Save in editor
-     * Enter in editor
      * Quit editor
      * Bring "up" connection "bond0.0"
      Then Check bond "nm-bond" state is "up"
@@ -325,6 +324,23 @@
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
+    @rhbz1158529
+    @slaves
+    @bond
+    @bond_slaves_start_via_master
+    Scenario: nmcli - bond - start slaves via master
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Open editor for connection "bond0"
+     * Submit "set connection.autoconnect-slaves 1" in editor
+     * Save in editor
+     * Quit editor
+     * Disconnect device "nm-bond"
+     * Bring "up" connection "bond0"
+     Then Check bond "nm-bond" state is "up"
+     Then Check slave "eth1" in bond "nm-bond" in proc
+     Then Check slave "eth2" in bond "nm-bond" in proc
 
 
     @bond_start_on_boot_with_nothing_auto
@@ -781,21 +797,54 @@
      Then Check bond "nm-bond" state is "up"
 
 
+    @rhbz1177860
+    @slaves
+    @bond
+    @bond_set_mtu
+    Scenario: nmcli - bond - set mtu
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Open editor for connection "bond0.0"
+     * Set a property named "802-3-ethernet.mtu" to "9000" in editor
+     * Save in editor
+     * Quit editor
+     * Open editor for connection "bond0.1"
+     * Set a property named "802-3-ethernet.mtu" to "9000" in editor
+     * Save in editor
+     * Quit editor
+     * Open editor for connection "bond0"
+     * Set a property named "802-3-ethernet.mtu" to "9000" in editor
+     * Set a property named "ipv4.method" to "manual" in editor
+     * Set a property named "ipv4.addresses" to "1.1.1.2/24" in editor
+     * Save in editor
+     * Quit editor
+     * Disconnect device "nm-bond"
+     * Bring "up" connection "bond0"
+     * Bring "up" connection "bond0.1"
+     * Bring "up" connection "bond0.0"
+    Then Check bond "nm-bond" state is "up"
+    Then Check "nm-bond" has "eth1" in proc
+    Then Check "nm-bond" has "eth2" in proc
+    Then "mtu 9000" is visible with command "ip a s eth1 |grep mtu" in "15" seconds
+    Then "mtu 9000" is visible with command "ip a s eth2 |grep mtu"
+    Then "mtu 9000" is visible with command "ip a s nm-bond |grep mtu"
+
+
     @dummy
     @bond_reflect_changes_from_outside_of_NM
     Scenario: nmcli - bond - reflect changes from outside of NM
     * Finish "ip link add bond0 type bond"
-    When "bond0\s+bond\s+unmanaged" is visible with command "nmcli d"
+    When "bond0\s+bond\s+unmanaged" is visible with command "nmcli d" in "5" seconds
     * Finish "ip link set dev bond0 up"
-    When "bond0\s+bond\s+disconnected" is visible with command "nmcli d"
+    When "bond0\s+bond\s+disconnected" is visible with command "nmcli d" in "5" seconds
     * Finish "ip link add dummy0 type dummy"
-    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d" in "5" seconds
     * Finish "ip link set dev dummy0 up"
     * Finish "ip addr add 1.1.1.1/24 dev bond0"
-    * Finish "sleep 2"
-    When "bond0\s+bond\s+connected\s+bond0" is visible with command "nmcli d"
+    When "bond0\s+bond\s+connected\s+bond0" is visible with command "nmcli d" in "5" seconds
     * Finish "ifenslave bond0 dummy0"
-    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
+    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d" in "5" seconds
     Then "BOND.SLAVES:\s+dummy0" is visible with command "nmcli -f bond.slaves dev show bond0"
 
 #FIXME: more tests with arp and conflicts with load balancing can be written
@@ -814,8 +863,8 @@
     @bond_mode_by_number_in_ifcfg
     Scenario: NM - bond - ifcfg - mode set by number
      * Add connection type "bond" named "bond0" for device "nm-bond"
-     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
-     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Add slave connection for master "nm-bond" on device "eth3" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth4" named "bond0.1"
      * Execute "sed -i 's/BONDING_OPTS=mode=balance-rr/BONDING_OPTS=mode=5/' /etc/sysconfig/network-scripts/ifcfg-bond0"
      * Execute "sudo nmcli connection reload"
      * Bring "up" connection "bond0"
@@ -843,6 +892,35 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then Check bond "nm-bond" state is "up"
+
+
+    @rhbz1243371
+    @bond
+    @regenerate_veth
+    @delete_addrgenmode_bond
+    Scenario: NM - bond - addrgenmode bond delete
+    * Execute "systemctl stop NetworkManager"
+    * Execute "ip l add bond0 type bond"
+    * Execute "ip l set eth2 down; ip l set eth2 master bond0; ip l set eth2 addrgenmode none; ip l set eth2 up"
+    * Execute "ip l set eth1 down; ip l set eth1 master bond0; ip l set eth1 addrgenmode none; ip l set eth1 up"
+    * Restart NM
+    * Execute "sleep 5"
+    * Note the output of "pidof NetworkManager" as value "orig_pid"
+    * Execute "ip l del bond0"
+    * Note the output of "pidof NetworkManager" as value "new_pid"
+    Then Check noted values "orig_pid" and "new_pid" are the same
+
+
+    @bond
+    @bridge
+    @bond_enslave_to_bridge
+    Scenario: nmcli - bond - enslave bond device to bridge
+     * Add a new connection of type "bond" and options "con-name bond0 autoconnect no ifname nm-bond"
+     * Add a new connection of type "bridge" and options "con-name br10 autoconnect no ifname bridge0 ip4 192.168.177.100/24 gw4 192.168.177.1"
+     * Execute "nmcli connection modify id bond0 connection.master bridge0 connection.slave-type bridge"
+     * Bring "up" connection "bond0"
+    Then "bridge0:bridge:connected:br10" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
+    Then "nm-bond:bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
 
 
     @testcase_281154

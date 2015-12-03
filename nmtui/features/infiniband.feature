@@ -68,10 +68,10 @@ Feature: Bridge TUI tests
     Scenario: nmtui - inf - set MTU
     * Prepare new connection of type "InfiniBand" named "infiniband0"
     * Set "Device" field to "inf0"
-    * Set "MTU" field to "128"
+    * Set "MTU" field to "1280"
     * Confirm the connection settings
     Then Check ifcfg-name file created for connection "infiniband0"
-    Then "MTU=128" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-infiniband0"
+    Then "MTU=1280" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-infiniband0"
 
 
     @inf

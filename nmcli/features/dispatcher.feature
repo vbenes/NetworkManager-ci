@@ -75,7 +75,7 @@ Feature: NM: dispatcher
     Scenario: NM - dispatcher - serialization
     * Bring "down" connection "testeth1"
     * Bring "down" connection "testeth2"
-    * Write dispatcher "98-disp" file with params "if [ "$2" == "up" ]; then sleep 30; echo $1 >> /tmp/dispatcher.txt; fi"
+    * Write dispatcher "98-disp" file with params "if [ "$2" == "up" ]; then sleep 10; echo $1 >> /tmp/dispatcher.txt; fi"
     * Write dispatcher "99-disp" file with params "if [ "$2" == "up" ]; then echo "quick$1" >> /tmp/dispatcher.txt; fi"
     * Bring "up" connection "testeth1"
     * Bring "up" connection "testeth2"

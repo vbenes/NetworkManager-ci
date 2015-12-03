@@ -35,7 +35,44 @@ Feature: nmcli: connection
      * Add connection type "ethernet" named "connie" for device "eth1"
      * Open editor for "connie" with timeout
      * Delete connection "connie" and hit Enter
-     #* Submit "save" in editor
+
+
+    @rhbz1168657
+    @connection_double_delete
+    @con
+    Scenario: nmcli - connection - double delete
+     * Add connection type "ethernet" named "connie" for device "*"
+     * Delete connection "connie connie"
+
+
+    @rhbz1171751
+    @teardown_testveth
+    @con
+    @connection_profile_duplication
+    Scenario: nmcli - connection - profile duplication
+     * Prepare simulated test "testX" device
+     * Add a new connection of type "ethernet" and options "ifname testX con-name connie autoconnect no"
+     * Execute "echo 'NM_CONTROLLED=no' >> /etc/sysconfig/network-scripts/ifcfg-connie"
+     * Execute "nmcli con reload"
+     * Execute "rm -f /etc/sysconfig/network-scripts/ifcfg-connie"
+     * Add a new connection of type "ethernet" and options "ifname eth1 con-name connie autoconnect no"
+     * Execute "nmcli con reload"
+     Then "1" is visible with command "nmcli c |grep connie |wc -l"
+     * Bring "up" connection "connie"
+
+
+    @rhbz1174164
+    @add_testeth1
+    @connection_veth_profile_duplication
+    Scenario: nmcli - connection - veth - profile duplication
+    * Connect device "eth1"
+    * Connect device "eth1"
+    * Connect device "eth1"
+    * Delete connection "testeth1"
+    * Connect device "eth1"
+    * Connect device "eth1"
+    * Connect device "eth1"
+    Then "1" is visible with command "nmcli connection |grep ^eth1 |wc -l"
 
 
     @connection_restricted_to_single_device
@@ -45,8 +82,8 @@ Feature: nmcli: connection
      * Add connection type "ethernet" named "connie" for device "*"
      * Start generic connection "connie" for "eth1"
      * Start generic connection "connie" for "eth2"
-    Then "eth1\s+ethernet\s+disconnected" is visible with command "nmcli device"
-    Then "eth2\s+ethernet\s+connected\s+connie" is visible with command "nmcli device"
+    Then "eth2" is visible with command "nmcli -f GENERAL.DEVICES connection show connie"
+    Then "eth1" is not visible with command "nmcli -f GENERAL.DEVICES connection show connie"
 
 
     @connection_secondaries_restricted_to_vpn
@@ -306,6 +343,125 @@ Feature: nmcli: connection
      * Disconnect device "eth10"
      * Restart NM
      Then "ethie" is visible with command "nmcli con show -a"
+
+
+    # NM_METERED_UNKNOWN    = 0,
+    # NM_METERED_YES        = 1,
+    # NM_METERED_NO         = 2,
+    # NM_METERED_GUESS_YES  = 3,
+    # NM_METERED_GUESS_NO   = 4,
+
+
+    @rhbz1200452
+    @con
+    @eth0
+    @connection_metered_manual_yes
+    Scenario: nmcli - connection - metered manual yes
+     * Add connection type "ethernet" named "connie" for device "eth1"
+     * Open editor for connection "connie"
+     * Submit "set connection.metered true" in editor
+     * Save in editor
+     * Quit editor
+     * Bring "up" connection "connie"
+     Then Metered status is "1"
+
+
+    @rhbz1200452
+    @con
+    @eth0
+    @connection_metered_manual_no
+    Scenario: nmcli - connection - metered manual no
+     * Add connection type "ethernet" named "connie" for device "eth1"
+     * Open editor for connection "connie"
+     * Submit "set connection.metered false" in editor
+     * Save in editor
+     * Quit editor
+     * Bring "up" connection "connie"
+     Then Metered status is "2"
+
+
+    @rhbz1200452
+    @con
+    @eth0
+    @connection_metered_guess_no
+    Scenario: NM - connection - metered guess no
+     * Add connection type "ethernet" named "connie" for device "eth1"
+     * Open editor for connection "connie"
+     * Submit "set connection.metered unknown" in editor
+     * Save in editor
+     * Quit editor
+     * Bring "up" connection "connie"
+     Then Metered status is "4"
+
+
+    @rhbz1200452
+    @con
+    @eth0
+    @teardown_testveth
+    @connection_metered_guess_yes
+    Scenario: NM - connection - metered guess yes
+     * Prepare simulated test "testX" device with "192.168.99" ipv4 and "2620:52:0:dead" ipv6 dhcp address prefix and dhcp option "43,ANDROID_METERED"
+     * Add a new connection of type "ethernet" and options "ifname testX con-name connie autoconnect off"
+     * Open editor for connection "connie"
+     * Submit "set ipv6.method ignore" in editor
+     * Submit "set connection.metered unknown" in editor
+     * Save in editor
+     * Quit editor
+     * Bring "up" connection "connie"
+     Then Metered status is "3"
+
+
+     @con
+     @bond
+     @team
+     @wifi
+     @eth
+     @display_allowed_values
+     Scenario: nmcli - connection - showing allowed values
+     * Add connection type "ethernet" named "connie" for device "testX"
+     * Open editor for connection "connie"
+     * Check "fast|leap|md5|peap|pwd|sim|tls|ttls" are shown for object "802-1x.eap"
+     * Check "0|1" are shown for object "802-1x.phase1-peapver"
+     * Check "0|1" are shown for object "802-1x.phase1-peaplabel"
+     * Check "0|1|2|3" are shown for object "802-1x.phase1-fast-provisioning"
+     * Check "chap|gtc|md5|mschap|mschapv2|otp|pap|tls" are shown for object "802-1x.phase2-auth"
+     * Check "gtc|md5|mschapv2|otp|tls" are shown for object "802-1x.phase2-autheap"
+     * Check "fabric|vn2vn" are shown for object "dcb.app-fcoe-mode"
+     * Check "auto|disabled|link-local|manual|shared" are shown for object "ipv4.method"
+     * Check "auto|dhcp|ignore|link-local|manual|shared" are shown for object "ipv6.method"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "802-1x.ca-cert"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "802-1x.ca-path"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "802-1x.private-key"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "802-1x.phase2-ca-cert"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "802-1x.phase2-ca-path"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "802-1x.phase2-private-key"
+     * Check "broadcast_mode|ctcprot|ipato_add4|ipato_invert6|layer2|protocol|rxip_add6|vipa_add6|buffer_count|fake_broadcast|ipato_add6|isolation|portname|route4|sniffer|canonical_macaddr|inter|ipato_enable|lancmd_timeout|portno|route6|total|checksumming|inter_jumbo|ipato_invert4|large_send|priority_queueing|rxip_add4|vipa_add4" are shown for object "ethernet.s390-options"
+     * Check "ctc|lcs|qeth" are shown for object "ethernet.s390-nettype"
+     * Check "bond|bridge|team" are shown for object "connection.slave-type"
+     * Quit editor
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Open editor for connection "bond0"
+     * Check "ad_select|arp_ip_target|downdelay|lacp_rate|mode|primary_reselect|updelay|xmit_hash_policy|arp_interval|arp_validate|fail_over_mac|miimon|primary|resend_igmp|use_carrier|" are shown for object "bond.options"
+     * Quit editor
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Open editor for connection "team0"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "team.config"
+     * Check "testmapper.txt|nmcli|nmtui|README|vethsetup.sh" are shown for object "team-port.config"
+     * Quit editor
+     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
+     * Open editor for connection "qe-open"
+     * Check "adhoc|ap|infrastructure" are shown for object "wifi.mode"
+     * Check "a|bg" are shown for object "wifi.band"
+     * Check "ieee8021x|none|wpa-eap|wpa-none|wpa-psk\s+" are shown for object "wifi-sec.key-mgmt"
+     * Check "leap|open|shared" are shown for object "wifi-sec.auth-alg"
+     * Check "rsn|wpa" are shown for object "wifi-sec.proto"
+     * Check "ccmp|tkip" are shown for object "wifi-sec.pairwise"
+     * Check "ccmp|tkip|wep104|wep40" are shown for object "wifi-sec.group"
+     * Quit editor
+     * Add connection type "infiniband" named "ethie" for device "mlx4_ib1"
+     * Open editor for connection "ethie"
+     * Check "connected|datagram" are shown for object "infiniband.transport-mode"
+     * Quit editor
 
 
     @testcase_300568
