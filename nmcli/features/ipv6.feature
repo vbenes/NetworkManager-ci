@@ -771,7 +771,6 @@ Feature: nmcli: ipv6
     * Execute "ip a flush dev eth10; ip l set eth10 down; ip l set eth10 up"
     When "fe80" is visible with command "ip a s eth10" in "5" seconds
     * Execute "systemctl start NetworkManager.service"
-    Then "Wired.*eth10" is visible with command "nmcli con" in "5" seconds
     Then "eth10.*eth10" is not visible with command "nmcli con"
 
 
