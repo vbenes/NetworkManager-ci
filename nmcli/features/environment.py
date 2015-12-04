@@ -327,7 +327,7 @@ def before_scenario(context, scenario):
             print ("setting up OpenVPN")
             call("[ -x /usr/sbin/openvpn ] || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/openvpn-2.3.8-1.el7.$(uname -p).rpm\
                                                                   http://file.brq.redhat.com/vbenes/repo/pkcs11-helper-1.11-3.el7.$(uname -p).rpm", shell=True)
-            call("rpm -q NetworkManager-openvpn || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/NetworkManager-openvpn-0.9.8.2-4.el7.1.$(uname -p).rpm", shell=True)
+            call("rpm -q NetworkManager-openvpn || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
 
             samples = glob('/usr/share/doc/openvpn-*/sample')[0]
             cfg = Popen("sudo sh -c 'cat >/etc/openvpn/trest-server.conf'", stdin=PIPE, shell=True).stdin
