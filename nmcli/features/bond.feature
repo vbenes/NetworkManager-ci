@@ -102,7 +102,7 @@
      * Submit "bond-slave" in editor
      * Expect "Interface name"
      * Submit "eth1" in editor
-     * Expect "Master"
+     * Expect "aster"
      * Submit "nm-bond" in editor
     Then "activated" is visible with command "nmcli c show bond-slave-eth1" in "45" seconds
     Then Check bond "nm-bond" state is "up"
