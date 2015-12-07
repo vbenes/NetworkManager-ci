@@ -606,11 +606,13 @@ Feature: nmcli: ipv6
 
 
     @ipv6
+    @teardown_testveth
     @ipv6_secondary_address
     Scenario: nmcli - ipv6 - secondary
-    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
+    * Prepare simulated test "testX" device
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie"
     * Bring "up" connection "ethie"
-    Then "2" is visible with command "ip a s eth10 |grep 'inet6 .* global' |wc -l" in "10" seconds
+    Then "2" is visible with command "ip a s testX |grep 'inet6 .* global' |wc -l" in "10" seconds
 
 
     @ipv6_ip6-privacy_0
