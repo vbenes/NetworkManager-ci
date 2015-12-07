@@ -4,11 +4,11 @@ Feature: nmcli - general
     @general
     @logging
     Scenario: NM - general - setting log level and autocompletion
-    Then "DEBUG\s+ERR\s+INFO\s+OFF\s+TRACE\s+WARN" is visible with tab after "sudo nmcli general logging level "
+    Then "DEBUG\s+ERR\s+INFO\s+.*TRACE\s+WARN" is visible with tab after "sudo nmcli general logging level "
     * Set logging for "all" to "INFO"
-    Then "INFO\s+PLATFORM,RFKILL,ETHER,WIFI,BT,MB,DHCP4,DHCP6,PPP,WIFI_SCAN,IP4,IP6,AUTOIP4,DNS,VPN,SHARING,SUPPLICANT,AGENTS,SETTINGS,SUSPEND,CORE,DEVICE,OLPC,INFINIBAND,FIREWALL,ADSL,BOND,VLAN,BRIDGE,DBUS_PROPS,TEAM,CONCHECK,DCB,DISPATCH" is visible with command "nmcli general logging"
+    Then "INFO\s+[^:]*$" is visible with command "nmcli general logging"
     * Set logging for "default,WIFI:ERR" to " "
-    Then "INFO\s+PLATFORM,RFKILL,ETHER,WIFI:ERR,BT,MB,DHCP4,DHCP6,PPP,IP4,IP6,AUTOIP4,DNS,VPN,SHARING,SUPPLICANT,AGENTS,SETTINGS,SUSPEND,CORE,DEVICE,OLPC,INFINIBAND,FIREWALL,ADSL,BOND,VLAN,BRIDGE,TEAM,CONCHECK,DCB,DISPATCH" is visible with command "nmcli general logging"
+    Then "INFO\s+[^:]*,WIFI:ERR,[^:]*$" is visible with command "nmcli general logging"
 
     @rhbz1212196
     @reduce_logging
