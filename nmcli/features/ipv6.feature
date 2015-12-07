@@ -606,11 +606,13 @@ Feature: nmcli: ipv6
 
 
     @ipv6
+    @teardown_testveth
     @ipv6_secondary_address
     Scenario: nmcli - ipv6 - secondary
-    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie"
+    * Prepare simulated test "testX" device
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie"
     * Bring "up" connection "ethie"
-    Then "2" is visible with command "ip a s eth10 |grep 'inet6 .* global' |wc -l" in "10" seconds
+    Then "2" is visible with command "ip a s testX |grep 'inet6 .* global' |wc -l" in "10" seconds
 
 
     @ipv6_ip6-privacy_0
@@ -771,7 +773,6 @@ Feature: nmcli: ipv6
     * Execute "ip a flush dev eth10; ip l set eth10 down; ip l set eth10 up"
     When "fe80" is visible with command "ip a s eth10" in "5" seconds
     * Execute "systemctl start NetworkManager.service"
-    Then "Wired.*eth10" is visible with command "nmcli con" in "5" seconds
     Then "eth10.*eth10" is not visible with command "nmcli con"
 
 
