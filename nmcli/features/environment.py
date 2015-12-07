@@ -901,6 +901,9 @@ def after_scenario(context, scenario):
         if 'restore_hostname' in scenario.tags:
             print ("---------------------------")
             print ("restoring original hostname")
+            os.system('systemctl unmask systemd-hostnamed.service')
+            os.system('systemctl unmask dbus-org.freedesktop.hostname1.service')
+            os.system('systemctl restart NetworkManager')
             call('sudo echo %s > /etc/hostname' % context.original_hostname, shell=True)
             call('sudo hostnamectl set-hostname %s' % context.original_hostname, shell=True)
 

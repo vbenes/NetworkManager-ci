@@ -308,8 +308,9 @@ Feature: nmcli - general
     @nmcli_general_dhcp_hostname_over_localhost
     Scenario: NM - general - dont take localhost as configured hostname
     * Note the output of "cat /etc/hostname" as value "orig_file"
-    * Execute "systemctl stop systemd-hostnamed.service"
+    * Execute "systemctl mask dbus-org.freedesktop.hostname1.service"
     * Execute "systemctl mask systemd-hostnamed.service"
+    * Execute "systemctl stop systemd-hostnamed.service"
     * Restart NM
     * Note the output of "hostname" as value "orig_cmd"
     * Check noted values "orig_file" and "orig_cmd" are the same
@@ -322,11 +323,11 @@ Feature: nmcli - general
     * Execute "echo myown.hostname > /etc/hostname"
     * Note the output of "echo myown.hostname" as value "nonlocalh_file"
     * Wait for at least "5" seconds
-    * Note the output of "hostname" as value "nonlocalh_cmd"
+    * Note the output of "nmcli g hostname" as value "nonlocalh_cmd"
     # Now see that the non-locahost value has been set
     Then Check noted values "nonlocalh_file" and "nonlocalh_cmd" are the same
     # Restoring orig. hostname in after_scenario
-
+    
 
     @rhbz1136843
     @general
