@@ -126,7 +126,7 @@ def setup_racoon(dh_group):
     #call("sudo ip netns exec racoon ping -c1 172.31.70.2", shell=True)
     #call("ping -c1 172.31.70.1", shell=True)
     call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
-    call("sudo rm -rf /etc/ipsec.d/*", shell=True)
+    call("sudo rm -rf /etc/ipsec.d/*.db", shell=True)
     call("sudo certutil -N -d  sql:/etc/ipsec.d --empty-password", shell=True)
     sleep(2)
 
