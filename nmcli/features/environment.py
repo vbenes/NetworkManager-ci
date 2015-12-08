@@ -43,7 +43,7 @@ def dump_status(context, when):
 
 def setup_racoon(dh_group):
     print ("setting up racoon")
-    call("yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
+    call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
 
     cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
     cfg.write('# Racoon configuration for Libreswan client testing')
@@ -126,6 +126,8 @@ def setup_racoon(dh_group):
     #call("sudo ip netns exec racoon ping -c1 172.31.70.2", shell=True)
     #call("ping -c1 172.31.70.1", shell=True)
     call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
+    call("sudo rm -rf /etc/ipsec.d/*", shell=True)
+    call("sudo certutil -N -d  sql:/etc/ipsec.d --empty-password", shell=True)
     sleep(2)
 
 def teardown_racoon():
