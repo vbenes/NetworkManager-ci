@@ -130,6 +130,10 @@ def open_slave_connection(context, master, device, name):
 
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on Libreswan connection "{name}"')
 def set_vpnc_connection(context, user, password, group, secret, gateway, name):
+    os.system("nmcli connection down %s" %name)
+    #sleep(2)
+    os.system("nmcli connection modify %s connection.autoconnect no" % name)
+    #sleep(2)
     cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 0, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
