@@ -131,14 +131,6 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     touch /tmp/nm_eth_configured
 fi
 
-if [[ $1 == *libreswan_* ]]; then
-    if [ ! -e /tmp/libreswan_configured ]; then
-        sudo rm -rf /etc/ipsec.d/*.db
-        sudo certutil -N -d  sql:/etc/ipsec.d --empty-password
-        yum -y reinstall libreswan
-        touch /tmp/libreswan_configured
-    fi
-fi
 if [[ $1 == *dcb_* ]]; then
     if [ ! -e /tmp/dcb_configured ]; then
         #start dcb modules

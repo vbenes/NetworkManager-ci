@@ -43,6 +43,10 @@ def dump_status(context, when):
 
 def setup_racoon(dh_group):
     print ("setting up racoon")
+    call("sudo rm -rf /etc/ipsec.d/*.db", shell=True)
+    call("sudo certutil -N -d  sql:/etc/ipsec.d --empty-password", shell=True)
+    call("sudo yum -y reinstall libreswan", shell=True)
+
     call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
 
     cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
@@ -136,8 +140,6 @@ def setup_racoon(dh_group):
     call("sudo nmcli con add type ethernet con-name rac1 ifname racoon1 autoconnect no", shell=True)
     call("sudo nmcli con modify rac1 ipv6.method ignore ipv4.route-metric 90", shell=True)
     call("sudo nmcli connection up id rac1", shell=True)
-    #call("sudo ip netns exec racoon ping -c1 172.31.70.2", shell=True)
-    #call("ping -c1 172.31.70.1", shell=True)
     call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
     sleep(2)
 
