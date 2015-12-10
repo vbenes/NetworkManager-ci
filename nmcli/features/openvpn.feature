@@ -11,7 +11,8 @@
     Then "IP4.ADDRESS.*172.31.70.*/32" is visible with command "nmcli c show openvpn"
     Then "IP6.ADDRESS" is not visible with command "nmcli c show openvpn"
 
-
+    
+    @ver+=1.0.8
     @openvpn
     @openvpn6
     @openvpn_ipv6
