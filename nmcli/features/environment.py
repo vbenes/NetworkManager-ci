@@ -43,10 +43,6 @@ def dump_status(context, when):
 
 def setup_racoon(dh_group):
     print ("setting up racoon")
-    call("sudo rm -rf /etc/ipsec.d/*.db", shell=True)
-    call("sudo certutil -N -d  sql:/etc/ipsec.d --empty-password", shell=True)
-    call("sudo yum -y reinstall libreswan", shell=True)
-
     call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
 
     cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
