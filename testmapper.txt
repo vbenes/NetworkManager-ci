@@ -340,10 +340,10 @@ nmcli_ethernet_wol_disable, ., nmcli/./runtest.sh nmcli_ethernet_wol_disable, Ne
 nmcli_ethernet_wol_enable_magic, ., nmcli/./runtest.sh nmcli_ethernet_wol_enable_magic, NetworkManager
 nmcli_ethernet_wol_default, ., nmcli/./runtest.sh nmcli_ethernet_wol_default, NetworkManager
 no_assumed_connection_for_veth, ., nmcli/./runtest.sh no_assumed_connection_for_veth, NetworkManager
-openvswitch_interface_recognized, ., nmcli/./runtest.sh openvswitch_interface_recognized, NetworkManager
-openvswitch_ignore_ovs_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_network_setup, NetworkManager
-openvswitch_ignore_ovs_vlan_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_vlan_network_setup, NetworkManager
-openvswitch_ignore_ovs_bond_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_bond_network_setup, NetworkManager
+#openvswitch_interface_recognized, ., nmcli/./runtest.sh openvswitch_interface_recognized, NetworkManager
+#openvswitch_ignore_ovs_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_network_setup, NetworkManager
+#openvswitch_ignore_ovs_vlan_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_vlan_network_setup, NetworkManager
+#openvswitch_ignore_ovs_bond_network_setup, ., nmcli/./runtest.sh openvswitch_ignore_ovs_bond_network_setup, NetworkManager
 #@ethernet_end
 
 #@bond_start
