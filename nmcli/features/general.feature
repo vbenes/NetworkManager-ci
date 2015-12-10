@@ -411,7 +411,6 @@ Feature: nmcli - general
     Scenario: NM - general - presume failed assumed connections
     * Execute "ip tuntap add BBB mode tap"
     * Execute "ip link set dev BBB up"
-    When "unmanaged" is visible with command "nmcli device show BBB"
     * Execute "ip addr add 10.2.5.6/24 valid_lft 1024 preferred_lft 1024 dev BBB"
     When "connecting" is visible with command "nmcli device show BBB" in "45" seconds
     * Bring "down" connection "BBB"
