@@ -82,6 +82,8 @@
     # Then Ping "10.16.40.254"
 
 
+    #this is somehow broken in 7.2 in libreswan not in NM
+    @ver+=1.0.8
     @libreswan
     @libreswan_start_as_secondary
     Scenario: nmcli - libreswan - start as secondary
