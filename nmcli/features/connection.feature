@@ -10,7 +10,16 @@ Feature: nmcli: connection
     Then "help" is visible with tab after "nmcli connection add "
     Then "ifname" is visible with tab after "nmcli connection add "
     Then "type" is visible with tab after "nmcli connection add "
-    Then "add\s+down\s+help\s+modify\s+show\s+delete\s+edit\s+load\s+reload\s+up" is visible with tab after "nmcli connection "
+    Then "add" is visible with tab after "nmcli connection "
+    Then "down" is visible with tab after "nmcli connection "
+    Then "help" is visible with tab after "nmcli connection "
+    Then "modify" is visible with tab after "nmcli connection "
+    Then "show" is visible with tab after "nmcli connection "
+    Then "delete" is visible with tab after "nmcli connection "
+    Then "edit" is visible with tab after "nmcli connection "
+    Then "load" is visible with tab after "nmcli connection "
+    Then "reload" is visible with tab after "nmcli connection "
+    Then "up" is visible with tab after "nmcli connection "
     Then "Usage: nmcli connection add { OPTIONS | help }\s+OPTIONS \:= COMMON_OPTIONS TYPE_SPECIFIC_OPTIONS IP_OPTIONS\s+COMMON_OPTIONS:\s+type <type>\s+ifname <interface name> |\s+ethernet\:\s+wifi:\s+ssid <SSID>\s+gsm:\s+apn <APN>\s+cdma:\s+infiniband:\s+bluetooth:\s+vlan:\s+dev <parent device \(connection  UUID, ifname, or MAC\)>\s+bond:\s+bond-slave:\s+master <master \(ifname or connection UUID\)>\s+team:\s+team-slave:\s+master <master \(ifname or connection UUID\)>\s+bridge:\s+bridge-slave:\s+master <master \(ifname or connection UUID\)>\svpn:\s+vpn-type vpnc|openvpn|pptp|openconnect|openswan\s+olpc-mesh:\s+ssid" is visible with command "nmcli connection add help"
 
 
