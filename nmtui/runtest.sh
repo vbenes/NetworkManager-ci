@@ -166,7 +166,7 @@ if [ -z "$TEST" ]; then
 fi
 
 #check if NM version is correct for test
-TAG=$(python version_control.py nmcli $TEST); vc=$?
+TAG=$(python version_control.py nmtui $TEST); vc=$?
 if [ $vc -eq 1 ]; then
     echo "Skipping due to incorrect NM version for this test"
     # exit 0 doesn't affect overal result
