@@ -175,9 +175,9 @@ if [ $vc -eq 1 ]; then
 elif [ $vc -eq 0 ]; then
     if [ x$TAG != x"" ]; then
         echo "Running $TAG version of $TEST"
-        behave nmcli/features -t $1 -t $TAG -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
+        behave nmtui/features -t $1 -t $TAG -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
     else
-        behave nmcli/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
+        behave nmtui/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
     fi
 fi
 
