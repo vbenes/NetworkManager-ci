@@ -175,9 +175,9 @@ if [ $vc -eq 1 ]; then
 elif [ $vc -eq 0 ]; then
     if [ x$TAG != x"" ]; then
         echo "Running $TAG version of $TEST"
-        behave nmtui/features -t $1 -t $TAG -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
+        behave nmtui/features --no-capture --no-capture-stderr -k -t $1 -t $TAG -f plain -o /tmp/report_$TEST.log; rc=$?
     else
-        behave nmtui/features -t $1 -k -f html -o /tmp/report_$TEST.html -f plain; rc=$?
+        behave nmtui/features --no-capture --no-capture-stderr -k -t $1 -f plain -o /tmp/report_$TEST.log; rc=$?
     fi
 fi
 
