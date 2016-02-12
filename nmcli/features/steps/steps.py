@@ -69,7 +69,7 @@ def add_vpnc_connection_for_iface(context, name, ifname, vpn):
 @step(u'Add a secondary address to device "{device}" within the same subnet')
 def add_secondary_addr_same_subnet(context, device):
     from netaddr import IPNetwork
-    primary_ipn = IPNetwork(command_output(context, "ip a s %s | grep dynamic | awk '{print $2}'" % device))
+    primary_ipn = IPNetwork(command_output(context, "ip -4 a s %s | awk '/inet .*dynamic/ {print $2}'" % device))
     if str(primary_ipn.ip).split('.')[2] == str(primary_ipn.ip+1).split('.')[2]:
         secondary_ip = primary_ipn.ip+1
     else:
