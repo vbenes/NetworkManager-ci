@@ -228,6 +228,8 @@ Feature: Bond TUI tests
     * Set "Device" field to "eth2"
     * Ensure "Automatically connect" is checked
     * Confirm the slave settings
+    * Come in "IPv4 CONFIGURATION" category
+    * Ensure "Require IPv4 addressing for this connection" is checked
     * Confirm the connection settings
     Then Check bond "bond0" state is "up"
     Then "bond0\s+bond\s+connected" is visible with command "nmcli device" in "45" seconds
