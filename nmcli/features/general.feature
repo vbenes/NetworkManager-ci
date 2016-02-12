@@ -480,13 +480,13 @@ Feature: nmcli - general
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Start NM
     Then "192." is visible with command " ip a s testY |grep 'inet '|grep dynamic" in "60" seconds
-    Then "1.2.3.4\/24" is visible with command "ip a s testY |grep 'inet '|grep -v dynamic" in "15" seconds
+    Then "1.2.3.4\/24" is visible with command "ip a s testY |grep 'inet '|grep -v dynamic" in "60" seconds
     Then "2620:" is visible with command "ip a s testY |grep 'inet6'|grep  dynamic" in "60" seconds
-    Then "1::128\/128" is visible with command "ip a s testY |grep 'inet6'" in "15" seconds
-    Then "default via 192" is visible with command "ip r |grep testY" in "15" seconds
-    Then "1.2.3.0\/24" is visible with command "ip r |grep testY" in "15" seconds
-    Then "1::128" is visible with command "ip -6 r |grep testY" in "15" seconds
-    Then "nm-iface-helper --ifname testY" is visible with command "ps aux|grep helper" in "15" seconds
+    Then "1::128\/128" is visible with command "ip a s testY |grep 'inet6'" in "60" seconds
+    Then "default via 192" is visible with command "ip r |grep testY" in "60" seconds
+    Then "1.2.3.0\/24" is visible with command "ip r |grep testY" in "60" seconds
+    Then "1::128" is visible with command "ip -6 r |grep testY" in "60" seconds
+    Then "nm-iface-helper --ifname testY" is visible with command "ps aux|grep helper" in "60" seconds
     Then "Active:\s+inactive" is visible with command "systemctl status NetworkManager"
 
 
