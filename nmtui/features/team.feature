@@ -202,6 +202,8 @@ Feature: Team TUI tests
     * Set "Device" field to "eth2"
     * Ensure "Automatically connect" is checked
     * Confirm the slave settings
+    * Come in "IPv4 CONFIGURATION" category
+    * Ensure "Require IPv4 addressing for this connection" is checked
     * Confirm the connection settings
     Then "team0\s+team\s+connected" is visible with command "nmcli device" in "60" seconds
     Then Team "team0" is up
