@@ -36,10 +36,12 @@ function setup_veth_env ()
         nmcli con mod $UUID connection.interface-name eth0
         nmcli con mod $UUID connection.id testeth0
         ip link set eth0 up
+        nmcli connection modify testeth0 ipv6.method auto
         nmcli c u testeth0
     else # make active device eth0 if not
         UUID=$(nmcli con show -active |grep 802-3-ethernet |awk {'print $2'})
         nmcli con mod $UUID connection.id testeth0
+        nmcli connection modify testeth0 ipv6.method auto
         nmcli c u testeth0
     fi
 
