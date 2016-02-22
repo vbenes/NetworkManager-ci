@@ -243,6 +243,7 @@ nmcli_novice_mode_create_team-slave_with_default_options, ., nmcli/./runtest.sh 
 add_two_slaves_to_team, ., nmcli/./runtest.sh add_two_slaves_to_team, NetworkManager
 add_team_master_via_uuid, ., nmcli/./runtest.sh add_team_master_via_uuid, NetworkManager
 remove_all_slaves, ., nmcli/./runtest.sh remove_all_slaves, NetworkManager
+team_restart_persistence, ., nmcli/./runtest.sh team_restart_persistence, NetworkManager
 remove_one_slave, ., nmcli/./runtest.sh remove_one_slave, NetworkManager
 #change_slave_type_and_master, ., nmcli/./runtest.sh change_slave_type_and_master, NetworkManager
 remove_active_team_profile, ., nmcli/./runtest.sh remove_active_team_profile, NetworkManager

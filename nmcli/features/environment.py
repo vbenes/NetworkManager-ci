@@ -731,7 +731,7 @@ def after_scenario(context, scenario):
         if 'team_slaves' in scenario.tags:
             print ("---------------------------")
             print ("deleting team slaves")
-            call('nmcli connection delete id team0.0 team0.1 team-slave-eth2 team-slave-eth1', shell=True)
+            call('nmcli connection delete id team0.0 team0.1 team-slave-eth2 team-slave-eth1 eth1 eth2', shell=True)
             #sleep(TIMER)
 
         if 'team' in scenario.tags:
@@ -1080,4 +1080,3 @@ def after_all(context):
     pass
     #call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)
     #Popen('beah-beaker-backend -H $(hostname) &', shell=True)
-

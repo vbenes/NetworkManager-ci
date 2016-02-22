@@ -89,6 +89,22 @@
     Then Check slave "eth1" in team "nm-team" is "down"
 
 
+    @ver+=1.1
+    @team_slaves
+    @team
+    @restart
+    @team_restart_persistence
+    Scenario: nmcli - team - restart persistence
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+     * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
+     * Restart NM
+    Then Team "nm-team" is up
+     And Check slave "eth2" in team "nm-team" is "up"
+     And Check slave "eth1" in team "nm-team" is "up"
+     And "team0" is visible with command "nmcli con show -a"
+     And "team0.0" is visible with command "nmcli con show -a"
+     And "team0.1" is visible with command "nmcli con show -a"
 
     @remove_one_slave
     @team_slaves
