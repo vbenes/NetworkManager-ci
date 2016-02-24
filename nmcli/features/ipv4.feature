@@ -301,8 +301,8 @@ Feature: nmcli: ipv4
     * Execute "ip a add 1.2.3.4/24 dev dummy0"
     Then "default dev dummy0" is visible with command "ip route"
     Then "1.2.3.0/24 dev dummy0\s+proto kernel\s+scope link\s+src 1.2.3.4" is visible with command "ip route"
-    Then "IP4.ADDRESS\[1\]:\s+1.2.3.4/24" is visible with command "nmcli con show dummy0" in "10" seconds
-    Then "IP4.GATEWAY:\s+0.0.0.0" is visible with command "nmcli con show dummy0"
+    Then "IP4.ADDRESS\[1\]:\s+1.2.3.4/24" is visible with command "nmcli dev show dummy0" in "10" seconds
+    Then "IP4.GATEWAY:\s+0.0.0.0" is visible with command "nmcli dev show dummy0"
 
 
     @testcase_303659
