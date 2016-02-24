@@ -155,6 +155,8 @@ def reset_hwaddr(ifname):
 
 def before_scenario(context, scenario):
     try:
+        os.environ['TERM'] = 'dumb'
+
         # dump status before the test preparation starts
         context.log = file('/tmp/log_%s.html' % scenario.name,'w')
         dump_status(context, 'before %s' % scenario.name)

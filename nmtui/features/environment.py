@@ -60,6 +60,8 @@ def reset_hwaddr(ifname):
 
 def before_scenario(context, scenario):
     try:
+        os.environ['TERM'] = 'dumb'
+
         # Do the cleanup
         if os.path.isfile('/tmp/tui-screen.log'):
             os.remove('/tmp/tui-screen.log')

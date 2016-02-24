@@ -127,8 +127,7 @@ def prepare_environment(context):
 
 @step(u'Start nmtui')
 def start_nmtui(context):
-    os.environ['TERM'] = TERM_TYPE
-    context.tui = pexpect.spawn('sh -c "nmtui > %s"' % OUTPUT)
+    context.tui = pexpect.spawn('sh -c "TERM=%s nmtui > %s"' % (TERM_TYPE, OUTPUT))
     sleep(3)
 
 

@@ -15,13 +15,6 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     echo "Setting root password to 'redhat'"
     echo "redhat" | passwd root --stdin
 
-    if [ $(NetworkManager -V |awk 'BEGIN { FS = "." }; {print $1$2}') -gt "10" ]; then
-        #set the anti-colors wrapper (should be temporary solution)
-        mv /usr/bin/nmcli /usr/bin/nmcli_colors
-        cp ./wrapper /usr/bin/nmcli
-        hash -r
-    fi
-
     #adding ntp and syncing time
     yum -y install ntp tcpdump NetworkManager-libreswan
     service ntpd restart
