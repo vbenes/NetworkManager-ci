@@ -54,6 +54,10 @@ def before_all(context):
         print("Error in before_all:")
         traceback.print_exc(file=sys.stdout)
 
+def reset_hwaddr(ifname):
+    hwaddr = check_output("ethtool -P %s" % ifname, shell=True).split()[2]
+    call("ip link set %s address %s" % (ifname, hwaddr), shell=True)
+
 def before_scenario(context, scenario):
     try:
         # Do the cleanup
@@ -161,6 +165,8 @@ def after_scenario(context, scenario):
                 context.embed('text/plain', data)
         if 'bridge' in scenario.tags:
             os.system("sudo nmcli connection delete id bridge0 bridge-slave-eth1 bridge-slave-eth2")
+            reset_hwaddr('eth1')
+            reset_hwaddr('eth2')
             os.system("sudo ip link del bridge0")
         if 'vlan' in scenario.tags:
             os.system("sudo nmcli connection delete id vlan eth1.99")
@@ -168,9 +174,13 @@ def after_scenario(context, scenario):
             os.system("sudo ip link del eth2.88")
         if 'bond' in scenario.tags:
             os.system("sudo nmcli connection delete id bond0 bond-slave-eth1 bond-slave-eth2")
+            reset_hwaddr('eth1')
+            reset_hwaddr('eth2')
             os.system("sudo ip link del bond0")
         if 'team' in scenario.tags:
             os.system("sudo nmcli connection delete id team0 team-slave-eth1 team-slave-eth2")
+            reset_hwaddr('eth1')
+            reset_hwaddr('eth2')
             os.system("sudo ip link del team0")
         if 'inf' in scenario.tags:
             os.system("sudo nmcli connection delete id infiniband0 infiniband0-port")
@@ -188,12 +198,33 @@ def after_scenario(context, scenario):
         if 'nmtui_bridge_add_many_slaves' in scenario.tags:
             os.system("sudo nmcli con delete bridge-slave-eth3 bridge-slave-eth4 bridge-slave-eth5"+
                       " bridge-slave-eth6 bridge-slave-eth7 bridge-slave-eth8 bridge-slave-eth9")
+            reset_hwaddr('eth3')
+            reset_hwaddr('eth4')
+            reset_hwaddr('eth5')
+            reset_hwaddr('eth6')
+            reset_hwaddr('eth7')
+            reset_hwaddr('eth8')
+            reset_hwaddr('eth9')
         if 'nmtui_bond_add_many_slaves' in scenario.tags:
             os.system("sudo nmcli con delete bond-slave-eth3 bond-slave-eth4 bond-slave-eth5"+
                       " bond-slave-eth6 bond-slave-eth7 bond-slave-eth8 bond-slave-eth9")
+            reset_hwaddr('eth3')
+            reset_hwaddr('eth4')
+            reset_hwaddr('eth5')
+            reset_hwaddr('eth6')
+            reset_hwaddr('eth7')
+            reset_hwaddr('eth8')
+            reset_hwaddr('eth9')
         if 'nmtui_team_add_many_slaves' in scenario.tags:
             os.system("sudo nmcli con delete team-slave-eth3 team-slave-eth4 team-slave-eth5"+
                       " team-slave-eth6 team-slave-eth7 team-slave-eth8 team-slave-eth9")
+            reset_hwaddr('eth3')
+            reset_hwaddr('eth4')
+            reset_hwaddr('eth5')
+            reset_hwaddr('eth6')
+            reset_hwaddr('eth7')
+            reset_hwaddr('eth8')
+            reset_hwaddr('eth9')
         if 'nmtui_ethernet_set_mtu' in scenario.tags:
             os.system("ip link set mtu 1500 dev eth1")
         if 'nmtui_wifi_ap' in scenario.tags:
