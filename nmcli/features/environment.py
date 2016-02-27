@@ -17,6 +17,16 @@ TIMER = 0.5
 # 3. after scenario
 # 4. after tag
 
+def process_size_kb(pid):
+    memsize = 0
+    smaps = open("/proc/%d/smaps" % pid)
+    for line in smaps:
+        fields = line.split()
+        if not fields[0] in ('Private_Dirty:', 'Swap:'):
+            continue
+        memsize += int(fields[1])
+    return memsize
+
 def dump_status(context, when):
     context.log.write("\n\n\n=================================================================================\n")
     context.log.write("Network configuration %s:\n\n" % when)
@@ -465,10 +475,13 @@ def before_scenario(context, scenario):
                 context.restore_config_server = True
 
         try:
-            context.nm_pid = check_output(['pgrep','NetworkManager'])
+            context.nm_pid = int(check_output(['pgrep','NetworkManager']))
         except CalledProcessError, e:
             context.nm_pid = None
         print("NetworkManager process id before: %s", context.nm_pid)
+
+        if context.nm_pid is not None:
+            context.log.write("NetworkManager memory consumption before: %d KiB\n" % process_size_kb(context.nm_pid))
 
         context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
 
@@ -502,7 +515,7 @@ def after_scenario(context, scenario):
     nm_pid = None
     try:
         try:
-            nm_pid = check_output(['pgrep','NetworkManager']);
+            nm_pid = int(check_output(['pgrep','NetworkManager']))
         except CalledProcessError, e:
             nm_pid = None
         print("NetworkManager process id after: %s (was %s)", nm_pid, context.nm_pid)
@@ -1077,6 +1090,9 @@ def after_scenario(context, scenario):
             else:
                 for link in range(1,11):
                     call('ip link set eth%d up' % link, shell=True)
+
+        if nm_pid is not None:
+            context.log.write("NetworkManager memory consumption after: %d KiB\n" % process_size_kb(nm_pid))
 
         assert nm_pid is not None or \
                'restart' in scenario.tags
