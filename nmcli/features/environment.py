@@ -487,6 +487,7 @@ def before_scenario(context, scenario):
 
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
+        traceback.print_exc(file=sys.stdout)
 
 def after_step(context, step):
     """
