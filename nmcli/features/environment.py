@@ -515,6 +515,12 @@ def after_scenario(context, scenario):
         context.log.close ()
         context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
+        if 'restart' in scenario.tags:
+            print ("---------------------------")
+            print ("restarting NM service")
+            call('sudo service NetworkManager restart', shell=True)
+            sleep(5)
+
         if '1000' in scenario.tags:
             print ("---------------------------")
             print ("deleting bridge0 and 1000 dummy devices")
@@ -850,12 +856,6 @@ def after_scenario(context, scenario):
                 cfg = pexpect.spawn('ifconfig')
                 if cfg.expect(['inet 10', pexpect.EOF]) == 0:
                     break
-
-        if 'restart' in scenario.tags:
-            print ("---------------------------")
-            print ("restarting NM service")
-            call('sudo service NetworkManager restart', shell=True)
-            sleep(5)
 
         if 'remove_dns_none' in scenario.tags:
             if call('grep dns /etc/NetworkManager/NetworkManager.conf', shell=True) == 0:
