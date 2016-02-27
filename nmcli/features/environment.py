@@ -1078,8 +1078,8 @@ def after_scenario(context, scenario):
                 for link in range(1,11):
                     call('ip link set eth%d up' % link, shell=True)
 
-
-        assert nm_pid is not None
+        assert nm_pid is not None or \
+               'restart' in scenario.tags
         assert context.nm_pid is not None
         assert getattr(context, 'nm_restarted', False) or \
                'restart' in scenario.tags or \
