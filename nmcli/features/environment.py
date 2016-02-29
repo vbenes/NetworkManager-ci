@@ -149,6 +149,10 @@ def teardown_racoon():
     call("sudo nmcli con del rac1", shell=True)
     call("sudo modprobe -r ip_vti", shell=True)
 
+def reset_hwaddr(ifname):
+    hwaddr = check_output("ethtool -P %s" % ifname, shell=True).split()[2]
+    call("ip link set %s address %s" % (ifname, hwaddr), shell=True)
+
 def before_scenario(context, scenario):
     try:
         # dump status before the test preparation starts
@@ -559,6 +563,7 @@ def after_scenario(context, scenario):
             print ("---------------------------")
             print ("deleting slave profiles")
             call('nmcli connection delete id bond0.0 bond0.1 bond-slave-eth1', shell=True)
+            reset_hwaddr('eth1')
             #sleep(TIMER)
 
         if 'bond' in scenario.tags:
@@ -732,6 +737,8 @@ def after_scenario(context, scenario):
             print ("---------------------------")
             print ("deleting team slaves")
             call('nmcli connection delete id team0.0 team0.1 team-slave-eth2 team-slave-eth1 eth1 eth2', shell=True)
+            reset_hwaddr('eth1')
+            reset_hwaddr('eth2')
             #sleep(TIMER)
 
         if 'team' in scenario.tags:
@@ -785,6 +792,9 @@ def after_scenario(context, scenario):
             call("nmcli connection down testeth1", shell=True)
             call('ip link del bridge0', shell=True)
             call('ip link del eth0.99', shell=True)
+            reset_hwaddr('eth1')
+            reset_hwaddr('eth2')
+            reset_hwaddr('eth3')
 
 
         if 'vpn' in scenario.tags:
@@ -977,6 +987,8 @@ def after_scenario(context, scenario):
             call('sudo systemctl start NetworkManager.service', shell=True)
             # remove all the setup profiles in correct order
             call('sudo nmcli con del bridge-br0 vlan-vlan10 bond-bond0 bond-slave-eth1 bond-slave-eth2', shell=True)
+            reset_hwaddr('eth1')
+            reset_hwaddr('eth2')
             sleep(1)
             if not call('ip a s br0 > /dev/null', shell=True):
                 call('sudo ip link del br0', shell=True)
