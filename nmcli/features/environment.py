@@ -528,8 +528,6 @@ def after_scenario(context, scenario):
             context.embed('text/plain', data)
 
         dump_status(context, 'after %s' % scenario.name)
-        context.log.close ()
-        context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
         if 'restart' in scenario.tags:
             print ("---------------------------")
@@ -1094,6 +1092,9 @@ def after_scenario(context, scenario):
 
         if nm_pid is not None:
             context.log.write("NetworkManager memory consumption after: %d KiB\n" % process_size_kb(nm_pid))
+
+        context.log.close ()
+        context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
         assert nm_pid is not None or \
                'restart' in scenario.tags
