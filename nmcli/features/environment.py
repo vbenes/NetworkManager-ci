@@ -475,13 +475,15 @@ def before_scenario(context, scenario):
                 context.restore_config_server = True
 
         try:
-            context.nm_pid = int(check_output(['pgrep','NetworkManager']))
+            context.nm_pid = int(check_output(['systemctl', 'show', '-pMainPID', 'NetworkManager.service']).split('=')[-1])
         except CalledProcessError, e:
             context.nm_pid = None
         print("NetworkManager process id before: %s", context.nm_pid)
 
         if context.nm_pid is not None:
             context.log.write("NetworkManager memory consumption before: %d KiB\n" % process_size_kb(context.nm_pid))
+            if call("[ -f /etc/systemd/system/NetworkManager.service ] && grep -q valgrind /etc/systemd/system/NetworkManager.service", shell=True) == 0:
+                call("LOGNAME=root HOSTNAME=localhost gdb /usr/sbin/NetworkManager -ex 'target remote | vgdb' -ex 'monitor leak_check summary' -batch", shell=True, stdout=context.log, stderr=context.log)
 
         context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
 
@@ -516,7 +518,7 @@ def after_scenario(context, scenario):
     nm_pid = None
     try:
         try:
-            nm_pid = int(check_output(['pgrep','NetworkManager']))
+            nm_pid = int(check_output(['systemctl', 'show', '-pMainPID', 'NetworkManager.service']).split('=')[-1])
         except CalledProcessError, e:
             nm_pid = None
         print("NetworkManager process id after: %s (was %s)", nm_pid, context.nm_pid)
@@ -1090,8 +1092,11 @@ def after_scenario(context, scenario):
                 for link in range(1,11):
                     call('ip link set eth%d up' % link, shell=True)
 
-        if nm_pid is not None:
+        if nm_pid is not None and context.nm_pid == nm_pid:
             context.log.write("NetworkManager memory consumption after: %d KiB\n" % process_size_kb(nm_pid))
+            if call("[ -f /etc/systemd/system/NetworkManager.service ] && grep -q valgrind /etc/systemd/system/NetworkManager.service", shell=True) == 0:
+                sleep(3) # Wait for dispatcher to finish its business
+                call("LOGNAME=root HOSTNAME=localhost gdb /usr/sbin/NetworkManager -ex 'target remote | vgdb' -ex 'monitor leak_check full kinds all increased' -batch", shell=True, stdout=context.log, stderr=context.log)
 
         context.log.close ()
         context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
