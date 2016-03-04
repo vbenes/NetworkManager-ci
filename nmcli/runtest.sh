@@ -20,6 +20,11 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     service ntpd restart
     sleep 10
 
+    #pull in debugging symbols
+    cat /proc/$(pidof NetworkManager)/maps | awk '/ ..x. / {print $NF}' |
+        grep '^/' | xargs rpm -qf | grep -v 'not owned' | sort | uniq |
+        xargs debuginfo-install -y
+
     #removing rate limit for systemd journaling
     sed -i 's/^#\?\(RateLimitInterval *= *\).*/\10/' /etc/systemd/journald.conf
     sed -i 's/^#\?\(RateLimitBurst *= *\).*/\10/' /etc/systemd/journald.conf
