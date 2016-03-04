@@ -25,6 +25,13 @@ if [ ! -e /tmp/nm_eth_configured ]; then
         grep '^/' | xargs rpm -qf | grep -v 'not owned' | sort | uniq |
         xargs debuginfo-install -y
 
+    #restart with valgrind
+    if [ -e /etc/systemd/system/NetworkManager-valgrind.service ]; then
+        ln -s NetworkManager-valgrind.service /etc/systemd/system/NetworkManager.service
+        systemctl daemon-reload
+        systemctl restart NetworkManager
+    fi
+
     #removing rate limit for systemd journaling
     sed -i 's/^#\?\(RateLimitInterval *= *\).*/\10/' /etc/systemd/journald.conf
     sed -i 's/^#\?\(RateLimitBurst *= *\).*/\10/' /etc/systemd/journald.conf
