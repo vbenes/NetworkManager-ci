@@ -943,7 +943,7 @@ def after_scenario(context, scenario):
             os.system('systemctl unmask dbus-org.freedesktop.hostname1.service')
             os.system('systemctl restart NetworkManager')
             call('sudo echo %s > /etc/hostname' % context.original_hostname, shell=True)
-            call('sudo hostnamectl set-hostname %s' % context.original_hostname, shell=True)
+            call('sudo nmcli g hostname %s' % context.original_hostname, shell=True)
 
         if 'ipv6_describe' in scenario.tags or 'testcase_304241' in scenario.tags:
             call('sh sanitize_beah.sh', shell=True)

@@ -416,7 +416,7 @@ def note_the_output_of(context, command):
 
 @step(u'Restore hostname from the noted value')
 def restore_hostname(context):
-    os.system('hostnamectl set-hostname %s' % context.noted_value)
+    os.system('nmcli g hostname %s' % context.noted_value)
     sleep(0.5)
 
 
