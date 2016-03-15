@@ -347,6 +347,7 @@ def before_scenario(context, scenario):
         if 'libreswan' in scenario.tags:
             print ("---------------------------")
             call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
+            call("/usr/sbin/ipsec --checknss", shell=True)
             setup_racoon (dh_group=5)
             #call("ip route add default via 172.31.70.1", shell=True)
 
