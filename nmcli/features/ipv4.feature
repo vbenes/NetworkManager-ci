@@ -456,11 +456,11 @@ Feature: nmcli: ipv4
     * Execute "echo 'INVALID_DNS' > /etc/resolv.conf"
     When "nameserver 8.8.8.8" is not visible with command "cat /etc/resolv.conf"
     When "nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
-    Then Unable to ping "nix.cz"
+    Then Unable to ping "redhat.com"
     * Execute "sudo kill -SIGUSR1 $(pidof NetworkManager)"
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "10" seconds
     Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
-    Then Ping "nix.cz"
+    Then Ping "redhat.com"
 
 
     @newveth
