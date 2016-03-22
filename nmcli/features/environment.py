@@ -1084,7 +1084,7 @@ def after_scenario(context, scenario):
             sleep(1)
 
 
-        if 'regenerate_veth' in scenario.tags:
+        if 'regenerate_veth' in scenario.tags or 'restart' in scenario.tags:
             print ("---------------------------")
             print ("regenerate veth setup")
             if os.path.isfile('/tmp/nm_newveth_configured'):
