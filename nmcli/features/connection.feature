@@ -327,6 +327,8 @@ Feature: nmcli: connection
     Scenario: nmcli - connection - route priorities
      * Add a new connection of type "ethernet" and options "ifname eth0 con-name ethie autoconnect no"
      * Add a new connection of type "ethernet" and options "ifname eth10 con-name connie autoconnect no"
+     * Execute "nmcli con modify ethie ipv4.may-fail no"
+     * Execute "nmcli con modify connie ipv4.may-fail no"
      * Bring "up" connection "ethie"
      * Bring "up" connection "connie"
      When "metric 100" is visible with command "ip r |grep default |grep eth0"
