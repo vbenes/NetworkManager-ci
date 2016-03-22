@@ -447,9 +447,8 @@ def before_scenario(context, scenario):
 
         if 'pppoe' in scenario.tags:
             print ("---------------------------")
-            print ("installing pppeo dependencies")
-            call('yum -y install NetworkManager-adsl NetworkManager-glib rp-pppoe', shell=True)
-            call('systemctl restart NetworkManager.service', shell=True)
+            print ("installing pppoe dependencies")
+            call('yum -y install rp-pppoe', shell=True)
 
         if 'nmcli_general_dhcp_profiles_general_gateway' in scenario.tags:
             print("---------------------------")
