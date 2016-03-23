@@ -69,6 +69,7 @@ function setup_veth_env ()
 
     # create bridge for the internal device peers inside the namespace
     ip netns exec vethsetup brctl addbr inbr
+    ip netns exec vethsetup brctl setfd inbr 2
     ip netns exec vethsetup brctl stp inbr on
 
     # set best prirority to this bridge
