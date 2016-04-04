@@ -1,7 +1,7 @@
 import sys
 from subprocess import call, check_output
 
-current_nm_version = "".join(check_output("""NetworkManager -V |awk 'BEGIN { FS = "." }; {print $1$2$3}'""", shell=True).split('-')[0])
+current_nm_version = "".join(check_output("""NetworkManager -V |awk 'BEGIN { FS = "." }; {printf "%03d%03d%03d", $1, $2, $3}'""", shell=True).split('-')[0])
 
 test_name = "".join('_'.join(sys.argv[2].split('_')[2:]))
 
@@ -22,13 +22,13 @@ for tags in tests_tags:
             if tag_to_return == "":
                 tag_to_return = "skip"
 
-            # we needed version in 106 format
-            need_nm_version = "".join(tag.split('=')[-1].split('.'))
-            if len(need_nm_version) == 3:
-                pass
+            # we need version in 001002003 format
+            tokens = tag.split('=')[-1].split('.')
+            if len(tokens) == 3:
+                need_nm_version = "%03d%03d%03d" % (int(tokens[0]), int(tokens[1]), int(tokens[2]))
             # append 0 to the end if needed
-            elif len(need_nm_version) == 2:
-                need_nm_version=need_nm_version+"0"
+            elif len(tokens) == 2:
+                need_nm_version = "%03d%03d000" % (int(tokens[0]), int(tokens[1]))
             # skip tag otherwise
             else:
                 tag_to_return = "skip"
