@@ -17,10 +17,21 @@ TIMER = 0.5
 # 3. after scenario
 # 4. after tag
 
+def nm_pid():
+    try:
+        pid = int(check_output(['systemctl', 'show', '-pMainPID', 'NetworkManager.service']).split('=')[-1])
+    except CalledProcessError, e:
+        pid = None
+    if not pid:
+        try:
+            pid = int(check_output(['pgrep', 'NetworkManager']))
+        except CalledProcessError, e:
+            pid = None
+    return pid
+
 def nm_size_kb():
-    pid = int(check_output(['pgrep','NetworkManager']))
     memsize = 0
-    smaps = open("/proc/%d/smaps" % pid)
+    smaps = open("/proc/%d/smaps" % nm_pid())
     for line in smaps:
         fields = line.split()
         if not fields[0] in ('Private_Dirty:', 'Swap:'):
@@ -473,7 +484,7 @@ def before_scenario(context, scenario):
                 context.restore_config_server = True
 
         try:
-            context.nm_pid = int(check_output(['systemctl', 'show', '-pMainPID', 'NetworkManager.service']).split('=')[-1])
+            context.nm_pid = nm_pid()
         except CalledProcessError, e:
             context.nm_pid = None
         print("NetworkManager process id before: %s", context.nm_pid)
@@ -513,13 +524,10 @@ def after_step(context, step):
 def after_scenario(context, scenario):
     """
     """
-    nm_pid = None
+    nm_pid_after = None
     try:
-        try:
-            nm_pid = int(check_output(['systemctl', 'show', '-pMainPID', 'NetworkManager.service']).split('=')[-1])
-        except CalledProcessError, e:
-            nm_pid = None
-        print("NetworkManager process id after: %s (was %s)", nm_pid, context.nm_pid)
+        nm_pid_after = nm_pid()
+        print("NetworkManager process id after: %s (was %s)", nm_pid_after, context.nm_pid)
 
         # Attach journalctl logs
         os.system("sudo journalctl -u NetworkManager --no-pager -o cat %s > /tmp/journal-nm.log" % context.log_cursor)
@@ -1092,7 +1100,7 @@ def after_scenario(context, scenario):
                 for link in range(1,11):
                     call('ip link set eth%d up' % link, shell=True)
 
-        if nm_pid is not None and context.nm_pid == nm_pid:
+        if nm_pid_after is not None and context.nm_pid == nm_pid_after:
             context.log.write("NetworkManager memory consumption after: %d KiB\n" % nm_size_kb())
             if call("[ -f /etc/systemd/system/NetworkManager.service ] && grep -q valgrind /etc/systemd/system/NetworkManager.service", shell=True) == 0:
                 sleep(3) # Wait for dispatcher to finish its business
@@ -1101,12 +1109,12 @@ def after_scenario(context, scenario):
         context.log.close ()
         context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
-        assert nm_pid is not None or \
+        assert nm_pid_after is not None or \
                'restart' in scenario.tags
         assert context.nm_pid is not None
         assert getattr(context, 'nm_restarted', False) or \
                'restart' in scenario.tags or \
-               nm_pid == context.nm_pid
+               nm_pid_after == context.nm_pid
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
