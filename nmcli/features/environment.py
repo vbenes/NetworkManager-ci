@@ -182,13 +182,11 @@ def before_scenario(context, scenario):
         if 'not_on_s390x' in scenario.tags:
             arch = check_output("uname -p", shell=True).strip()
             if arch == "s390x":
-                import sys
                 sys.exit(0)
 
         if 'need_s390x' in scenario.tags:
             arch = check_output("uname -p", shell=True).strip()
             if arch != "s390x":
-                import sys
                 sys.exit(0)
 
         if 'allow_wired_connections' in scenario.tags:
@@ -206,17 +204,14 @@ def before_scenario(context, scenario):
 
         if 'not_under_internal_DHCP' in scenario.tags:
             if call("grep dhcp=internal /etc/NetworkManager/NetworkManager.conf", shell=True) == 0:
-                import sys
                 sys.exit(0)
 
         if 'veth' in scenario.tags:
             if os.path.isfile('/tmp/nm_veth_configured'):
-                import sys
                 sys.exit(0)
 
         if 'newveth' in scenario.tags:
             if os.path.isfile('/tmp/nm_newveth_configured'):
-                import sys
                 sys.exit(0)
 
         if 'disp' in scenario.tags:
