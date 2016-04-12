@@ -288,6 +288,7 @@ Feature: nmcli - bridge
     Then "bridge0:.*192.168" is visible with command "ip a s bridge0" in "45" seconds
 
 
+    @ver-=1.1
     @rhbz1030947
     @dummy
     @bridge_reflect_changes_from_outside_of_NM
@@ -306,15 +307,34 @@ Feature: nmcli - bridge
     Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
 
 
-    @bridge_assumed_connection_race
+    @ver+=1.1.1
+    @rhbz1030947
+    @dummy
+    @bridge_reflect_changes_from_outside_of_NM
+    Scenario: nmcli - bridge - reflect changes from outside of NM
+    * Execute "ip link add br0 type bridge"
+    When "br0\s+bridge\s+unmanaged" is visible with command "nmcli d" in "5" seconds
+    * Execute "ip link set dev br0 up"
+    When "br0\s+bridge\s+unmanaged" is visible with command "nmcli d" in "5" seconds
+    * Execute "ip link add dummy0 type dummy"
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d" in "5" seconds
+    * Execute "ip link set dev dummy0 up"
+    * Execute "ip addr add 1.1.1.1/24 dev br0"
+    When "br0\s+bridge\s+connected\s+br0" is visible with command "nmcli d" in "5" seconds
+    * Execute "brctl addif br0 dummy0"
+    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d" in "5" seconds
+    Then "BRIDGE.SLAVES:\s+dummy0" is visible with command "nmcli -f bridge.slaves dev show br0"
+
+
     @restart
+    @bridge_assumed_connection_race
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
     * Create 300 bridges and delete them
     Then "active \(running\)" is visible with command "service NetworkManager status"
 
 
-    @bridge_manipulation_with_1000_slaves
     @1000
+    @bridge_manipulation_with_1000_slaves
     Scenario: NM - bridge - manipulation with 1000 slaves bridge
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
     * Execute "for i in $(seq 0 1000); do ip link add port$i type dummy; ip link set port$i master bridge0; done"
@@ -323,9 +343,9 @@ Feature: nmcli - bridge
     Then "GENERAL.DEVICE:\s+port999" is visible with command "nmcli device show port999"
 
 
-    @bridge_assumed_connection_no_firewalld_zone
     @firewall
     @dummy
+    @bridge_assumed_connection_no_firewalld_zone
     Scenario: NM - bridge - no firewalld zone for bridge assumed connection
     * Execute "sudo ip link add br0 type bridge"
     * Execute "sudo ip link set dev br0 up"
@@ -334,8 +354,9 @@ Feature: nmcli - bridge
     Then "br0" is not visible with command "firewall-cmd --get-active-zones" in "5" seconds
 
 
-    @bridge_assumed_connection_ip_methods
+    @ver-=1.1
     @dummy
+    @bridge_assumed_connection_ip_methods
     Scenario: NM - bridge - Layer2 changes for bridge assumed connection
     * Execute "sudo ip link add br0 type bridge"
     * Execute "sudo ip link add dummy0 type dummy"
@@ -351,6 +372,22 @@ Feature: nmcli - bridge
     Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0" in "5" seconds
 
 
+    @ver+=1.1.1
+    @dummy
+    @bridge_assumed_connection_ip_methods
+    Scenario: NM - bridge - Layer2 changes for bridge assumed connection
+    * Execute "sudo ip link add br0 type bridge"
+    * Execute "sudo ip link add dummy0 type dummy"
+    * Execute "sudo ip link set dummy0 master br0"
+    When "br0" is not visible with command "nmcli con"
+    * Execute "sudo ip link set dev br0 up"
+    * Execute "sudo ip link set dev dummy0 up"
+    * Execute "sudo ip addr add 1.1.1.2/24 dev dummy0"
+    * Execute "sudo ip addr add 1::3/128 dev br0"
+    * Execute "sudo ip addr add 1.1.1.3/24 dev br0"
+    Then "ipv4.method:\s+manual.*ipv4.addresses:\s+1.1.1.3\/24.*ipv6.method:\s+manual.*ipv6.addresses:\s+1::3\/128" is visible with command "nmcli connection show br0" in "5" seconds
+
+
     @rhbz1269199
     @dummy
     @restart
@@ -361,8 +398,8 @@ Feature: nmcli - bridge
 
 
     @rhbz1169936
-    @outer_bridge_restart_persistence
     @two_bridged_veths
+    @outer_bridge_restart_persistence
     Scenario: NM - bridge - bridge restart persistence
     * Prepare veth pairs "test1" bridged over "vethbr"
     * Restart NM

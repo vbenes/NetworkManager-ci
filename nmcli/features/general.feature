@@ -327,8 +327,9 @@ Feature: nmcli - general
     # Now see that the non-locahost value has been set
     Then Check noted values "nonlocalh_file" and "nonlocalh_cmd" are the same
     # Restoring orig. hostname in after_scenario
-    
 
+
+    @ver-=1.1
     @rhbz1136843
     @general
     @nmcli_general_ignore_specified_unamanaged_devices
@@ -341,6 +342,25 @@ Feature: nmcli - general
     # Add a config rule to unmanage the device
     * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:dnt > /etc/NetworkManager/NetworkManager.conf"
     * Execute "pkill -HUP NetworkManager"
+    * Wait for at least "5" seconds
+    # Now the device should be listed as unmanaged
+    Then "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
+
+
+    @ver+=1.1.1
+    @rhbz1136843
+    @general
+    @nmcli_general_ignore_specified_unamanaged_devices
+    Scenario: NM - general - ignore specified unmanaged devices
+    * Execute "ip link add name dnt type bond"
+    # Still unmanaged
+    * "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
+    * Execute "ip link set dev dnt up"
+    * "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
+    # Add a config rule to unmanage the device
+    * Execute "echo -e \\n[keyfile]\\nunmanaged-devices=interface-name:dnt > /etc/NetworkManager/NetworkManager.conf"
+    * Execute "pkill -HUP NetworkManager"
+    * Execute "ip addr add dev dnt 1.2.3.4/24"
     * Wait for at least "5" seconds
     # Now the device should be listed as unmanaged
     Then "dnt\s+bond\s+unmanaged" is visible with command "nmcli device"
@@ -710,4 +730,3 @@ Feature: nmcli - general
     * Run child "sleep 40 && ip netns exec testM_ns ip a add 192.168.99.1/24 dev testM_bridge"
     Then "connected:ethie" is visible with command "nmcli -t -f STATE,CONNECTION device" in "55" seconds
     And "connected:full" is visible with command "nmcli -t -f STATE,CONNECTIVITY general status"
-

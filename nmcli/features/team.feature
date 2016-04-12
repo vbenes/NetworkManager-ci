@@ -499,6 +499,7 @@
     Then Check slave "eth2" in team "nm-team" is "up"
 
 
+    @ver-=1.1
     @dummy
     @teamd
     @team_reflect_changes_from_outside_of_NM
@@ -506,7 +507,7 @@
     * Finish "systemd-run --unit teamd teamd --team-dev=team0"
     * Finish "sleep 2"
     When "team0\s+team\s+unmanaged" is visible with command "nmcli d"
-   * Finish "ip link set dev team0 up"
+    * Finish "ip link set dev team0 up"
     When "team0\s+team\s+disconnected" is visible with command "nmcli d"
     * Finish "ip link add dummy0 type dummy"
     * Finish "ip addr add 1.1.1.1/24 dev team0"
@@ -516,6 +517,24 @@
     When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
     Then "TEAM.SLAVES:\s+dummy0" is visible with command "nmcli -f team.slaves dev show team0"
 
+
+    @ver+=1.1.1
+    @dummy
+    @teamd
+    @team_reflect_changes_from_outside_of_NM
+    Scenario: nmcli - team - reflect changes from outside of NM
+    * Finish "systemd-run --unit teamd teamd --team-dev=team0"
+    * Finish "sleep 2"
+    When "team0\s+team\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip link set dev team0 up"
+    When "team0\s+team\s+unmanaged" is visible with command "nmcli d"
+    * Finish "ip link add dummy0 type dummy"
+    * Finish "ip addr add 1.1.1.1/24 dev team0"
+    When "team0\s+team\s+connected\s+team0" is visible with command "nmcli d" in "5" seconds
+    When "dummy0\s+dummy\s+unmanaged" is visible with command "nmcli d"
+    * Finish "teamdctl team0 port add dummy0"
+    When "dummy0\s+dummy\s+connected\s+dummy" is visible with command "nmcli d"
+    Then "TEAM.SLAVES:\s+dummy0" is visible with command "nmcli -f team.slaves dev show team0"
 
 
     @rhbz1145988
