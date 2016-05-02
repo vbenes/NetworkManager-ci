@@ -169,8 +169,7 @@ Feature: WIFI TUI tests
     * Confirm the connection settings
     * "wifi1" is visible with command "nmcli connection"
     * "wifi1" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "wifi1" in the list
     * Choose to "<Activate>" a connection
@@ -189,8 +188,7 @@ Feature: WIFI TUI tests
     * Execute "nmcli con down wifi1"
     * "wifi1" is visible with command "nmcli connection"
     * "wifi1" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "wifi1" in the list
     * Choose to "<Activate>" a connection

@@ -185,8 +185,7 @@ Feature: IPv4 TUI tests
     * Come in "IPv4 CONFIGURATION" category
     * Remove all routes
     * Confirm the connection settings
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Edit a connection" from main screen
     * Select connection "ethernet2" in the list
     * Choose to "<Edit...>" a connection
@@ -308,8 +307,7 @@ Feature: IPv4 TUI tests
     * Set "Gateway" field to "192.168.122.1"
     * Add ip route "192.168.1.0/24 192.168.3.11 1"
     * Confirm the connection settings
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "ethernet" in the list
     * Choose to "<Activate>" a connection

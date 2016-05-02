@@ -73,8 +73,7 @@ Feature: Bond TUI tests
     * Confirm the connection settings
     * "bond0" is visible with command "nmcli connection"
     * "bond0" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "bond0" in the list
     * Choose to "<Activate>" a connection
@@ -92,8 +91,7 @@ Feature: Bond TUI tests
     * Execute "nmcli con down bond0"
     * "bond0" is visible with command "nmcli connection"
     * "bond0" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "bond0" in the list
     * Choose to "<Activate>" a connection
@@ -109,8 +107,7 @@ Feature: Bond TUI tests
     * Confirm the connection settings
     * "bond0" is visible with command "nmcli connection"
     * "bond0" is visible with command "nmcli device" in "10" seconds
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "bond0" in the list
     * Choose to "<Deactivate>" a connection

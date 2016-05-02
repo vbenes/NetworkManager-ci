@@ -187,8 +187,7 @@ Feature: VLAN TUI tests
     * Check ifcfg-name file created for connection "eth1.99"
     * "eth1.99" is visible with command "nmcli connection"
     * "eth1.99" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "eth1.99" in the list
     * Choose to "<Activate>" a connection
@@ -208,8 +207,7 @@ Feature: VLAN TUI tests
     * "eth1.99" is visible with command "nmcli connection"
     * "eth1.99" is not visible with command "nmcli device"
     * Execute "nmcli connection up eth1.99"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "eth1.99" in the list
     * Choose to "<Deactivate>" a connection
@@ -230,8 +228,7 @@ Feature: VLAN TUI tests
     * Check ifcfg-name file created for connection "eth1.99"
     * "eth1.99" is visible with command "nmcli connection"
     * "eth1.99" is visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "eth1.99" in the list
     * Choose to "<Deactivate>" a connection
@@ -253,8 +250,7 @@ Feature: VLAN TUI tests
     * Set "Device" field to "eth1.88"
     * Set "VLAN id" field to "88"
     * Confirm the connection settings
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "vlan" in the list
     * "eth1.99" is visible with command "nmcli device"

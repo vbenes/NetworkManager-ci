@@ -239,6 +239,10 @@ def after_scenario(context, scenario):
             os.system("cp -f /tmp/backup_profiles/* /etc/sysconfig/network-scripts/")
             os.system("rm -rf /tmp/backup_profiles")
             os.system("nmcli con reload")
+        if 'nmtui_ethernet_activate_connection_specific_device' in scenario.tags:
+            if os.system("nmcli connection show -a |grep testeth7") == 0:
+                print ("Disconnect testeth7")
+                os.system("nmcli con down testeth7")
         if "eth0" in scenario.tags:
             print ("---------------------------")
             print ("upping testeth0")

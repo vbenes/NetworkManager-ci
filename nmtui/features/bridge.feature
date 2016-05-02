@@ -55,8 +55,7 @@ Feature: Bridge TUI tests
     * Confirm the connection settings
     * "bridge0" is visible with command "nmcli connection"
     * "bridge0" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "bridge0" in the list
     * Choose to "<Activate>" a connection
@@ -74,8 +73,7 @@ Feature: Bridge TUI tests
     * Execute "nmcli con down bridge0"
     * "bridge0" is visible with command "nmcli connection"
     * "bridge0" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "bridge0" in the list
     * Choose to "<Activate>" a connection
@@ -91,8 +89,7 @@ Feature: Bridge TUI tests
     * Confirm the connection settings
     * "bridge0" is visible with command "nmcli connection"
     * "bridge0" is visible with command "nmcli device" in "10" seconds
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "bridge0" in the list
     * Choose to "<Deactivate>" a connection

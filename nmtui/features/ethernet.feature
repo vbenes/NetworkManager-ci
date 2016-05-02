@@ -62,8 +62,7 @@ Feature: Ethernet TUI tests
     * Confirm the connection settings
     * Check ifcfg-name file created for connection "ethernet"
     * "ethernet\s+--\s+no" is visible with command "nmcli -f NAME,DEVICE,ACTIVE connection"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "ethernet" in the list
     * Choose to "<Activate>" a connection
@@ -75,6 +74,7 @@ Feature: Ethernet TUI tests
     @ethernet
     @nmtui_ethernet_activate_connection_specific_device
     Scenario: nmtui - ethernet - activate connection on specific device
+    * Execute "nmcli con up testeth7"
     * Start nmtui
     * Choose to "Edit a connection" from main screen
     * Choose to "<Add>" a connection
@@ -84,10 +84,7 @@ Feature: Ethernet TUI tests
     * Confirm the connection settings
     * Check ifcfg-name file created for connection "ethernet"
     * "ethernet\s+--\s+no" is visible with command "nmcli -f NAME,DEVICE,ACTIVE connection"
-    * Execute "nmcli connection up testeth7"
-    * Execute "nmcli connection down testeth7"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "testeth7" in the list
     * Select connection "ethernet" in the list

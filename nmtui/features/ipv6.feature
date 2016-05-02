@@ -194,8 +194,7 @@ Feature: IPv6 TUI tests
     * Come in "IPv6 CONFIGURATION" category
     * Remove all routes
     * Confirm the connection settings
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Edit a connection" from main screen
     * Select connection "ethernet2" in the list
     * Choose to "<Edit...>" a connection

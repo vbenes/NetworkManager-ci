@@ -39,8 +39,7 @@ Feature: Team TUI tests
     * "team0" is visible with command "nmcli connection"
     * "team0" is not visible with command "nmcli device"
     * Team "team0" is down
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "team0" in the list
     * Choose to "<Activate>" a connection
@@ -58,8 +57,7 @@ Feature: Team TUI tests
     * Execute "nmcli con down team0"
     * "team0" is visible with command "nmcli connection"
     * "team0" is not visible with command "nmcli device"
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "team0" in the list
     * Choose to "<Activate>" a connection
@@ -75,8 +73,7 @@ Feature: Team TUI tests
     * Confirm the connection settings
     * "team0" is visible with command "nmcli connection"
     * "team0" is visible with command "nmcli device" in "10" seconds
-    * Exit nmtui via "<Quit>" button
-    * Start nmtui
+    * Come back to main screen
     * Choose to "Activate a connection" from main screen
     * Select connection "team0" in the list
     * Choose to "<Deactivate>" a connection

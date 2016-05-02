@@ -37,7 +37,7 @@ Feature: General TUI tests
     * Start nmtui
     * Main screen is visible
     * Choose to "Activate a connection" from main screen
-    Then ".*ctivate>.*<Quit>.*" is visible on screen
+    Then ".*ctivate>.*<(Quit|Back)>.*" is visible on screen
 
 
     @general
@@ -72,6 +72,24 @@ Feature: General TUI tests
     * Press "ENTER" key
     * ".*Set hostname to 'testsethostname'.*" is visible on screen
     * Press "ENTER" key
+    Then Nmtui process is not running
+    Then "testsethostname" is visible with command "hostname"
+
+
+    @ver+=1.3.0
+    @general
+    @nmtui_general_set_new_hostname
+    Scenario: nmtui - general - set hostname
+    * Note the output of "hostname"
+    * Start nmtui
+    * Choose to "Set system hostname" from main screen
+    * ".*Set Hostname.*" is visible on screen
+    * Set current field to "testsethostname"
+    * ".*Hostname testsethostname.*" is visible on screen
+    * Press "ENTER" key
+    * ".*Set hostname to 'testsethostname'.*" is visible on screen
+    * Press "ENTER" key
+    * Choose to "Quit" from main screen
     Then Nmtui process is not running
     Then "testsethostname" is visible with command "hostname"
 
@@ -180,5 +198,5 @@ Feature: General TUI tests
     * Main screen is visible
     * Choose to "Activate a connection" from main screen
     * Nmtui process is running
-    Then ".*<Quit>.*" is visible on screen
+    Then ".*<(Quit|Back)>.*" is visible on screen
     Then ".*testeth.*" is not visible on screen

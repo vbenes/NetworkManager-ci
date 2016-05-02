@@ -7,6 +7,7 @@ import re
 import subprocess
 from behave import step
 from time import sleep
+from subprocess import check_output
 
 OUTPUT = '/tmp/nmtui.out'
 TERM_TYPE = 'vt102'
@@ -211,9 +212,16 @@ def back_to_con_list(context):
     context.tui.send(keys['LEFTARROW']*8)
     context.tui.send(keys['UPARROW']*32)
 
+@step(u'Come back to main screen')
+def back_to_main(context):
+    current_nm_version = "".join(check_output("""NetworkManager -V |awk 'BEGIN { FS = "." }; {printf "%03d%03d%03d", $1, $2, $3}'""", shell=True).split('-')[0])
+    context.tui.send(keys['ESCAPE'])
+    if current_nm_version < "001003000":
+        context.execute_steps(u'* Start nmtui')
 
 @step(u'Exit nmtui via "{action}" button')
 @step(u'Choose to "{action}" a slave')
+@step(u'Exit the dialog via "{action}" button')
 @step(u'Choose to "{action}" a connection')
 def choose_connection_action(context, action):
     assert go_until_pattern_matches_aftercursor_text(context,keys['TAB'],r'%s.*' % action) is not None, "Could not go to action '%s' on screen!" % action
