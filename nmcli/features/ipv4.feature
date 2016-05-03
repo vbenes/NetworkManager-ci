@@ -344,6 +344,7 @@ Feature: nmcli: ipv4
     * Submit "set ipv4.addresses 192.168.122.2/24" in editor
     * Submit "set ipv4.gateway 192.168.122.1" in editor
     * Submit "set ipv4.routes 192.168.1.0/24 192.168.3.11 1" in editor
+    * Submit "set ipv6.method ignore" in editor
     * Save in editor
     * Quit editor
     * Bring up connection "ethie" ignoring error
