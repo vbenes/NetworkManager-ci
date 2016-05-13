@@ -732,6 +732,65 @@ Feature: nmcli: ipv6
     Then "IPv6" lifetimes are slightly smaller than "3600" and "1800" for device "test11"
 
 
+    @rhbz1329366
+    @scapy
+    @ipv6_drop_ra_with_low_hlimit
+    Scenario: NM - ipv6 - drop scapy packet with lower hop limit
+    * Finish "ip link add test10 type veth peer name test11"
+    * Finish "nmcli c add type ethernet ifname test10"
+    * Finish "nmcli c add type ethernet ifname test11"
+    * Execute "nmcli con modify ethernet-test10 ipv4.method disabled ipv6.method auto"
+    * Execute "nmcli con modify ethernet-test11 ipv4.method disabled ipv6.method auto"
+    * Finish "ip link set dev test10 up"
+    * Finish "ip link set dev test11 up"
+    * Execute "sleep 1"
+    * Execute "nmcli --wait 0 c up ethernet-test10"
+    * Execute "nmcli --wait 0 c up ethernet-test11"
+    When "ethernet-test10" is visible with command "nmcli con sh -a"
+    When "ethernet-test11" is visible with command "nmcli con sh -a"
+    * Send lifetime scapy packet with "250"
+    Then "valid_lft forever preferred_lft forever" is visible with command "ip a s test11"
+
+
+    @rhbz1329366
+    @scapy
+    @ipv6_drop_ra_with_255_hlimit
+    Scenario: NM - ipv6 - scapy packet with 255 hop limit
+    * Finish "ip link add test10 type veth peer name test11"
+    * Finish "nmcli c add type ethernet ifname test10"
+    * Finish "nmcli c add type ethernet ifname test11"
+    * Execute "nmcli con modify ethernet-test10 ipv4.method disabled ipv6.method auto"
+    * Execute "nmcli con modify ethernet-test11 ipv4.method disabled ipv6.method auto"
+    * Finish "ip link set dev test10 up"
+    * Finish "ip link set dev test11 up"
+    * Execute "sleep 1"
+    * Execute "nmcli --wait 0 c up ethernet-test10"
+    * Execute "nmcli --wait 0 c up ethernet-test11"
+    When "ethernet-test10" is visible with command "nmcli con sh -a"
+    When "ethernet-test11" is visible with command "nmcli con sh -a"
+    * Send lifetime scapy packet with "255"
+    Then "IPv6" lifetimes are slightly smaller than "3600" and "1800" for device "test11"
+
+
+    @rhbz1329366
+    @scapy
+    @ipv6_drop_ra_from_non_ll_address
+    Scenario: NM - ipv6 - drop scapy packet from non LL address
+    * Finish "ip link add test10 type veth peer name test11"
+    * Finish "nmcli c add type ethernet ifname test10"
+    * Finish "nmcli c add type ethernet ifname test11"
+    * Execute "nmcli con modify ethernet-test10 ipv4.method disabled ipv6.method auto"
+    * Execute "nmcli con modify ethernet-test11 ipv4.method disabled ipv6.method auto"
+    * Finish "ip link set dev test10 up"
+    * Finish "ip link set dev test11 up"
+    * Execute "sleep 1"
+    * Execute "nmcli --wait 0 c up ethernet-test10"
+    * Execute "nmcli --wait 0 c up ethernet-test11"
+    When "ethernet-test10" is visible with command "nmcli con sh -a"
+    When "ethernet-test11" is visible with command "nmcli con sh -a"
+    * Send lifetime scapy packet from "ff02::1"
+    Then "valid_lft forever preferred_lft forever" is visible with command "ip a s test11"
+
 
     @rhbz1170530
     @add_testeth10
@@ -888,5 +947,3 @@ Feature: nmcli: ipv6
     Then Check "=== \[never-default\] ===\s+\[NM property description\]\s+If TRUE, this connection will never be the default connection for this IP type, meaning it will never be assigned the default route by NetworkManager." are present in describe output for object "never-default"
 
     Then Check "=== \[may-fail\] ===\s+\[NM property description\]\s+If TRUE, allow overall network configuration to proceed even if the configuration specified by this property times out.  Note that at least one IP configuration must succeed or overall network configuration will still fail.  For example, in IPv6-only networks, setting this property to TRUE on the NMSettingIP4Config allows the overall network configuration to succeed if IPv4 configuration fails but IPv6 configuration completes successfully." are present in describe output for object "may-fail"
-
-

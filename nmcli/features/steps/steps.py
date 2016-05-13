@@ -1314,8 +1314,10 @@ def check_error_while_saving_in_editor_2(context):
     context.prompt.expect("Error")
 
 
+@step(u'Send lifetime scapy packet with "{hlim}"')
+@step(u'Send lifetime scapy packet from "{srcaddr}"')
 @step(u'Send lifetime scapy packet')
-def send_packet(context):
+def send_packet(context, srcaddr=None, hlim=None):
     from scapy.all import get_if_hwaddr
     from scapy.all import sendp, Ether, IPv6
     from scapy.all import ICMPv6ND_RA
@@ -1325,7 +1327,14 @@ def send_packet(context):
     out_if = "test11"
 
     p = Ether(dst=get_if_hwaddr(out_if), src=get_if_hwaddr(in_if))
-    p /= IPv6(dst="ff02::1")
+    if srcaddr or hlim:
+        if hlim:
+            p /= IPv6(dst="ff02::1", hlim=int(hlim))
+        else:
+            p /= IPv6(dst="ff02::1", src=srcaddr)
+    else:
+        p /= IPv6(dst="ff02::1")
+
     p /= ICMPv6ND_RA()
     p /= ICMPv6NDOptPrefixInfo(prefix="fd00:8086:1337::", prefixlen=64, validlifetime=3600, preferredlifetime=1800)
     sendp(p, iface=in_if)
