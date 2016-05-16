@@ -1298,6 +1298,14 @@ def stop_NM(context):
     assert command_code(context, "sudo systemctl stop NetworkManager.service") == 0
 
 
+@step(u'Stop NM and clean "{device}"')
+def stop_NM_and_clean(context, device):
+    context.nm_restarted = True
+    assert command_code(context, "sudo systemctl stop NetworkManager.service") == 0
+    assert command_code(context, "sudo ip addr flush dev %s" %(device)) == 0
+    assert command_code(context, "sudo ip link set %s down" %(device)) == 0
+
+
 @step(u'Run child "{command}"')
 def run_child_process(context, command):
     Popen(command, shell=True)

@@ -493,7 +493,7 @@ Feature: nmcli - general
     * Execute "nmcli connection modify ethie ipv4.addresses 1.2.3.4/24 ipv4.may-fail no ipv6.addresses 1::128/128 ipv6.may-fail no connection.autoconnect yes"
     * Bring "up" connection "ethie"
     * Disconnect device "testY"
-    * Execute "systemctl stop NetworkManager"
+    * Stop NM and clean "testY"
     When "state DOWN" is visible with command "ip a s testY" in "15" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
@@ -518,7 +518,7 @@ Feature: nmcli - general
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie"
     * Bring "up" connection "ethie"
     * Disconnect device "eth1"
-    * Stop NM
+    * Stop NM and clean "eth1"
     When "state DOWN" is visible with command "ip a s eth1" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
@@ -545,7 +545,7 @@ Feature: nmcli - general
     Then "2620" is visible with command "ip a s testX" in "60" seconds
     Then "192" is visible with command "ip a s testX" in "60" seconds
     * Disconnect device "testX"
-    * Stop NM
+    * Stop NM and clean "testX"
     When "state DOWN" is visible with command "ip a s testX" in "5" seconds
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
@@ -564,7 +564,7 @@ Feature: nmcli - general
     Scenario: NM - general - helper running for localhost on localdo
     * Bring "up" connection "testeth0"
     * Disconnect device "eth0"
-    * Stop NM
+    * Stop NM and clean "eth0"
     When "state DOWN" is visible with command "ip a s eth0" in "5" seconds
     * Execute "hostnamectl set-hostname localhost.localdomain"
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
