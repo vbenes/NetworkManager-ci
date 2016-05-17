@@ -760,7 +760,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
     When "default" is not visible with command "ip r |grep testX" in "130" seconds
-    When "ethie" is not visible with command "nmcli connection s -a" in "200" seconds
+    When "ethie" is not visible with command "nmcli connection s -a" in "800" seconds
     * Execute "ip netns exec testX_ns kill -SIGCONT $(cat /tmp/testX_ns.pid)"
     Then "routers = 192.168.99.1" is visible with command "nmcli con show ethie" in "400" seconds
     Then "default via 192.168.99.1 dev testX" is visible with command "ip r"
@@ -891,4 +891,3 @@ Feature: nmcli: ipv4
     Then Check "=== \[never-default\] ===\s+\[NM property description\]\s+If TRUE, this connection will never be the default connection for this IP type, meaning it will never be assigned the default route by NetworkManager." are present in describe output for object "never-default"
 
     Then Check "=== \[may-fail\] ===\s+\[NM property description\]\s+If TRUE, allow overall network configuration to proceed even if the configuration specified by this property times out.  Note that at least one IP configuration must succeed or overall network configuration will still fail.  For example, in IPv6-only networks, setting this property to TRUE on the NMSettingIP4Config allows the overall network configuration to succeed if IPv4 configuration fails but IPv6 configuration completes successfully." are present in describe output for object "may-fail"
-
