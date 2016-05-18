@@ -35,6 +35,8 @@ dns_none, ., nmcli/./runtest.sh dns_none ,
 remove_dns_none, ., nmcli/./runtest.sh remove_dns_none ,
 #### ^^^
 device_connect, ., nmcli/./runtest.sh device_connect ,
+device_reapply_routes, ., nmcli/./runtest.sh device_reapply_routes ,
+device_reapply_all, ., nmcli/./runtest.sh device_reapply_all ,
 device_connect_no_profile, ., nmcli/./runtest.sh device_connect_no_profile ,
 nmcli_device_delete, ., nmcli/./runtest.sh nmcli_device_delete ,
 nmcli_device_attempt_hw_delete, ., nmcli/./runtest.sh nmcli_device_attempt_hw_delete ,

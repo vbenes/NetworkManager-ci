@@ -199,6 +199,65 @@ Feature: nmcli - general
     Then "eth2\s+ethernet\s+connected" is visible with command "nmcli device"
 
 
+    @rhbz1032717
+    @ver+=1.2.0
+    @eth
+    @teardown_testveth
+    @two_bridged_veths
+    @dhcpd
+    @device_reapply_routes
+    Scenario: NM - device - reapply just routes
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Bring "up" connection "ethie"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.routes 192.168.5.0/24 192.168.99.111 1" in editor
+    * Submit "set ipv4.route-metric 21" in editor
+    * Submit "set ipv6.method static" in editor
+    * Submit "set ipv6.addresses 2000::2/126" in editor
+    * Submit "set ipv6.routes 1010::1/128 2000::1 1" in editor
+    * Save in editor
+    * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
+    * Execute "nmcli device reapply testX"
+    Then "1010::1 via 2000::1 dev testX  proto static  metric 1" is visible with command "ip -6 route" in "5" seconds
+     And "2000::/126 dev testX  proto kernel  metric 256" is visible with command "ip -6 route"
+     And "192.168.5.0/24 via 192.168.99.111 dev testX  proto static  metric" is visible with command "ip route"
+     And "routers = 192.168.99.1" is visible with command "nmcli con show ethie"
+     And "default via 192.168.99.1 dev testX" is visible with command "ip r"
+
+
+    @rhbz1032717
+    @ver+=1.2.0
+    @eth
+    @teardown_testveth
+    @two_bridged_veths
+    @dhcpd
+    @device_reapply_all
+    Scenario: NM - device - reapply even address and gate
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Bring "up" connection "ethie"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.method static" in editor
+    * Submit "set ipv4.addresses 192.168.3.10/24" in editor
+    * Submit "set ipv4.gateway 192.168.4.1" in editor
+    * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11 1" in editor
+    * Submit "set ipv4.route-metric 21" in editor
+    * Submit "set ipv6.method static" in editor
+    * Submit "set ipv6.addresses 2000::2/126" in editor
+    * Submit "set ipv6.routes 1010::1/128 2000::1 1" in editor
+    * Save in editor
+    * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
+    * Execute "nmcli device reapply testX"
+    Then "1010::1 via 2000::1 dev testX  proto static  metric 1" is visible with command "ip -6 route" in "5" seconds
+     And "2000::/126 dev testX  proto kernel  metric 256" is visible with command "ip -6 route"
+     And "192.168.3.0/24 dev testX  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
+     And "192.168.4.1 dev testX  proto static  scope link  metric 21" is visible with command "ip route"
+     And "192.168.5.0/24 via 192.168.3.11 dev testX  proto static  metric" is visible with command "ip route"
+     And "routers = 192.168.99.1" is not visible with command "nmcli con show ethie"
+     And "default via 192.168.99.1 dev testX" is not visible with command "ip r"
+
+
     @rhbz1113941
     @veth
     @general
