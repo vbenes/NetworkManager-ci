@@ -646,9 +646,7 @@ Feature: nmcli - general
     * Execute "nmcli con modify ethie ipv4.may-fail no ipv6.may-fail no"
     * Bring "up" connection "ethie"
     * Disconnect device "eth10"
-    * Stop NM
-    When "state DOWN" is visible with command "ip a s eth10" in "5" seconds
-    * Start NM
+    * Restart NM
     #When "2620:" is not visible with command "ip a s eth10"
     * Execute "/usr/bin/nm-online -s -q --timeout=30"
     When "inet .* global" is visible with command "ip a s eth10"
