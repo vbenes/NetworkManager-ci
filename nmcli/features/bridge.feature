@@ -231,7 +231,8 @@ Feature: nmcli - bridge
     * Add a new connection of type "bridge-slave" and options "ifname eth1 con-name bridge-slave-eth1 master bridge0"
     * Bring up connection "bridge-slave-eth1"
     Then "bridge0.*eth1" is visible with command "brctl show" in "10" seconds
-    Then "eth1.*master bridge0.*eth2" is visible with command "ip a"
+    Then "eth1.*master bridge0" is visible with command "ip a"
+    Then "eth2" is visible with command "ip a"
     Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "30" seconds
 
 
@@ -248,7 +249,9 @@ Feature: nmcli - bridge
     * Add a new connection of type "bridge-slave" and options "ifname eth3 con-name bridge-slave-eth3 master bridge0"
     * Bring up connection "bridge-slave-eth3"
     Then "bridge0.*eth1.*eth2.*eth3" is visible with command "brctl show" in "10" seconds
-    Then "eth1.*master bridge0.*eth2.*master bridge0.*eth3.*master bridge0" is visible with command "ip a"
+    Then "eth1.*master bridge0" is visible with command "ip a"
+    Then "eth2.*master bridge0" is visible with command "ip a"
+    Then "eth3.*master bridge0" is visible with command "ip a"
     Then "bridge0:.*192.168.*inet6" is visible with command "ip a" in "60" seconds
 
 
@@ -270,7 +273,9 @@ Feature: nmcli - bridge
     * Add a new connection of type "bridge-slave" and options "ifname eth3 con-name bridge-slave-eth3 master bridge0"
     * Bring up connection "bridge-slave-eth3"
     Then "bridge0.*eth1.*eth2.*eth3" is visible with command "brctl show" in "10" seconds
-    Then "eth1.*master bridge0.*eth2.*master bridge0.*eth3.*master bridge0" is visible with command "ip a"
+    Then "eth1.*master bridge0" is visible with command "ip a"
+    Then "eth2.*master bridge0" is visible with command "ip a"
+    Then "eth3.*master bridge0" is visible with command "ip a"
     Then "bridge0:.*192.168.1.19" is visible with command "ip a" in "30" seconds
 
 
