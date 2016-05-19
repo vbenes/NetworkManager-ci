@@ -150,14 +150,17 @@ def setup_racoon(dh_group):
     call("sudo ip link set dev racoon1 up", shell=True)
     sleep(3)
 
-    ##call("sudo ip netns exec racoon sysctl -w net.ipv6.conf.racoon0.disable_ipv6=1", shell=True)
-    # For some reason the peer needs to initiate the arp otherwise it won't respond
-    # and we'll end up in a stale entry in a neighbor cache
     call("sudo ip netns exec racoon dnsmasq --dhcp-range=172.31.70.2,172.31.70.7,2m --interface=racoon0 --bind-interfaces", shell=True)
 
     call("sudo nmcli con add type ethernet con-name rac1 ifname racoon1 autoconnect no", shell=True)
     call("sudo nmcli con modify rac1 ipv6.method ignore ipv4.route-metric 90", shell=True)
     call("sudo nmcli connection up id rac1", shell=True)
+
+    # For some reason the peer needs to initiate the arp otherwise it won't respond
+    # and we'll end up in a stale entry in a neighbor cache
+    call("sudo ip netns exec racoon ping -c1 %s" % (check_output("ip -o -4 addr show primary dev racoon1", shell=True).split()[3].split('/')[0]), shell=True)
+    call("sudo ping -c1 172.31.70.1", shell=True)
+
     call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
     sleep(2)
 
