@@ -542,6 +542,49 @@ Feature: nmcli: ipv4
    Then "RHB" is not visible with command "cat /tmp/tshark.log"
 
 
+    @rhbz1255507
+    @tshark
+    @ipv4
+    @nmcli_ipv4_set_fqdn
+    Scenario: nmcli - ipv4 - dhcp-fqdn - set dhcp-fqdn
+    * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Bring "up" connection "ethie"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
+    When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.dhcp-fqdn foo.bar.com" in editor
+    #* Submit "set ipv4.send-hostname yes" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    * Finish "sleep 10; sudo pkill tshark"
+    Then "foo.bar.com" is visible with command "grep fqdn /var/lib/NetworkManager/dhclient-eth10.conf"
+     And "foo.bar.com" is visible with command "cat /tmp/tshark.log"
+
+
+    @tshark
+    @ipv4
+    @nmcli_ipv4_remove_fqdn
+    Scenario: nmcli - ipv4 - dhcp-fqdn - remove dhcp-fqdn
+    * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.dhcp-fqdn foo.bar.com" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
+    When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.dhcp-fqdn" in editor
+    * Enter in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    * Finish "sleep 10; sudo pkill tshark"
+     Then "foo.bar.com" is not visible with command "grep fqdn /var/lib/NetworkManager/dhclient-eth10.conf"
+      And "foo.bar.com" is not visible with command "cat /tmp/tshark.log"
+
+
     @testcase_303670
     @tshark
     @ipv4
