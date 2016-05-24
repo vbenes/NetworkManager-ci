@@ -427,7 +427,7 @@
      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
      * Open editor for connection "team0"
-     * Submit "set team.config {blah blah blah}" in editor
+     * Submit "set team.config {\"blah\":1,\"blah\":2,\"blah\":3}" in editor
      * Save in editor
      * Quit editor
      * Bring up connection "team0" ignoring error
