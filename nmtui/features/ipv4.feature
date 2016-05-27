@@ -306,6 +306,7 @@ Feature: IPv4 TUI tests
     * In "Addresses" property add "192.168.122.2/24"
     * Set "Gateway" field to "192.168.122.1"
     * Add ip route "192.168.1.0/24 192.168.3.11 1"
+    * Set "IPv6 CONFIGURATION" category to "Ignore"
     * Confirm the connection settings
     * Come back to main screen
     * Choose to "Activate a connection" from main screen
