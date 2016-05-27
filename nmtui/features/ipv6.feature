@@ -20,12 +20,13 @@ Feature: IPv6 TUI tests
     Scenario: nmtui - ipv6 - addresses - static IPv6 configuration without netmask
     * Prepare new connection of type "Ethernet" named "ethernet"
     * Set "Device" field to "eth1"
+    * Set "IPv4 CONFIGURATION" category to "Disabled"
     * Set "IPv6 CONFIGURATION" category to "Manual"
     * Come in "IPv6 CONFIGURATION" category
     * In "Addresses" property add "2607:f0d0:1002:51::4"
     * Confirm the connection settings
-    Then "inet6 2607:f0d0:1002:51::4/128" is visible with command "ip a" in "10" seconds
-    Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device"
+    Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device" in "10" seconds
+    Then "inet6 2607:f0d0:1002:51::4/128" is visible with command "ip -6 a s eth1"
 
 
     @ipv6
@@ -33,15 +34,16 @@ Feature: IPv6 TUI tests
     Scenario: nmtui - ipv6 - addresses - static IPv6 configuration with netmask
     * Prepare new connection of type "Ethernet" named "ethernet"
     * Set "Device" field to "eth1"
+    * Set "IPv4 CONFIGURATION" category to "Disabled"
     * Set "IPv6 CONFIGURATION" category to "Manual"
     * Come in "IPv6 CONFIGURATION" category
     * In "Addresses" property add "2607:f0d0:1002:51::4/63"
     * In this property also add "1050:0:0:0:5:600:300c:326b/121"
     * Confirm the connection settings
+    Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device" in "10" seconds
     Then "2607:f0d0:1002:51::4/63" is visible with command "ip -6 a s eth1"
     Then "1050::5:600:300c:326b/121" is visible with command "ip -6 a s eth1"
     Then "dynamic" is not visible with command "ip -6 a s eth1"
-    Then "eth1\s+ethernet\s+connected\s+ethernet" is visible with command "nmcli device"
 
 
     @ipv6
