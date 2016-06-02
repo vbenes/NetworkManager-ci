@@ -930,16 +930,19 @@
     Then Check noted values "orig_pid" and "new_pid" are the same
 
 
+    @rhbz1183420
     @bond
     @bridge
+    @slaves
     @bond_enslave_to_bridge
     Scenario: nmcli - bond - enslave bond device to bridge
-     * Add a new connection of type "bond" and options "con-name bond0 autoconnect no ifname nm-bond"
-     * Add a new connection of type "bridge" and options "con-name br10 autoconnect no ifname bridge0 ip4 192.168.177.100/24 gw4 192.168.177.1"
-     * Execute "nmcli connection modify id bond0 connection.master bridge0 connection.slave-type bridge"
-     * Bring "up" connection "bond0"
-    Then "bridge0:bridge:connected:br10" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
-    Then "nm-bond:bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
+     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
+     * Add a new connection of type "bond" and options "ifname nm-bond con-name bond0 master bridge0"
+     * Add a new connection of type "ethernet" and options "ifname eth1 con-name bond-slave-eth1 master nm-bond"
+     * Bring "up" connection "bond-slave-eth1"
+    Then "bridge0:bridge:connected:bridge0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "45" seconds
+     And "nm-bond:bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
+     And "eth1:ethernet:connected:bond-slave-eth1" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
 
 
     @testcase_281154
