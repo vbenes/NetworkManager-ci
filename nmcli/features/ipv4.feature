@@ -621,7 +621,6 @@ Feature: nmcli: ipv4
     * Finish "sleep 10; sudo pkill tshark"
     Then Hostname is visible in log "/tmp/tshark.log"
 
-
     @testcase_304232
     @tshark
     @ipv4
@@ -638,6 +637,29 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     * Finish "sleep 10; sudo pkill tshark"
     Then Hostname is not visible in log "/tmp/real.log"
+
+
+    @rhbz1264410
+    @ipv4
+    @eth0
+    @ipv4_add_dns_options
+    Scenario: nmcli - ipv4 - dns-options - add
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
+    * Execute "nmcli con modify ethie ipv4.dns-options debug"
+    * Bring "up" connection "ethie"
+    Then "options debug" is visible with command "cat /etc/resolv.conf" in "5" seconds
+
+
+    @ipv4
+    @eth0
+    @ipv4_remove_dns_options
+    Scenario: nmcli - ipv4 - dns-options - remove
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
+    * Execute "nmcli con modify ethie ipv4.dns-options debug"
+    * Bring "up" connection "ethie"
+    * Execute "nmcli con modify ethie ipv4.dns-options ' '"
+    * Bring "up" connection "ethie"
+    Then "options debug" is not visible with command "cat /etc/resolv.conf" in "5" seconds
 
 
     @testcase_304233
