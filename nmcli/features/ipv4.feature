@@ -817,8 +817,6 @@ Feature: nmcli: ipv4
     @eth
     @teardown_testveth
     @renewal_gw_after_dhcp_outage
-    @two_bridged_veths
-    @dhcpd
     Scenario: NM - ipv4 - renewal gw after DHCP outage
     * Prepare simulated test "testX" device
     * Add connection type "ethernet" named "ethie" for device "testX"
@@ -829,6 +827,22 @@ Feature: nmcli: ipv4
     When "ethie" is not visible with command "nmcli connection s -a" in "800" seconds
     * Execute "ip netns exec testX_ns kill -SIGCONT $(cat /tmp/testX_ns.pid)"
     Then "routers = 192.168.99.1" is visible with command "nmcli con show ethie" in "400" seconds
+    Then "default via 192.168.99.1 dev testX" is visible with command "ip r"
+
+
+    @rhbz1262922
+    @ver+=1.2.0
+    @eth
+    @teardown_testveth
+    @dhcp-timeout
+    Scenario: NM - ipv4 - add dhcp-timeout
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    * Execute "nmcli connection modify ethie ipv4.dhcp-timeout 60"
+    * Execute "ip netns exec testX_ns kill -SIGSTOP $(cat /tmp/testX_ns.pid)"
+    * Execute "sleep 50; ip netns exec testX_ns kill -SIGCONT $(cat /tmp/testX_ns.pid)" without waiting for process to finish
+    * Bring "up" connection "ethie"
+    Then "routers = 192.168.99.1" is visible with command "nmcli con show ethie" in "10" seconds
     Then "default via 192.168.99.1 dev testX" is visible with command "ip r"
 
 
