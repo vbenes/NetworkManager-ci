@@ -1412,6 +1412,32 @@ def submit_in_editor(context, command):
     command = command.replace('\\','')
     context.prompt.sendline("%s" % command)
 
+@step(u'Dismiss IP configuration in editor')
+def dismiss_in_editor(context):
+    cpl = context.prompt.compile_pattern_list(['There are \d+ optional settings for IPv4 protocol.',
+                                               'Do you want to add IP addresses?'])
+    if context.prompt.expect_list(cpl) == 0:
+        context.execute_steps(u'* Submit "no" in editor')
+    context.execute_steps(u'* Submit "no" in editor')
+
+@step(u'Agree to add IPv4 configuration in editor')
+def dismiss_in_editor(context):
+    cpl = context.prompt.compile_pattern_list(['There are \d+ optional settings for IPv4 protocol.',
+                                               'Do you want to add IP addresses?'])
+    context.execute_steps(u"""
+        * Submit "yes" in editor
+        * Expect "IPv4 address"
+    """)
+
+@step(u'Agree to add IPv6 configuration in editor')
+def dismiss_in_editor(context):
+    cpl = context.prompt.compile_pattern_list(['There are \d+ optional settings for IPv6 protocol.',
+                                               'IPv6 address'])
+    if context.prompt.expect_list(cpl) == 0:
+        context.execute_steps(u"""
+            * Submit "yes" in editor
+            * Expect "IPv6 address"
+        """)
 
 @step(u'Submit team \'{command}\' in editor')
 def submit_team_command_in_editor(context, command):

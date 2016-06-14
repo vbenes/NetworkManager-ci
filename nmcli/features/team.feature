@@ -28,10 +28,9 @@
      * Open wizard for adding new connection
      * Expect "Connection type"
      * Submit "team" in editor
-     * Expect "There is 1 optional argument"
+     * Expect "There .* optional"
      * Submit "no" in editor
-     * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
-     * Submit "no" in editor
+     * Dismiss IP configuration in editor
     Then "nm-team" is visible with command "sudo teamdctl nm-team state dump"
 
 
@@ -47,7 +46,7 @@
      * Submit "eth1" in editor
      * Expect "aster"
      * Submit "nm-team" in editor
-     * Expect "There is 1 optional argument"
+     * Expect "There .* optional"
      * Submit "no" in editor
      * Bring "up" connection "team-slave-eth1"
     Then Check slave "eth1" in team "nm-team" is "up"

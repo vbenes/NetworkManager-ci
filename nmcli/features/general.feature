@@ -319,9 +319,9 @@ Feature: nmcli - general
     * Send "bond" in editor
     * Clear the text typed in editor
     * Submit "bridge" in editor
-    Then Expect "arguments for 'bridge' connection"
+    Then Expect "There are \d+ optional .*[Bb]ridge"
     * Submit "no" in editor
-    * Submit "no" in editor
+    * Dismiss IP configuration in editor
     Then "nm-bridge" is visible with command "nmcli connection show bridge"
 
 

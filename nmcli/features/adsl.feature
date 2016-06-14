@@ -13,14 +13,13 @@ Feature: nmcli: adsl
     * Submit "test" in editor
     * Expect "Protocol"
     * Submit "pppoe" in editor
-    * Expect "There are 2 optional arguments"
+    * Expect "There are .* optional"
     * Enter in editor
     * Expect "Password"
     * Submit "redhat" in editor
     * Expect "ADSL encapsulation"
     * Enter in editor
-    * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
-    * Submit "no" in editor
+    * Dismiss IP configuration in editor
     Then "adsl.username:\s+test" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.password:\s+redhat" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.protocol:\s+pppoe" is visible with command "nmcli  connection show --show-secrets adsl-test11"

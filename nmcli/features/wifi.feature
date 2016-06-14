@@ -1252,10 +1252,9 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional .*Wi-Fi"
     * Submit "no"
-    * Expect "Do you want to add IP addresses?"
-    * Submit "no"
+    * Dismiss IP configuration in editor
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
     Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
 
@@ -1269,7 +1268,7 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional .*Wi-Fi"
     * Submit "yes"
     * Expect "MTU"
     * Submit "64"
@@ -1279,8 +1278,7 @@ Feature: nmcli - wifi
     * Submit "noted-value"
     * Expect "Mode"
     * Submit "infrastructure"
-    * Expect "Do you want to add IP addresses?"
-    * Submit "no"
+    * Dismiss IP configuration in editor
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
     Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
 
@@ -1295,11 +1293,9 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional .*Wi-Fi"
     * Submit "no"
-    * Expect "Do you want to add IP addresses?"
-    * Submit "yes"
-    * Expect "IPv4 address"
+    * Agree to add IPv4 configuration in editor
     * Submit "10.1.1.5"
     * No error appeared in editor
     * Submit "10.1.1.6/24"
@@ -1307,7 +1303,7 @@ Feature: nmcli - wifi
     * Submit "<enter>"
     * Expect "IPv4 gateway"
     * Submit "10.1.1.1"
-    * Expect "IPv6 address"
+    * Agree to add IPv6 configuration in editor
     * Submit "fe80::215:ff:fe93:ffff"
     * No error appeared in editor
     * Submit "fe80::215:ff:fe93:ffff/128"
@@ -1332,11 +1328,9 @@ Feature: nmcli - wifi
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
-    * Expect "There are . optional arguments for 'Wi-Fi' connection type"
+    * Expect "There are . optional .*Wi-Fi"
     * Submit "no"
-    * Expect "Do you want to add IP addresses?"
-    * Submit "yes"
-    * Expect "IPv4 address"
+    * Agree to add IPv4 configuration in editor
     * Submit "280.1.1.5"
     * Error appeared in editor
     * Submit "val.der.oni.uma"
@@ -1344,7 +1338,9 @@ Feature: nmcli - wifi
     * Submit "-1.1.-1.5"
     * Error appeared in editor
     * Submit "<enter>"
-    * Expect "IPv6 address"
+    * Expect "IPv4 gateway"
+    * Submit "<enter>"
+    * Agree to add IPv6 configuration in editor
     * Submit "feG0::215:ff:fe93:ffff"
     * Error appeared in editor
     * Submit "vald::ron:bogu:sva:vald"

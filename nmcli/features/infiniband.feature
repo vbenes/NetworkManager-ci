@@ -18,8 +18,7 @@
      * Submit "inf_ib0" in editor
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
      * Submit "no" in editor
-     * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
-     * Submit "no" in editor
+     * Dismiss IP configuration in editor
      * Bring "up" connection "infiniband-inf_ib0"
     Then "inet 172" is visible with command "ip a s inf_ib0"
 
@@ -65,8 +64,7 @@
      * Submit "inf_ib0" in editor
      * Expect "P_KEY"
      * Submit "0x8002" in editor
-     * Expect "Do you want to add IP addresses\? \(yes\/no\) \[yes\]"
-     * Submit "no" in editor
+     * Dismiss IP configuration in editor
      * Bring "up" connection "inf"
      * Bring "up" connection "infiniband-inf_ib0.8002"
     Then "inet 172" is visible with command "ip a s inf_ib0.8002"
