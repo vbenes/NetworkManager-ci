@@ -554,14 +554,37 @@ Feature: nmcli: ipv4
     When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
     * Open editor for connection "ethie"
     * Submit "set ipv4.dhcp-fqdn foo.bar.com" in editor
-    #* Submit "set ipv4.send-hostname yes" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
     * Finish "sleep 10; sudo pkill tshark"
     Then "foo.bar.com" is visible with command "grep fqdn /var/lib/NetworkManager/dhclient-eth10.conf"
      And "foo.bar.com" is visible with command "cat /tmp/tshark.log"
+     And "Encoding: Binary encoding" is visible with command "cat /tmp/tshark.log"
+     And "Server: Server" is visible with command "cat /tmp/tshark.log"
 
+    @rhbz1255507
+    @ver+=1.3.0
+    @tshark
+    @ipv4
+    @nmcli_ipv4_override_fqdn
+    Scenario: nmcli - ipv4 - dhcp-fqdn - override dhcp-fqdn
+    * Add connection type "ethernet" named "ethie" for device "eth10"
+    * Bring "up" connection "ethie"
+    * Execute "echo 'send fqdn.encoded off;' > /etc/dhcp/dhclient-eth10.conf"
+    * Execute "echo 'send fqdn.server-update off;' >> /etc/dhcp/dhclient-eth10.conf"
+    * Run child "sudo tshark -l -O bootp -i eth10 > /tmp/tshark.log"
+    When "Proto" is visible with command "cat /tmp/tshark.log" in "30" seconds
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.dhcp-fqdn foo.bar.com" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    * Finish "sleep 10; sudo pkill tshark"
+    Then "foo.bar.com" is visible with command "grep fqdn /var/lib/NetworkManager/dhclient-eth10.conf"
+     And "foo.bar.com" is visible with command "cat /tmp/tshark.log"
+     And "Encoding: ASCII encoding" is visible with command "cat /tmp/tshark.log"
+     And "Server: Client" is visible with command "cat /tmp/tshark.log"
 
     @tshark
     @ipv4

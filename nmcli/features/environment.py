@@ -327,10 +327,6 @@ def before_scenario(context, scenario):
             call("sudo systemctl start firewalld", shell=True)
             #call("sleep 4", shell=True)
 
-        if 'tshark' in scenario.tags:
-            print ("---------------------------")
-            print ("ip link up eth10 connection")
-
         if ('ethernet' in scenario.tags) or ('bridge' in scenario.tags) or ('vlan' in scenario.tags):
             print ("---------------------------")
             print ("sanitizing eth1 and eth2")
@@ -782,6 +778,12 @@ def after_scenario(context, scenario):
         if 'teamd' in scenario.tags:
             call("systemctl stop teamd", shell=True)
             call("systemctl reset-failed teamd", shell=True)
+
+        if 'tshark' in scenario.tags:
+            print ("---------------------------")
+            print ("kill tshark and delet dhclinet-eth10")
+            call("pkill -9 tshark", shell=True)
+            call("rm -rf /etc/dhcp/dhclient-eth10.conf", shell=True)
 
         if 'vpnc' in scenario.tags:
             print ("---------------------------")
