@@ -1043,6 +1043,12 @@ def after_scenario(context, scenario):
             print ("disconnecting eth1 device")
             call('sudo nmcli device disconnect eth1', shell=True)
 
+        if 'shutdown' in scenario.tags:
+            print ("---------------------------")
+            print ("sanitizing env")
+            call('ip addr  del 192.168.50.5/24 dev eth1', shell=True)
+            call('route del default gw 192.168.50.1 eth1', shell=True)
+            
         if 'connect_testeth0' in scenario.tags:
             print ("---------------------------")
             print ("upping testeth0")

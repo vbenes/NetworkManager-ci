@@ -84,6 +84,45 @@ Feature: nmcli - general
     Then "NetworkManager is not running" is visible with command "nmcli general"
 
 
+    @rhbz1311988
+    @restart @add_testeth1 @shutdown @eth1_disconnect
+    @shutdown_service_assumed
+    Scenario: NM - general - shutdown service - assumed
+    * Delete connection "testeth1"
+    * Stop NM
+    * Execute "ip addr add 192.168.50.5/24 dev eth1"
+    * Execute "route add default gw 192.168.50.1 metric 200 dev eth1"
+    * "default via 192.168.50.1 dev eth1  metric 200" is visible with command "ip r"
+    * "inet 192.168.50.5" is visible with command "ip a s eth1" in "5" seconds
+    * Start NM
+    * "default via 192.168.50.1 dev eth1  metric 200" is visible with command "ip r"
+    * "inet 192.168.50.5" is visible with command "ip a s eth1" in "5" seconds
+    * Stop NM
+    Then "default via 192.168.50.1 dev eth1  metric 200" is visible with command "ip r" for full "5" seconds
+     And "inet 192.168.50.5" is visible with command "ip a s eth1"
+
+
+     @rhbz1311988
+     @restart @shutdown @eth
+     @shutdown_service_connected
+     Scenario: NM - general - shutdown service - connected
+     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie autoconnect no"
+     * Bring "up" connection "ethie"
+     * "default via 192.168.100.1 dev eth1" is visible with command "ip r"
+     * "inet 192.168.100" is visible with command "ip a s eth1" in "5" seconds
+     * Stop NM
+     Then "default via 192.168.100.1 dev eth1" is visible with command "ip r" for full "5" seconds
+      And "inet 192.168.100" is visible with command "ip a s eth1"
+
+
+      @rhbz1311988
+      @restart @shutdown
+      @shutdown_service_any
+      Scenario: NM - general - shutdown service - all
+      * Stop NM
+      Then "DOWN" is not visible with command "ip a s" in "5" seconds
+       And "After=network-pre.target dbus.service" is visible with command "grep After /usr/lib/systemd/system/NetworkManager.service"
+
     @general
     @testcase_290429
     Scenario: nmcli - general - networking
