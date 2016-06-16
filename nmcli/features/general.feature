@@ -827,11 +827,15 @@ Feature: nmcli - general
     Then "connected:ethie" is visible with command "nmcli -t -f STATE,CONNECTION device" in "55" seconds
     And "connected:full" is visible with command "nmcli -t -f STATE,CONNECTIVITY general status"
 
+
     @rhbz1034158
     @connect_testeth0
     @nmcli_monitor
     Scenario: nmcli - monitor
     * Run child "nmcli m 2>&1> /tmp/monitor.txt"
+    * Bring "down" connection "testeth0"
+    * Execute "sleep 2"
     * Bring "up" connection "testeth0"
     * Execute "pkill -9 nmcli"
-    Then "eth0: deactivating\s+Connectivity is now 'none'\s+Networkmanager is now in the 'connecting' state\s+There's no primary connection\s+eth0: using connection 'testeth0'\s+eth0: connecting \(getting IP configuration\)\s+Connectivity is now 'full'\s+'testeth0' is now the primary connection\s+Networkmanager is now in the 'connected' state\s+eth0: connected" is visible with command "cat /tmp/monitor.txt"
+    Then "eth0: deactivating\s+Connectivity is now 'none'\s+Networkmanager is now in the 'disconnecting' state\s+eth0: disconnected\s+There's no primary connection\s+Networkmanager is now in the 'disconnected' state" is visible with command "cat /tmp/monitor.txt"
+     And "Networkmanager is now in the 'connecting' state\s+eth0: connecting \(getting IP configuration\)\s+eth0: using connection 'testeth0'\s+Connectivity is now 'full'\s+'testeth0' is now the primary connection\s+Networkmanager is now in the 'connected' state\s+eth0: connected" is visible with command "cat /tmp/monitor.txt"
