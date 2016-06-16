@@ -46,6 +46,9 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     #making sure all wifi devices are named wlanX
     NUM=0
     wlan=0
+    if ! rpm -q --quiet NetworkManager-wifi; then
+        yum -y install NetworkManager-wifi
+    fi
     for DEV in `nmcli device | grep wifi | awk {'print $1'}`; do
         wlan=1
         ip link set $DEV down
