@@ -1421,12 +1421,13 @@ Feature: nmcli - wifi
     Then "qe-wep" is visible with command "iw dev wlan0 link"
 
 
-    @rhbz1115564
+    @rhbz1115564 @rhbz1184530
     @wifi
     @nmcli_wifi_add_certificate_as_blob
-    Scenario: nmcli - wifi - connect WEP network asking for password
+    Scenario: nmcli - wifi - show or hide certificate blob
     * Execute "python tmp/dbus-set-wifi-tls-blob.py"
-    Then "802-1x.client-cert:\s+3330383230" is visible with command "nmcli connection show wifi-wlan0"
+    Then "802-1x.client-cert:\s+3330383230" is visible with command "nmcli --show-secrets connection show wifi-wlan0"
+		 And "3330383230" is not visible with command "nmcli connection show wifi-wlan0"
 
 
     @rhbz1182567
