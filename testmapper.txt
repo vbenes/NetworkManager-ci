@@ -61,6 +61,7 @@ ctc_device_recognition, ., nmcli/./runtest.sh ctc_device_recognition ,
 nmcli_general_wait_for_carrier_on_new_device_request, ., nmcli/./runtest.sh nmcli_general_wait_for_carrier_on_new_device_request ,
 nmcli_general_activate_static_connection_carrier_ignored, ., nmcli/./runtest.sh nmcli_general_activate_static_connection_carrier_ignored ,
 nmcli_general_activate_static_connection_carrier_not_ignored, ., nmcli/./runtest.sh nmcli_general_activate_static_connection_carrier_not_ignored ,
+nmcli_monitor, ., nmcli/./runtest.sh nmcli_monitor ,
 #@general_end
 
 #@dispatcher_start
