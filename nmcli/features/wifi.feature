@@ -1338,8 +1338,6 @@ Feature: nmcli - wifi
     * Submit "-1.1.-1.5"
     * Error appeared in editor
     * Submit "<enter>"
-    * Expect "IPv4 gateway"
-    * Submit "<enter>"
     * Agree to add IPv6 configuration in editor
     * Submit "feG0::215:ff:fe93:ffff"
     * Error appeared in editor
