@@ -300,6 +300,7 @@ testcase_281282, ., nmcli/./runtest.sh testcase_281282 ,
 testcase_284357, ., nmcli/./runtest.sh testcase_284357 ,
 vlan_on_bridge, ., nmcli/./runtest.sh vlan_on_bridge ,
 assertion_failure, ., nmcli/./runtest.sh  assertion_failure ,
+vlan_not_duplicated, ., nmcli/./runtest.sh vlan_not_duplicated ,
 vlan_update_mac_from_bond, ., nmcli/./runtest.sh  vlan_update_mac_from_bond ,
 #@vlan_end
 

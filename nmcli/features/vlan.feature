@@ -245,6 +245,18 @@ Feature: nmcli - vlan
     Then "bridge.15:" is visible with command "ifconfig"
 
 
+    @rhbz1276343
+    @vlan @restart
+    @vlan_not_duplicated
+    Scenario: nmcli - vlan - do not duplicate mtu and ipv4 vlan
+    * Add a new connection of type "vlan" and options "con-name vlan dev eth1 id 80"
+    * Modify connection "vlan" changing options "eth.mtu 1450 ipv4.method manual ipv4.addresses 1.2.3.4/24"
+    * Bring "up" connection "testeth1"
+    * Bring "up" connection "vlan"
+    * Restart NM
+    Then "eth1.80:connected:vlan" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+
+
     @rhbz1264322
     @vlan_update_mac_from_bond
     Scenario: nmcli - vlan - update mac address from bond
