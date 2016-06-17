@@ -63,6 +63,15 @@
     Then "172.31.80.0/24 .*dev racoon1" is not visible with command "ip route" in "10" seconds
 
 
+
+    @rhbz1264552
+    @libreswan_provides_and_obsoletes
+    Scenario: nmcli - libreswan - provides and obsoletes
+    Then "NetworkManager-libreswan" is visible with command "rpm -q --qf '[%{provides}\n]' NetworkManager-libreswan"
+     And "NetworkManager-openswan" is visible with command "rpm -q --qf '[%{provides}\n]' NetworkManager-libreswan"
+     And "NetworkManager-openswan" is visible with command "rpm -q --qf '[%{obsoletes}\n]' NetworkManager-libreswan"
+
+
     #@libreswan
     #@ethernet
     #@libreswan_start_on_boot

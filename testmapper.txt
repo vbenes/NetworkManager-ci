@@ -84,6 +84,7 @@ libreswan_terminate, ., nmcli/./runtest.sh libreswan_terminate ,
 libreswan_delete_active_profile, ., nmcli/./runtest.sh libreswan_delete_active_profile ,
 libreswan_start_as_secondary, ., nmcli/./runtest.sh libreswan_start_as_secondary ,
 libreswan_connection_renewal, ., nmcli/./runtest.sh libreswan_connection_renewal ,
+libreswan_provides_and_obsoletes, ., nmcli/./runtest.sh libreswan_provides_and_obsoletes ,
 vpn_describe, ., nmcli/./runtest.sh vpn_describe ,
 vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
 #@libreswan_end
