@@ -890,6 +890,74 @@
      Then Check bond "nm-bond" state is "up"
 
 
+    @rhbz1299103 @rhbz1348198
+    @slaves @bond
+    @bond_set_active_backup_options
+    Scenario: nmcli - bond - set active backup options
+     * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond autoconnect no -- connection.autoconnect-slaves 1 bond.options mode=active-backup,active_slave=eth2,num_grat_arp=3,num_unsol_na=3"
+     * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth2 master nm-bond autoconnect no"
+     * Add a new connection of type "ethernet" and options "con-name bond0.0 ifname eth1 master nm-bond autoconnect no"
+     * Bring "up" connection "bond0"
+     When "nm-bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+     Then "BONDING_OPTS=\"mode=active-backup num_grat_arp=3 num_unsol_na=3 active_slave=eth2\"" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0"
+      And "Currently Active Slave: eth2" is visible with command "cat /proc/net/bonding/nm-bond"
+      And "3" is visible with command "cat /sys/class/net/nm-bond/bonding/num_grat_arp"
+      And "3" is visible with command "cat /sys/class/net/nm-bond/bonding/num_sol_na"
+
+
+    @rhbz1299103
+    @slaves @bond
+    @bond_set_ad_options
+    Scenario: nmcli - bond - set 802.3ad options
+     * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond autoconnect no -- connection.autoconnect-slaves 1 bond.options mode=802.3ad,ad_actor_sys_prio=666,ad_actor_system=00:00:00:00:11:00,min_links=2,ad_user_port_key=2,all_slaves_active=1"
+     * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth2 master nm-bond autoconnect no"
+     * Add a new connection of type "ethernet" and options "con-name bond0.0 ifname eth1 master nm-bond autoconnect no"
+     * Bring "up" connection "bond0"
+     #When "nm-bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+     Then "system priority: 666" is visible with command "cat /proc/net/bonding/nm-bond"
+      And "2" is visible with command "cat /sys/class/net/nm-bond/bonding/ad_user_port_key"
+      And "00:00:00:00:11:00" is visible with command "cat /sys/class/net/nm-bond/bonding/ad_actor_system"
+      And "1" is visible with command "cat /sys/class/net/nm-bond/bonding/all_slaves_active"
+      And "2" is visible with command "cat /sys/class/net/nm-bond/bonding/min_links"
+
+
+    @rhbz1299103
+    @slaves @bond
+    @bond_set_arp_all_targets
+    Scenario: nmcli - bond - set arp_all_targets
+     * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond autoconnect no -- connection.autoconnect-slaves 1 bond.options mode=active-backup,arp_interval=10000,arp_ip_target=10.16.135.254,arp_all_targets=1"
+     * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth2 master nm-bond autoconnect no"
+     * Add a new connection of type "ethernet" and options "con-name bond0.0 ifname eth1 master nm-bond autoconnect no"
+     * Bring "up" connection "bond0"
+     When "nm-bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+     Then "1" is visible with command "cat /sys/class/net/nm-bond/bonding/arp_all_targets"
+
+
+    @rhbz1299103
+    @slaves @bond
+    @bond_set_packets_per_slave_option
+    Scenario: nmcli - bond - set packets_per_slave option
+     * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond autoconnect no -- connection.autoconnect-slaves 1 bond.options mode=balance-rr,packets_per_slave=1024"
+     * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth2 master nm-bond autoconnect no"
+     * Add a new connection of type "ethernet" and options "con-name bond0.0 ifname eth1 master nm-bond autoconnect no"
+     * Bring "up" connection "bond0"
+     When "nm-bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+     Then "1024" is visible with command "cat /sys/class/net/nm-bond/bonding/packets_per_slave"
+
+
+    @rhbz1299103 @rhbz1348573
+    @slaves @bond
+    @bond_set_balance_tlb_options
+    Scenario: nmcli - bond - set balance-tlb options
+     * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond autoconnect no -- connection.autoconnect-slaves 1 bond.options mode=balance-tlb,tlb_dynamic_lb=0,lp_interval=666"
+     * Add a new connection of type "ethernet" and options "con-name bond0.1 ifname eth2 master nm-bond autoconnect no"
+     * Add a new connection of type "ethernet" and options "con-name bond0.0 ifname eth1 master nm-bond autoconnect no"
+     * Bring "up" connection "bond0"
+     #When "nm-bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+     Then "0" is visible with command "cat /sys/class/net/nm-bond/bonding/tlb_dynamic_lb"
+      And "666" is visible with command "cat /sys/class/net/nm-bond/bonding/lp_interval"
+
+
     @rhbz979425
     @slaves
     @bond

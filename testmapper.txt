@@ -412,6 +412,11 @@ nmcli_novice_mode_create_bond-slave_with_default_options, ., nmcli/./runtest.sh 
 bond_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh bond_reflect_changes_from_outside_of_NM ,
 bond_dbus_creation, ., nmcli/./runtest.sh bond_dbus_creation ,
 bond_mode_by_number_in_ifcfg, ., nmcli/./runtest.sh bond_mode_by_number_in_ifcfg ,
+bond_set_active_backup_options, ., nmcli/./runtest.sh bond_set_active_backup_options ,
+bond_set_ad_options, ., nmcli/./runtest.sh bond_set_ad_options ,
+bond_set_arp_all_targets, ., nmcli/./runtest.sh bond_set_arp_all_targets ,
+bond_set_packets_per_slave_option, ., nmcli/./runtest.sh bond_set_packets_per_slave_option ,
+bond_set_balance_tlb_options, ., nmcli/./runtest.sh bond_set_balance_tlb_options ,
 bond_device_rename, ., nmcli/./runtest.sh bond_device_rename ,
 bond_enslave_to_bridge, ., nmcli/./runtest.sh bond_enslave_to_bridge ,
 #@bond_end
