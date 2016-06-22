@@ -941,6 +941,18 @@ Feature: nmcli: ipv4
     Then "default via 192.168.99.1 dev testX  metric 666" is not visible with command "ip r" in "70" seconds
 
 
+    @rhbz1284261
+    @no_config_server @eth @teardown_testveth
+    @ipv4_remove_default_route_for_no_carrier
+    Scenario: NM - ipv4 - remove default route for no carrier
+    * Prepare simulated test "testX" device
+    * Add connection type "ethernet" named "ethie" for device "testX"
+    When "default" is visible with command "ip r | grep testX" in "10" seconds
+    * Execute "ip netns exec testX_ns ip link set dev testXp down"
+    Then "default" is not visible with command "ip r |grep testX" in "10" seconds
+     And "ethie" is not visible with command "nmcli con show -a"
+
+
     @custom_shared_range_preserves_restart
     @eth
     Scenario: nmcli - ipv4 - shared custom range preserves restart
