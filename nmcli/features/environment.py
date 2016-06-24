@@ -343,6 +343,12 @@ def before_scenario(context, scenario):
             print ("connecting eth1")
             call("nmcli connection up testeth1", shell=True)
 
+        if 'vpn' in scenario.tags:
+            print ("---------------------------")
+            print ("installing networkManager-libreswan-gnome")
+            call("rpm -q NetworkManager-libreswan-gnome || sudo yum -y install NetworkManager-libreswan-gnome", shell=True)
+            call("rpm -q nm-connection-editor || sudo yum -y install nm-connection-editor", shell=True)
+
         if 'vpnc' in scenario.tags:
             print ("---------------------------")
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
@@ -1048,7 +1054,7 @@ def after_scenario(context, scenario):
             print ("sanitizing env")
             call('ip addr  del 192.168.50.5/24 dev eth1', shell=True)
             call('route del default gw 192.168.50.1 eth1', shell=True)
-            
+
         if 'connect_testeth0' in scenario.tags:
             print ("---------------------------")
             print ("upping testeth0")

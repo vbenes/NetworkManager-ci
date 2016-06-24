@@ -133,3 +133,25 @@
     * Quit editor
     Then "leftxauthusername=desktopqe" is visible with command "cat /etc/NetworkManager/system-connections/vpn"
     Then "user-name=incorrectuser" is visible with command "cat /etc/NetworkManager/system-connections/vpn"
+
+
+    @rhbz1034105
+    @ver+=1.3.0
+    @vpn
+    @libreswan_import
+    Scenario: nmcli - libreswan - import
+    * Execute "nmcli connection import file tmp/vpn.swan type libreswan"
+    Then "leftid = VPN-standard" is visible with command "nmcli connection show vpn |grep vpn.data"
+     And "right = vpn-test.com" is visible with command "nmcli connection show vpn |grep vpn.data"
+     And "ike = aes-sha1;modp1024" is visible with command "nmcli connection show vpn |grep vpn.data"
+     And "leftxauthusername = test_user" is visible with command "nmcli connection show vpn |grep vpn.data"
+
+
+    @rhbz1034105
+    @ver+=1.3.0
+    @vpn
+    @libreswan_export
+    Scenario: nmcli - libreswan - export
+    * Execute "nmcli connection import file tmp/vpn.swan type libreswan"
+    * Execute "nmcli connection export vpn > /tmp/vpn.swan"
+    Then "Files /tmp/vpn.swan and tmp/vpn.swan are identical" is visible with command "diff -s /tmp/vpn.swan tmp/vpn.swan"
