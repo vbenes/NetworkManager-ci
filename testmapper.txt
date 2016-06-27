@@ -89,6 +89,7 @@ vpn_describe, ., nmcli/./runtest.sh vpn_describe ,
 vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
 libreswan_import, ., nmcli/./runtest.sh libreswan_import ,
 libreswan_export, ., nmcli/./runtest.sh libreswan_export ,
+libreswan_autocompletion, ., nmcli/./runtest.sh libreswan_autocompletion ,
 #@libreswan_end
 
 #@openvpn_start

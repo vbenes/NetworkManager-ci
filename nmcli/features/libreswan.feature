@@ -155,3 +155,15 @@
     * Execute "nmcli connection import file tmp/vpn.swan type libreswan"
     * Execute "nmcli connection export vpn > /tmp/vpn.swan"
     Then "Files /tmp/vpn.swan and tmp/vpn.swan are identical" is visible with command "diff -s /tmp/vpn.swan tmp/vpn.swan"
+
+
+    @rhbz1337300
+    @ver+=1.3.0
+    @vpn
+    @libreswan_autocompletion
+    Scenario: nmcli - libreswan - autocompletion
+     * "file.*type" is visible with tab after "nmcli con import "
+     Then "vpn.swan" is visible with tab after "nmcli con import file tmp/"
+      And "vpn.swan" is visible with tab after "nmcli con import type libreswan file tmp/"
+      And "type" is visible with tab after "nmcli con import file tmp/vpn.swan "
+      And "libreswan|openswan|openconnect|strongswan" is visible with tab after "nmcli con import file tmp/vpn.swan type "
