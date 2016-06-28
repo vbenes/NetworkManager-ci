@@ -902,7 +902,7 @@
      Then "BONDING_OPTS=\"mode=active-backup num_grat_arp=3 num_unsol_na=3 active_slave=eth2\"" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0"
       And "Currently Active Slave: eth2" is visible with command "cat /proc/net/bonding/nm-bond"
       And "3" is visible with command "cat /sys/class/net/nm-bond/bonding/num_grat_arp"
-      And "3" is visible with command "cat /sys/class/net/nm-bond/bonding/num_sol_na"
+      And "3" is visible with command "cat /sys/class/net/nm-bond/bonding/num_unsol_na"
 
 
     @rhbz1299103
