@@ -35,10 +35,38 @@
     # Scenario: nmcli - vpn - novice mode - add default connection
 
 
-    # @libreswan
-    # @vpn_activate_asking_for_credentials
-    # Scenario: nmcli - vpn - activate asking for password
+    @rhbz1141947
+    @libreswan
+    @libreswan_activate_asking_for_password
+    Scenario: nmcli - vpn - activate asking for password
+    * Add a connection named "libreswan" for device "\*" to "libreswan" VPN
+    * Use user "budulinek" with password "ask" and group "yolo" with secret "ipsecret" for gateway "172.31.70.1" on Libreswan connection "libreswan"
+    * Connect to vpn "libreswan" with password "passwd"
+    * Execute "nmcli --show-secrets con show libreswan > /tmp/libreswan"
+    Then "VPN.VPN-STATE:.*VPN connected" is visible with command "nmcli c show libreswan" in "120" seconds
+    Then "172.31.80.0/24 .*dev racoon1" is visible with command "ip route"
+    Then "VPN.BANNER:.*BUG_REPORT_URL" is visible with command "nmcli c show libreswan"
+    Then "IP4.ADDRESS.*172.31.60.2/32" is visible with command "nmcli c show libreswan"
+    Then "IP4.ADDRESS.*172.31.60.2/32" is visible with command "nmcli d show racoon1"
+    Then "IP4.ADDRESS.*172.31.70.*/24" is visible with command "nmcli d show racoon1"
+    Then "IP4.GATEWAY:.*172.31.70.1" is visible with command "nmcli d show racoon1"
 
+
+    @rhbz1141947
+    @libreswan
+    @libreswan_activate_asking_for_password_and_secret
+    Scenario: nmcli - vpn - activate asking for password and secret
+    * Add a connection named "libreswan" for device "\*" to "libreswan" VPN
+    * Use user "budulinek" with password "ask" and group "yolo" with secret "ask" for gateway "172.31.70.1" on Libreswan connection "libreswan"
+    * Connect to vpn "libreswan" with password "passwd" and secret "ipsecret"
+    * Execute "nmcli --show-secrets con show libreswan > /tmp/libreswan"
+    Then "VPN.VPN-STATE:.*VPN connected" is visible with command "nmcli c show libreswan" in "120" seconds
+    Then "172.31.80.0/24 .*dev racoon1" is visible with command "ip route"
+    Then "VPN.BANNER:.*BUG_REPORT_URL" is visible with command "nmcli c show libreswan"
+    Then "IP4.ADDRESS.*172.31.60.2/32" is visible with command "nmcli c show libreswan"
+    Then "IP4.ADDRESS.*172.31.60.2/32" is visible with command "nmcli d show racoon1"
+    Then "IP4.ADDRESS.*172.31.70.*/24" is visible with command "nmcli d show racoon1"
+    Then "IP4.GATEWAY:.*172.31.70.1" is visible with command "nmcli d show racoon1"
 
     @libreswan
     @libreswan_terminate

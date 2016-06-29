@@ -90,6 +90,8 @@ vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
 libreswan_import, ., nmcli/./runtest.sh libreswan_import ,
 libreswan_export, ., nmcli/./runtest.sh libreswan_export ,
 libreswan_autocompletion, ., nmcli/./runtest.sh libreswan_autocompletion ,
+libreswan_activate_asking_for_password, ., nmcli/./runtest.sh libreswan_activate_asking_for_password ,
+libreswan_activate_asking_for_password_and_secret, ., nmcli/./runtest.sh libreswan_activate_asking_for_password_and_secret ,
 #@libreswan_end
 
 #@openvpn_start
