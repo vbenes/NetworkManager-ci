@@ -130,14 +130,25 @@ def open_slave_connection(context, master, device, name):
 
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on Libreswan connection "{name}"')
 def set_libreswan_connection(context, user, password, group, secret, gateway, name):
-    cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 0, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
+    if password == "ask" and secret != "ask":
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = ask, pskvalue-flags = 0, xauthpassword-flags = 2, vendor = Cisco"' % (name, user, group, gateway))
+        cli2 = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s"' % (name, secret))
+    if password == "ask" and secret == "ask":
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = ask, right = %s, xauthpasswordinputmodes = ask, pskvalue-flags = 2, xauthpassword-flags = 2, vendor = Cisco"' % (name, user, group, gateway))
+        cli2 = pexpect.spawn('nmcli c show %s' % (name))
+    if password != "ask" and secret == "ask":
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = ask, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 2, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
+        cli2 = pexpect.spawn('nmcli c modify %s vpn.secrets "xauthpassword = %s"' % (name, password))
+    if password != "ask" and secret != "ask":
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 0, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
+        cli2 = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s, xauthpassword = %s"' % (name, secret, password))
+
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
         raise Exception('Got an Error while editing %s connection data' % (name))
     sleep(1)
-    cli = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s, xauthpassword = %s"' % (name, secret, password))
-    r = cli.expect(['Error', pexpect.EOF])
-    if r == 0:
+    x = cli2.expect(['Error', pexpect.EOF])
+    if x == 0:
         raise Exception('Got an Error while editing %s connection secrets' % (name))
     sleep(1)
 
@@ -657,6 +668,20 @@ def connect_wifi_device_w_options(context, network, options):
     elif r == 1:
         raise Exception('nmcli device wifi connect ... timed out (180s)')
 
+@step(u'Connect to vpn "{vpn}" with password "{password}"')
+@step(u'Connect to vpn "{vpn}" with password "{password}" and secret "{secret}"')
+def connect_to_vpn(context, vpn, password, secret=None):
+    cli = pexpect.spawn('nmcli -a connect up %s' % (vpn), timeout = 180, logfile=context.log)
+    sleep(1)
+    cli.sendline(password)
+    if secret != None:
+        sleep(1)
+        cli.sendline(secret)
+    r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
+    if r == 0:
+        raise Exception('Got an Error while connecting to network %s' % network)
+    elif r == 1:
+        raise Exception('nmcli vpn connect ... timed out (180s)')
 
 @step(u'Delete connection "{connection}"')
 def delete_connection(context,connection):
