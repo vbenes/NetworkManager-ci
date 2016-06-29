@@ -23,7 +23,10 @@ function setup_veth_env ()
     #    sleep 1
     #    service NetworkManager restart
     #fi
-    yum -y install NetworkManager-config-server
+
+    if ! rpm -q --quiet NetworkManager-config-server; then
+        yum -y install NetworkManager-config-server
+    fi
     cp /usr/lib/NetworkManager/conf.d/00-server.conf /etc/NetworkManager/conf.d/00-server.conf
     service NetworkManager restart
     sleep 5
