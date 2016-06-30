@@ -287,6 +287,7 @@ team_reflect_changes_from_outside_of_NM, ., nmcli/./runtest.sh team_reflect_chan
 kill_teamd, ., nmcli/./runtest.sh  kill_teamd ,
 team_enslave_to_bridge, ., nmcli/./runtest.sh team_enslave_to_bridge, bridge-utils
 describe, ., nmcli/./runtest.sh describe ,
+team_in_bridge_mtu, ., nmcli/./runtest.sh team_in_bridge_mtu ,
 #@team_end
 
 #@vlan_start

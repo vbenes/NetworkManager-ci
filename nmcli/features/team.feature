@@ -574,3 +574,19 @@
      * Bring "up" connection "team0"
     Then "bridge0:bridge:connected:br10" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
     Then "nm-team:team:connected:team0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
+
+
+    @rhbz1303968
+    @team @bridge @team_slaves
+    @team_in_bridge_mtu
+    Scenario: nmcli - team - enslave team device to bridge and set mtu
+     * Add a new connection of type "bridge" and options "con-name bridge0 autoconnect no ifname bridge0 -- 802-3-ethernet.mtu 9000 ipv4.method manual ipv4.addresses 192.168.177.100/24 ipv4.gateway 192.168.177.1"
+     * Add a new connection of type "team" and options "con-name team0 autoconnect no ifname nm-team master bridge0 -- 802-3-ethernet.mtu 9000"
+     * Add a new connection of type "ethernet" and options "con-name team0.0 autoconnect no ifname eth1 master nm-team -- 802-3-ethernet.mtu 9000"
+     * Add a new connection of type "ethernet" and options "con-name team0.0 autoconnect no ifname eth1 master nm-team -- 802-3-ethernet.mtu 9000"
+     * Bring "up" connection "bridge0"
+     * Bring "up" connection "team0"
+     * Bring "up" connection "team0.0"
+     Then "mtu 9000" is visible with command "ip a s eth1"
+     Then "mtu 9000" is visible with command "ip a s nm-team"
+     Then "mtu 9000" is visible with command "ip a s bridge0"
