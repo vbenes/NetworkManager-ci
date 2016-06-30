@@ -464,6 +464,22 @@ Feature: nmcli: ipv4
     Then Ping "redhat.com"
 
 
+    @rhbz1228707
+    @ver+=1.2.0
+    @ipv4_2
+    @dns_priority
+    Scenario: nmcli - ipv4 - dns - priority
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth2 autoconnect no -- ipv4.method manual ipv4.addresses 192.168.1.2/24 ipv4.dns 8.8.4.4 ipv4.dns-priority 300"
+    * Add a new connection of type "ethernet" and options "con-name ethie2 ifname eth1 autoconnect no -- ipv4.method manual ipv4.addresses 192.168.2.2/24 ipv4.dns 8.8.8.8 ipv4.dns-priority 200"
+    * Bring "up" connection "ethie"
+    * Bring "up" connection "ethie2"
+    When "nameserver 8.8.8.8\s+nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
+    * Execute "nmcli con modify ethie ipv4.dns-priority 100"
+    * Bring "up" connection "ethie"
+    * Bring "up" connection "ethie2"
+    Then "nameserver 8.8.4.4\s+nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
+
+
     @newveth
     @testcase_303666
     @ipv4
