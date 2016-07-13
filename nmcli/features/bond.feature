@@ -52,7 +52,7 @@
      * Dismiss IP configuration in editor
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Bring "up" connection "bond"
-    Then Check bond "nm-bond" state is "up"
+    Then Check bond "nm-bond" link state is "up"
     Then "MII Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
     Then "Up Delay \(ms\): 400" is visible with command "cat /proc/net/bonding/nm-bond"
     Then "Down Delay \(ms\): 200" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -102,7 +102,7 @@
      * Expect "aster"
      * Submit "nm-bond" in editor
     Then "activated" is visible with command "nmcli c show bond-slave-eth1" in "45" seconds
-    Then Check bond "nm-bond" state is "up"
+    Then Check bond "nm-bond" link state is "up"
     Then Check slave "eth1" in bond "nm-bond" in proc
 
 
@@ -138,7 +138,7 @@
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Bring "up" connection "bond0.0"
      * Delete connection "bond0.0"
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
 
 
     @testcase_280565
@@ -151,7 +151,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      * Delete connection "bond0.1"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
 
 
@@ -169,7 +169,7 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "bond0.0"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
 
 
@@ -207,7 +207,7 @@
      Then Check bond "nm-bond" state is "up"
      * Delete connection "bond0"
      * Execute "sleep 3"
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
 
 
 
@@ -221,7 +221,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      * Disconnect device "nm-bond"
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
 
 
 
@@ -235,10 +235,10 @@
      * Disconnect device "nm-bond"
      * Bring "down" connection "bond0.0"
      * Bring "down" connection "bond0.1"
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -253,7 +253,7 @@
      * Disconnect device "nm-bond"
      * Bring "down" connection "bond0.0"
      * Bring "down" connection "bond0.1"
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
      * Bring up connection "bond0" ignoring error
      Then Check bond "nm-bond" state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
@@ -270,13 +270,13 @@
      * Disconnect device "nm-bond"
      * Bring "down" connection "bond0.0"
      * Bring "down" connection "bond0.1"
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
      * Open editor for connection "bond0.0"
      * Submit "activate" in editor
      * Enter in editor
      * Quit editor
      * Execute "sleep 3"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" not in bond "nm-bond" in proc
 
@@ -294,7 +294,7 @@
      * Save in editor
      * Quit editor
      * Bring "up" connection "bond0"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -317,7 +317,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      * Reboot
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -335,7 +335,7 @@
      * Quit editor
      * Disconnect device "nm-bond"
      * Bring "up" connection "bond0"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -362,7 +362,7 @@
      * Quit editor
      * Disconnect device "nm-bond"
      * Reboot
-     Then Check bond "nm-bond" state is "down"
+     Then Check bond "nm-bond" link state is "down"
      Then Check slave "eth1" not in bond "nm-bond" in proc
      Then Check slave "eth2" not in bond "nm-bond" in proc
 
@@ -390,7 +390,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      * Reboot
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -420,7 +420,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      * Reboot
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then Check slave "eth1" not in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
@@ -440,7 +440,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "MII Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -463,7 +463,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "MII Polling Interval \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Up Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -490,7 +490,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "MII Polling Interval \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "ARP Polling Interval \(ms\): 10000" is visible with command "cat /proc/net/bonding/nm-bond"
      Then Check "nm-bond" has "eth1" in proc
@@ -531,7 +531,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "Up Delay \(ms\): 200" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
@@ -569,7 +569,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
@@ -587,7 +587,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "MII Polling Interval \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
@@ -602,7 +602,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Down Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
 
@@ -621,7 +621,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      Then "MII Polling Interval \(ms\): 999" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
@@ -639,7 +639,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(xor\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
      * Open editor for connection "bond0"
      * Set a property named "bond.options" to "mode=0" in editor
      * Save in editor
@@ -647,7 +647,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(round-robin\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @testcase_280613
@@ -664,7 +664,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: fault-tolerance \(active-backup\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @bond_active-backup_primary_set
@@ -683,7 +683,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then "Bonding Mode: fault-tolerance \(active-backup\) \(fail_over_mac follow\)\s+Primary Slave: eth1 \(primary_reselect always\)\s+Currently Active Slave: eth1" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @testcase_281146
@@ -700,7 +700,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: load balancing \(xor\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @testcase_281149
@@ -717,7 +717,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: fault-tolerance \(broadcast\)" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @testcase_281150
@@ -734,7 +734,7 @@
      * Quit editor
      * Bring "up" connection "bond0"
      Then "Bonding Mode: IEEE 802.3ad Dynamic link aggregation" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @bond_8023ad_with_lacp_rate_fast
@@ -753,7 +753,7 @@
      Then "Bonding Mode: IEEE 802.3ad Dynamic link aggregation" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "Transmit Hash Policy:\s+layer2\+3" is visible with command "cat /proc/net/bonding/nm-bond"
      Then "802.3ad info\s+LACP rate: fast" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @testcase_281151
@@ -772,7 +772,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then "Bonding Mode: transmit load balancing" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @testcase_281153
@@ -791,7 +791,7 @@
      * Bring "up" connection "bond0.1"
      * Bring "up" connection "bond0.0"
      Then "Bonding Mode: adaptive load balancing" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @rhbz1177860
@@ -820,7 +820,7 @@
      * Bring "up" connection "bond0"
      * Bring "up" connection "bond0.1"
      * Bring "up" connection "bond0.0"
-    Then Check bond "nm-bond" state is "up"
+    Then Check bond "nm-bond" link state is "up"
     Then Check "nm-bond" has "eth1" in proc
     Then Check "nm-bond" has "eth2" in proc
     Then "mtu 9000" is visible with command "ip a s eth1 |grep mtu" in "15" seconds
@@ -887,7 +887,7 @@
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
      Then "Bonding Mode: transmit load balancing" is visible with command "cat /proc/net/bonding/nm-bond"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @rhbz1299103 @rhbz1348198
@@ -975,7 +975,7 @@
      * Bring "up" connection "bond0"
      * Bring "up" connection "bond0.0"
      * Bring "up" connection "bond0.1"
-     Then Check bond "nm-bond" state is "up"
+     Then Check bond "nm-bond" link state is "up"
 
 
     @rhbz1243371

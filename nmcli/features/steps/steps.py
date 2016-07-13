@@ -457,14 +457,19 @@ def check_slave_not_in_bond_in_proc(context, slave, bond):
     child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond), logfile=context.log )
     assert child.expect(["Slave Interface: %s\s+MII Status: up" % slave, pexpect.EOF]) != 0, "Slave %s is in %s" % (slave, bond)
 
-
 @step(u'Check bond "{bond}" state is "{state}"')
 def check_bond_state(context, bond, state):
-    if command_code(context, 'ls /proc/net/bonding/%s' %bond) != 0 and state == "down":
-        return
-    child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond) , logfile=context.log)
-    assert child.expect(["MII Status: %s" %  state, pexpect.EOF]) == 0, "%s is not in %s state" % (bond, state)
+    child = pexpect.spawn('ip addr show dev %s up' % (bond))
+    exp = 0 if state == "up" else 1
+    r = child.expect(["\\d+: %s:" %  bond, pexpect.EOF])
+    assert r == exp, "%s not in %s state" % (bond, state)
 
+@step(u'Check bond "{bond}" link state is "{state}"')
+def check_bond_link_state(context, bond, state):
+    if os.system('ls /proc/net/bonding/%s' %bond) != 0 and state == "down":
+        return
+    child = pexpect.spawn('cat /proc/net/bonding/%s' % (bond))
+    assert child.expect(["MII Status: %s" %  state, pexpect.EOF]) == 0, "%s is not in %s link state" % (bond, state)
 
 @step(u'Check solicitation for "{dev}" in "{file}"')
 def check_solicitation(context, dev, file):
