@@ -647,7 +647,9 @@ Feature: nmcli: ipv4
     @testcase_303671
     @tshark
     @ipv4
+    @restore_hostname
     Scenario: nmcli - ipv4 - dhcp-send-hostname - send real hostname
+    * Execute "hostnamectl set-hostname foobar.test"
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Execute "nmcli con modify ethie ipv4.may-fail no"
     * Bring "up" connection "ethie"
