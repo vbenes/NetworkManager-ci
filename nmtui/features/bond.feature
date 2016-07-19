@@ -250,7 +250,7 @@ Feature: Bond TUI tests
     * Set "Device" field to "infi2"
     * Confirm the slave settings
     * Confirm the connection settings
-    Then Check bond "bond0" link state is "up"
+    Then Check bond "bond0" state is "up"
     Then "bond0\s+bond" is visible with command "nmcli device" in "60" seconds
     Then "TYPE=InfiniBand" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond-slave-eth1"
     Then "TYPE=InfiniBand" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond-slave-eth2"
