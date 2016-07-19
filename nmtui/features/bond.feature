@@ -279,7 +279,7 @@ Feature: Bond TUI tests
     * Execute "nmcli connection up bond-slave-eth1"
     * Execute "nmcli connection up bond-slave-eth2"
     * Reboot
-    Then Check bond state is "up"
+    Then Check bond "bond0" state is "up"
     Then Check slave "eth1" not in bond "bond0" in proc
     Then Check slave "eth2" in bond "bond0" in proc
 
