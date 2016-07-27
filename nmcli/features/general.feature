@@ -837,6 +837,7 @@ Feature: nmcli - general
     * Bring "down" connection "testeth0"
     * Execute "sleep 2"
     * Bring "up" connection "testeth0"
+    * Execute "sleep 2"
     * Execute "pkill -9 nmcli"
     Then "eth0: deactivating" is visible with command "cat /tmp/monitor.txt"
      And "Connectivity is now 'none'" is visible with command "cat /tmp/monitor.txt"
