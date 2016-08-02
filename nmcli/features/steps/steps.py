@@ -1145,6 +1145,19 @@ def check_pattern_not_visible_with_tab_after_command(context, pattern, command):
     assert exp.expect([pattern, pexpect.EOF, pexpect.TIMEOUT]) != 0, 'pattern %s is visible with "%s"' % (pattern, command)
 
 
+@step(u'All ifaces but "{exclude_ifaces}" are not in state "{iface_state}"')
+def check_ifaces_in_state(context, exclude_ifaces, iface_state):
+    ex_ifaces = []
+    for ex_iface in exclude_ifaces.split(','):
+        ex_ifaces.append(ex_iface.strip())
+
+    cmd = 'ip a s'
+    for ex_iface in ex_ifaces:
+        cmd = cmd + " | grep -v " + str(ex_iface)
+
+    check_pattern_not_visible_with_command(context, iface_state, cmd)
+
+
 @step(u'Ping "{domain}"')
 def ping_domain(context, domain):
     ping = pexpect.spawn('ping -c 2 %s' %domain, logfile=context.log)
