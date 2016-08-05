@@ -834,6 +834,7 @@ Feature: nmcli - general
     @nmcli_monitor
     Scenario: nmcli - monitor
     * Run child "nmcli m 2>&1> /tmp/monitor.txt"
+    * Execute "sleep 1"
     * Bring "down" connection "testeth0"
     * Execute "sleep 2"
     * Bring "up" connection "testeth0"
