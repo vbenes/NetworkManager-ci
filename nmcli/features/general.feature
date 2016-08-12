@@ -832,13 +832,15 @@ Feature: nmcli - general
     @rhbz1034158
     @connect_testeth0
     @nmcli_monitor
+    @disp
     Scenario: nmcli - monitor
     * Run child "nmcli m 2>&1> /tmp/monitor.txt"
-    * Execute "sleep 1"
+    * Write dispatcher "pre-up.d/98-disp" file with params "sleep 1;"
+    * Write dispatcher "pre-down.d/97-disp" file with params "sleep 1;"
     * Bring "down" connection "testeth0"
-    * Execute "sleep 2"
+    * Execute "sleep 1"
     * Bring "up" connection "testeth0"
-    * Execute "sleep 2"
+    * Execute "sleep 1"
     * Execute "pkill -9 nmcli"
     Then "eth0: deactivating" is visible with command "cat /tmp/monitor.txt"
      And "Connectivity is now 'none'" is visible with command "cat /tmp/monitor.txt"
