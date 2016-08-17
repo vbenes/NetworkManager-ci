@@ -828,6 +828,45 @@
     Then "mtu 9000" is visible with command "ip a s nm-bond |grep mtu"
 
 
+    @rhbz1304641
+    @ver+=1.3
+    @slaves @bond @restart
+    @bond_addreses_restart_persistence
+    Scenario: nmcli - bond - addresses restart persistence
+     * Add connection type "bond" named "bond0" for device "nm-bond"
+     * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+     * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
+     * Open editor for connection "bond0"
+     * Set a property named "ipv4.method" to "manual" in editor
+     * Set a property named "ipv4.addresses" to "1.1.1.2/24" in editor
+     * Set a property named "ipv6.method" to "manual" in editor
+     * Set a property named "ipv6.addresses" to "1::2/128" in editor
+     * Save in editor
+     * Quit editor
+     * Bring "up" connection "bond0"
+     * Bring "up" connection "bond0.1"
+     * Bring "up" connection "bond0.0"
+     * restart NM
+     When "activated" is visible with command "nmcli  connection show bond0 |grep STATE" in "10" seconds
+      And "nm-bond" is not visible with command "nmcli -f NAME connection"
+     * restart NM
+     When "activated" is visible with command "nmcli  connection show bond0 |grep STATE" in "10" seconds
+      And "nm-bond" is not visible with command "nmcli -f NAME connection"
+     * restart NM
+     Then "activated" is visible with command "nmcli  connection show bond0 |grep STATE" in "10" seconds
+      And "nm-bond" is not visible with command "nmcli -f NAME connection"
+      And Check bond "nm-bond" link state is "up"
+      And Check "nm-bond" has "eth1" in proc
+      And Check "nm-bond" has "eth2" in proc
+      And "1.1.1.2/24" is visible with command "nmcli connection show bond0 |grep ipv4.addresses"
+      And "manual" is visible with command "nmcli connection show bond0 |grep ipv4.method"
+      And "1.1.1.2/24" is visible with command "nmcli connection show bond0 |grep IP4.ADDRESS"
+      And "1::2/128" is visible with command "nmcli connection show bond0 |grep ipv6.addresses"
+      And "manual" is visible with command "nmcli connection show bond0 |grep ipv6.method"
+      And "1::2/128" is visible with command "nmcli connection show bond0 |grep IP6.ADDRESS"
+      And "fe80" is visible with command "nmcli connection show bond0 |grep IP6.ADDRESS"
+
+
     @ver-=1.1
     @dummy
     @bond_reflect_changes_from_outside_of_NM

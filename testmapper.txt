@@ -410,6 +410,7 @@ bond_8023ad_with_lacp_rate_fast, ., nmcli/./runtest.sh bond_8023ad_with_lacp_rat
 testcase_281151, ., nmcli/./runtest.sh testcase_281151 ,
 testcase_281153, ., nmcli/./runtest.sh testcase_281153 ,
 bond_set_mtu, ., nmcli/./runtest.sh bond_set_mtu ,
+bond_addreses_restart_persistence, ., nmcli/./runtest.sh bond_addreses_restart_persistence ,
 testcase_281154, ., nmcli/./runtest.sh testcase_281154 ,
 delete_addrgenmode_bond, ., nmcli/./runtest.sh delete_addrgenmode_bond ,
 nmcli_novice_mode_create_bond_with_mii_monitor_values, ., nmcli/./runtest.sh nmcli_novice_mode_create_bond_with_mii_monitor_values ,
