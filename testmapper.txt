@@ -4,6 +4,7 @@
 logging, ., nmcli/./runtest.sh logging ,
 reduce_logging, ., nmcli/./runtest.sh reduce_logging ,
 hostname_change, ., nmcli/./runtest.sh hostname_change ,
+pull_hostname_from_dhcp, ., nmcli/./runtest.sh pull_hostname_from_dhcp ,
 testcase_290423, ., nmcli/./runtest.sh testcase_290423 ,
 testcase_290424, ., nmcli/./runtest.sh testcase_290424 ,
 testcase_290425, ., nmcli/./runtest.sh testcase_290425 ,

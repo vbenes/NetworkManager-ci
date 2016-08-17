@@ -44,6 +44,15 @@ Feature: nmcli - general
 
 
     @general
+    @restore_hostname
+    @pull_hostname_from_dhcp
+    Scenario: nmcli - general - pull hostname from DHCP
+    * Execute "hostnamectl set-hostname --transient localhost.localdomain"
+    * Bring up connection "testeth0"
+    Then "localhost" is not visible with command "hostnamectl --transient" in "60" seconds
+
+
+    @general
     @restart
     @veth
     @testcase_290425
