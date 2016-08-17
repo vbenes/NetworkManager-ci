@@ -674,17 +674,21 @@ def connect_wifi_device_w_options(context, network, options):
         raise Exception('nmcli device wifi connect ... timed out (180s)')
 
 @step(u'Connect to vpn "{vpn}" with password "{password}"')
+@step(u'Connect to vpn "{vpn}" with password "{password}" with timeout "{time_out}"')
 @step(u'Connect to vpn "{vpn}" with password "{password}" and secret "{secret}"')
-def connect_to_vpn(context, vpn, password, secret=None):
+def connect_to_vpn(context, vpn, password, secret=None, time_out=None):
     cli = pexpect.spawn('nmcli -a connect up %s' % (vpn), timeout = 180, logfile=context.log)
-    sleep(1)
+    if not time_out:
+        sleep(1)
+    else:
+        sleep(int(time_out))
     cli.sendline(password)
     if secret != None:
         sleep(1)
         cli.sendline(secret)
     r = cli.expect(['Error', pexpect.TIMEOUT, pexpect.EOF])
     if r == 0:
-        raise Exception('Got an Error while connecting to network %s' % network)
+        raise Exception('Got an Error while connecting to network %s' % vpn)
     elif r == 1:
         raise Exception('nmcli vpn connect ... timed out (180s)')
 
