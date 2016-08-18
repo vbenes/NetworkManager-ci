@@ -230,6 +230,24 @@ Feature: nmcli: ipv4
     Then "192.168.5.0/24 via 192.168.3.11 dev eth1  proto static  metric" is visible with command "ip route"
 
 
+    @rhbz1302532
+    @ipv4 @restart
+    @no_metric_route_connection_restart_persistence
+    Scenario: nmcli - ipv4 - routes - no metric route connection restart persistence
+    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.method static" in editor
+    * Submit "set ipv4.addresses 192.168.3.10/24" in editor
+    * Submit "set ipv4.gateway 192.168.4.1" in editor
+    * Submit "set ipv4.routes 192.168.5.0/24 192.168.3.11" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    When "eth1:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+    * Restart NM
+    Then "eth1:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+
+
     @1164441
     @testcase_303657
     @ipv4_2
