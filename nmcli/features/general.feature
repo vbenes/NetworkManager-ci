@@ -512,6 +512,15 @@ Feature: nmcli - general
     Then "nm_connection_get_setting_connection: assertion `NM_IS_CONNECTION \(connection\)' failed" is not visible with command "sudo tail -n 30 /var/log/messages"
 
 
+    @rhbz1286576
+    @restart
+    @wpa_supplicant_not_started
+    Scenario: NM - general - do not start wpa_supplicant
+    * Execute "sudo systemctl stop wpa_supplicant"
+    * restart NM
+    Then "Active\: inactive" is visible with command "systemctl status wpa_supplicant"
+
+
     @rhbz1041901
     @general
     @nmcli_general_multiword_autocompletion
