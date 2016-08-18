@@ -66,6 +66,20 @@
     Then Check slave "eth2" in team "nm-team" is "up"
 
 
+    @1310435
+    @team_slaves @team
+    @default_config_watch
+    Scenario: nmcli - team - default config watcher
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+     * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
+     And "eth1" is visible with command "nmcli -f all d show nm-team |grep CONFIG" in "20" seconds
+     And "eth2" is visible with command "nmcli -f all d show nm-team |grep CONFIG" in "20" seconds
+     * Bring "down" connection "team0.1"
+    Then "eth1" is visible with command "nmcli -f all d show nm-team |grep CONFIG" in "20" seconds
+     And "eth2" is not visible with command "nmcli -f all d show nm-team |grep CONFIG" in "20" seconds
+
+
     @add_team_master_via_uuid
     @team_slaves
     @team

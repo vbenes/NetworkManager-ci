@@ -265,6 +265,7 @@ ifcfg_team_slave_device_type, ., nmcli/./runtest.sh ifcfg_team_slave_device_type
 nmcli_novice_mode_create_team, ., nmcli/./runtest.sh nmcli_novice_mode_create_team ,
 nmcli_novice_mode_create_team-slave_with_default_options, ., nmcli/./runtest.sh nmcli_novice_mode_create_team-slave_with_default_options ,
 add_two_slaves_to_team, ., nmcli/./runtest.sh add_two_slaves_to_team ,
+default_config_watch, ., nmcli/./runtest.sh default_config_watch ,
 add_team_master_via_uuid, ., nmcli/./runtest.sh add_team_master_via_uuid ,
 remove_all_slaves, ., nmcli/./runtest.sh remove_all_slaves ,
 #team_restart_persistence, ., nmcli/./runtest.sh team_restart_persistence ,
