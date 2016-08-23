@@ -13,8 +13,8 @@ sleep 5
 ip a s eth0
 ip -6 r
 
-#sudo kill -9 $(ps aux|grep -v grep| grep beah-beaker-backend |awk '{print $2}')
-#sudo /usr/bin/python /usr/bin/beah-beaker-backend --log-stderr &
-#sleep 30
+sudo kill -9 $(ps aux|grep -v grep| grep beah-beaker-backend |awk '{print $2}')
+sudo /usr/bin/python /usr/bin/beah-beaker-backend --log-stderr &
+sleep 60
 
 exit 0
