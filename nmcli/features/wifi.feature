@@ -380,7 +380,7 @@ Feature: nmcli - wifi
     @testcase_306574
     Scenario: nmcli - wifi - set matching mac adress
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
-    * Note the "ether" property from ifconfig output for device "wlan0"
+		* Note MAC address output for device "wlan0" via ethtool
     * Open editor for connection "qe-open"
     * Set a property named "802-11-wireless.mac-address" to "noted-value" in editor
     * Save in editor
@@ -450,7 +450,7 @@ Feature: nmcli - wifi
     @testcase_306579
     Scenario: nmcli - wifi - mac adress blacklist
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
-    * Note the "ether" property from ifconfig output for device "wlan0"
+		* Note MAC address output for device "wlan0" via ethtool
     * Open editor for connection "qe-open"
     * Set a property named "802-11-wireless.mac-address-blacklist" to "noted-value" in editor
     * No error appeared in editor
@@ -1263,22 +1263,22 @@ Feature: nmcli - wifi
     @testcase_309439
     Scenario: nmcli - wifi - add connection in novice (nmcli -a) mode specifying options
     * Open interactive connection addition mode for a type "wifi"
-    * Note the "ether" property from ifconfig output for device "wlan0"
+		* Note MAC address output for device "wlan0" via ethtool
     * Expect "Interface name"
     * Submit "wlan0"
     * Expect "SSID"
     * Submit "qe-open"
     * Expect "There are . optional .*Wi-Fi"
     * Submit "yes"
+		* Expect "Wi-Fi mode"
+		* Submit "infrastructure"
     * Expect "MTU"
     * Submit "64"
     * Expect "MAC"
     * Submit "noted-value"
     * Expect "Cloned MAC"
     * Submit "noted-value"
-    * Expect "Mode"
-    * Submit "infrastructure"
-    * Dismiss IP configuration in editor
+		* Dismiss IP configuration in editor
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
     Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
 
@@ -1338,6 +1338,7 @@ Feature: nmcli - wifi
     * Submit "-1.1.-1.5"
     * Error appeared in editor
     * Submit "<enter>"
+		* Submit "<enter>"
     * Agree to add IPv6 configuration in editor
     * Submit "feG0::215:ff:fe93:ffff"
     * Error appeared in editor

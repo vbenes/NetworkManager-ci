@@ -991,6 +991,10 @@ def note_print_property(context, prop, device):
     context.noted = ifc.match.group(1)
     print (context.noted)
 
+@step(u'Note MAC address output for device "{device}" via ethtool')
+def note_mac_address(context, device):
+    context.noted = command_output(context, "ethtool -P %s |grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'" % device).strip()
+    print (context.noted)
 
 @step(u'Noted value contains "{pattern}"')
 def note_print_property_b(context, pattern):
