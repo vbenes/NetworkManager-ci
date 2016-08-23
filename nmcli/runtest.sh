@@ -117,7 +117,11 @@ if [ ! -e /tmp/nm_eth_configured ]; then
                 done
                 nmcli connection modify testeth10 ipv6.method auto
             fi
+
+            yum -y install NetworkManager-config-server
+            cp /usr/lib/NetworkManager/conf.d/00-server.conf /etc/NetworkManager/conf.d/00-server.conf
         fi
+
         if [ $wlan -eq 1 ]; then
             # we need to do this to have the device rescan networks after the renaming
             service NetworkManager restart
@@ -134,7 +138,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     # if [ "$?" == "1" ]; then
     #     sed -i 's/\[main\]/\[main\]\ndebug=fatal-warnings/' /etc/NetworkManager/NetworkManager.conf
     # fi
-
+    
     service NetworkManager restart
     touch /tmp/nm_eth_configured
 fi
