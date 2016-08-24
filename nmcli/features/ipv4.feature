@@ -493,6 +493,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie2"
     When "nameserver 8.8.8.8\s+nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
     * Execute "nmcli con modify ethie ipv4.dns-priority 100"
+    * Execute "nmcli con modify ethie ipv6.dns-priority 300"
     * Bring "up" connection "ethie"
     * Bring "up" connection "ethie2"
     Then "nameserver 8.8.4.4\s+nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
