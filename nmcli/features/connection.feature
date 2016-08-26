@@ -221,6 +221,14 @@ Feature: nmcli: connection
      Then Check if "connie" is not active connection
 
 
+     @rhbz1367737
+     @con
+     @manual_connection_with_both_ips
+     Scenario: nmcli - connection - add ipv4 ipv6 manual connection
+     * Execute "nmcli connection add type ethernet con-name connie ifname eth1 ipv4.method manual ipv4.addresses 1.1.1.1/24 ipv6.method manual ipv6.addresses 1::2/128"
+     Then "connie" is visible with command "nmcli con"
+
+
     @testcase_300561
     @time
     Scenario: nmcli - connection - timestamp
@@ -510,4 +518,3 @@ Feature: nmcli: connection
      Then Check "=== \[secondaries\] ===\s+\[NM property description\]\s+List of connection UUIDs that should be activated when the base connection itself is activated. Currently only VPN connections are supported." are present in describe output for object "secondaries"
 
      Then Check "=== \[gateway-ping-timeout\] ===\s+\[NM property description]\s+If greater than zero, delay success of IP addressing until either the timeout is reached, or an IP gateway replies to a ping." are present in describe output for object "gateway-ping-timeout"
-
