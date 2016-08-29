@@ -34,6 +34,13 @@ Feature: nmcli: connection
     Then "connie" is visible with tab after "nmcli connection edit id "
 
 
+    @rhbz1367736
+    @con
+    @connection_objects_autocompletion
+    Scenario: nmcli - connection - objects autocompletion
+    Then "ipv4.addresses" is visible with tab after "nmcli  connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ipv"
+
+
     @connection_no_error
     #VV reproducer for 842975
     Scenario: nmcli - connection - no error shown

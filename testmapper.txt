@@ -33,6 +33,7 @@ no_error_when_firewald_restarted, ., nmcli/./runtest.sh no_error_when_firewald_r
 wpa_supplicant_not_started, ., nmcli/./runtest.sh wpa_supplicant_not_started ,
 nmcli_general_dbus_set_gateway, ., nmcli/./runtest.sh nmcli_general_dbus_set_gateway ,
 preserve_failed_assumed_connections, ., nmcli/./runtest.sh preserve_failed_assumed_connections ,
+connection_objects_autocompletion, ., nmcli/./runtest.sh connection_objects_autocompletion ,
 nmcli_general_profile_pickup_doesnt_break_network, ., nmcli/./runtest.sh nmcli_general_profile_pickup_doesnt_break_network ,
 
 #### vv KEEP THESE TWO TESTS ALWAYS TOGETHER!
@@ -200,7 +201,7 @@ ipv6_tunnel_module_removal, ., nmcli/./runtest.sh ipv6_tunnel_module_removal ,
 ipv6_no_activation_schedule_error_in_logs, ., nmcli/./runtest.sh ipv6_no_activation_schedule_error_in_logs ,
 ipv6_NM_stable_with_internal_DHCPv6, ., nmcli/./runtest.sh ipv6_NM_stable_with_internal_DHCPv6 ,
 persistent_default_ipv6_gw, ., nmcli/./runtest.sh persistent_default_ipv6_gw ,
-persistent_ipv6_route, ., nmcli/./runtest.sh spersistent_ipv6_routes ,
+persistent_ipv6_route, ., nmcli/./runtest.sh persistent_ipv6_routes ,
 ipv6_describe, ., nmcli/./runtest.sh ipv6_describe ,
 #@ipv6_end
 
