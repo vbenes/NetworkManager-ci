@@ -35,6 +35,7 @@ nmcli_general_dbus_set_gateway, ., nmcli/./runtest.sh nmcli_general_dbus_set_gat
 preserve_failed_assumed_connections, ., nmcli/./runtest.sh preserve_failed_assumed_connections ,
 connection_objects_autocompletion, ., nmcli/./runtest.sh connection_objects_autocompletion ,
 nmcli_general_profile_pickup_doesnt_break_network, ., nmcli/./runtest.sh nmcli_general_profile_pickup_doesnt_break_network ,
+insufficient_logging_perms, ., nmcli/./runtest.sh insufficient_logging_perms ,
 
 #### vv KEEP THESE TWO TESTS ALWAYS TOGETHER!
 dns_none, ., nmcli/./runtest.sh dns_none ,

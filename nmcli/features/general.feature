@@ -19,6 +19,13 @@ Feature: nmcli - general
     Then "exported as" is not visible with command "journalctl _COMM=NetworkManager --since '2 min ago' |grep '<info> .*nm-bond' |grep 'exported as'"
     Then "Stage" is not visible with command "journalctl _COMM=NetworkManager --since '2 min ago'       |grep '<info> .*nm-bond' |grep 'Stage'"
 
+
+    @rhbz1362542
+    @insufficient_logging_perms
+    Scenario: NM - general - not enough logging perms
+    Then "Error: failed to set logging: access denied" is visible with command "sudo -u test nmcli general logging level TRACE domains all"
+
+
     @general
     @testcase_290423
     Scenario: nmcli - general - check version
