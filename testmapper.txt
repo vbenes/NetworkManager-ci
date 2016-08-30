@@ -321,6 +321,7 @@ assertion_failure, ., nmcli/./runtest.sh  assertion_failure ,
 vlan_not_duplicated, ., nmcli/./runtest.sh vlan_not_duplicated ,
 vlan_update_mac_from_bond, ., nmcli/./runtest.sh  vlan_update_mac_from_bond ,
 bring_up_very_long_device_name, ., nmcli/./runtest.sh bring_up_very_long_device_name ,
+reorder_hdr, ., nmcli/./runtest.sh reorder_hdr ,
 #@vlan_end
 
 #@bridge_start

@@ -308,3 +308,17 @@ Feature: nmcli - vlan
      And "very_long_.1024:connected:vlan" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
      And "inet 1.2.3.4\/24" is visible with command "ip a s very_long_name"
      And "inet 1.2.3.55\/24" is visible with command "ip a s very_long_.1024"
+
+
+     @rhbz1312281
+     @ver+=1.4.0
+     @vlan
+     @reorder_hdr
+     Scenario: nmcli - vlan - reorder HDR
+     * Add a new connection of type "vlan" and options "con-name vlan ifname vlan dev eth1 id 80 ip4 1.2.3.4/32 vlan.flags 1"
+     When "REORDER_HDR" is visible with command "ip -d l show vlan"
+      And "REORDER_HDR=yes" is visible with command "grep HDR /etc/sysconfig/network-scripts/ifcfg-vlan"
+     * Modify connection "vlan" changing options "vlan.flags 0"
+     * Bring "up" connection "vlan"
+     Then "REORDER_HDR=no\s+VLAN_FLAGS=NO_REORDER_HDR" is visible with command "grep HDR /etc/sysconfig/network-scripts/ifcfg-vlan"
+      And "REORDER_HDR" is not visible with command "ip -d l show vlan"
