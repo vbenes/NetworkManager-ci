@@ -292,3 +292,19 @@ Feature: nmcli - vlan
     * Note the output of "ip a s vlan10 | grep link/ether | awk '{print $2}'" as value "vlan_mac"
     # And that the VLAN mac has changed according to the recreated other devices
     Then Check noted values "bond_mac" and "vlan_mac" are the same
+
+
+    @rhbz1300755
+    @ver+=1.4.0
+    @vlan @del_test1112_veths @ipv4
+    @bring_up_very_long_device_name
+    Scenario: nmcli - general - bring up very_long_device_name
+    * Execute "ip link add very_long_name type veth peer name test11"
+    * Add a new connection of type "ethernet" and options "ifname very_long_name con-name ethie -- ipv4.method manual ipv4.addresses 1.2.3.4/24"
+    * Bring "up" connection "ethie"
+    * Add a new connection of type "vlan" and options "dev very_long_name id 1024 con-name vlan -- ipv4.method manual ipv4.addresses 1.2.3.55/24"
+    * Bring "up" connection "vlan"
+    Then "very_long_name:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+     And "very_long_.1024:connected:vlan" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+     And "inet 1.2.3.4\/24" is visible with command "ip a s very_long_name"
+     And "inet 1.2.3.55\/24" is visible with command "ip a s very_long_.1024"
