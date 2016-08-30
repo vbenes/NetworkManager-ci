@@ -38,7 +38,7 @@ Feature: nmcli: connection
     @con
     @connection_objects_autocompletion
     Scenario: nmcli - connection - objects autocompletion
-    Then "ipv4.addresses" is visible with tab after "nmcli  connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ipv"
+    Then "ipv4.dad-timeout" is visible with tab after "nmcli  connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ip"
 
 
     @connection_no_error
