@@ -310,12 +310,12 @@ Feature: nmcli - vlan
      And "inet 1.2.3.55\/24" is visible with command "ip a s very_long_.1024"
 
 
-     @rhbz1312281
+     @rhbz1312281 @rhbz1250225
      @ver+=1.4.0
      @vlan
      @reorder_hdr
      Scenario: nmcli - vlan - reorder HDR
-     * Add a new connection of type "vlan" and options "con-name vlan ifname vlan dev eth1 id 80 ip4 1.2.3.4/32 vlan.flags 1"
+     * Add a new connection of type "vlan" and options "con-name vlan ifname vlan dev eth1 id 80 ip4 1.2.3.4/32"
      When "REORDER_HDR" is visible with command "ip -d l show vlan"
       And "REORDER_HDR=yes" is visible with command "grep HDR /etc/sysconfig/network-scripts/ifcfg-vlan"
      * Modify connection "vlan" changing options "vlan.flags 0"
