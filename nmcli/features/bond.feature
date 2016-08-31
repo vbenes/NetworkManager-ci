@@ -1070,7 +1070,7 @@
 
      @rhbz1364275
      @ver+=1.4
-     @bond @bridge @bond_slaves
+     @bond @bridge @slaves
      @bond_in_bridge_mtu
      Scenario: nmcli - bond - enslave bond device to bridge and set mtu
       * Add a new connection of type "bridge" and options "con-name bridge0 autoconnect no ifname bridge0 -- 802-3-ethernet.mtu 9000 ipv4.method manual ipv4.addresses 192.168.177.100/24 ipv4.gateway 192.168.177.1"
