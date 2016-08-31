@@ -854,6 +854,24 @@ Feature: nmcli: ipv4
     Then "default via 10." is visible with command "ip route"
 
 
+    @rhbz1313091
+    @ver+=1.2.0
+    @ipv4 @restart
+    @ipv4_never_default_restart_persistence
+    Scenario: nmcli - ipv4 - never-default - restart persistence
+    * Add connection type "ethernet" named "ethie" for device "eth1"
+    * Open editor for connection "ethie"
+    * Submit "set ipv4.method manual" in editor
+    * Submit "set ipv4.addresses 1.2.3.4/24" in editor
+    * Submit "set ipv4.gateway 1.2.3.1" in editor
+    * Submit "set ipv4.never-default yes" in editor
+    * Save in editor
+    * Quit editor
+    * Bring "up" connection "ethie"
+    * Restart NM
+    Then "eth1:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
+
+
     @set_mtu_from_DHCP
     @mtu
     Scenario: NM - ipv4 - set dhcp received MTU
