@@ -878,3 +878,21 @@ Feature: nmcli - general
      And "'testeth0' is now the primary connection" is visible with command "cat /tmp/monitor.txt"
      And "Networkmanager is now in the 'connected' state" is visible with command "cat /tmp/monitor.txt"
      And "eth0: connected" is visible with command "cat /tmp/monitor.txt"
+
+
+     @rhbz998000
+     @ver+=1.4.0
+     @ipv4 @disp
+     @device_reapply
+     Scenario: nmcli - device -reapply
+     * Add connection type "ethernet" named "ethie" for device "eth1"
+     * Bring "up" connection "ethie"
+     * Write dispatcher "99-disp" file
+     * Execute "ip addr a 1.2.3.4/24 dev eth1"
+     * Execute "nmcli c modify ethie +ipv4.address 1.2.3.4/24"
+     * Execute "nmcli device reapply eth1"
+     When "up" is not visible with command "cat /tmp/dispatcher.txt"
+     * Execute "ip addr a 1.2.3.4/24 dev eth1"
+     * Execute "nmcli c modify ethie -ipv4.address 1.2.3.4/24"
+     * Execute "nmcli device reapply eth1"
+     Then "up" is not visible with command "cat /tmp/dispatcher.txt"
