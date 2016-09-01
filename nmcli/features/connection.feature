@@ -41,6 +41,16 @@ Feature: nmcli: connection
     Then "ipv4.dad-timeout" is visible with tab after "nmcli  connection add type bond -- ipv4.method manual ipv4.addresses 1.1.1.1/24 ip"
 
 
+    @rhbz1301226
+    @ver+=1.4.0
+    @con
+    @802_1x_objects_autocompletion
+    Scenario: nmcli - connection - 802_1x objects autocompletion
+    * "802.1x" is visible with tab after "nmcli  connection add type ethernet ifname eth1 con-name ethie 802-"
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name connie 802-1x.identity jdoe 802-1x.eap leap"
+    Then "802-1x.eap:\s+leap\s+802-1x.identity:\s+jdoe" is visible with command "nmcli con show connie"
+
+
     @connection_no_error
     #VV reproducer for 842975
     Scenario: nmcli - connection - no error shown
