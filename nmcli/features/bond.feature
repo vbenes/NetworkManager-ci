@@ -30,6 +30,25 @@
     Then Check bond "nm-bond" state is "up"
 
 
+    @rhbz1368761
+    @ver+=1.4.0
+    @slaves @bond
+    @nmcli_bond_manual_ipv4
+    Scenario: nmcli - bond - remove BOOTPROTO dhcp for enslaved ethernet
+    * Add a new connection of type "ethernet" and options "ifname eth1 con-name bond0.0 autoconnect no"
+    * Add a new connection of type "ethernet" and options "ifname eth2 con-name bond0.1 autoconnect no"
+    * Add a new connection of type "bond" and options "ifname nm-bond con-name bond0 autoconnect no mode active-backup"
+    * Execute "nmcli con mod id bond0 ipv4.addresses 10.35.1.2/24 ipv4.gateway 10.35.1.254 ipv4.method manual"
+    * Execute "nmcli connection modify id bond0.0 connection.slave-type bond connection.master nm-bond connection.autoconnect yes"
+    * Execute "nmcli connection modify id bond0.1 connection.slave-type bond connection.master nm-bond connection.autoconnect yes"
+    * Bring "up" connection "bond0"
+    * Bring "up" connection "bond0.0"
+    * Bring "up" connection "bond0.1"
+    Then "BOOTPROTO=dhcp" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0.0"
+     And "BOOTPROTO=dhcp" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0.1"
+     And "BOOTPROTO=dhcp" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0"
+
+
     @nmcli_novice_mode_create_bond_with_mii_monitor_values
     @slaves
     @bond
