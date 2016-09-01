@@ -21,6 +21,7 @@ Feature: nmcli - general
 
 
     @rhbz1362542
+    ver+=1.4.0
     @insufficient_logging_perms
     Scenario: NM - general - not enough logging perms
     Then "Error: failed to set logging: access denied" is visible with command "sudo -u test nmcli general logging level TRACE domains all"
@@ -50,6 +51,7 @@ Feature: nmcli - general
     Then "walderon" is visible with command "cat /etc/hostname"
 
 
+    @ver+=1.4.0
     @general
     @restore_hostname
     @pull_hostname_from_dhcp
