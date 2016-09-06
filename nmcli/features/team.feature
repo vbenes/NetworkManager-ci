@@ -466,6 +466,21 @@
     Then Team "nm-team" is down
      And "connecting" is not visible with command "nmcli device"
 
+     @rhbz1366300
+     @ver+=1.4.0
+     @team_slaves @team @clean
+     @team_config_null
+     Scenario: nmcli - team - config - empty string
+     * Add a new connection of type "team" and options "con-name team0 ifname nm-team autoconnect no team.config "" "
+     * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+     * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
+     * Bring "up" connection "team0"
+     * Bring "up" connection "team0.1"
+     * Bring "up" connection "team0.0"
+     Then "\"kernel_team_mode_name\": \"roundrobin\"" is visible with command "sudo teamdctl nm-team state dump"
+      And Check slave "eth1" in team "nm-team" is "up"
+      And Check slave "eth2" in team "nm-team" is "up"
+
 
     @rhbz1255927
     @team_slaves
