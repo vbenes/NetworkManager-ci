@@ -128,7 +128,26 @@ def setup_racoon(dh_group):
     psk.write("172.31.70.18 ipsecret\n")
     psk.write("172.31.70.19 ipsecret\n")
     psk.write("172.31.70.20 ipsecret\n")
-
+    psk.write("172.31.70.21 ipsecret\n")
+    psk.write("172.31.70.22 ipsecret\n")
+    psk.write("172.31.70.23 ipsecret\n")
+    psk.write("172.31.70.24 ipsecret\n")
+    psk.write("172.31.70.25 ipsecret\n")
+    psk.write("172.31.70.26 ipsecret\n")
+    psk.write("172.31.70.27 ipsecret\n")
+    psk.write("172.31.70.28 ipsecret\n")
+    psk.write("172.31.70.29 ipsecret\n")
+    psk.write("172.31.70.30 ipsecret\n")
+    psk.write("172.31.70.31 ipsecret\n")
+    psk.write("172.31.70.32 ipsecret\n")
+    psk.write("172.31.70.33 ipsecret\n")
+    psk.write("172.31.70.34 ipsecret\n")
+    psk.write("172.31.70.35 ipsecret\n")
+    psk.write("172.31.70.36 ipsecret\n")
+    psk.write("172.31.70.37 ipsecret\n")
+    psk.write("172.31.70.38 ipsecret\n")
+    psk.write("172.31.70.39 ipsecret\n")
+    psk.write("172.31.70.40 ipsecret\n")
     psk.close()
 
     call("sudo userdel -r budulinek", shell=True)
@@ -162,7 +181,7 @@ def setup_racoon(dh_group):
     call("sudo ping -c1 172.31.70.1", shell=True)
 
     call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
-    sleep(2)
+    sleep(5)
 
 def teardown_racoon():
     call("sudo echo 0 > /proc/sys/net/ipv6/conf/default/disable_ipv6", shell=True)
@@ -173,6 +192,7 @@ def teardown_racoon():
     call("sudo ip link del racoon1", shell=True)
     call("sudo nmcli con del rac1", shell=True)
     call("sudo modprobe -r ip_vti", shell=True)
+    sleep(2)
 
 def reset_hwaddr(ifname):
     hwaddr = check_output("ethtool -P %s" % ifname, shell=True).split()[2]
