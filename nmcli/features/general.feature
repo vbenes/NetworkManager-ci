@@ -898,3 +898,17 @@ Feature: nmcli - general
      * Execute "nmcli c modify ethie -ipv4.address 1.2.3.4/24"
      * Execute "nmcli device reapply eth1"
      Then "up" is not visible with command "cat /tmp/dispatcher.txt"
+
+
+     @rhbz1371920
+     @ver+=1.4.0
+     @eth @teardown_testveth @kill_dbus-monitor
+     @device_dbus_signal
+     Scenario: NM - general - device dbus signal
+     * Prepare simulated test "testX" device
+     * Add connection type "ethernet" named "ethie" for device "testX"
+     * Run child "dbus-monitor --system --monitor 'sender=org.freedesktop.NetworkManager' > /tmp/dbus.txt"
+     * Bring "up" connection "ethie"
+     Then "NetworkManager.Device.Wired; member=PropertiesChanged" is visible with command "grep PropertiesChanged /tmp/dbus.txt"
+      And "NetworkManager.Device.Veth; member=PropertiesChanged" is visible with command "grep PropertiesChanged /tmp/dbus.txt"
+      And "DBus.Properties; member=PropertiesChanged" is visible with command "grep PropertiesChanged /tmp/dbus.txt"

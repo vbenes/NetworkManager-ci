@@ -1087,6 +1087,11 @@ def after_scenario(context, scenario):
             call('sudo nmcli connection delete eth0', shell=True)
             call("nmcli connection add type ethernet con-name testeth0 ifname eth0", shell=True)
 
+        if 'kill_dbus-monitor' in scenario.tags:
+            print ("---------------------------")
+            print ("killing dbus-monitor")
+            call('pkill -9 dbus-monitor', shell=True)
+
         if 'policy_based_routing' in scenario.tags:
             print ("---------------------------")
             print ("remove dispatcher scripts")
