@@ -304,6 +304,7 @@ team_enslave_to_bridge, ., nmcli/./runtest.sh team_enslave_to_bridge, bridge-uti
 describe, ., nmcli/./runtest.sh describe ,
 team_in_bridge_mtu, ., nmcli/./runtest.sh team_in_bridge_mtu ,
 team_config_null, ., nmcli/./runtest.sh team_config_null ,
+ifcfg_with_missing_devicetype, ., nmcli/./runtest.sh ifcfg_with_missing_devicetype ,
 #@team_end
 
 #@vlan_start
