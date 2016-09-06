@@ -636,3 +636,32 @@
      Then "mtu 9000" is visible with command "ip a s eth1"
      Then "mtu 9000" is visible with command "ip a s nm-team"
      Then "mtu 9000" is visible with command "ip a s bridge0"
+
+
+     @rhbz1367180
+     @ver+=1.4.0
+     @team @team_slaves
+     @ifcfg_with_missing_devicetype
+     Scenario: ifcfg - team - missing device type
+     * Append "DEVICE=eth1" to ifcfg file "team0.0"
+     * Append "NAME=team0.0" to ifcfg file "team0.0"
+     * Append "ONBOOT=no" to ifcfg file "team0.0"
+     * Append "TEAM_MASTER=nm-team" to ifcfg file "team0.0"
+     * Append "DEVICE=eth2" to ifcfg file "team0.1"
+     * Append "NAME=team0.1" to ifcfg file "team0.1"
+     * Append "ONBOOT=no" to ifcfg file "team0.1"
+     * Append "TEAM_MASTER=nm-team" to ifcfg file "team0.1"
+     * Append "DEVICE=nm-team" to ifcfg file "team0"
+     * Append "NAME=team0" to ifcfg file "team0"
+     * Append "ONBOOT=no" to ifcfg file "team0"
+     * Append "BOOTPROTO=none" to ifcfg file "team0"
+     * Append "IPADDR=192.168.23.11" to ifcfg file "team0"
+     * Append "NETMASK=255.255.255.0" to ifcfg file "team0"
+     * Append "TEAM_CONFIG='{\"runner\": {\"name\": \"activebackup\"}, \"link_wach\": {\"name\": \"ethtool\"}}'" to ifcfg file "team0"
+     * Execute "nmcli con reload"
+     * Bring "up" connection "team0"
+     * Bring "up" connection "team0.1"
+     * Bring "up" connection "team0.0"
+     Then "\"kernel_team_mode_name\": \"activebackup\"" is visible with command "sudo teamdctl nm-team state dump"
+      And Check slave "eth1" in team "nm-team" is "up"
+      And Check slave "eth2" in team "nm-team" is "up"
