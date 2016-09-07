@@ -452,6 +452,13 @@ bond_enslave_to_bridge, ., nmcli/./runtest.sh bond_enslave_to_bridge ,
 bond_in_bridge_mtu, ., nmcli/./runtest.sh bond_in_bridge_mtu ,
 #@bond_end
 
+#@tuntap_start
+add_default_tap_device, ., nmcli/./runtest.sh add_default_tap_device ,
+add_default_tun_device, ., nmcli/./runtest.sh add_default_tun_device ,
+remove_default_tuntap, ., nmcli/./runtest.sh remove_default_tuntap ,
+preserve_master_and_ip_settings, ., nmcli/./runtest.sh preserve_master_and_ip_settings ,
+#@tuntap_end
+
 #@wifi_start
 testcase_306548, ., nmcli/./runtest.sh testcase_306548, iw;pexpect
 testcase_306549, ., nmcli/./runtest.sh testcase_306549, iw;pexpect
