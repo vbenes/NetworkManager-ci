@@ -1240,7 +1240,7 @@ def prepare_simdev(context, device, ipv4=None, ipv6=None, option=None):
                                             --pid-file=/tmp/{device}_ns.pid \
                                             --dhcp-leasefile=/tmp/{device}_ns.lease \
                                             --dhcp-range={ipv4}.10,{ipv4}.15,2m \
-                                            --dhcp-range={ipv6}::100,{ipv6}::1ff,slaac,64,2m \
+                                            --dhcp-range={ipv6}::100,{ipv6}::fff,slaac,64,2m \
                                             --enable-ra --interface={device}_bridge \
                                             --bind-interfaces".format(device=device, ipv4=ipv4, ipv6=ipv6))
     else:

@@ -889,11 +889,11 @@ Feature: nmcli: ipv6
 
 
     @rhbz1268866
-    @eth
-    @internal_DHCP
+    @eth @internal_DHCP @teardown_testveth
     @ipv6_NM_stable_with_internal_DHCPv6
     Scenario: NM - ipv6 - stable with internal DHCPv6
-    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie autoconnect no"
+    * Prepare simulated test "testX" device
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie autoconnect no"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
     * Submit "set ipv6.method dhcp" in editor
