@@ -873,6 +873,7 @@ def after_scenario(context, scenario):
             print ("removing dummy and bridge/bond/team devices")
             call("ip link delete dummy0", shell=True)
             call("ip link del br0", shell=True)
+            call("ip link del vlan", shell=True)
             call("ip link del bond0", shell=True)
             call("ip link del team0", shell=True)
 

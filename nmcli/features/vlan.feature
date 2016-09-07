@@ -322,3 +322,18 @@ Feature: nmcli - vlan
      * Bring "up" connection "vlan"
      Then "REORDER_HDR=no\s+VLAN_FLAGS=NO_REORDER_HDR" is visible with command "grep HDR /etc/sysconfig/network-scripts/ifcfg-vlan"
       And "REORDER_HDR" is not visible with command "ip -d l show vlan"
+
+
+      @rhbz1363995
+      @ver+=1.4
+      @dummy
+      @vlan_preserve_assumed_connection_ips
+      Scenario: nmcli - bridge - preserve assumed connection's addresses
+      * Execute "ip link add link eth1 name vlan type vlan id 80"
+      * Execute "ip link set dev vlan up"
+      * Execute "ip add add 30.0.0.1/24 dev vlan"
+      When "vlan:connected:vlan" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+       And "inet 30.0.0.1\/24" is visible with command "ip a s vlan"
+      * Execute "ip link set dev vlan down"
+      Then "vlan:unmanaged" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+       And "inet 30.0.0.1\/24" is visible with command "ip a s vlan"

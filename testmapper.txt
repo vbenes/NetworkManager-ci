@@ -329,6 +329,7 @@ vlan_not_duplicated, ., nmcli/./runtest.sh vlan_not_duplicated ,
 vlan_update_mac_from_bond, ., nmcli/./runtest.sh  vlan_update_mac_from_bond ,
 bring_up_very_long_device_name, ., nmcli/./runtest.sh bring_up_very_long_device_name ,
 reorder_hdr, ., nmcli/./runtest.sh reorder_hdr ,
+vlan_preserve_assumed_connection_ips, ., nmcli/./runtest.sh vlan_preserve_assumed_connection_ips ,
 #@vlan_end
 
 #@bridge_start
@@ -358,6 +359,7 @@ bridge_assumed_connection_ip_methods, ., nmcli/./runtest.sh bridge_assumed_conne
 outer_bridge_restart_persistence, ., nmcli/./runtest.sh outer_bridge_restart_persistence, bridge-utils
 bridge_set_mac, ., nmcli/./runtest.sh bridge_set_mac, bridge-utils
 bridge_external_unmanaged, ., nmcli/./runtest.sh bridge_external_unmanaged, bridge-utils
+bridge_preserve_assumed_connection_ips, ., nmcli/./runtest.sh bridge_preserve_assumed_connection_ips ,
 #@bridge_end
 
 #@ethernet_start
