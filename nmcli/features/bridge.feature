@@ -409,3 +409,18 @@ Feature: nmcli - bridge
     * Prepare veth pairs "test1" bridged over "vethbr"
     * Restart NM
     Then "vethbr.*test1p" is visible with command "brctl show vethbr" in "5" seconds
+
+
+    @rhbz1363995
+    @ver+=1.4
+    @dummy
+    @bridge_preserve_assumed_connection_ips
+    Scenario: nmcli - bridge - preserve assumed connection's addresses
+    * Execute "ip link add br0 type bridge"
+    * Execute "ip link set dev br0 up"
+    * Execute "ip add add 30.0.0.1/24 dev br0"
+    When "br0:connected:br0" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+     And "inet 30.0.0.1\/24" is visible with command "ip a s br0"
+    * Execute "ip link set dev br0 down"
+    Then "br0:unmanaged" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+     And "inet 30.0.0.1\/24" is visible with command "ip a s br0"
