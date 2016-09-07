@@ -878,6 +878,14 @@ def after_scenario(context, scenario):
             call("ip link del team0", shell=True)
 
 
+        if 'tuntap' in scenario.tags:
+            print ("---------------------------")
+            print ("removing tuntap devices")
+            call("ip link del tap0", shell=True)
+            call("nmcli con delete tap0", shell=True)
+            call("ip link del br0", shell=True)
+
+
         if 'wifi' in scenario.tags:
             print ("---------------------------")
             print ("removing all wifi residues")
