@@ -131,25 +131,17 @@ def open_slave_connection(context, master, device, name):
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on Libreswan connection "{name}"')
 def set_libreswan_connection(context, user, password, group, secret, gateway, name):
     if password == "ask" and secret != "ask":
-        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = ask, pskvalue-flags = 0, xauthpassword-flags = 2, vendor = Cisco"' % (name, user, group, gateway))
-        cli2 = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s"' % (name, secret))
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = ask, pskvalue-flags = 0, xauthpassword-flags = 2, vendor = Cisco" vpn.secrets "pskvalue = %s"' % (name, user, group, gateway, secret))
     if password == "ask" and secret == "ask":
         cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = ask, right = %s, xauthpasswordinputmodes = ask, pskvalue-flags = 2, xauthpassword-flags = 2, vendor = Cisco"' % (name, user, group, gateway))
-        cli2 = pexpect.spawn('nmcli c show %s' % (name))
     if password != "ask" and secret == "ask":
-        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = ask, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 2, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
-        cli2 = pexpect.spawn('nmcli c modify %s vpn.secrets "xauthpassword = %s"' % (name, password))
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = ask, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 2, xauthpassword-flags = 0, vendor = Cisco" vpn.secrets "xauthpassword = %s"' % (name, user, group, gateway))
     if password != "ask" and secret != "ask":
-        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 0, xauthpassword-flags = 0, vendor = Cisco"' % (name, user, group, gateway))
-        cli2 = pexpect.spawn('nmcli c modify %s vpn.secrets "pskvalue = %s, xauthpassword = %s"' % (name, secret, password))
+        cli = pexpect.spawn('nmcli c modify %s vpn.data "leftxauthusername = %s, leftid = %s, pskinputmodes = save, right = %s, xauthpasswordinputmodes = save, pskvalue-flags = 0, xauthpassword-flags = 0, vendor = Cisco" vpn.secrets "pskvalue = %s, xauthpassword = %s"' % (name, user, group, gateway, secret, password))
 
     r = cli.expect(['Error', pexpect.EOF])
     if r == 0:
-        raise Exception('Got an Error while editing %s connection data' % (name))
-    sleep(1)
-    x = cli2.expect(['Error', pexpect.EOF])
-    if x == 0:
-        raise Exception('Got an Error while editing %s connection secrets' % (name))
+        raise Exception('Got an Error while editing %s connection' % (name))
     sleep(1)
 
 @step(u'Use user "{user}" with password "{password}" and group "{group}" with secret "{secret}" for gateway "{gateway}" on VPNC connection "{name}"')
