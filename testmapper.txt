@@ -147,6 +147,7 @@ profile_priorities, ., nmcli/./runtest.sh profile_priorities ,
 nmcli_general_multiword_autocompletion, ., nmcli/./runtest.sh nmcli_general_multiword_autocompletion ,
 display_allowed_values, ., nmcli/./runtest.sh display_allowed_values ,
 device_reapply, ., nmcli/./runtest.sh device_reapply ,
+firewall_zones_restart_persistence, ., nmcli/./runtest.sh firewall_zones_restart_persistence ,
 #@connection_end
 
 #@ipv6_start

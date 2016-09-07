@@ -345,6 +345,26 @@ Feature: nmcli: connection
      Then "eth6" is visible with command "firewall-cmd --zone=public --list-all"
 
 
+     @rhbz1366288
+     @ver+=1.4.0
+     @con @firewall @restart
+     @firewall_zones_restart_persistence
+     Scenario: nmcli - connection - zone to drop and public
+      * Add connection type "ethernet" named "connie" for device "eth1"
+      When "public\s+interfaces: eth0 eth1" is visible with command "firewall-cmd --get-active-zones"
+      * Execute "nmcli c modify connie connection.zone internal"
+      When "internal\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      * Execute "systemctl restart firewalld"
+      When "internal\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      * restart NM
+      When "internal\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      * Execute "nmcli c modify connie connection.zone home"
+      When "home\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      * Execute "systemctl restart firewalld"
+      When "home\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      * Execute "nmcli c modify connie connection.zone work"
+
+
     @route_priorities
     @con
     @eth
