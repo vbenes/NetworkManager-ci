@@ -1076,7 +1076,6 @@
       * Add a new connection of type "bridge" and options "con-name bridge0 autoconnect no ifname bridge0 -- 802-3-ethernet.mtu 9000 ipv4.method manual ipv4.addresses 192.168.177.100/24 ipv4.gateway 192.168.177.1"
       * Add a new connection of type "bond" and options "con-name bond0 autoconnect no ifname nm-bond master bridge0 -- 802-3-ethernet.mtu 9000"
       * Add a new connection of type "ethernet" and options "con-name bond0.0 autoconnect no ifname eth1 master nm-bond -- 802-3-ethernet.mtu 9000"
-      * Add a new connection of type "ethernet" and options "con-name bond0.0 autoconnect no ifname eth1 master nm-bond -- 802-3-ethernet.mtu 9000"
       * Bring "up" connection "bridge0"
       * Bring "up" connection "bond0"
       * Bring "up" connection "bond0.0"
