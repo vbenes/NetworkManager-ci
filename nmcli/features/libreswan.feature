@@ -108,6 +108,8 @@
     Then "172.31.80.0/24 .*dev racoon1" is not visible with command "ip route" in "10" seconds
 
 
+    @rhbz1348901
+    @ver+=1.4.0
     @libreswan
     @libreswan_dns
     Scenario: nmcli - libreswan - dns
