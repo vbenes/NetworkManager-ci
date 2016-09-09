@@ -1068,6 +1068,17 @@
      And "eth1:ethernet:connected:bond-slave-eth1" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
 
 
+     @rhbz1352131
+     @ver+=1.2.0
+     @bond
+     @bond_8023ad_no_error
+     Scenario: nmcli - bond - no error in 8023ad setup
+      * Run child "journalctl -f > /tmp/journal.txt"
+      * Execute "nmcli connection add type bond ifname bond0 con-name bond0 mode 4 miimon 100"
+      * Execute "pkill journalctl"
+      Then "mode dependency failed, not supported in mode 802.3ad" is not visible with command "grep arp_validate /tmp/journal.txt"
+
+
      @rhbz1364275
      @ver+=1.4
      @bond @bridge @slaves
