@@ -26,7 +26,6 @@ function setup_veth_env ()
     yum -y install NetworkManager-config-server
     cp /usr/lib/NetworkManager/conf.d/00-server.conf /etc/NetworkManager/conf.d/00-server.conf
     service NetworkManager restart
-    sleep 5
 
     # making sure the active ethernet device is eth0 and profile name testeth0
     if [ ! "eth0" == $(nmcli -f TYPE,DEVICE -t c sh -a  | grep ethernet | awk '{split($0,a,":"); print a[2]}') ]; then
@@ -128,7 +127,6 @@ function setup_veth_env ()
     nmcli c add type ethernet con-name testeth10 ifname eth10 autoconnect no
 
     service NetworkManager restart
-    sleep 5
 
     nmcli con up testeth0
 
@@ -204,8 +202,6 @@ function teardown_veth_env ()
     done
 
     service NetworkManager restart
-
-    sleep 5
 
     # log state of net after the teardown
     ip a
