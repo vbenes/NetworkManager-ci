@@ -424,3 +424,28 @@ Feature: nmcli - bridge
     * Execute "ip link set dev br0 down"
     Then "br0:unmanaged" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
      And "inet 30.0.0.1\/24" is visible with command "ip a s br0"
+
+
+     @rhbz1355656
+     @ver+=1.4
+     @bridge @restart @eth
+     @bridge_slave_to_ethernet_conversion
+     Scenario: nmcli - bridge - slave to ethernet conversion
+     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0 ipv4.method manual ipv4.address '192.168.99.99/24' ipv6.method ignore"
+     * Add connection type "ethernet" named "ethie" for device "eth1"
+     * Modify connection "ethie" changing options "connection.master bridge0 connection.slave-type bridge"
+     When "connection.master:\s+bridge0" is visible with command "nmcli c s ethie | grep 'master:'"
+      And "connection.slave-type:\s+bridge" is visible with command "nmcli c s ethie | grep 'slave-type:'"
+     * Execute "nmcli con modify ethie connection.master "" connection.slave-type """
+   #  * Modify connection "ethie" changing options "connection.master '' connection.slave-type ''"
+     When "connection.master:\s+bridge0" is not visible with command "nmcli c s ethie | grep 'master:'"
+      And "connection.slave-type:\s+bridge" is not visible with command "nmcli c s ethie | grep 'slave-type:'"
+      And "BRIDGE" is not visible with command "grep BRIDGE /etc/sysconfig/network-scripts/ifcfg-ethie"
+     * Delete connection "bridge0"
+     * Bring "up" connection "ethie"
+     * Disconnect device "eth1"
+     * Execute "nmcli con reload"
+     Then "connection.master:\s+bridge0" is not visible with command "nmcli c s ethie | grep 'master:'"
+      And "connection.slave-type:\s+bridge" is not visible with command "nmcli c s ethie | grep 'slave-type:'"
+      And "BRIDGE" is not visible with command "grep BRIDGE /etc/sysconfig/network-scripts/ifcfg-ethie"
+      And Bring "up" connection "ethie"

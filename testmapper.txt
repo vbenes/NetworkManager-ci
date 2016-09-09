@@ -361,6 +361,7 @@ outer_bridge_restart_persistence, ., nmcli/./runtest.sh outer_bridge_restart_per
 bridge_set_mac, ., nmcli/./runtest.sh bridge_set_mac, bridge-utils
 bridge_external_unmanaged, ., nmcli/./runtest.sh bridge_external_unmanaged, bridge-utils
 bridge_preserve_assumed_connection_ips, ., nmcli/./runtest.sh bridge_preserve_assumed_connection_ips ,
+bridge_slave_to_ethernet_conversion, ., nmcli/./runtest.sh bridge_slave_to_ethernet_conversion ,
 #@bridge_end
 
 #@ethernet_start
