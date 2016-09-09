@@ -258,6 +258,7 @@ Feature: nmcli - vlan
 
 
     @rhbz1264322
+    @restart
     @vlan_update_mac_from_bond
     Scenario: nmcli - vlan - update mac address from bond
     # Setup given in the bug description
