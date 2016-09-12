@@ -181,7 +181,7 @@
 
 
     @rhbz1060460
-    @vpn
+    @libreswan
     @vpn_keep_username_from_data
     Scenario: nmcli - vpn - keep username from vpn.data
     * Add a new connection of type "vpn" and options "ifname \* con-name vpn autoconnect no vpn-type libreswan"
@@ -198,7 +198,7 @@
 
     @rhbz1034105
     @ver+=1.3.0
-    @vpn
+    @libreswan
     @libreswan_import
     Scenario: nmcli - libreswan - import
     * Execute "nmcli connection import file tmp/vpn.swan type libreswan"
@@ -210,7 +210,7 @@
 
     @rhbz1034105
     @ver+=1.3.0
-    @vpn
+    @libreswan
     @libreswan_export
     Scenario: nmcli - libreswan - export
     * Execute "nmcli connection import file tmp/vpn.swan type libreswan"
@@ -220,7 +220,7 @@
 
     @rhbz1337300
     @ver+=1.3.0
-    @vpn
+    @libreswan
     @libreswan_autocompletion
     Scenario: nmcli - libreswan - autocompletion
      * "file.*type" is visible with tab after "nmcli con import "

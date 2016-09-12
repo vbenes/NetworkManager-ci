@@ -1,7 +1,7 @@
  Feature: nmcli: vpn
 
     @vpn_add_profile
-    @vpn
+    @libreswan
     Scenario: nmcli - vpn - add default connection
     * Add a new connection of type "vpn" and options "ifname \* con-name vpn vpn-type libreswan"
     * Open editor for connection "vpn"
@@ -38,7 +38,7 @@
     When Check "<<< vpn >>>|=== \[service-type\] ===\s+\[NM property description\]\s+D-Bus service name of the VPN plugin that this setting uses to connect to its network.  i.e. org.freedesktop.NetworkManager.vpnc for the vpnc plugin.\s+=== \[user-name\] ===\s+\[NM property description\]\s+If the VPN connection requires a user name for authentication, that name should be provided here.  If the connection is available to more than one user, and the VPN requires each user to supply a different name, then leave this property empty.  If this property is empty, NetworkManager will automatically supply the username of the user which requested the VPN connection.\s+=== \[persistent\] ===\s+\[NM property description\]\s+If the VPN service supports persistence, and this property is TRUE, the VPN will attempt to stay connected across link changes and outages, until explicitly disconnected.\s+=== \[data\] ===\s+\[NM property description\]\s+Dictionary of key/value pairs of VPN plugin specific data.  Both keys and values must be strings.\s+=== \[secrets\] ===\s+\[NM property description\]\s+Dictionary of key\/value pairs of VPN plugin specific secrets like passwords or private keys.\s+Both keys and values must be strings." are present in describe output for object "vpn"
 
     @rhbz1060460
-    @vpn
+    @libreswan
     @vpn_keep_username_from_data
     Scenario: nmcli - vpn - keep username from vpn.data
     * Add a new connection of type "vpn" and options "ifname \* con-name vpn autoconnect no vpn-type libreswan"
