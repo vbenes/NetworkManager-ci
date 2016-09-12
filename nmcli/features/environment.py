@@ -363,12 +363,6 @@ def before_scenario(context, scenario):
             print ("connecting eth1")
             call("nmcli connection up testeth1", shell=True)
 
-        # if 'vpn' in scenario.tags:
-        #     print ("---------------------------")
-        #     print ("installing networkManager-libreswan-gnome")
-        #     call("rpm -q NetworkManager-libreswan-gnome || sudo yum -y install NetworkManager-libreswan-gnome", shell=True)
-        #     call("rpm -q nm-connection-editor || sudo yum -y install nm-connection-editor", shell=True)
-
         if 'vpnc' in scenario.tags:
             print ("---------------------------")
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
