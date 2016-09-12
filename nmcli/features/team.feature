@@ -67,6 +67,7 @@
 
 
     @1310435
+    @ver+=1.4.0
     @team_slaves @team
     @default_config_watch
     Scenario: nmcli - team - default config watcher
