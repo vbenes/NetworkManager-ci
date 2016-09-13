@@ -1069,7 +1069,7 @@
 
 
      @rhbz1352131
-     @ver+=1.2.0
+     @ver+=1.4.0
      @bond
      @bond_8023ad_no_error
      Scenario: nmcli - bond - no error in 8023ad setup
