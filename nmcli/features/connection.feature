@@ -239,6 +239,7 @@ Feature: nmcli: connection
 
 
      @rhbz1367737
+     @ver+=1.4.0
      @con
      @manual_connection_with_both_ips
      Scenario: nmcli - connection - add ipv4 ipv6 manual connection
