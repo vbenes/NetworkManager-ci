@@ -1181,11 +1181,7 @@ def ping6_domain(context, domain):
 @step(u'Prepare connection')
 def prepare_connection(context):
     context.execute_steps(u"""
-        * Submit "set ipv4.method manual" in editor
-        * Submit "set ipv4.addresses 1.2.3.4/24" in editor
-        * Submit "set ipv4.gateway 1.1.1.1" in editor
-        * Submit "set ipv4.never-default yes" in editor
-        * Submit "set ipv6.method ignore" in editor
+        * Execute "nmcli con modify dcb ipv4.method manual ipv4.addresses 1.2.3.4/24 ipv6.method ignore"
     """)
 
 
@@ -1416,21 +1412,7 @@ def set_logging(context, domain, level):
 @step(u'Set default DCB options')
 def set_default_dcb(context):
     context.execute_steps(u"""
-        * Submit "set dcb.app-fcoe-flags 7" in editor
-        * Submit "set dcb.app-fcoe-priority 7" in editor
-        * Submit "set dcb.app-fcoe-mode vn2vn" in editor
-        * Submit "set dcb.app-iscsi-flags 7" in editor
-        * Submit "set dcb.app-iscsi-priority 6" in editor
-        * Submit "set dcb.app-fip-flags 7" in editor
-        * Submit "set dcb.app-fip-priority 2" in editor
-
-        * Submit "set dcb.priority-flow-control-flags 7" in editor
-        * Submit "set dcb.priority-flow-control 1,0,0,1,1,0,1,0" in editor
-        * Submit "set dcb.priority-group-flags 7" in editor
-        * Submit "set dcb.priority-group-id 0,0,0,0,1,1,1,1" in editor
-        * Submit "set dcb.priority-group-bandwidth 13,13,13,13,12,12,12,12" in editor
-        * Submit "set dcb.priority-bandwidth 100,100,100,100,100,100,100,100" in editor
-        * Submit "set dcb.priority-traffic-class 7,6,5,4,3,2,1,0" in editor
+    * Execute "nmcli con modify dcb dcb.app-fcoe-flags 7 dcb.app-fcoe-priority 7 dcb.app-fcoe-mode vn2vn dcb.app-iscsi-flags 7 dcb.app-iscsi-priority 6 dcb.app-fip-flags 7 dcb.app-fip-priority 2  dcb.priority-flow-control-flags 7 dcb.priority-flow-control 1,0,0,1,1,0,1,0 dcb.priority-group-flags 7 dcb.priority-group-id 0,0,0,0,1,1,1,1 dcb.priority-group-bandwidth 13,13,13,13,12,12,12,12 dcb.priority-bandwidth 100,100,100,100,100,100,100,100 dcb.priority-traffic-class 7,6,5,4,3,2,1,0"
     """)
 
 
