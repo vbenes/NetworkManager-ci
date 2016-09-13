@@ -572,6 +572,8 @@ inf_create_port_connection, ., nmcli/./runtest.sh inf_create_port_connection ,
 inf_create_port_novice_mode, ., nmcli/./runtest.sh inf_create_port_novice_mode ,
 inf_disable_port, ., nmcli/./runtest.sh inf_disable_port ,
 inf_enable_after_reboot, ., nmcli/./runtest.sh inf_enable_after_reboot ,
+inf_master_in_bond, ., nmclic/./runtest.sh inf_master_in_bond ,
+inf_master_in_bond_restart_persistence, ., nmclic/./runtest.sh inf_master_in_bond_restart_persistence ,
 #@infiniband_end
 
 #@dcb_start
