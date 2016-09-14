@@ -467,6 +467,22 @@
     Then Team "nm-team" is down
      And "connecting" is not visible with command "nmcli device"
 
+
+     @rhbz1312726
+     @ver+=1.4.0
+     @team_slaves @team @clean
+     @config_invalid3
+     Scenario: nmcli - team - config - set invalid mode
+      * Add connection type "team" named "team0" for device "nm-team"
+      * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
+      * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
+      * Execute "nmcli connection modify team0 team.config '{ "device": "nm-team", "runner": {"name": "activebalance"}}' "
+      Then "Error: Connection activation failed: Active connection could not be attached to the device" is visible with command "nmcli connection up id team0"
+       And Team "nm-team" is down
+       And "Error: Connection activation failed: Active connection removed before it was initialized" is visible with command "nmcli connection up id team0"
+       And Team "nm-team" is down
+
+
      @rhbz1366300
      @ver+=1.4.0
      @team_slaves @team @clean
