@@ -1,4 +1,4 @@
- Feature: nmcli: inf
+Feature: nmcli: inf
 
     @inf_create_connection
     @inf
@@ -131,3 +131,22 @@
      And "inf_ib0:infiniband:connected:inf" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "5" seconds
      And Check bond "nm-bond" link state is "up"
      And Check slave "inf_ib0" in bond "nm-bond" in proc
+
+
+    @rhbz1281301
+    @ver+=1.4.0
+    @inf
+    @inf_down_before_mode_change
+    Scenario: nmcli - inf - take down device before changing
+    * Add a new connection of type "infiniband" and options "con-name inf ifname inf_ib0 infiniband.transport-mode datagram"
+    * Add a new connection of type "infiniband" and options "con-name inf2 ifname inf_ib0 infiniband.transport-mode connected"
+    * Bring "up" connection "inf"
+    * Execute "nmcli general logging level debug domains all"
+    * Run child "journalctl -f > /tmp/journal.txt"
+    * Bring "up" connection "inf2"
+    * Execute "pkill journalctl; sleep 2"
+    When "taking down device.*inf_ib0/mode' to 'connected'" is visible with command "egrep 'taking|datagram' /tmp/journal.txt"
+    * Run child "journalctl -f > /tmp/journal.txt"
+    * Bring "up" connection "inf"
+    * Execute "sleep 2;pkill journalctl"
+    Then "taking down device.*inf_ib0/mode' to 'datagram'" is visible with command "egrep 'taking|datagram' /tmp/journal.txt"
