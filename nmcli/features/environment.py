@@ -167,7 +167,6 @@ def setup_racoon(dh_group):
     call("sudo ip netns exec racoon ip addr add dev racoon0 172.31.70.1/24", shell=True)
     call("sudo ip netns exec racoon ip link set racoon0 up", shell=True)
     call("sudo ip link set dev racoon1 up", shell=True)
-    sleep(3)
 
     call("sudo ip netns exec racoon dnsmasq --dhcp-range=172.31.70.2,172.31.70.7,2m --interface=racoon0 --bind-interfaces", shell=True)
 
@@ -175,13 +174,27 @@ def setup_racoon(dh_group):
     call("sudo nmcli con modify rac1 ipv6.method ignore ipv4.route-metric 90", shell=True)
     call("sudo nmcli connection up id rac1", shell=True)
 
+    # Sometime there is larger time needed to set everything up, sometimes not. Let's make the delay
+    # to fit all situations.
+    # Clean properly if racoon1 wasn't set correctly. Fail test immediately.
+    wait = 10
+    while wait > 0:
+        if call("ip a s racoon1 |grep 172.31.70", shell=True) != 0:
+            sleep(1)
+            wait -= 1
+            if wait == 0:
+                print ("Unable to set racoon1 address, exiting!")
+                teardown_racoon()
+                sys.exit(1)
+        else:
+            break
+
     # For some reason the peer needs to initiate the arp otherwise it won't respond
     # and we'll end up in a stale entry in a neighbor cache
     call("sudo ip netns exec racoon ping -c1 %s" % (check_output("ip -o -4 addr show primary dev racoon1", shell=True).split()[3].split('/')[0]), shell=True)
     call("sudo ping -c1 172.31.70.1", shell=True)
 
     call("sudo systemd-run --unit nm-racoon nsenter --net=/var/run/netns/racoon racoon -F", shell=True)
-    sleep(5)
 
 def teardown_racoon():
     call("sudo echo 0 > /proc/sys/net/ipv6/conf/default/disable_ipv6", shell=True)
@@ -192,7 +205,6 @@ def teardown_racoon():
     call("sudo ip link del racoon1", shell=True)
     call("sudo nmcli con del rac1", shell=True)
     call("sudo modprobe -r ip_vti", shell=True)
-    sleep(2)
 
 def reset_hwaddr(ifname):
     hwaddr = check_output("ethtool -P %s" % ifname, shell=True).split()[2]
@@ -548,7 +560,11 @@ def after_scenario(context, scenario):
     try:
         nm_pid_after = nm_pid()
         print("NetworkManager process id after: %s (was %s)", nm_pid_after, context.nm_pid)
+    except Exception as e:
+        print("nm_pid wasn't set. Probably crash in before_scenario: %s" % e.message)
+        pass
 
+    try:
         # Attach journalctl logs
         os.system("sudo journalctl -u NetworkManager --no-pager -o cat %s > /tmp/journal-nm.log" % context.log_cursor)
         data = open("/tmp/journal-nm.log", 'r').read()
