@@ -666,3 +666,19 @@
      Then "\"kernel_team_mode_name\": \"activebackup\"" is visible with command "sudo teamdctl nm-team state dump"
       And Check slave "eth1" in team "nm-team" is "up"
       And Check slave "eth2" in team "nm-team" is "up"
+
+
+    @rhbz1286105
+    @ver+=1.4.0
+    @team @team_slaves
+    @ipv6_for_teams_vlan
+    Scenario: nmcli - team - preserve manual ipv6 setup for vlan over team
+     * Add connection type "team" named "team0" for device "nm-team"
+     * Execute "ip link set nm-team mtu 1500"
+     * Execute "nmcli con add type vlan con-name team0.1 dev nm-team id 1 mtu 1500 ip4 192.168.168.16/24 ip6 2168::16/64"
+     * Bring "up" connection "team0"
+     * Bring "up" connection "team0.1"
+     * "2168::16" is visible with command "ip a s nm-team.1"
+     * Add a new connection of type "team-slave" and options "con-name team0.0 ifname eth10 master nm-team"
+     * Bring "up" connection "team0.0"
+    Then "2168::16" is visible with command "ip a s nm-team.1" for full "10" seconds
