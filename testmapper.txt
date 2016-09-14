@@ -307,6 +307,7 @@ describe, ., nmcli/./runtest.sh describe ,
 team_in_bridge_mtu, ., nmcli/./runtest.sh team_in_bridge_mtu ,
 team_config_null, ., nmcli/./runtest.sh team_config_null ,
 ifcfg_with_missing_devicetype, ., nmcli/./runtest.sh ifcfg_with_missing_devicetype ,
+ipv6_for_teams_vlan, ., nmcli/./runtest.sh ipv6_for_teams_vlan ,
 #@team_end
 
 #@vlan_start
