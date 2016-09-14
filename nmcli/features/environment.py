@@ -848,6 +848,7 @@ def after_scenario(context, scenario):
             call("nmcli connection down testeth1", shell=True)
             call('ip link del bridge0', shell=True)
             call('ip link del eth0.99', shell=True)
+            call('ip link del eth1.80', shell=True)
             reset_hwaddr('eth1')
             reset_hwaddr('eth2')
             reset_hwaddr('eth3')
