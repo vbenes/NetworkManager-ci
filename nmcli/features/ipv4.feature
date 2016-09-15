@@ -1008,6 +1008,24 @@ Feature: nmcli: ipv4
      And "ethie" is not visible with command "nmcli con show -a"
 
 
+     @rhbz1259063
+     @ver+=1.4.0
+     @eth @teardown_testveth
+     @ipv4_dad
+     Scenario: NM - ipv4 - DAD
+     * Prepare simulated test "testX" device
+     * Add connection type "ethernet" named "ethie" for device "testX"
+     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.1/24"
+     * Bring "up" connection "ethie"
+     When "testX:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.1/24 ipv4.dad-timeout 5"
+     * Bring up connection "ethie" ignoring error
+     When "testX:connected:ethie" is not visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.2/24 ipv4.dad-timeout 5"
+     * Bring "up" connection "ethie"
+     Then "testX:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
+
+
     @custom_shared_range_preserves_restart
     @eth
     Scenario: nmcli - ipv4 - shared custom range preserves restart

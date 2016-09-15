@@ -54,6 +54,7 @@
 
 
     @rhbz1374526
+    @ver+=1.4.0
     @pptp
     @vpn_list_args
     Scenario: nmcli - vpn - list args
