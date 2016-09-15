@@ -912,3 +912,10 @@ Feature: nmcli - general
      Then "NetworkManager.Device.Wired; member=PropertiesChanged" is visible with command "grep PropertiesChanged /tmp/dbus.txt"
       And "NetworkManager.Device.Veth; member=PropertiesChanged" is visible with command "grep PropertiesChanged /tmp/dbus.txt"
       And "DBus.Properties; member=PropertiesChanged" is visible with command "grep PropertiesChanged /tmp/dbus.txt"
+
+
+      @rhbz1358335
+      @ver+=1.4.0
+      @NM_syslog_in_anaconda
+      Scenario: NM - general - syslog in Anaconda
+      Then "NetworkManager" is visible with command "grep NetworkManager /var/log/anaconda/syslog"
