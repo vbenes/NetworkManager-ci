@@ -92,9 +92,6 @@ libreswan_dns, ., nmcli/./runtest.sh libreswan_dns ,
 libreswan_start_as_secondary, ., nmcli/./runtest.sh libreswan_start_as_secondary ,
 libreswan_connection_renewal, ., nmcli/./runtest.sh libreswan_connection_renewal ,
 libreswan_provides_and_obsoletes, ., nmcli/./runtest.sh libreswan_provides_and_obsoletes ,
-vpn_describe, ., nmcli/./runtest.sh vpn_describe ,
-vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
-vpn_list_args, ., nmcli/./runtest.sh vpn_list_args ,
 libreswan_import, ., nmcli/./runtest.sh libreswan_import ,
 libreswan_export, ., nmcli/./runtest.sh libreswan_export ,
 libreswan_autocompletion, ., nmcli/./runtest.sh libreswan_autocompletion ,
@@ -102,6 +99,12 @@ libreswan_activate_asking_for_password, ., nmcli/./runtest.sh libreswan_activate
 libreswan_activate_asking_for_password_with_delay, ., nmcli/./runtest.sh libreswan_activate_asking_for_password_with_delay ,
 libreswan_activate_asking_for_password_and_secret, ., nmcli/./runtest.sh libreswan_activate_asking_for_password_and_secret ,
 #@libreswan_end
+
+#@vpn_start
+vpn_describe, ., nmcli/./runtest.sh vpn_describe ,
+vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
+vpn_list_args, ., nmcli/./runtest.sh vpn_list_args ,
+#@vpn_end
 
 #@openvpn_start
 openvpn_ipv4, ., nmcli/./runtest.sh openvpn_ipv4 ,
@@ -112,6 +115,12 @@ openvpn_terminate, ., nmcli/./runtest.sh openvpn_terminate ,
 openvpn_delete_active_connection, ., nmcli/./runtest.sh openvpn_delete_active_connection ,
 openvpn_persist, ., nmcli/./runtest.sh openvpn_persist ,
 #@openvpn_end
+
+#@vpnc_start
+vpnc_add_profile, ., nmcli/./runtest.sh vpnc_add_profile ,
+vpnc_terminate, ., nmcli/./runtest.sh vpnc_terminate
+#@vpnc_end
+
 
 #@connection_start
 connection_restricted_to_single_device, ., nmcli/./runtest.sh connection_restricted_to_single_device ,
