@@ -51,3 +51,10 @@
     * Quit editor
     Then "leftxauthusername=desktopqe" is visible with command "cat /etc/NetworkManager/system-connections/vpn"
     Then "user-name=incorrectuser" is visible with command "cat /etc/NetworkManager/system-connections/vpn"
+
+
+    @rhbz1374526
+    @pptp
+    @vpn_list_args
+    Scenario: nmcli - vpn - list args
+    Then "libreswan|vpnc|openvpn|org.freedesktop.NetworkManager.libreswan" is visible with command "nmcli --complete-args connection add type vpn vpn-type ''"

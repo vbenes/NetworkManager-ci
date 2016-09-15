@@ -94,6 +94,7 @@ libreswan_connection_renewal, ., nmcli/./runtest.sh libreswan_connection_renewal
 libreswan_provides_and_obsoletes, ., nmcli/./runtest.sh libreswan_provides_and_obsoletes ,
 vpn_describe, ., nmcli/./runtest.sh vpn_describe ,
 vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
+vpn_list_args, ., nmcli/./runtest.sh vpn_list_args ,
 libreswan_import, ., nmcli/./runtest.sh libreswan_import ,
 libreswan_export, ., nmcli/./runtest.sh libreswan_export ,
 libreswan_autocompletion, ., nmcli/./runtest.sh libreswan_autocompletion ,
