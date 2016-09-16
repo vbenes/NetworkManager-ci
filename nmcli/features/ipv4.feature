@@ -1018,10 +1018,10 @@ Feature: nmcli: ipv4
      * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.1/24"
      * Bring "up" connection "ethie"
      When "testX:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
-     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.1/24 ipv4.dad-timeout 5"
+     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.1/24 ipv4.dad-timeout 5000"
      * Bring up connection "ethie" ignoring error
      When "testX:connected:ethie" is not visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
-     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.2/24 ipv4.dad-timeout 5"
+     * Execute "nmcli connection modify ethie ipv4.may-fail no ipv4.method manual ipv4.addresses 192.168.99.2/24 ipv4.dad-timeout 5000"
      * Bring "up" connection "ethie"
      Then "testX:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
 
