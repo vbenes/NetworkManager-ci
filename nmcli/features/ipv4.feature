@@ -749,7 +749,7 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "169.254" is visible with command "ip a s eth1"
+    Then "169.254" is visible with command "ip a s eth1" in "10" seconds
 
 
     @testcase_304235
