@@ -631,7 +631,8 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2"
+    When "2620" is visible with command "ip a s eth10" in "10" seconds
+     And "tentative dynamic" is not visible with command "ip a s eth10" in "10" seconds
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
     Then "global temporary dynamic" is not visible with command "ip a s eth10" in "5" seconds
 
@@ -639,7 +640,6 @@ Feature: nmcli: ipv6
     @ipv6_ip6-privacy_1
     @ipv6
     Scenario: nmcli - ipv6 - ip6_privacy - 1
-
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
     * Submit "set ipv4.method disabled" in editor
@@ -647,7 +647,8 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2"
+    When "2620" is visible with command "ip a s eth10" in "10" seconds
+     And "tentative dynamic" is not visible with command "ip a s eth10" in "10" seconds
     Then "1" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr"
     Then Global temporary ip is not based on mac of device "eth10"
 
@@ -662,7 +663,8 @@ Feature: nmcli: ipv6
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    * Finish "sleep 2"
+    When "2620" is visible with command "ip a s eth10" in "10" seconds
+     And "tentative dynamic" is not visible with command "ip a s eth10" in "10" seconds
     Then "2" is visible with command "cat /proc/sys/net/ipv6/conf/eth10/use_tempaddr" in "5" seconds
     Then Global temporary ip is not based on mac of device "eth10"
 
