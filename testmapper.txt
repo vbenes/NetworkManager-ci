@@ -69,6 +69,7 @@ nmcli_general_activate_static_connection_carrier_not_ignored, ., nmcli/./runtest
 nmcli_monitor, ., nmcli/./runtest.sh nmcli_monitor ,
 device_dbus_signal, ., nmcli/./runtest.sh device_dbus_signal ,
 NM_syslog_in_anaconda, ., nmcli/./runtest.sh NM_syslog_in_anaconda ,
+snapshot_rollback, ., nmcli/./runtest.sh snapshot_rollback ,
 #@general_end
 
 #@dispatcher_start
