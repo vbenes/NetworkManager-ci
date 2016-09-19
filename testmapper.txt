@@ -602,6 +602,7 @@ dcb_error_shown, ., nmcli/./runtest.sh dcb_error_shown ,
 connect_to_pppoe_via_pap, ., nmcli/./runtest.sh connect_to_pppoe_via_pap ,
 connect_to_pppoe_via_chap, ., nmcli/./runtest.sh connect_to_pppoe_via_chap ,
 disconnect_from_pppoe, ., nmcli/./runtest.sh disconnect_from_pppoe ,
+update_firewall_zone_upon_reconnect, ., nmcli/./runtest.sh update_firewall_zone_upon_reconnect ,
 #@ppp_end
 
 #@nmtui_start
