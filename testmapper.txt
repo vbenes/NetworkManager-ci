@@ -127,6 +127,7 @@ vpnc_terminate, ., nmcli/./runtest.sh vpnc_terminate
 #@connection_start
 connection_restricted_to_single_device, ., nmcli/./runtest.sh connection_restricted_to_single_device ,
 connection_help, ., nmcli/./runtest.sh connection_help ,
+device_autocompletion, ., nmcli/./runtest.sh device_autocompletion ,
 connection_names_autocompletion, ., nmcli/./runtest.sh connection_names_autocompletion ,
 connection_no_error, ., nmcli/./runtest.sh connection_no_error ,
 connection_secondaries_restricted_to_vpn, ., nmcli/./runtest.sh connection_secondaries_restricted_to_vpn ,

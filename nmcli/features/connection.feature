@@ -34,6 +34,13 @@ Feature: nmcli: connection
     Then "connie" is visible with tab after "nmcli connection edit id "
 
 
+    @rhbz1375933
+    @con
+    @device_autocompletion
+    Scenario: nmcli - connection - device autocompletion
+    Then "eth0|eth1|eth10" is visible with tab after "nmcli connection add type ethernet ifname "
+
+
     @rhbz1367736
     @con
     @connection_objects_autocompletion
