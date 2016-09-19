@@ -1360,6 +1360,46 @@ def save_in_editor(context):
 def check_error_while_saving_in_editor_2(context):
     context.prompt.expect("Error")
 
+@step(u'Snapshot "{action}" for "{device}"')
+def snapshot_action(context, action, device):
+    def initialize_manager_for_device(device):
+        import dbus, sys
+        bus = dbus.SystemBus()
+        # Get a proxy for the base NetworkManager object
+        proxy = bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+        manager = dbus.Interface(proxy, "org.freedesktop.NetworkManager")
+        dpath = None
+        # Find the device
+        devices = manager.GetDevices()
+        for d in devices:
+            dev_proxy = bus.get_object("org.freedesktop.NetworkManager", d)
+            prop_iface = dbus.Interface(dev_proxy, "org.freedesktop.DBus.Properties")
+            iface = prop_iface.Get("org.freedesktop.NetworkManager.Device", "Interface")
+            if iface == device:
+                dpath = d
+                return manager, dpath
+        if not dpath or not len(dpath):
+            raise Exception("NetworkManager knows nothing about %s" % device)
+
+    if not hasattr(context, 'checkpoints'):
+        context.checkpoints = {}
+
+    manager, dpath = initialize_manager_for_device(device)
+
+    if action == "create":
+        print ("Create checkpoint for device %s" %device)
+        context.checkpoints[device] = manager.CheckpointCreate([ dpath ],
+                                      0,  # no rollback
+                                      1); # DESTROY_ALL
+    if action == "revert":
+        print ("Rollback checkpoint for device %s" %device)
+        results = manager.CheckpointRollback(context.checkpoints[device])
+        for d in results:
+            print ("  - device %s: result %u" % (d, results[d]))
+
+    if action == "delete":
+        print ("Destroy checkpoint for device %s" %device)
+        manager.CheckpointDestroy(context.checkpoints[device])
 
 @step(u'Send lifetime scapy packet with "{hlim}"')
 @step(u'Send lifetime scapy packet from "{srcaddr}"')

@@ -919,3 +919,26 @@ Feature: nmcli - general
       @NM_syslog_in_anaconda
       Scenario: NM - general - syslog in Anaconda
       Then "NetworkManager" is visible with command "grep NetworkManager /var/log/anaconda/syslog"
+
+
+      @rhbz1217288
+      @eth
+      @snapshot_rollback
+      Scenario: NM - general - snapshot and rollback
+      * Add connection type "ethernet" named "ethie" for device "eth1"
+      * Bring "up" connection "ethie"
+      * Snapshot "create" for "eth1"
+      * Open editor for connection "ethie"
+      * Submit "set ipv4.method manual" in editor
+      * Submit "set ipv4.addresses 1.2.3.4/24" in editor
+      * Submit "set ipv4.gateway 1.2.3.1" in editor
+      * Save in editor
+      * Quit editor
+      * Bring "up" connection "ethie"
+      When "1.2.3.4/24" is visible with command "ip a s eth1" in "5" seconds
+       And "1.2.3.1" is visible with command "ip r"
+      * Snapshot "revert" for "eth1"
+      Then "192.168.100" is visible with command "ip a s eth1" in "5" seconds
+       And "1.2.3.4/24" is not visible with command "ip a s eth1"
+       And "1.2.3.1" is not visible with command "ip r"
+       And "192.168.100.1" is visible with command "ip r"
