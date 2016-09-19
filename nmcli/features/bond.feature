@@ -1105,3 +1105,15 @@
      Then Check "NM property description|nmcli specific description|mode, miimon, downdelay, updelay, arp_interval, arp_ip_target|balance-rr    = 0\s+active-backup = 1\s+balance-xor   = 2\s+broadcast     = 3\s+802.3ad       = 4\s+balance-tlb   = 5\s+balance-alb   = 6" are present in describe output for object "options"
       * Submit "g o" in editor
      Then Check "NM property description|nmcli specific description|mode, miimon, downdelay, updelay, arp_interval, arp_ip_target|balance-rr    = 0\s+active-backup = 1\s+balance-xor   = 2\s+broadcast     = 3\s+802.3ad       = 4\s+balance-tlb   = 5\s+balance-alb   = 6" are present in describe output for object " "
+
+
+     @rhbz1376784
+     @ver+=1.4.0
+     @slaves @bond
+     @reapply_unchanged_slave
+     Scenario: nmcli - bond - reapply unchanged slave
+      * Add connection type "bond" named "bond0" for device "nm-bond"
+      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
+      * Bring "up" connection "bond0"
+      * Bring "up" connection "bond0.0"
+      Then "Connection successfully reapplied to device" is visible with command "nmcli dev reapply eth1"
