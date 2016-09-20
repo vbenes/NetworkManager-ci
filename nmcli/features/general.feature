@@ -141,6 +141,14 @@ Feature: nmcli - general
       Then All ifaces but "gre0, gretap0, dummy0, ip6tnl0, tunl0, sit0" are not in state "DOWN"
        And "After=network-pre.target dbus.service" is visible with command "grep After /usr/lib/systemd/system/NetworkManager.service"
 
+
+    @rhbz1371201
+    @ver+=1.4.0
+    @CAP_SYS_ADMIN_for_ibft
+    Scenario: NM - service - CAP_SYS_ADMIN for ibft plugin
+      Then "CAP_SYS_ADMIN" is visible with command "grep CapabilityBoundingSet /usr/lib/systemd/system/NetworkManager.service"
+
+
     @general
     @testcase_290429
     Scenario: nmcli - general - networking
