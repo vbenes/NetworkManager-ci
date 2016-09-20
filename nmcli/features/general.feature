@@ -922,6 +922,7 @@ Feature: nmcli - general
 
 
       @rhbz1217288
+      @ver+=1.4.0
       @eth
       @snapshot_rollback
       Scenario: NM - general - snapshot and rollback
