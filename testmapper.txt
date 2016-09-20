@@ -634,6 +634,7 @@ nmtui_ethernet_delete_connection_down, ., nmtui/./runtest.sh nmtui_ethernet_dele
 nmtui_ethernet_delete_connection_up, ., nmtui/./runtest.sh nmtui_ethernet_delete_connection_up ,
 nmtui_ethernet_set_mtu, ., nmtui/./runtest.sh nmtui_ethernet_set_mtu ,
 nmtui_ethernet_mac_spoofing, ., nmtui/./runtest.sh nmtui_ethernet_mac_spoofing ,
+nmtui_ethernet_mac_removal, ., nmtui/./runtest.sh nmtui_ethernet_mac_removal ,
 nmtui_ethernet_static_ipv4, ., nmtui/./runtest.sh nmtui_ethernet_static_ipv4 ,
 nmtui_ethernet_static_ipv6, ., nmtui/./runtest.sh nmtui_ethernet_static_ipv6 ,
 nmtui_ethernet_static_combined, ., nmtui/./runtest.sh nmtui_ethernet_static_combined ,
