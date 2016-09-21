@@ -1,9 +1,6 @@
 @testplan
 Feature: nmcli - ethernet
 
- # Background:
- #   * Close Evolution and cleanup data
-
     @cleanethernet
     Scenario: Clean ethernet
     * "eth0" is visible with command "ifconfig"
@@ -311,6 +308,28 @@ Feature: nmcli - ethernet
     Then "ETHTOOL_OPTS" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-ethernet"
     * Note the output of "ethtool eno1 |grep Wake-on |grep -v Supports | awk '{print $2}'" as value "wol_new"
     Then Check noted values "wol_new" and "wol_orig" are the same
+
+
+    @ver+=1.2.0
+    @eth @8021x
+    @8021x_with_credentials
+    Scenario: nmcli - ethernet - connect to 8021x - md5
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie 802-1x.eap md5 802-1x.identity user 802-1x.password password"
+    Then Bring "up" connection "ethie"
+
+
+    @rhbz1113941
+    @ver+=1.2.0
+    @eth @8021x
+    @8021x_without_password
+    Scenario: nmcli - ethernet - connect to 8021x - md5 - ask for password
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie 802-1x.eap md5 802-1x.identity user"
+    * Spawn "nmcli -a con up ethie" command
+    * Expect "identity.*user"
+    * Enter in editor
+    * Send "password" in editor
+    * Enter in editor
+    Then "testX:connected:ethie" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "20" seconds
 
 
     @openvswitch
