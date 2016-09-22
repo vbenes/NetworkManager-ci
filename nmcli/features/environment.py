@@ -444,6 +444,12 @@ def before_scenario(context, scenario):
             setup_racoon (dh_group=5)
             #call("ip route add default via 172.31.70.1", shell=True)
 
+        if 'lldp' in scenario.tags:
+            print ("---------------------------")
+            print ("install tcpreplay")
+            call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+            call("[ -x /usr/bin/tcpreplay ] || yum -y install tcpreplay", shell=True)
+
         if 'openvpn' in scenario.tags:
             print ("---------------------------")
             print ("setting up OpenVPN")

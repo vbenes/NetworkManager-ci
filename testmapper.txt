@@ -163,6 +163,7 @@ nmcli_general_multiword_autocompletion, ., nmcli/./runtest.sh nmcli_general_mult
 display_allowed_values, ., nmcli/./runtest.sh display_allowed_values ,
 device_reapply, ., nmcli/./runtest.sh device_reapply ,
 firewall_zones_restart_persistence, ., nmcli/./runtest.sh firewall_zones_restart_persistence ,
+lldp, ., nmcli/./runtest.sh lldp ,
 #@connection_end
 
 #@ipv6_start

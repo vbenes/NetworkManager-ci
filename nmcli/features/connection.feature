@@ -532,6 +532,24 @@ Feature: nmcli: connection
      * Quit editor
 
 
+    @rhbz1142898
+    @ver+=1.4.0
+    @con @teardown_testveth
+    @lldp
+    Scenario: nmcli - connection - lldp
+     * Prepare simulated test "testX" device
+     * Add a new connection of type "ethernet" and options "ifname testX con-name connie ipv4.method manual ipv4.addresses 1.2.3.4/24 connection.lldp enable"
+     * Bring "up" connection "connie"
+     * Execute "ip netns exec testX_ns tcpreplay --intf1=testXp tmp/lldp.detailed.pcap"
+     Then "NEIGHBOR\[0\].DEVICE:\s+testX" is visible with command "nmcli device lldp" in "5" seconds
+      And "NEIGHBOR\[0\].CHASSIS-ID:\s+00:01:30:F9:AD:A0" is visible with command "nmcli device lldp"
+      And "NEIGHBOR\[0\].PORT-ID:\s+1\/1" is visible with command "nmcli device lldp"
+      And "NEIGHBOR\[0\].PORT-DESCRIPTION:\s+Summit300-48-Port 1001" is visible with command "nmcli device lldp"
+      And "NEIGHBOR\[0\].SYSTEM-NAME:\s+Summit300-48" is visible with command "nmcli device lldp"
+      And "NEIGHBOR\[0\].SYSTEM-DESCRIPTION:\s+Summit300-48 - Version 7.4e.1 \(Build 5\) by Release_Master 05\/27\/05 04:53:11" is visible with command "nmcli device lldp"
+      And "NEIGHBOR\[0\].SYSTEM-CAPABILITIES:\s+20 \(mac-bridge,router\)" is visible with command "nmcli device lldp"
+
+
     @testcase_300568
     @con
     Scenario: nmcli - connection - describe
