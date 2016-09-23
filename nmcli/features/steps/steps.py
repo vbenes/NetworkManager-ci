@@ -913,8 +913,8 @@ def correct_lifetime(context, typ, valid_lft, pref_lft, device):
     valid = valid.replace('sec', '')
     pref = pref.strip()
     pref = pref.replace('sec', '')
-    assert int(valid) <= int(valid_lft)+20 and int(valid_lft) >= int(valid)-50
-    assert int(pref) <= int(pref_lft)+20 and int(pref_lft) >= int(pref)-50
+    assert int(valid) < int(valid_lft) and int(valid_lft) >= int(valid)-50
+    assert int(pref) < int(pref_lft) and int(pref_lft) >= int(pref)-50
 
 
 @step(u'Look for "{content}" in tailed file')
