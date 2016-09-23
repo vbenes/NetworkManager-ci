@@ -218,6 +218,7 @@ ipv6_keep_connectivity_on_assuming_connection_profile, ., nmcli/./runtest.sh ipv
 ipv6_add_static_address_manually_not_active, ., nmcli/./runtest.sh ipv6_add_static_address_manually_not_active ,
 ipv6_no_assumed_connection_for_ipv6ll_only, ., nmcli/./runtest.sh ipv6_no_assumed_connection_for_ipv6ll_only ,
 ipv6_set_ra_announced_mtu, ., nmcli/./runtest.sh ipv6_set_ra_announced_mtu ,
+nm-online_wait_for_ipv6_to_finish, ., nmcli/./runtest.sh nm-online_wait_for_ipv6_to_finish ,
 ipv6_shared_connection_error, ., nmcli/./runtest.sh ipv6_shared_connection_error ,
 ipv6_tunnel_module_removal, ., nmcli/./runtest.sh ipv6_tunnel_module_removal ,
 ipv6_no_activation_schedule_error_in_logs, ., nmcli/./runtest.sh ipv6_no_activation_schedule_error_in_logs ,
