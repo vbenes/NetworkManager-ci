@@ -731,6 +731,27 @@ Feature: nmcli: ipv6
     When "ethernet-test10" is visible with command "nmcli con sh -a"
     When "ethernet-test11" is visible with command "nmcli con sh -a"
     * Send lifetime scapy packet
+    Then "IPv6" lifetimes are slightly smaller than "3605" and "1805" for device "test11"
+
+
+    @rhbz1318945
+    @ver+=1.4.0
+    @scapy
+    @ipv6_lifetime_no_padding
+    Scenario: NM - ipv6 - RA lifetime with no padding
+    * Finish "ip link add test10 type veth peer name test11"
+    * Finish "nmcli c add type ethernet ifname test10"
+    * Finish "nmcli c add type ethernet ifname test11"
+    * Execute "nmcli con modify ethernet-test10 ipv4.method disabled ipv6.method auto"
+    * Execute "nmcli con modify ethernet-test11 ipv4.method disabled ipv6.method auto"
+    * Finish "ip link set dev test10 up"
+    * Finish "ip link set dev test11 up"
+    * Execute "sleep 1"
+    * Execute "nmcli --wait 0 c up ethernet-test10"
+    * Execute "nmcli --wait 0 c up ethernet-test11"
+    When "ethernet-test10" is visible with command "nmcli con sh -a"
+    When "ethernet-test11" is visible with command "nmcli con sh -a"
+    * Send lifetime scapy packet
     Then "IPv6" lifetimes are slightly smaller than "3600" and "1800" for device "test11"
 
 
@@ -771,7 +792,7 @@ Feature: nmcli: ipv6
     When "ethernet-test10" is visible with command "nmcli con sh -a"
     When "ethernet-test11" is visible with command "nmcli con sh -a"
     * Send lifetime scapy packet with "255"
-    Then "IPv6" lifetimes are slightly smaller than "3600" and "1800" for device "test11"
+    Then "IPv6" lifetimes are slightly smaller than "3605" and "1805" for device "test11"
 
 
     @rhbz1329366
