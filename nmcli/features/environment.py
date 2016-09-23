@@ -63,7 +63,7 @@ def dump_status(context, when):
                 call(cmd, shell=True, stdout=context.log)
     context.log.write("==================================================================================\n\n\n")
 
-def setup_racoon(dh_group):
+def setup_racoon(mode, dh_group):
     print ("setting up racoon")
     call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
 
@@ -81,7 +81,7 @@ def setup_racoon(dh_group):
     cfg.write("\n" + '}')
     cfg.write("\n" + '')
     cfg.write("\n" + 'remote anonymous {')
-    cfg.write("\n" + '        exchange_mode aggressive;')
+    cfg.write("\n" + '        exchange_mode %s;' % mode)
     cfg.write("\n" + '        proposal_check obey;')
     cfg.write("\n" + '        mode_cfg on;')
     cfg.write("\n" + '')
@@ -435,14 +435,20 @@ def before_scenario(context, scenario):
             print ("---------------------------")
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
-            setup_racoon (dh_group=2)
+            setup_racoon (mode="aggressive", dh_group=2)
 
         if 'libreswan' in scenario.tags:
             print ("---------------------------")
             call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
             call("/usr/sbin/ipsec --checknss", shell=True)
-            setup_racoon (dh_group=5)
+            setup_racoon (mode="aggressive", dh_group=5)
             #call("ip route add default via 172.31.70.1", shell=True)
+
+        if 'libreswan_main' in scenario.tags:
+            print ("---------------------------")
+            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
+            call("/usr/sbin/ipsec --checknss", shell=True)
+            setup_racoon (mode="main", dh_group=5)
 
         if 'lldp' in scenario.tags:
             print ("---------------------------")
