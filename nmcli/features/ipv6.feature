@@ -879,6 +879,19 @@ Feature: nmcli: ipv6
     Then "1300" is visible with command "sysctl net.ipv6.conf.test2.mtu" in "30" seconds
 
 
+    @rhbz1243958
+    @ver+=1.4.0
+    @eth0 @mtu
+    @nm-online_wait_for_ipv6_to_finish
+    Scenario: NM - ipv6 - nm-online wait for non tentative ipv6
+    * Finish "ip link add test1 type veth peer name test1p"
+    * Finish "ip link set dev test1 up"
+    * Finish "ip link set dev test1p up"
+    * Finish "nmcli connection add type ethernet con-name tc1 ifname test1 autoconnect no ip4 192.168.99.1/24 ip6 2620:52:0:beef::1/64"
+    * Finish "nmcli connection modify tc1 ipv6.may-fail no"
+    Then "tentative" is not visible with command "nmcli connection down testeth0 ; nmcli connection down tc1; sleep 2; nmcli connection up id tc1; time nm-online ;ip a s test1|grep 'global tentative'; nmcli connection up testeth0"
+
+
     @rhbz1183015
     @ipv6
     @ipv6_shared_connection_error
