@@ -310,7 +310,7 @@ Feature: nmcli - ethernet
     Then Check noted values "wol_new" and "wol_orig" are the same
 
 
-    @ver+=1.2.0
+    @ver+=1.4.0
     @eth @8021x
     @8021x_with_credentials
     Scenario: nmcli - ethernet - connect to 8021x - md5
@@ -319,7 +319,7 @@ Feature: nmcli - ethernet
 
 
     @rhbz1113941
-    @ver+=1.2.0
+    @ver+=1.4.0
     @eth @8021x
     @8021x_without_password
     Scenario: nmcli - ethernet - connect to 8021x - md5 - ask for password
