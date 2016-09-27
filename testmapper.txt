@@ -476,6 +476,7 @@ bond_enslave_to_bridge, ., nmcli/./runtest.sh bond_enslave_to_bridge ,
 bond_in_bridge_mtu, ., nmcli/./runtest.sh bond_in_bridge_mtu ,
 bond_8023ad_no_error, ., nmcli/./runtest.sh bond_8023ad_no_error ,
 reapply_unchanged_slave, ., nmcli/./runtest.sh reapply_unchanged_slave ,
+vlan_over_no_L3_bond_restart_persistence, ., nmcli/./runtest.sh vlan_over_no_L3_bond_restart_persistence ,
 #@bond_end
 
 #@tuntap_start
