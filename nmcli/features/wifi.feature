@@ -1296,16 +1296,16 @@ Feature: nmcli - wifi
     * Expect "There are . optional .*Wi-Fi"
     * Submit "no"
     * Agree to add IPv4 configuration in editor
-    * Submit "10.1.1.5"
-    * No error appeared in editor
+    #* Submit "10.1.1.5"
+    #* No error appeared in editor
     * Submit "10.1.1.6/24"
     * No error appeared in editor
     * Submit "<enter>"
     * Expect "IPv4 gateway"
     * Submit "10.1.1.1"
     * Agree to add IPv6 configuration in editor
-    * Submit "fe80::215:ff:fe93:ffff"
-    * No error appeared in editor
+    #* Submit "fe80::215:ff:fe93:ffff"
+    #* No error appeared in editor
     * Submit "fe80::215:ff:fe93:ffff/128"
     * No error appeared in editor
     * Submit "<enter>"
@@ -1314,8 +1314,8 @@ Feature: nmcli - wifi
     * Expect "Connection.*successfully added"
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list" in "30" seconds
     Then "qe-open" is visible with command "iw dev wlan0 link" in "30" seconds
-    Then "10.1.1.5.*fe80::215:ff:fe93:ffff" is visible with command "ip a" in "30" seconds
-    Then "10.1.1.6" is visible with command "ip a" in "30" seconds
+    Then "10.1.1.6.*fe80::215:ff:fe93:ffff" is visible with command "ip a" in "30" seconds
+    #Then "10.1.1.5" is visible with command "ip a" in "30" seconds
 
 
     @wifi
