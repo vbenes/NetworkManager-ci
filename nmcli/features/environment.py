@@ -429,10 +429,16 @@ def before_scenario(context, scenario):
 
         if '8021x' in scenario.tags:
             print ("---------------------------")
+            arch = check_output("uname -p", shell=True).strip()
+            if arch == "s390x" or arch == 'aarch64':
+                sys.exit(0)
             setup_hostapd()
 
         if 'vpnc' in scenario.tags:
             print ("---------------------------")
+            arch = check_output("uname -p", shell=True).strip()
+            if arch == "s390x" or arch == 'aarch64':
+                sys.exit(0)
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
             setup_racoon (mode="aggressive", dh_group=2)
@@ -453,12 +459,18 @@ def before_scenario(context, scenario):
         if 'lldp' in scenario.tags:
             print ("---------------------------")
             print ("install tcpreplay")
+            arch = check_output("uname -p", shell=True).strip()
+            if arch == "s390x" or arch == 'aarch64':
+                sys.exit(0)
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("[ -x /usr/bin/tcpreplay ] || yum -y install tcpreplay", shell=True)
 
         if 'openvpn' in scenario.tags:
             print ("---------------------------")
             print ("setting up OpenVPN")
+            arch = check_output("uname -p", shell=True).strip()
+            if arch == "s390x" or arch == 'aarch64':
+                sys.exit(0)
             call("[ -x /usr/sbin/openvpn ] || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/openvpn-2.3.8-1.el7.$(uname -p).rpm\
                                                                   http://file.brq.redhat.com/vbenes/repo/pkcs11-helper-1.11-3.el7.$(uname -p).rpm", shell=True)
             call("rpm -q NetworkManager-openvpn || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
@@ -493,6 +505,9 @@ def before_scenario(context, scenario):
         if 'pptp' in scenario.tags:
             print ("---------------------------")
             print ("setting up pptpd")
+            arch = check_output("uname -p", shell=True).strip()
+            if arch == "s390x" or arch == 'aarch64':
+                sys.exit(0)
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("[ -x /usr/sbin/pptpd ] || sudo yum -y install /usr/sbin/pptpd", shell=True)
             call("rpm -q NetworkManager-pptp || sudo yum -y install NetworkManager-pptp", shell=True)
