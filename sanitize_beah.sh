@@ -15,6 +15,6 @@ ip -6 r
 #sudo kill -9 $(ps aux|grep -v grep| grep beah-beaker-backend |awk '{print $2}')
 #sudo /usr/bin/python /usr/bin/beah-beaker-backend --log-stderr &
 systemctl condreload beah-beaker-backend.service
-#sleep 60
+sleep 10
 
 exit 0
