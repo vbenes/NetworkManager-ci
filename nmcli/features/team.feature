@@ -477,9 +477,9 @@
       * Add slave connection for master "nm-team" on device "eth1" named "team0.0"
       * Add slave connection for master "nm-team" on device "eth2" named "team0.1"
       * Execute "nmcli connection modify team0 team.config '{ "device": "nm-team", "runner": {"name": "activebalance"}}' "
-      Then "Error: Connection activation failed: Active connection could not be attached to the device" is visible with command "nmcli connection up id team0"
+      Then "Error: Connection activation failed" is visible with command "nmcli connection up id team0"
        And Team "nm-team" is down
-       And "Error: Connection activation failed: Active connection removed before it was initialized" is visible with command "nmcli connection up id team0"
+       And "Error: Connection activation failed" is visible with command "nmcli connection up id team0"
        And Team "nm-team" is down
 
 
