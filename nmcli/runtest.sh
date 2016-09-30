@@ -3,12 +3,12 @@ set -x
 
 logger -t $0 "Running test $1"
 
-if [ -e /tmp/nm_newveth_configured ]; then
-    # we must keep this device up in any case it went down
-    nmcli con up testeth0
-    # possible auto created duplicate profile. that we do not want
-    nmcli con del eth0
-fi
+# if [ -e /tmp/nm_newveth_configured ]; then
+#     # we must keep this device up in any case it went down
+#     nmcli con up testeth0
+#     # possible auto created duplicate profile. that we do not want
+#     nmcli con del eth0
+# fi
 
 if [ ! -e /tmp/nm_eth_configured ]; then
     #set the root password to 'redhat' (for overcoming polkit easily)
@@ -138,7 +138,7 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     # if [ "$?" == "1" ]; then
     #     sed -i 's/\[main\]/\[main\]\ndebug=fatal-warnings/' /etc/NetworkManager/NetworkManager.conf
     # fi
-    
+
     service NetworkManager restart
     touch /tmp/nm_eth_configured
 fi
