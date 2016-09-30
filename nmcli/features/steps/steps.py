@@ -1064,11 +1064,14 @@ def add_novice_connection(context):
 
 @step(u'"{pattern}" is visible with command "{command}"')
 def check_pattern_visible_with_command(context, pattern, command):
-    sleep(1) # time for all to get set
     cmd = '/bin/bash -c "%s"' %command
     ifconfig = pexpect.spawn(cmd, maxread=100000, logfile=context.log)
-    assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
-
+    if ifconfig.expect([pattern, pexpect.EOF]) != 0:
+        sleep(1)
+        ifconfig = pexpect.spawn(cmd, maxread=100000, logfile=context.log)
+        assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is not visible with %s' % (pattern, command)
+    else:
+        return True
 
 @step(u'"{pattern}" is visible with command "{command}" in "{seconds}" seconds')
 def check_pattern_visible_with_command_in_time(context, pattern, command, seconds):
