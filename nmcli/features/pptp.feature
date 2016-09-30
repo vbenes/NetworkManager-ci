@@ -17,6 +17,9 @@
     Scenario: nmcli - pptp - terminate connection
     * Add a connection named "pptp" for device "\*" to "pptp" VPN
     * Use user "budulinek" with password "passwd" and MPPE set to "yes" for gateway "127.0.0.1" on PPTP connection "pptp"
+    # The following is a work around a pptpd bug where the server fails the first
+    # connection with "loopback detected" error
+    * Execute "/sbin/pppd pty '/sbin/pptp 127.0.0.1' nodetach"
     * Execute "nmcli c modify pptp vpn.persistent true"
     * Bring "up" connection "pptp"
     When "VPN.VPN-STATE:.*VPN connected" is visible with command "nmcli c show pptp"
