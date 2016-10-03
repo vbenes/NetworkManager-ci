@@ -826,12 +826,9 @@ Feature: nmcli: ipv6
     Then Check ipv6 connectivity is stable on assuming connection profile "ethie" for device "eth10"
 
 
-    @rhbz1083133
-    @rhbz1098319
-    @rhbz1127718
-    @veth
+    @rhbz1083133 @rhbz1098319 @rhbz1127718
+    @veth @eth1_disconnect
     @ipv6_add_static_address_manually_not_active
-    @eth1_disconnect
     Scenario: NM - ipv6 - add a static address manually to non-active interface
     Given "testeth1" is visible with command "nmcli connection"
     Given "eth1\s+ethernet\s+connected" is not visible with command "nmcli device"
@@ -840,7 +837,7 @@ Feature: nmcli: ipv6
     * Execute "ip -6 addr add 2001::dead:beef:01/64 dev eth1"
     Then "0" is visible with command "cat /proc/sys/net/ipv6/conf/eth1/disable_ipv6"
     Then "inet6 2001::dead:beef:1/64 scope global" is visible with command "ip a s eth1"
-    Then "inet6 fe80" is visible with command "ip a s eth1"
+    Then "inet6 fe80" is visible with command "ip a s eth1" in "5" seconds
     # the assumed connection is created
     Then "eth1\s+ethernet\s+connected\s+eth1" is visible with command "nmcli device"
 
