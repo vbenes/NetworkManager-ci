@@ -1115,12 +1115,17 @@ def check_pattern_not_visible_with_command_in_time(context, pattern, command, se
         sleep(1)
     raise Exception('Did still see the pattern %s after %d seconds' % (pattern, orig_seconds))
 
+
 @step(u'"{pattern}" is not visible with command "{command}"')
 def check_pattern_not_visible_with_command(context, pattern, command):
-    sleep(1) # time for all to get set
     cmd = '/bin/bash -c "%s"' %command
     ifconfig = pexpect.spawn(cmd, maxread=100000, logfile=context.log)
-    assert ifconfig.expect([pattern, pexpect.EOF]) != 0, 'pattern %s still visible with %s' % (pattern, command)
+    if ifconfig.expect([pattern, pexpect.EOF]) == 0:
+        sleep(1)
+        ifconfig = pexpect.spawn(cmd, maxread=100000, logfile=context.log)
+        assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is visible with %s' % (pattern, command)
+    else:
+        return True
 
 
 @step(u'"{pattern}" is visible with tab after "{command}"')
