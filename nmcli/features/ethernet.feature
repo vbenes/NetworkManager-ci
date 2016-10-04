@@ -314,7 +314,7 @@ Feature: nmcli - ethernet
     @eth @8021x
     @8021x_with_credentials
     Scenario: nmcli - ethernet - connect to 8021x - md5
-    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie 802-1x.eap md5 802-1x.identity user 802-1x.password password"
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie autoconnect no 802-1x.eap md5 802-1x.identity user 802-1x.password password"
     Then Bring "up" connection "ethie"
 
 
