@@ -1123,7 +1123,7 @@ def check_pattern_not_visible_with_command(context, pattern, command):
     if ifconfig.expect([pattern, pexpect.EOF]) == 0:
         sleep(1)
         ifconfig = pexpect.spawn(cmd, maxread=100000, logfile=context.log)
-        assert ifconfig.expect([pattern, pexpect.EOF]) == 0, 'pattern %s is visible with %s' % (pattern, command)
+        assert ifconfig.expect([pattern, pexpect.EOF]) != 0, 'pattern %s is visible with %s' % (pattern, command)
     else:
         return True
 
