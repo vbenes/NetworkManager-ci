@@ -224,11 +224,6 @@ def setup_hostapd():
     call("nmcli connection add type ethernet con-name DHCP_testY ifname testY ip4 10.0.0.1/24", shell=True)
     call("nmcli connection up id DHCP_testY", shell=True)
     call("echo 8 > /sys/class/net/testX_bridge/bridge/group_fwd_mask", shell=True)
-    sleep(5)
-    Popen("/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=10.0.0.1 --dhcp-range=10.0.0.10,10.0.0.100,60m --dhcp-option=option:router,10.0.0.1 --dhcp-lease-max=50", shell=True)
-
-    call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
-    call("[ -x /usr/sbin/hostapd ] || yum -y install hostapd", shell=True)
 
     cfg = Popen("sudo sh -c 'cat > /etc/hostapd/wired.conf'", stdin=PIPE, shell=True).stdin
     cfg.write('# Hostapd configuration for 802.1x client testing')
@@ -251,9 +246,16 @@ def setup_hostapd():
     psk.write("\n")
     psk.close()
 
-    Popen("hostapd /etc/hostapd/wired.conf > /dev/null", shell=True)
+    call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+    call("[ -x /usr/sbin/hostapd ] || yum -y install hostapd", shell=True)
+
     Popen("pkill -9 hostapd", shell=True)
+
+    sleep(5)
+    Popen("/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=10.0.0.1 --dhcp-range=10.0.0.10,10.0.0.100,60m --dhcp-option=option:router,10.0.0.1 --dhcp-lease-max=50", shell=True)
+
     Popen("hostapd /etc/hostapd/wired.conf > /dev/null", shell=True)
+    sleep(2)
 
 def teardown_hostapd():
     call("sudo kill -INT $(ps aux|grep hostapd|grep -v grep |awk {'print $2'})", shell=True)
