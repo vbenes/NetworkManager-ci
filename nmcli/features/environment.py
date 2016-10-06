@@ -1141,11 +1141,12 @@ def after_scenario(context, scenario):
         if 'nmcli_general_profile_pickup_doesnt_break_network' in scenario.tags:
             print("---------------------------")
             print("Restoring configuration, turning off network.service")
+            context.nm_restarted = True
             call('sudo nmcli connection delete ethernet0 ethernet1', shell=True)
             call('sudo systemctl stop network.service', shell=True)
             call('sudo systemctl restart NetworkManager.service', shell=True)
-            sleep(2)
             call('sudo nmcli connection down testeth1 testeth2', shell=True)
+            call('sudo nmcli connection up testeth0', shell=True)
 
         if 'vlan_update_mac_from_bond' in scenario.tags:
             print("---------------------------")
@@ -1262,12 +1263,20 @@ def after_scenario(context, scenario):
         context.log.close ()
         context.embed('text/plain', open("/tmp/log_%s.html" % scenario.name, 'r').read())
 
-        assert nm_pid_after is not None or \
-               'restart' in scenario.tags
-        assert context.nm_pid is not None
-        assert getattr(context, 'nm_restarted', False) or \
-               'restart' in scenario.tags or \
-               nm_pid_after == context.nm_pid
+        if getattr(context, 'nm_restarted', True) or \
+               'restart' in scenario.tags:
+               pass
+        else:
+            if nm_pid_after is None or nm_pid_after != context.nm_pid:
+                sys.exit(1)
+
+        #
+        # assert nm_pid_after is not None or \
+        #        'restart' in scenario.tags
+        # assert context.nm_pid is not None
+        # assert getattr(context, 'nm_restarted', False) or \
+        #        'restart' in scenario.tags or \
+        #        nm_pid_after == context.nm_pid
 
     except Exception as e:
         print("Error in after_scenario: %s" % e.message)
