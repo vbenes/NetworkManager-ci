@@ -211,7 +211,6 @@ def reset_hwaddr(ifname):
     call("ip link set %s address %s" % (ifname, hwaddr), shell=True)
 
 def setup_hostapd():
-def setup_hostapd():
     print ("setting up hostapd")
     call("ip link add testY type veth peer name testYp", shell=True)
     call("ip link add testX type veth peer name testXp", shell=True)
