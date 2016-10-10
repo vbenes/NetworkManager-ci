@@ -772,13 +772,13 @@ Feature: nmcli - general
 
 
     @rhbz1254089
-    @del_test1112_veths
+    @teardown_testveth
     @allow_wired_connections
     Scenario: NM - general - create Wired connection for veth devices
-    * Execute "ip link add test11 type veth peer name test12"
+    * Prepare simulated test "testX" device
     * Restart NM
     Then "Wired connection 1" is visible with command "nmcli con"
-    Then "Wired connection 2" is visible with command "nmcli con"
+
 
     @rhbz1182085
     @nmcli_general_profile_pickup_doesnt_break_network

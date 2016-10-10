@@ -297,6 +297,7 @@ def before_scenario(context, scenario):
                 cfg.write("\n" + 'no-auto-default=eth*')
                 cfg.write("\n")
                 cfg.close()
+                call("pkill -HUP NetworkManager", shell=True)
                 context.revert_unmanaged = True
             else:
                 context.revert_unmanaged = False
