@@ -522,11 +522,11 @@ Feature: nmcli - general
 
 
     @rhbz1103777
-    @no_error_when_firewald_restarted
     @firewall
+    @no_error_when_firewald_restarted
     Scenario: NM - general - no error when firewalld restarted
-    * Execute "sudo service firewalld restart"
-    Then "nm_connection_get_setting_connection: assertion `NM_IS_CONNECTION \(connection\)' failed" is not visible with command "sudo tail -n 30 /var/log/messages"
+    * Execute "sudo systemctl restart firewalld"
+    Then "nm_connection_get_setting_connection: assertion" is not visible with command "journalctl --since '10 seconds ago' --no-pager"
 
 
     @rhbz1286576
