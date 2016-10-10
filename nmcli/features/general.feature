@@ -535,7 +535,7 @@ Feature: nmcli - general
     Scenario: NM - general - do not start wpa_supplicant
     * Execute "sudo systemctl stop wpa_supplicant"
     * restart NM
-    Then "Active\: inactive" is visible with command "systemctl status wpa_supplicant"
+    Then "inactive" is visible with command "systemctl is-active wpa_supplicant"
 
 
     @rhbz1041901
@@ -641,7 +641,7 @@ Feature: nmcli - general
     Then "1.2.3.0\/24" is visible with command "ip r |grep testY" in "60" seconds
     Then "1::128" is visible with command "ip -6 r |grep testY" in "60" seconds
     Then "nm-iface-helper --ifname testY" is visible with command "ps aux|grep helper" in "60" seconds
-    Then "Active:\s+inactive" is visible with command "systemctl status NetworkManager"
+    Then "inactive" is visible with command "systemctl is-active NetworkManager"
 
 
     @rhbz1083683
