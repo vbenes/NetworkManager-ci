@@ -604,6 +604,7 @@ def before_scenario(context, scenario):
             context.nm_pid = nm_pid()
         except CalledProcessError, e:
             context.nm_pid = None
+
         print("NetworkManager process id before: %s", context.nm_pid)
 
         if context.nm_pid is not None:
@@ -612,6 +613,8 @@ def before_scenario(context, scenario):
                 call("LOGNAME=root HOSTNAME=localhost gdb /usr/sbin/NetworkManager -ex 'target remote | vgdb' -ex 'monitor leak_check summary' -batch", shell=True, stdout=context.log, stderr=context.log)
 
         context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
+
+        Popen("sudo tcpdump -nn -i any > /tmp/network-traffic.log", shell=True)
 
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
@@ -655,6 +658,12 @@ def after_scenario(context, scenario):
         data = open("/tmp/journal-nm.log", 'r').read()
         if data:
             context.embed('text/plain', data)
+
+        #attach network traffic log
+        call("sudo kill -SIGHUP $(pidof tcpdump)", shell=True)
+        traffic = open("/tmp/network-traffic.log", 'r').read()
+        if traffic:
+            context.embed('text/plain', traffic)
 
         dump_status(context, 'after %s' % scenario.name)
 
