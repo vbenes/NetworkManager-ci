@@ -535,7 +535,7 @@ Feature: nmcli - general
     Scenario: NM - general - do not start wpa_supplicant
     * Execute "sudo systemctl stop wpa_supplicant"
     * restart NM
-    Then "inactive" is visible with command "systemctl is-active wpa_supplicant"
+    Then "^active" is not visible with command "systemctl is-active wpa_supplicant" in "5" seconds
 
 
     @rhbz1041901
