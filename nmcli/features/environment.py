@@ -614,7 +614,7 @@ def before_scenario(context, scenario):
 
         context.log_cursor = check_output("journalctl --lines=0 --show-cursor |awk '/^-- cursor:/ {print \"\\\"--after-cursor=\"$NF\"\\\"\"; exit}'", shell=True).strip()
 
-        Popen("sudo tcpdump -nn -i any > /tmp/network-traffic.log", shell=True)
+        Popen("sudo tcpdump -nne -i any > /tmp/network-traffic.log", shell=True)
 
     except Exception as e:
         print("Error in before_scenario: %s" % e.message)
