@@ -20,6 +20,7 @@ Feature: nmcli: adsl
     * Expect "ADSL encapsulation"
     * Enter in editor
     * Dismiss IP configuration in editor
+    * Dismiss Proxy configuration in editor
     Then "adsl.username:\s+test" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.password:\s+redhat" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.protocol:\s+pppoe" is visible with command "nmcli  connection show --show-secrets adsl-test11"

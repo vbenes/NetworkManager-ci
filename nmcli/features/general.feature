@@ -387,6 +387,7 @@ Feature: nmcli - general
     Then Expect "There are \d+ optional .*[Bb]ridge"
     * Submit "no" in editor
     * Dismiss IP configuration in editor
+    * Dismiss Proxy configuration in editor
     Then "nm-bridge" is visible with command "nmcli connection show bridge"
 
 

@@ -26,6 +26,7 @@
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
      * Submit "no" in editor
      * Dismiss IP configuration in editor
+     * Dismiss Proxy configuration in editor
      * Finish "sleep 3"
     Then Check bond "nm-bond" state is "up"
 
@@ -69,6 +70,7 @@
      * Expect "Bonding updelay \[0\]"
      * Submit "400" in editor
      * Dismiss IP configuration in editor
+     * Dismiss Proxy configuration in editor
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Bring "up" connection "bond"
     Then Check bond "nm-bond" link state is "up"
@@ -97,6 +99,7 @@
      * Expect "Bonding arp-ip-target \[none\]"
      * Submit "192.168.100.1" in editor
      * Dismiss IP configuration in editor
+     * Dismiss Proxy configuration in editor
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Add slave connection for master "nm-bond" on device "eth2" named "bond0.1"
      * Bring "up" connection "bond"

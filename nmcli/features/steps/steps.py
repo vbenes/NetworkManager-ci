@@ -1496,6 +1496,12 @@ def dismiss_in_editor(context):
         context.execute_steps(u'* Submit "no" in editor')
     context.execute_steps(u'* Submit "no" in editor')
 
+@step(u'Dismiss Proxy configuration in editor')
+def dismiss_in_editor(context):
+    cpl = context.prompt.compile_pattern_list(['There are \d+ optional settings for Proxy.', pexpect.EOF])
+    if context.prompt.expect_list(cpl) == 0:
+        context.execute_steps(u'* Submit "no" in editor')
+
 @step(u'Agree to add IPv4 configuration in editor')
 def dismiss_in_editor(context):
     cpl = context.prompt.compile_pattern_list(['There are \d+ optional settings for IPv4 protocol.',
