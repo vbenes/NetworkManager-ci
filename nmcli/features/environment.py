@@ -284,6 +284,9 @@ def before_scenario(context, scenario):
             if arch == "s390x":
                 sys.exit(0)
 
+        if 'shutdown_service_any' in scenario.tags or 'bridge_manipulation_with_1000_slaves' in scenario.tags:
+            call("modprobe -r qmi_wwan", shell=True)
+
         if 'need_s390x' in scenario.tags:
             arch = check_output("uname -p", shell=True).strip()
             if arch != "s390x":
