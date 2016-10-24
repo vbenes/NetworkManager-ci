@@ -50,7 +50,7 @@ def dump_status(context, when):
             call(cmd, shell=True, stdout=context.log)
     else:
         for cmd in ['ip addr', 'ip -4 route', 'ip -6 route',
-            'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w']:
+            'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w', 'nmcli con show testeth0']:
             context.log.write("--- %s ---\n" % cmd)
             context.log.flush()
             call(cmd, shell=True, stdout=context.log)
@@ -778,7 +778,8 @@ def after_scenario(context, scenario):
         if 'eth0' in scenario.tags:
             print ("---------------------------")
             print ("upping eth0")
-
+            call("nmcli connection modify testeth0 ipv4.method auto", shell=True)
+            call("nmcli connection modify testeth0 ipv6.method auto", shell=True)
             call("nmcli connection up id testeth0", shell=True)
             sleep(2)
 
