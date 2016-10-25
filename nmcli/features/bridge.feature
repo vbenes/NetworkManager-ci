@@ -335,7 +335,7 @@ Feature: nmcli - bridge
     @bridge_assumed_connection_race
     Scenario: NM - bridge - no crash when bridge started and shutdown immediately
     * Create 300 bridges and delete them
-    Then "active \(running\)" is visible with command "service NetworkManager status"
+    Then "active" is visible with command "systemctl is-active NetworkManager.service"
 
 
     @1000
