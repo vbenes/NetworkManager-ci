@@ -72,17 +72,18 @@ Feature: nmcli - vlan
     @vlan
     @testcase_284356
     Scenario: nmcli - vlan - connection up while up
-    * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect yes dev eth1 id 99"
+    * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect yes dev eth1 id 99 ip4 1.2.3.4/24"
     Then "eth1.99\s+vlan\s+connected" is visible with command "nmcli device" in "30" seconds
     * Open editor for connection "eth1.99"
     * Set a property named "ipv4.method" to "shared" in editor
+    * Enter in editor
     * Save in editor
     * No error appeared in editor
     * Check value saved message showed in editor
     * Quit editor
     # With no errors
     Then Bring up connection "eth1.99"
-
+     And "1.2.3.4" is not visible with command "ip a s eth1.99"
 
     @vlan
     @testcase_281271
