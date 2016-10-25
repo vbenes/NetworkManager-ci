@@ -352,9 +352,9 @@ Feature: nmcli: ipv4
     Then "192.168.122.0/24 dev eth1  proto kernel  scope link  src 192.168.122.2" is visible with command "ip route"
 
 
+    @ver+=1.4.0
+    @ipv4 @eth0
     @ipv4_routes_not_reachable
-    @ipv4
-    @eth0
     Scenario: nmcli - ipv4 - routes - set unreachable route
     * Add connection type "ethernet" named "ethie" for device "eth1"
     * Open editor for connection "ethie"
