@@ -1037,8 +1037,8 @@ Feature: nmcli: ipv4
 
 
     @rhbz1172780
+    @ipv4 @netaddr
     @ipv4_do_not_remove_second_ip_route
-    @ipv4
     Scenario: nmcli - ipv4 - do not remove secondary ip subnet route
     * Add a new connection of type "ethernet" and options "con-name ethie ifname eth1 autoconnect no"
     * Bring up connection "ethie"

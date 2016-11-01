@@ -365,6 +365,14 @@ def before_scenario(context, scenario):
             if call('pip list |grep IPy', shell=True) != 0:
                 call("sudo pip install IPy", shell=True)
 
+        if 'netaddr' in scenario.tags:
+            print ("---------------------------")
+            print ("install netaddr")
+            if not os.path.isfile('/usr/bin/pip'):
+                call('sudo easy_install pip', shell=True)
+            if call('pip list |grep netaddr', shell=True) != 0:
+                call("sudo pip install netaddr", shell=True)
+
         if 'inf' in scenario.tags:
             print ("---------------------------")
             print ("deleting infiniband connections")
