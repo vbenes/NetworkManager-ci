@@ -65,6 +65,10 @@ def dump_status(context, when):
 
 def setup_racoon(mode, dh_group):
     print ("setting up racoon")
+    call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+    call("[ -x /usr/sbin/racoon ] || yum -y install ipsec-tools", shell=True)
+
+    # This is an internal RH workaround for secondary architecures that are not present in EPEL
     call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
 
     cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
@@ -486,11 +490,16 @@ def before_scenario(context, scenario):
             arch = check_output("uname -p", shell=True).strip()
             if arch == "s390x" or arch == 'aarch64':
                 sys.exit(0)
+            call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+            call("[ -x /usr/sbin/openvpn ] || sudo yum -y install openvpn NetworkManager-openvpn", shell=True)
+            call("rpm -q NetworkManager-openvpn || sudo yum -y install NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
+
+            # This is an internal RH workaround for secondary architecures that are not present in EPEL
             call("[ -x /usr/sbin/openvpn ] || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/openvpn-2.3.8-1.el7.$(uname -p).rpm\
                                                                   http://file.brq.redhat.com/vbenes/repo/pkcs11-helper-1.11-3.el7.$(uname -p).rpm", shell=True)
             call("rpm -q NetworkManager-openvpn || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
 
-            samples = glob('/usr/share/doc/openvpn-*/sample')[0]
+            samples = glob('/usr/share/doc/openvpn*/sample')[0]
             cfg = Popen("sudo sh -c 'cat >/etc/openvpn/trest-server.conf'", stdin=PIPE, shell=True).stdin
             cfg.write('# OpenVPN configuration for client testing')
             cfg.write("\n" + 'mode server')
