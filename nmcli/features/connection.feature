@@ -361,16 +361,23 @@ Feature: nmcli: connection
       * Add connection type "ethernet" named "connie" for device "eth1"
       When "public\s+interfaces: eth0 eth1" is visible with command "firewall-cmd --get-active-zones"
       * Execute "nmcli c modify connie connection.zone internal"
-      When "internal\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      When "internal\s+interfaces: eth1" is visible with command "firewall-cmd --get-active-zones"
+       And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
       * Execute "systemctl restart firewalld"
-      When "internal\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      When "internal\s+interfaces: eth1" is visible with command "firewall-cmd --get-active-zones"
+       And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
       * restart NM
-      When "internal\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      When "internal\s+interfaces: eth1" is visible with command "firewall-cmd --get-active-zones"
+       And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
       * Execute "nmcli c modify connie connection.zone home"
-      When "home\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      When "home\s+interfaces: eth1" is visible with command "firewall-cmd --get-active-zones"
+       And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
       * Execute "systemctl restart firewalld"
-      When "home\s+interfaces: eth1\s+public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
+      When "home\s+interfaces: eth1" is visible with command "firewall-cmd --get-active-zones"
+       And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
       * Execute "nmcli c modify connie connection.zone work"
+      Then "work\s+interfaces: eth1" is visible with command "firewall-cmd --get-active-zones"
+       And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
 
 
     @route_priorities
