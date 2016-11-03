@@ -52,12 +52,15 @@ Feature: nmcli - general
 
 
     @ver+=1.4.0
-    @general
+    @general @eth
+    @teardown_testveth
     @restore_hostname
     @pull_hostname_from_dhcp
     Scenario: nmcli - general - pull hostname from DHCP
+    * Prepare simulated test "testX" device
     * Execute "hostnamectl set-hostname --transient localhost.localdomain"
-    * Bring up connection "testeth0"
+    * Add a new connection of type "ethernet" and options "ifname testX con-name ethie autoconnect no"
+    * Bring up connection "ethie"
     Then "localhost" is not visible with command "hostnamectl --transient" in "60" seconds
 
 
