@@ -601,7 +601,7 @@ Feature: nmcli: ipv6
     * Bring "up" connection "profie"
     * Finish "sleep 10"
     * Execute "sudo pkill tshark"
-    Then "Domain: dacan.local" is visible with command "cat /tmp/ipv6-hostname.log" in "5" seconds
+    Then "dacan.local" is visible with command "cat /tmp/ipv6-hostname.log" in "5" seconds
     Then "0. = O bit" is visible with command "cat /tmp/ipv6-hostname.log" in "5" seconds
 
 
@@ -908,11 +908,11 @@ Feature: nmcli: ipv6
 
 
     @rhbz1269520
-    @eth
-    @connect_testeth0
+    @eth @teardown_testveth
     @ipv6_no_activation_schedule_error_in_logs
     Scenario: NM - ipv6 - no activation scheduled error
-    * Add connection type "ethernet" named "ethie" for device "eth0"
+    * Prepare simulated test "testA" device
+    * Add connection type "ethernet" named "ethie" for device "testA"
     * Execute "nmcli connection modify ethie ipv6.may-fail no ipv4.method disabled"
     * Bring "up" connection "ethie"
     * Bring "up" connection "ethie"
