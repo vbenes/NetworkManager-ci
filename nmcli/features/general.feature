@@ -58,6 +58,7 @@ Feature: nmcli - general
     @pull_hostname_from_dhcp
     Scenario: nmcli - general - pull hostname from DHCP
     * Prepare simulated test "testX" device
+    * Execute "sudo nmcli general hostname localhost"
     * Execute "hostnamectl set-hostname --transient localhost.localdomain"
     * Add a new connection of type "ethernet" and options "ifname testX con-name ethie autoconnect no"
     * Bring up connection "ethie"
