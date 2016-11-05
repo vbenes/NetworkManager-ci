@@ -285,7 +285,7 @@ Feature: nmcli - vlan
     * Finish "ip link del br0"
     * Finish "systemctl start NetworkManager.service"
     # Check the configuration has been restored in full after by NM again
-    Then "connected:bridge-br0" is visible with command "nmcli -t -f STATE,CONNECTION device" in "5" seconds
+    Then "connected:bridge-br0" is visible with command "nmcli -t -f STATE,CONNECTION device" in "30" seconds
     Then "connected:vlan-vlan10" is visible with command "nmcli -t -f STATE,CONNECTION device"
     Then "connected:bond-bond0" is visible with command "nmcli -t -f STATE,CONNECTION device"
     Then "connected:bond-slave-eth1" is visible with command "nmcli -t -f STATE,CONNECTION device"
