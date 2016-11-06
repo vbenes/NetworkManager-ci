@@ -319,8 +319,8 @@ def check_describe_output_in_editor(context, options, obj):
     options = options.split('|')
     for opt in options:
         context.prompt.sendcontrol('c')
-        sleep(0.4)
         context.prompt.send('set %s \t\t' % obj)
+        sleep(0.1)
         a =  context.prompt.expect(["%s" % opt, pexpect.TIMEOUT], timeout=5)
         assert a == 0 , "Option %s was not shown!" % opt
 
