@@ -229,7 +229,7 @@ ipv6_describe, ., nmcli/./runtest.sh ipv6_describe ,
 #@ipv6_end
 
 #@ipv4_start
-ipv4_take_manually_created_ifcfg_with_ip, ., nmcli/ipv4/./runtest.sh ipv4_take_manually_created_ifcfg_with_ip ,
+ipv4_take_manually_created_ifcfg_with_ip, ., nmcli/./runtest.sh ipv4_take_manually_created_ifcfg_with_ip ,
 testcase_303647, ., nmcli/./runtest.sh testcase_303647 ,
 testcase_303648, ., nmcli/./runtest.sh testcase_303648 ,
 testcase_303649, ., nmcli/./runtest.sh testcase_303649 ,
