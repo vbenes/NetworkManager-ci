@@ -21,11 +21,11 @@ function setup_veth_env ()
     #    echo "no-auto-default=*" >> /etc/NetworkManager/NetworkManager.conf
     #    echo "ignore-carrier=*" >> /etc/NetworkManager/NetworkManager.conf
     #    sleep 1
-    #    service NetworkManager restart
+    #    systemctl restart NetworkManager; sleep 1
     #fi
     yum -y install NetworkManager-config-server
     cp /usr/lib/NetworkManager/conf.d/00-server.conf /etc/NetworkManager/conf.d/00-server.conf
-    service NetworkManager restart
+    systemctl restart NetworkManager; sleep 1
 
     # making sure the active ethernet device is eth0 and profile name testeth0
     if [ ! "eth0" == $(nmcli -f TYPE,DEVICE -t c sh -a  | grep ethernet | awk '{split($0,a,":"); print a[2]}') ]; then
@@ -126,7 +126,7 @@ function setup_veth_env ()
     # creating testeth profile for the simulater external device
     nmcli c add type ethernet con-name testeth10 ifname eth10 autoconnect no
 
-    service NetworkManager restart
+    systemctl restart NetworkManager; sleep 1
 
     nmcli con up testeth0
 
@@ -201,7 +201,7 @@ function teardown_veth_env ()
 
     done
 
-    service NetworkManager restart
+    systemctl restart NetworkManager; sleep 1
 
     # log state of net after the teardown
     ip a
