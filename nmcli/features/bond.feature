@@ -1127,10 +1127,10 @@
     @slaves @bond @vlan @restart
     @vlan_over_no_L3_bond_restart_persistence
     Scenario: nmcli - bond - restart persistence of no L3 bond in vlan
-     * Add a new connection of type "bond" and options "con-name bond0 autoconnect no ifname nm-bond ipv4.method disable ipv6.method ignore"
-     * Add a new connection of type "ethernet" and options "con-name bond0.0 autoconnect no ifname eth1 master nm-bond"
-     * Add a new connection of type "ethernet" and options "con-name bond0.1 autoconnect no ifname eth2 master nm-bond"
-     * Add a new connection of type "vlan" and options "con-name vlan dev nm-bond id 153 autoconnect no ip4 10.66.66.1/24"
+    * Add a new connection of type "bond" and options "con-name bond0 autoconnect no ifname nm-bond ipv4.method disable ipv6.method ignore"
+    * Add a new connection of type "ethernet" and options "con-name bond0.0 autoconnect no ifname eth1 master nm-bond"
+    * Add a new connection of type "ethernet" and options "con-name bond0.1 autoconnect no ifname eth2 master nm-bond"
+    * Add a new connection of type "vlan" and options "con-name vlan dev nm-bond id 153 autoconnect no ip4 10.66.66.1/24 ipv6.method ignore"
     * Bring "up" connection "bond0"
     * Bring "up" connection "bond0.0"
     * Bring "up" connection "bond0.1"
