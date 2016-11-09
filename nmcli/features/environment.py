@@ -290,6 +290,7 @@ def before_scenario(context, scenario):
 
         if 'shutdown_service_any' in scenario.tags or 'bridge_manipulation_with_1000_slaves' in scenario.tags:
             call("modprobe -r qmi_wwan", shell=True)
+            call("modprobe -r cdc-mbim", shell=True)
 
         if 'need_s390x' in scenario.tags:
             arch = check_output("uname -p", shell=True).strip()
