@@ -797,18 +797,19 @@ Feature: nmcli - general
 
 
     @rhbz1079353
-    @ethernet
-    @teardown_testveth
+    @ethernet @teardown_testveth
     @nmcli_general_wait_for_carrier_on_new_device_request
     Scenario: nmcli - general - wait for carrier on new device activation request
     * Add a new connection of type "ethernet" and options "ifname testX con-name ethernet0 autoconnect no"
     * Prepare simulated veth device "testX" wihout carrier
+    * Execute "nmcli con modify ethernet0 ipv4.may-fail no"
     * Execute "nmcli con up ethernet0" without waiting for process to finish
     * Wait for at least "1" seconds
     * Execute "ip netns exec testX_ns ip link set testXp up"
     * "connected:ethernet0" is visible with command "nmcli -t -f STATE,CONNECTION device" in "60" seconds
     Then "192" is visible with command "ip a s testX" in "60" seconds
     Then "2620" is visible with command "ip a s testX" in "60" seconds
+
 
     # Tied to the bz, though these are not direct verifiers
     @rhbz1079353
