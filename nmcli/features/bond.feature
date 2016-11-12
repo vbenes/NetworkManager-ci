@@ -1151,3 +1151,30 @@
      And "eth2:connected:bond0.1" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device"
      And "nm-bond.153:connected:vlan" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device"
      And "10.66.66.1/24" is visible with command "ip a s nm-bond.153"
+
+
+     @rhbz1371126
+     @ver+=1.4.0
+     @slaves @bond @teardown_testveth @restart
+     @bond_leave_L2_only_up_when_going_down
+     Scenario: nmcli - bond - leave UP with L2 only config
+      * Prepare simulated test "testX" device
+      * Add a new connection of type "bond" and options "con-name bond0 ifname nm-bond autoconnect no ipv4.method disabled ipv6.method ignore"
+      * Add a new connection of type "ethernet" and options "con-name bond0.0 ifname testX autoconnect no connection.master nm-bond connection.slave-type bond"
+      * Bring "up" connection "bond0.0"
+      When "nm-bond:bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "20" seconds
+       And "state UP" is visible with command "ip -6 a s nm-bond"
+       And "inet6 fe80" is visible with command "ip -6 a s nm-bond"
+       And "inet6 2620" is visible with command "ip -6 a s nm-bond" in "5" seconds
+       And "tentative" is not visible with command "ip -6 a s nm-bond" in "5" seconds
+      * Execute "killall NetworkManager && sleep 5"
+      * Execute "systemctl restart NetworkManager"
+      When "state UP" is visible with command "ip -6 a s nm-bond"
+       And "inet6 fe80" is visible with command "ip -6 a s nm-bond" for full "10" seconds
+       And "inet6 2620" is visible with command "ip -6 a s nm-bond"
+      * Bring "up" connection "bond0.0"
+      Then "nm-bond:bond:connected:bond0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "20" seconds
+       And "state UP" is visible with command "ip -6 a s nm-bond"
+       And "inet6 fe80" is visible with command "ip -6 a s nm-bond"
+       And "inet6 2620" is visible with command "ip -6 a s nm-bond" in "5" seconds
+       And "tentative" is not visible with command "ip -6 a s nm-bond" in "5" seconds

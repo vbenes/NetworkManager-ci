@@ -698,3 +698,30 @@
      * Add a new connection of type "team-slave" and options "con-name team0.0 ifname eth10 master nm-team"
      * Bring "up" connection "team0.0"
     Then "2168::16" is visible with command "ip a s nm-team.1" for full "10" seconds
+
+
+    @rhbz1371126
+    @ver+=1.4.0
+    @team_slaves @team @teardown_testveth @restart
+    @team_leave_L2_only_up_when_going_down
+    Scenario: nmcli - team - leave UP with L2 only config
+     * Prepare simulated test "testX" device
+     * Add a new connection of type "team" and options "con-name team0 ifname nm-team autoconnect no ipv4.method disabled ipv6.method ignore"
+     * Add a new connection of type "ethernet" and options "con-name team0.0 ifname testX autoconnect no connection.master nm-team connection.slave-type team"
+     * Bring "up" connection "team0.0"
+     When "nm-team:team:connected:team0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "20" seconds
+      And "state UP" is visible with command "ip -6 a s nm-team"
+      And "inet6 fe80" is visible with command "ip -6 a s nm-team"
+      And "inet6 2620" is visible with command "ip -6 a s nm-team" in "5" seconds
+      And "tentative" is not visible with command "ip -6 a s nm-team" in "5" seconds
+     * Execute "killall NetworkManager && sleep 5"
+     * Execute "systemctl restart NetworkManager"
+     When "state UP" is visible with command "ip -6 a s nm-team"
+      And "inet6 fe80" is visible with command "ip -6 a s nm-team" for full "10" seconds
+      And "inet6 2620" is visible with command "ip -6 a s nm-team"
+     * Bring "up" connection "team0.0"
+     Then "nm-team:team:connected:team0" is visible with command "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device" in "20" seconds
+      And "state UP" is visible with command "ip -6 a s nm-team"
+      And "inet6 fe80" is visible with command "ip -6 a s nm-team"
+      And "inet6 2620" is visible with command "ip -6 a s nm-team" in "5" seconds
+      And "tentative" is not visible with command "ip -6 a s nm-team" in "5" seconds
