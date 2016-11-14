@@ -65,11 +65,11 @@ def dump_status(context, when):
 
 def setup_racoon(mode, dh_group):
     print ("setting up racoon")
-    call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
-    call("[ -x /usr/sbin/racoon ] || yum -y install ipsec-tools", shell=True)
-
-    # This is an internal RH workaround for secondary architecures that are not present in EPEL
-    call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
+    if arch == "s390x" or arch == 'aarch64':
+        call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
+    else:
+        call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
+        call("[ -x /usr/sbin/racoon ] || yum -y install ipsec-tools", shell=True)
 
     cfg = Popen("sudo sh -c 'cat >/etc/racoon/racoon.conf'", stdin=PIPE, shell=True).stdin
     cfg.write('# Racoon configuration for Libreswan client testing')
