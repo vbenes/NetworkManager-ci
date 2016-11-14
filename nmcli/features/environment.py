@@ -65,6 +65,7 @@ def dump_status(context, when):
 
 def setup_racoon(mode, dh_group):
     print ("setting up racoon")
+    arch = check_output("uname -p", shell=True).strip()
     if arch == "s390x" or arch == 'aarch64':
         call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
     else:
