@@ -531,7 +531,7 @@ Feature: nmcli - general
     @no_error_when_firewald_restarted
     Scenario: NM - general - no error when firewalld restarted
     * Execute "sudo systemctl restart firewalld"
-    Then "nm_connection_get_setting_connection: assertion" is not visible with command "journalctl --since '10 seconds ago' --no-pager"
+    Then "nm_connection_get_setting_connection: assertion" is not visible with command "journalctl --since '10 seconds ago' --no-pager |grep nm_connection"
 
 
     @rhbz1286576
@@ -846,7 +846,7 @@ Feature: nmcli - general
     @ctc_device_recognition
     Scenario: NM - general - ctc device as ethernet recognition
     * Execute "znetconf -a $(znetconf -u |grep CTC |awk 'BEGIN { FS = "," } ; { print $1 }')"
-    Then "ctc0\s+ethernet\s+disconnected" is visible with command "nmcli device"
+    Then "ethernet" is visible with command "nmcli dev |grep $(znetconf -c |grep ctc | awk '{print $5}')"
 
 
     @rhbz1128581

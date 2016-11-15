@@ -289,6 +289,11 @@ def before_scenario(context, scenario):
             if arch == "s390x":
                 sys.exit(0)
 
+        if 'not_on_aarch64' in scenario.tags:
+            arch = check_output("uname -p", shell=True).strip()
+            if arch == "aarch64":
+                sys.exit(0)
+
         if 'shutdown_service_any' in scenario.tags or 'bridge_manipulation_with_1000_slaves' in scenario.tags:
             call("modprobe -r qmi_wwan", shell=True)
             call("modprobe -r cdc-mbim", shell=True)
@@ -430,6 +435,7 @@ def before_scenario(context, scenario):
             call("sudo yum -y install firewalld", shell=True)
             call("sudo systemctl unmask firewalld", shell=True)
             call("sudo systemctl start firewalld", shell=True)
+            call("sudo nmcli con modify testeth0 connection.zone public")
             #call("sleep 4", shell=True)
 
         if ('ethernet' in scenario.tags) or ('bridge' in scenario.tags) or ('vlan' in scenario.tags):

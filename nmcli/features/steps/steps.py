@@ -319,6 +319,7 @@ def check_describe_output_in_editor(context, options, obj):
     options = options.split('|')
     for opt in options:
         context.prompt.sendcontrol('c')
+        context.prompt.send('\n')
         context.prompt.send('set %s \t\t' % obj)
         sleep(0.25)
         a =  context.prompt.expect(["%s" % opt, pexpect.TIMEOUT], timeout=5)
