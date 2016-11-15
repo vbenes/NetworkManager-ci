@@ -435,7 +435,7 @@ def before_scenario(context, scenario):
             call("sudo yum -y install firewalld", shell=True)
             call("sudo systemctl unmask firewalld", shell=True)
             call("sudo systemctl start firewalld", shell=True)
-            call("sudo nmcli con modify testeth0 connection.zone public")
+            call("sudo nmcli con modify testeth0 connection.zone public", shell=True)
             #call("sleep 4", shell=True)
 
         if ('ethernet' in scenario.tags) or ('bridge' in scenario.tags) or ('vlan' in scenario.tags):
