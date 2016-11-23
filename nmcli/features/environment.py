@@ -50,7 +50,8 @@ def dump_status(context, when):
             call(cmd, shell=True, stdout=context.log)
     else:
         for cmd in ['ip addr', 'ip -4 route', 'ip -6 route',
-            'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w', 'nmcli con show testeth0', 'sysctl -a|grep ra |grep ipv6 |grep "all\|default\|eth"']:
+            'nmcli g', 'nmcli c', 'nmcli d', 'nmcli -f IN-USE,SSID,CHAN,SIGNAL,SECURITY d w', 'nmcli con show testeth0',\
+            'sysctl -a|grep ra |grep ipv6 |grep "all\|default\|eth\|test"']:
             context.log.write("--- %s ---\n" % cmd)
             context.log.flush()
             call(cmd, shell=True, stdout=context.log)
@@ -1184,9 +1185,9 @@ def after_scenario(context, scenario):
             context.nm_restarted = True
             call('sudo nmcli connection delete ethernet0 ethernet1', shell=True)
             call('sudo systemctl stop network.service', shell=True)
-            call('sudo systemctl restart NetworkManager.service', shell=True)
             call('sysctl net.ipv6.conf.all.accept_ra=1', shell=True)
             call('sysctl net.ipv6.conf.default.accept_ra=1', shell=True)
+            call('sudo systemctl restart NetworkManager.service', shell=True)
             call('sudo nmcli connection down testeth1 testeth2', shell=True)
             call('sudo nmcli connection up testeth0', shell=True)
 
