@@ -700,6 +700,9 @@ def after_scenario(context, scenario):
         if 'restart' in scenario.tags:
             print ("---------------------------")
             print ("restarting NM service")
+            call("nmcli connection modify testeth0 ipv4.method auto", shell=True)
+            call("nmcli connection modify testeth0 ipv6.method auto", shell=True)
+            call("nmcli connection up id testeth0", shell=True)
             call('sudo service NetworkManager restart', shell=True)
             sleep(5)
 
