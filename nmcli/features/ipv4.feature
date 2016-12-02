@@ -116,8 +116,7 @@ Feature: nmcli: ipv4
 
 
     @ipv4_take_manually_created_ifcfg_with_ip
-    @veth
-    @ipv4
+    @veth @ipv4 @delete_testeth0
     # covering https://bugzilla.redhat.com/show_bug.cgi?id=1073824
     Scenario: nmcli - ipv4 - use manually created ipv4 profile
     * Append "DEVICE='eth10'" to ifcfg file "ethie"
