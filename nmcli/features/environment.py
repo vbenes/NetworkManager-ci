@@ -1244,6 +1244,7 @@ def after_scenario(context, scenario):
             print ("---------------------------")
             print ("restoring testeth0 profile")
             call('sudo nmcli connection delete eth0', shell=True)
+            call('sudo nmcli connection delete testeth0', shell=True)
             call("nmcli connection add type ethernet con-name testeth0 ifname eth0", shell=True)
 
         if 'kill_dbus-monitor' in scenario.tags:
