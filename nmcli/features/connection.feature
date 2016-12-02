@@ -380,10 +380,9 @@ Feature: nmcli: connection
        And "public\s+interfaces: eth0" is visible with command "firewall-cmd --get-active-zones"
 
 
-    @route_priorities
-    @con
-    @eth
     @rhbz663730
+    @con @eth @connect_testeth0
+    @route_priorities
     Scenario: nmcli - connection - route priorities
      * Add a new connection of type "ethernet" and options "ifname eth0 con-name ethie autoconnect no"
      * Add a new connection of type "ethernet" and options "ifname eth10 con-name connie autoconnect no"
