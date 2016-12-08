@@ -280,8 +280,8 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie2"
-    Then "default via 192.168.4.1 dev eth1  proto static  metric 10[1-2]" is visible with command "ip route" in "5" seconds
-    Then "default via 192.168.4.1 dev eth2  proto static  metric 10[1-2]" is visible with command "ip route" in "5" seconds
+    Then "default via 192.168.4.1 dev eth1  proto static  metric 10[0-2]" is visible with command "ip route" in "5" seconds
+    Then "default via 192.168.4.1 dev eth2  proto static  metric 10[0-2]" is visible with command "ip route" in "5" seconds
     Then "192.168.1.0/24 dev eth2  proto kernel  scope link  src 192.168.1.10" is visible with command "ip route"
     Then "192.168.2.0/24 via 192.168.1.11 dev eth2  proto static  metric 2" is not visible with command "ip route"
     Then "192.168.3.0/24 dev eth1  proto kernel  scope link  src 192.168.3.10" is visible with command "ip route"
