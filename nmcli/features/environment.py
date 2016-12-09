@@ -696,8 +696,6 @@ def after_scenario(context, scenario):
         if traffic:
             context.embed('text/plain', traffic)
 
-        dump_status(context, 'after %s' % scenario.name)
-
         if 'restart' in scenario.tags:
             print ("---------------------------")
             print ("restarting NM service")
@@ -706,6 +704,8 @@ def after_scenario(context, scenario):
             call("nmcli connection up id testeth0", shell=True)
             call('sudo service NetworkManager restart', shell=True)
             sleep(5)
+
+        dump_status(context, 'after %s' % scenario.name)
 
         if '1000' in scenario.tags:
             print ("---------------------------")
