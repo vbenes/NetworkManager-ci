@@ -63,6 +63,7 @@ def append_to_ifcfg(context, line, name):
 def add_vpnc_connection_for_iface(context, name, ifname, vpn):
     cli = pexpect.spawn('nmcli connection add con-name %s type vpn ifname %s vpn-type %s' % (name, ifname, vpn), logfile=context.log)
     r = cli.expect(['Error', pexpect.EOF])
+    sleep(1)
     if r == 0:
         raise Exception('Got an Error while adding %s connection %s for device %s' % (vpn, name, ifname))
 
