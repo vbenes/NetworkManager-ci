@@ -176,15 +176,16 @@ def setup_racoon(mode, dh_group):
 
     call("sudo ip netns exec racoon dnsmasq --dhcp-range=172.31.70.2,172.31.70.40,2m --interface=racoon0 --bind-interfaces", shell=True)
 
-    call("sudo nmcli con add type ethernet con-name rac1 ifname racoon1 autoconnect no ipv6.method ignore ipv4.route-metric 90", shell=True)
-    #call("sudo nmcli con modify rac1 ", shell=True)
-    sleep(2)
+    call("sudo nmcli con add type ethernet con-name rac1 ifname racoon1 autoconnect no", shell=True)
+    sleep(1)
+    call("sudo nmcli con modify rac1 ipv6.method ignore ipv4.route-metric 90", shell=True)
+    sleep(1)
     call("sudo nmcli connection up id rac1", shell=True)
 
     # Sometime there is larger time needed to set everything up, sometimes not. Let's make the delay
     # to fit all situations.
     # Clean properly if racoon1 wasn't set correctly. Fail test immediately.
-    wait = 10
+    wait = 20
     while wait > 0:
         if call("ip a s racoon1 |grep 172.31.70", shell=True) != 0:
             sleep(1)
