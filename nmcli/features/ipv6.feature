@@ -889,6 +889,7 @@ Feature: nmcli: ipv6
     Then "tentative" is not visible with command "nmcli connection down testeth0 ; nmcli connection down tc1; sleep 2; nmcli connection up id tc1; time nm-online ;ip a s test1|grep 'global tentative'; nmcli connection up testeth0"
 
 
+    @ver-=1.5
     @rhbz1183015
     @ipv6
     @ipv6_shared_connection_error
