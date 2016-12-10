@@ -697,6 +697,19 @@ def after_scenario(context, scenario):
         if traffic:
             context.embed('text/plain', traffic)
 
+        if 'runonce' in scenario.tags:
+            print ("---------------------------")
+            print ("delete profiles and start NM")
+            call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
+            call("rm -rf /etc/NetworkManager/conf.d/01-run-once.conf", shell=True)
+            sleep (1)
+            call("systemctl restart  NetworkManager", shell=True)
+            sleep (1)
+            call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
+            call("nmcli connection delete ethie", shell=True)
+            call("nmcli device disconnect eth10", shell=True)
+            call("nmcli connection up testeth0", shell=True)
+
         if 'restart' in scenario.tags:
             print ("---------------------------")
             print ("restarting NM service")
@@ -907,19 +920,6 @@ def after_scenario(context, scenario):
             call("echo 0 > /proc/sys/net/ipv6/conf/default/use_tempaddr", shell=True)
             call("service NetworkManager restart", shell=True)
             #sleep(TIMER)
-
-        if 'runonce' in scenario.tags:
-            print ("---------------------------")
-            print ("delete profiles and start NM")
-            call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
-            call("rm -rf /etc/NetworkManager/conf.d/01-run-once.conf", shell=True)
-            sleep (1)
-            call("systemctl restart  NetworkManager", shell=True)
-            sleep (1)
-            call("for i in $(pidof nm-iface-helper); do kill -9 $i; done", shell=True)
-            call("nmcli connection delete ethie", shell=True)
-            call("nmcli device disconnect eth10", shell=True)
-            call("nmcli connection up testeth0", shell=True)
 
         if 'ipv6' in scenario.tags or 'ipv6_2' in scenario.tags:
             print ("---------------------------")

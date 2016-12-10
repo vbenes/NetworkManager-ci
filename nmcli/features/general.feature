@@ -662,6 +662,7 @@ Feature: nmcli - general
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
+    * Execute "sleep 1"
     * Start NM
     * "192" is visible with command " ip a s eth1 |grep 'inet '|grep dynamic" in "60" seconds
     * Execute "sleep 120"
@@ -689,6 +690,7 @@ Feature: nmcli - general
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
+    * Execute "sleep 1"
     * Start NM
     * Force renew IPv6 for "testX"
     When "2620:" is not visible with command "ip a s testX"
@@ -703,14 +705,16 @@ Feature: nmcli - general
     Scenario: NM - general - helper running for localhost on localdo
     * Bring "up" connection "testeth0"
     * Disconnect device "eth0"
+    * Execute "sleep 2"
     * Stop NM and clean "eth0"
     When "state DOWN" is visible with command "ip a s eth0" in "5" seconds
     * Execute "hostnamectl set-hostname localhost.localdomain"
     * Execute "echo '[main]' > /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'configure-and-quit=yes' >> /etc/NetworkManager/conf.d/01-run-once.conf"
     * Execute "echo 'dhcp=internal' >> /etc/NetworkManager/conf.d/01-run-once.conf"
+    * Execute "sleep 1"
     * Start NM
-    Then "eth0" is visible with command "ps aux|grep helper" in "20" seconds
+    Then "eth0" is visible with command "ps aux|grep helper" in "40" seconds
     Then "eth0" is visible with command "ps aux|grep helper" for full "20" seconds
 
 
