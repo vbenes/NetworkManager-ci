@@ -478,6 +478,11 @@ def before_scenario(context, scenario):
             call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
             call("/usr/sbin/ipsec --checknss", shell=True)
             setup_racoon (mode="aggressive", dh_group=5)
+            if 'libreswan_add_profile' in scenario.tags:
+                # Workaround for failures first in libreswan setup
+                teardown_racoon ()
+                setup_racoon (mode="aggressive", dh_group=5)
+
             #call("ip route add default via 172.31.70.1", shell=True)
 
         if 'libreswan_main' in scenario.tags:
