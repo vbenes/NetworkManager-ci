@@ -105,6 +105,7 @@ libreswan_activate_asking_for_password_and_secret, ., nmcli/./runtest.sh libresw
 
 #@vpn_start
 vpn_describe, ., nmcli/./runtest.sh vpn_describe ,
+multiple_vpn_connections, ., nmcli/./runtest.sh multiple_vpn_connections ,
 vpn_keep_username_from_data, ., nmcli/./runtest.sh vpn_keep_username_from_data ,
 vpn_list_args, ., nmcli/./runtest.sh vpn_list_args ,
 #@vpn_end

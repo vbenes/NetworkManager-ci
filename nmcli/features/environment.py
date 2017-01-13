@@ -473,24 +473,6 @@ def before_scenario(context, scenario):
             call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
             setup_racoon (mode="aggressive", dh_group=2)
 
-        if 'libreswan' in scenario.tags:
-            print ("---------------------------")
-            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
-            call("/usr/sbin/ipsec --checknss", shell=True)
-            setup_racoon (mode="aggressive", dh_group=5)
-            if 'libreswan_add_profile' in scenario.tags:
-                # Workaround for failures first in libreswan setup
-                teardown_racoon ()
-                setup_racoon (mode="aggressive", dh_group=5)
-
-            #call("ip route add default via 172.31.70.1", shell=True)
-
-        if 'libreswan_main' in scenario.tags:
-            print ("---------------------------")
-            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
-            call("/usr/sbin/ipsec --checknss", shell=True)
-            setup_racoon (mode="main", dh_group=5)
-
         if 'lldp' in scenario.tags:
             print ("---------------------------")
             print ("install tcpreplay")
@@ -541,6 +523,24 @@ def before_scenario(context, scenario):
             cfg.write("\n")
             cfg.close()
             call("sudo systemctl restart openvpn@trest-server", shell=True)
+
+        if 'libreswan' in scenario.tags:
+            print ("---------------------------")
+            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
+            call("/usr/sbin/ipsec --checknss", shell=True)
+            setup_racoon (mode="aggressive", dh_group=5)
+            if 'libreswan_add_profile' in scenario.tags:
+                # Workaround for failures first in libreswan setup
+                teardown_racoon ()
+                setup_racoon (mode="aggressive", dh_group=5)
+
+            #call("ip route add default via 172.31.70.1", shell=True)
+
+        if 'libreswan_main' in scenario.tags:
+            print ("---------------------------")
+            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
+            call("/usr/sbin/ipsec --checknss", shell=True)
+            setup_racoon (mode="main", dh_group=5)
 
         if 'pptp' in scenario.tags:
             print ("---------------------------")

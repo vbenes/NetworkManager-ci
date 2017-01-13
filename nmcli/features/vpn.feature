@@ -11,6 +11,26 @@
     * Quit editor
     Then "vpn.service-type:\s+org.freedesktop.NetworkManager.libreswan" is visible with command "nmcli connection show vpn"
 
+    @ver+=1.4.0
+    @libreswan @openvpn @openvpn6 @openvpn_ipv6
+    @multiple_vpn_connections
+    Scenario: nmcli - vpn - multiple connections
+    * Add a connection named "openvpn" for device "\*" to "openvpn" VPN
+    * Use certificate "sample-keys/client.crt" with key "sample-keys/client.key" and authority "sample-keys/ca.crt" for gateway "127.0.0.1" on OpenVPN connection "openvpn"
+    * Add a connection named "libreswan" for device "\*" to "libreswan" VPN
+    * Use user "budulinek" with password "passwd" and group "yolo" with secret "ipsecret" for gateway "172.31.70.1" on Libreswan connection "libreswan"
+    * Bring "up" connection "libreswan"
+    * Bring "up" connection "openvpn"
+    Then "172.31.80.0/24 .*dev racoon1" is visible with command "ip route"
+    Then "VPN.VPN-STATE:.*VPN connected" is visible with command "nmcli c show libreswan"
+    Then "VPN.BANNER:.*BUG_REPORT_URL" is visible with command "nmcli c show libreswan"
+    Then "IP4.ADDRESS.*172.31.60.2/32" is visible with command "nmcli c show libreswan"
+    Then "IP4.ADDRESS.*172.31.60.2/32" is visible with command "nmcli d show racoon1"
+    Then "IP4.ADDRESS.*172.31.70.*/24" is visible with command "nmcli d show racoon1"
+    Then "IP4.GATEWAY:.*172.31.70.1" is visible with command "nmcli d show racoon1"
+    Then "VPN.VPN-STATE:.*VPN connected" is visible with command "nmcli c show openvpn"
+    Then "IP6.ADDRESS.*2001:db8:666:dead::2/64" is visible with command "nmcli c show openvpn"
+
     @vpn_add_profile_novice_mode
     Scenario: nmcli - vpn - novice mode - add default connection
 
