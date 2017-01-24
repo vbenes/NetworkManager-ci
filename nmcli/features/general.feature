@@ -507,6 +507,7 @@ Feature: nmcli - general
     Then "eth2" is visible with command "nmcli con show eth1.99"
 
 
+    @ver-=1.5
     @mock
     @nmcli_device_wifi_with_two_devices
     Scenario: nmcli - device - wifi show two devices
