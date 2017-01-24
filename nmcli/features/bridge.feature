@@ -344,6 +344,7 @@ Feature: nmcli - bridge
     * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
     * Execute "for i in $(seq 0 1000); do ip link add port$i type dummy; ip link set port$i master bridge0; done"
     * Delete connection "bridge0"
+    * Settle with RTNETLINK
     Then Compare kernel and NM devices
     Then "GENERAL.DEVICE:\s+port999" is visible with command "nmcli device show port999"
 

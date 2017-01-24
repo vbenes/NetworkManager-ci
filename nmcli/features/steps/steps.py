@@ -526,7 +526,28 @@ def config_dhcp(context, subnet, lease):
         f.write(line+'\n')
     f.close()
 
+@step(u'Settle with RTNETLINK')
+def settle(context):
+    # This is a temporary measure until we have a proper API
+    # and a nmcli command to actually settle with platform
+    from gi.repository import NM
+    client = NM.Client.new (None)
 
+    while True:
+         devs = client.get_devices()
+         sleep(1)
+         devs2 = client.get_devices()
+
+         if len(devs) != len(devs2):
+             continue
+
+         different = False
+         for i in range(0, len(devs)):
+             if devs[i].get_iface() != devs2[i].get_iface():
+                 different = True
+                 break
+         if not different:
+             break
 
 @step(u'Compare kernel and NM devices')
 def compare_devices(context):
