@@ -199,7 +199,7 @@
     * Add a new connection of type "vpn" and options "ifname \* con-name vpn autoconnect no vpn-type libreswan"
     * Open editor for connection "vpn"
     * Submit "set vpn.service-type org.freedesktop.NetworkManager.libreswan" in editor
-    * Submit "set vpn.data right = ciscovpn.idm.lab.bos.redhat.com, xauthpasswordinputmodes = save, xauthpassword-flags = 1, esp = aes-sha1;modp1024, leftxauthusername = desktopqe, pskinputmodes = save, ike = aes-sha1;modp1024, pskvalue-flags = 1, leftid = desktopqe" in editor
+    * Submit "set vpn.data right = vpn-test.com, xauthpasswordinputmodes = save, xauthpassword-flags = 1, esp = aes-sha1;modp1024, leftxauthusername = desktopqe, pskinputmodes = save, ike = aes-sha1;modp1024, pskvalue-flags = 1, leftid = desktopqe" in editor
     * Save in editor
     * Submit "set vpn.user-name incorrectuser"
     * Save in editor

@@ -402,11 +402,11 @@ Feature: nmcli: ipv6
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv4.ignore-auto-dns yes" in editor
-     * Submit "set ipv6.dns-search redhat.com" in editor
+     * Submit "set ipv6.dns-search google.com" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then "redhat.com" is visible with command "cat /etc/resolv.conf" in "5" seconds
+    Then "google.com" is visible with command "cat /etc/resolv.conf" in "5" seconds
 
 
     @ipv6_dns-search_remove
@@ -417,7 +417,7 @@ Feature: nmcli: ipv6
      * Open editor for connection "ethie"
      * Submit "set ipv4.method disabled" in editor
      * Submit "set ipv4.ignore-auto-dns yes" in editor
-     * Submit "set ipv6.dns-search redhat.com" in editor
+     * Submit "set ipv6.dns-search google.com" in editor
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
@@ -427,7 +427,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then " google.com" is not visible with command "cat /etc/resolv.conf"
 
 
     @ipv6_ignore-auto-dns_set
@@ -443,7 +443,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then " google.com" is not visible with command "cat /etc/resolv.conf"
     Then "virtual" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver " is not visible with command "cat /etc/resolv.conf" in "5" seconds
 
@@ -461,7 +461,7 @@ Feature: nmcli: ipv6
      * Save in editor
      * Quit editor
      * Bring "up" connection "ethie"
-    Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
+    Then " google.com" is not visible with command "cat /etc/resolv.conf"
     Then "virtual" is not visible with command "cat /etc/resolv.conf"
     Then "nameserver " is not visible with command "cat /etc/resolv.conf" in "5" seconds
 

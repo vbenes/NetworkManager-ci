@@ -11,9 +11,14 @@ if [ -e /tmp/nm_newveth_configured ]; then
 fi
 
 if [ ! -e /tmp/nm_eth_configured ]; then
-    #set the root password to 'redhat' (for overcoming polkit easily)
-    echo "Setting root password to 'redhat'"
-    echo "redhat" | passwd root --stdin
+    #set the root password to 'networkmanager' (for overcoming polkit easily)
+    echo "Setting root password to 'networkmanager'"
+    echo "networkmanager" | passwd root --stdin
+
+    echo "Setting test's password to 'networkmanager'"
+    userdel -r test
+    useradd -m test
+    echo "networkmanager" | passwd test --stdin
 
     #adding ntp and syncing time
     yum -y install ntp tcpdump

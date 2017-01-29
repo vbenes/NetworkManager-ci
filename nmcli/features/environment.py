@@ -68,7 +68,7 @@ def setup_racoon(mode, dh_group):
     print ("setting up racoon")
     arch = check_output("uname -p", shell=True).strip()
     if arch == "s390x" or arch == 'aarch64':
-        call("[ -x /usr/sbin/racoon ] || yum -y install http://file.brq.redhat.com/vbenes/ipsec-tools/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
+        call("[ -x /usr/sbin/racoon ] || yum -y install https://vbenes.fedorapeople.org/NM/ipsec-tools-0.8.2-1.el7.$(uname -p).rpm", shell=True)
     else:
         call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
         call("[ -x /usr/sbin/racoon ] || yum -y install ipsec-tools", shell=True)
@@ -493,9 +493,10 @@ def before_scenario(context, scenario):
             call("rpm -q NetworkManager-openvpn || sudo yum -y install NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
 
             # This is an internal RH workaround for secondary architecures that are not present in EPEL
-            call("[ -x /usr/sbin/openvpn ] || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/openvpn-2.3.8-1.el7.$(uname -p).rpm\
-                                                                  http://file.brq.redhat.com/vbenes/repo/pkcs11-helper-1.11-3.el7.$(uname -p).rpm", shell=True)
-            call("rpm -q NetworkManager-openvpn || sudo yum -y install http://file.brq.redhat.com/vbenes/repo/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
+
+            call("[ -x /usr/sbin/openvpn ] || sudo yum -y install https://vbenes.fedorapeople.org/NM/openvpn-2.3.8-1.el7.$(uname -p).rpm\
+                                                                  https://vbenes.fedorapeople.org/NM/pkcs11-helper-1.11-3.el7.$(uname -p).rpm", shell=True)
+            call("rpm -q NetworkManager-openvpn || sudo yum -y install https://vbenes.fedorapeople.org/NM/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
 
             samples = glob('/usr/share/doc/openvpn*/sample')[0]
             cfg = Popen("sudo sh -c 'cat >/etc/openvpn/trest-server.conf'", stdin=PIPE, shell=True).stdin

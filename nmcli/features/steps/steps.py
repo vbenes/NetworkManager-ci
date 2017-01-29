@@ -971,17 +971,17 @@ def check_metered_status(context, value):
 @step(u'Network trafic "{state}" dropped')
 def network_dropped(context, state):
     if state == "is":
-        assert command_code(context, 'ping -c 1 -W 1 redhat.com') != 0
+        assert command_code(context, 'ping -c 1 -W 1 boston.com') != 0
     if state == "is not":
-        assert command_code(context, 'ping -c 1 -W 1 redhat.com') == 0
+        assert command_code(context, 'ping -c 1 -W 1 boston.com') == 0
 
 
 @step(u'Network trafic "{state}" dropped on "{device}"')
 def network_dropped_two(context, state, device):
     if state == "is":
-        assert command_code(context, 'ping -c 2 -I %s -W 1 10.11.5.19' % device) != 0
+        assert command_code(context, 'ping -c 2 -I %s -W 1 8.8.8.8' % device) != 0
     if state == "is not":
-        assert command_code(context, 'ping -c 2 -I %s -W 1 10.11.5.19' % device) == 0
+        assert command_code(context, 'ping -c 2 -I %s -W 1 8.8.8.8' % device) == 0
 
 
 @step(u'No error appeared in editor')

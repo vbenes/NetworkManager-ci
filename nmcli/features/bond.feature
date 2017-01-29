@@ -1,9 +1,14 @@
  Feature: nmcli: bond
 
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
 
-    @testcase_281207
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_add_default_bond
     Scenario: nmcli - bond - add default bond
      * Open editor for a type "bond"
      * Save in editor
@@ -16,9 +21,8 @@
      Then Check bond "nm-bond" in proc
 
 
+    @slaves @bond
     @nmcli_novice_mode_create_bond_with_default_options
-    @slaves
-    @bond
     Scenario: nmcli - bond - novice - create bond with default options
      * Open wizard for adding new connection
      * Expect "Connection type"
@@ -50,9 +54,8 @@
      And "BOOTPROTO=dhcp" is not visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bond0"
 
 
+    @slaves @bond
     @nmcli_novice_mode_create_bond_with_mii_monitor_values
-    @slaves
-    @bond
     Scenario: nmcli - bond - novice - create bond with miimon monitor
      * Open wizard for adding new connection
      * Expect "Connection type"
@@ -79,9 +82,8 @@
     Then "Down Delay \(ms\): 200" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
+    @slaves @bond
     @nmcli_novice_mode_create_bond_with_arp_monitor_values
-    @slaves
-    @bond
     Scenario: nmcli - bond - novice - create bond with arp monitor
      * Open wizard for adding new connection
      * Expect "Connection type"
@@ -111,9 +113,8 @@
      Then "ARP IP target/s \(n.n.n.n form\): 192.168.100.1" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
+    @slaves @bond
     @nmcli_novice_mode_create_bond-slave_with_default_options
-    @slaves
-    @bond
     Scenario: nmcli - bond - novice - create bond-slave with default options
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Open wizard for adding new connection
@@ -128,9 +129,8 @@
     Then Check slave "eth1" in bond "nm-bond" in proc
 
 
-    @testcase_280563
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_add_slaves
     Scenario: nmcli - bond - add slaves
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -141,10 +141,9 @@
      Then Check slave "eth2" in bond "nm-bond" in proc
 
 
+    @rhbz1057494
+    @slaves @bond
     @add_bond_master_via_uuid
-    @slaves
-    @bond
-    # bug verification for 1057494
     Scenario: nmcli - bond - master via uuid
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "bond0" on device "eth1" named "bond0.0"
@@ -152,9 +151,8 @@
     Then Check slave "eth1" in bond "nm-bond" in proc
 
 
-    @testcase_280567
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_remove_all_slaves
     Scenario: nmcli - bond - remove all slaves
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -163,9 +161,8 @@
      Then Check bond "nm-bond" link state is "down"
 
 
-    @testcase_280565
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_remove_slave
     Scenario: nmcli - bond - remove slave
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -177,9 +174,9 @@
      Then Check slave "eth1" in bond "nm-bond" in proc
 
 
-    @testcase_301107
     @slaves
     @bond
+    @testcase_301107
     Scenario: nmcli - connection - slave-type and master settings
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add connection type "ethernet" named "bond0.0" for device "eth1"
@@ -195,33 +192,8 @@
      Then Check slave "eth1" in bond "nm-bond" in proc
 
 
-
-    #this VVV is all wrong as secondaries will be disabled for non vpn connections
-
-    # @testcase_301108
-    # @slaves
-    # @bond
-    # Scenario: nmcli - connection - secondaries
-    #  * Add connection type "bond" named "bond0" for device "nm-bond"
-    #  * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
-    #  * Open editor for connection "bond0"
-    #  * Submit "set connection.uuid 00000000-0000-0000-0000-000000000000" in editor
-    #  * Save in editor
-    #  * Quit editor
-    #  * Open editor for connection "bond0.0"
-    #  * Set a property named "connection.secondaries" to "00000000-0000-0000-0000-000000000000" in editor
-    #  * Save in editor
-    #  * Quit editor
-    #  * Bring "up" connection "bond0.0"
-    #  #* Bring "up" connection "bond0"
-    #  Then Check bond "nm-bond" state is "up"
-    #  Then Check slave "eth1" in bond "nm-bond" in proc
-
-
-
-    @testcase_280562
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_remove_active_bond_profile
     Scenario: nmcli - bond - remove active bond profile
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -232,10 +204,8 @@
      Then Check bond "nm-bond" link state is "down"
 
 
-
-    @testcase_281210
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_disconnect
     Scenario: nmcli - bond - disconnect active bond
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -246,10 +216,8 @@
      Then Check bond "nm-bond" link state is "down"
 
 
-
-    @testcase_281356
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_start_by_hand
     Scenario: nmcli - bond - start bond by hand
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -265,9 +233,8 @@
      Then Check slave "eth2" in bond "nm-bond" in proc
 
 
+    @slaves @bond
     @bond_start_by_hand_no_slaves
-    @slaves
-    @bond
     Scenario: nmcli - bond - start bond by hand with no slaves
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -282,9 +249,8 @@
      Then Check slave "eth2" not in bond "nm-bond" in proc
 
 
+    @slaves @bond
     @bond_activate
-    @slaves
-    @bond
     Scenario: nmcli - bond - activate
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -303,10 +269,8 @@
      Then Check slave "eth2" not in bond "nm-bond" in proc
 
 
+    @veth @slaves @bond
     @bond_start_by_hand_with_one_auto_only
-    @veth
-    @slaves
-    @bond
     Scenario: nmcli - bond - start bond by hand with on auto only
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -321,10 +285,8 @@
      Then Check slave "eth2" in bond "nm-bond" in proc
 
 
-    @testcase_281361
-    @veth
-    @slaves
-    @bond
+    @veth @slaves @bond
+    @bond_start_on_boot
     Scenario: nmcli - bond - start bond on boot
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -343,9 +305,9 @@
      Then Check slave "eth1" in bond "nm-bond" in proc
      Then Check slave "eth2" in bond "nm-bond" in proc
 
+
     @rhbz1158529
-    @slaves
-    @bond
+    @slaves @bond
     @bond_slaves_start_via_master
     Scenario: nmcli - bond - start slaves via master
      * Add connection type "bond" named "bond0" for device "nm-bond"
@@ -362,10 +324,8 @@
      Then Check slave "eth2" in bond "nm-bond" in proc
 
 
+    @veth @slaves @bond
     @bond_start_on_boot_with_nothing_auto
-    @veth
-    @slaves
-    @bond
     Scenario: nmcli - bond - start bond on boot - nothing auto
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -389,11 +349,8 @@
      Then Check slave "eth2" not in bond "nm-bond" in proc
 
 
-
+    @veth @slaves @bond
     @bond_start_on_boot_with_one_auto_only
-    @veth
-    @slaves
-    @bond
     Scenario: nmcli - bond - start bond on boot - one slave auto only
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -417,11 +374,8 @@
      Then Check slave "eth2" in bond "nm-bond" in proc
 
 
-
+    @veth @slaves @bond
     @bond_start_on_boot_with_bond_and_one_slave_auto
-    @veth
-    @slaves
-    @bond
     Scenario: nmcli - bond - start bond on boot - bond and one slave auto
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -447,10 +401,8 @@
      Then Check slave "eth2" in bond "nm-bond" in proc
 
 
-
-    @testcase_281170
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_set_miimon_values
     Scenario: nmcli - bond - options - set new miimon values
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -468,10 +420,8 @@
      Then "Down Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
-
-    @testcase_281388
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_options_new_arp_values
     Scenario: nmcli - bond - options - set new arp values
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -495,10 +445,8 @@
      Then Check "nm-bond" has "eth2" in proc
 
 
-
-    @testcase_281392
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_options_arp_vs_miimon_conflict
     Scenario: nmcli - bond - options - set conflicting values between miimon and arp
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -519,9 +467,8 @@
      Then Check "nm-bond" has "eth2" in proc
 
 
-
-    @testcase_281393
     @bond
+    @bond_option_mode_missing
     Scenario: nmcli - bond - options - mode missing
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Open editor for connection "bond0"
@@ -534,9 +481,8 @@
      * Quit editor
 
 
-    @testcase_281249
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_add_option
     Scenario: nmcli - bond - options - add values
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -557,8 +503,8 @@
      Then "Up Delay \(ms\): 200" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
-    @testcase_281558
     @bond
+    @bond_mode_incorrect_value
     Scenario: nmcli - bond - options - add incorrect value
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Open editor for connection "bond0"
@@ -572,9 +518,8 @@
      * Quit editor
 
 
-    @testcase_281241
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_change_options
     Scenario: nmcli - bond - options - change values
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -595,9 +540,8 @@
      Then "Up Delay \(ms\): 100" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
-    @testcase_281243
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_remove_option
     Scenario: nmcli - bond - options - remove a value
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -629,9 +573,8 @@
      Then "Down Delay \(ms\): 0" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
-    @testcase_281155
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_overwrite_options
     Scenario: nmcli - bond - options - overwrite some value
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -647,9 +590,8 @@
      Then "MII Polling Interval \(ms\): 999" is visible with command "cat /proc/net/bonding/nm-bond"
 
 
-    @testcase_280740
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_balance_rr
     Scenario: nmcli - bond - options - mode set to balance-rr
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -672,9 +614,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
-    @testcase_280613
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_active_backup
     Scenario: nmcli - bond - options - mode set to active backup
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -689,9 +630,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
+    @slaves @bond
     @bond_active-backup_primary_set
-    @slaves
-    @bond
     Scenario: nmcli - bond - options - mode set to active backup with primary device
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -708,9 +648,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
-    @testcase_281146
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_balance_xor
     Scenario: nmcli - bond - options - mode set to balance xor
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -725,9 +664,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
-    @testcase_281149
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_broadcast
     Scenario: nmcli - bond - options - mode set to broadcast
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -742,9 +680,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
-    @testcase_281150
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_8023ad
     Scenario: nmcli - bond - options - mode set to 802.3ad
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -759,9 +696,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
+    @slaves @bond
     @bond_8023ad_with_lacp_rate_fast
-    @slaves
-    @bond
     Scenario: nmcli - bond - options - mode set to 802.3ad with lacp_rate fast
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -778,9 +714,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
-    @testcase_281151
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_balance_tlb
     Scenario: nmcli - bond - options - mode set to balance-tlb
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -797,9 +732,8 @@
      Then Check bond "nm-bond" link state is "up"
 
 
-    @testcase_281153
-    @slaves
-    @bond
+    @slaves @bond
+    @bond_mode_balance_alb
     Scenario: nmcli - bond - options - mode set to balance-alb
      * Add connection type "bond" named "bond0" for device "nm-bond"
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
@@ -817,8 +751,7 @@
 
 
     @rhbz1177860
-    @slaves
-    @bond
+    @slaves @bond
     @bond_set_mtu
     Scenario: nmcli - bond - set mtu
      * Add connection type "bond" named "bond0" for device "nm-bond"
@@ -927,16 +860,15 @@
 #FIXME: more tests with arp and conflicts with load balancing can be written
 
     @rhbz1133544
-    @bond_dbus_creation
     @bond
+    @bond_dbus_creation
     Scenario: NM - bond - dbus api bond setting
     * Execute "python tmp/dbus-set-bond.py"
     Then "bond0.*bond\s+nm-bond" is visible with command "nmcli connection"
 
 
     @rhbz1171009
-    @slaves
-    @bond
+    @slaves @bond
     @bond_mode_by_number_in_ifcfg
     Scenario: NM - bond - ifcfg - mode set by number
      * Add connection type "bond" named "bond0" for device "nm-bond"
@@ -1020,8 +952,7 @@
 
 
     @rhbz979425
-    @slaves
-    @bond
+    @slaves @bond
     @bond_device_rename
     Scenario: NM - bond - device rename
      * Add connection type "bond" named "bond0" for device "bondy"
@@ -1040,8 +971,7 @@
 
 
     @rhbz1243371
-    @bond
-    @regenerate_veth
+    @bond @regenerate_veth
     @delete_addrgenmode_bond
     Scenario: NM - bond - addrgenmode bond delete
     * Execute "systemctl stop NetworkManager"
@@ -1057,9 +987,7 @@
 
 
     @rhbz1183420
-    @bond
-    @bridge
-    @slaves
+    @bond @bridge @slaves
     @bond_enslave_to_bridge
     Scenario: nmcli - bond - enslave bond device to bridge
      * Add a new connection of type "bridge" and options "ifname bridge0 con-name bridge0"
@@ -1098,8 +1026,8 @@
       Then "mtu 9000" is visible with command "ip a s bridge0"
 
 
-    @testcase_281154
     @bond
+    @bond_describe
     Scenario: nmcli - bond - describe bond
      * Open editor for a type "bond"
      Then Check "<<< bond >>>|=== \[options\] ===|\[NM property description\]" are present in describe output for object "bond"

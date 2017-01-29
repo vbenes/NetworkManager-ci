@@ -266,7 +266,7 @@ Feature: nmcli - vlan
     * Add a new connection of type "bridge" and options "ifname br0 con-name bridge-br0 autoconnect no"
     * Modify connection "bridge-br0" changing options "bridge.stp no connection.autoconnect yes"
     * Modify connection "bridge-br0" changing options "ipv4.method manual ipv4.address '192.168.1.11/24' ipv4.gateway '192.168.1.1'"
-    * Modify connection "bridge-br0" changing options "ipv4.dns 8.8.8.8 ipv4.dns-search redhat.com"
+    * Modify connection "bridge-br0" changing options "ipv4.dns 8.8.8.8 ipv4.dns-search boston.com"
     * Bring up connection "bridge-br0"
     * Add a new connection of type "bond" and options "ifname bond0 con-name bond-bond0 autoconnect no mode active-backup"
     * Modify connection "bond-bond0" changing options "ipv4.method disabled ipv6.method ignore connection.autoconnect yes"

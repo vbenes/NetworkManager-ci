@@ -10,9 +10,9 @@ Feature: nmcli - general
     * Set logging for "default,WIFI:ERR" to " "
     Then "INFO\s+[^:]*,WIFI:ERR,[^:]*$" is visible with command "nmcli general logging"
 
+
     @rhbz1212196
-    @reduce_logging
-    @bond
+    @bond @reduce_logging
     Scenario: NM - general - reduce logging
      * Add connection type "bond" named "bond0" for device "nm-bond"
     Then "preparing" is not visible with command "journalctl _COMM=NetworkManager --since '2 min ago'   |grep '<info> .*nm-bond' |grep 'preparing device'"
@@ -28,7 +28,7 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_290423
+    @general_check_version
     Scenario: nmcli - general - check version
     * Note the output of "rpm -q --queryformat '%{VERSION}' NetworkManager" as value "1"
     * Note the output of "nmcli -t -f VERSION general" as value "2"
@@ -36,15 +36,14 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_290424
+    @general_state_connected
     Scenario: nmcli - general - state connected
     * Note the output of "nmcli -t -f STATE general" as value "1"
     * Note the output of "echo connected" as value "2"
     Then Check noted values "1" and "2" are the same
 
 
-    @general
-    @restore_hostname
+    @general @restore_hostname
     @hostname_change
     Scenario: nmcli - general - set hostname
     * Execute "sudo nmcli general hostname walderon"
@@ -52,8 +51,7 @@ Feature: nmcli - general
 
 
     @ver+=1.4.0
-    @general @eth
-    @teardown_testveth
+    @general @eth @teardown_testveth
     @restore_hostname
     @pull_hostname_from_dhcp
     Scenario: nmcli - general - pull hostname from DHCP
@@ -65,10 +63,8 @@ Feature: nmcli - general
     Then "localhost" is not visible with command "hostnamectl --transient" in "60" seconds
 
 
-    @general
-    @restart
-    @veth
-    @testcase_290425
+    @general @restart @veth
+    @general_state_disconnected
     Scenario: nmcli - general - state disconnected
     * "disconnect" all " connected" devices
     * Note the output of "nmcli -t -f STATE general" as value "1"
@@ -77,9 +73,8 @@ Feature: nmcli - general
     * Bring up connection "testeth0"
 
 
-    @general
-    @veth
-    @testcase_290426
+    @general @veth
+    @general_state_asleep
     Scenario: nmcli - general - state asleep
     * Execute "nmcli networking off"
     * Note the output of "nmcli -t -f STATE general" as value "1"
@@ -89,17 +84,15 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_290427
+    @general_state_running
     Scenario: nmcli - general - running
     * Note the output of "nmcli -t -f RUNNING general" as value "1"
     * Note the output of "echo running" as value "2"
     Then Check noted values "1" and "2" are the same
 
 
-    @general
-    @veth
-    @restart
-    @testcase_290428
+    @general @veth @restart
+    @general_state_not_running
     Scenario: nmcli - general - not running
     * Stop NM
     * Wait for at least "2" seconds
@@ -154,7 +147,7 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_290429
+    @general_networking_on_off
     Scenario: nmcli - general - networking
     * Note the output of "nmcli -t -f NETWORKING general" as value "1"
     * Note the output of "echo enabled" as value "2"
@@ -167,7 +160,7 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_290430
+    @general_networking_enabled
     Scenario: nmcli - networking - status - enabled
     * Note the output of "nmcli networking" as value "1"
     * Note the output of "echo enabled" as value "2"
@@ -175,7 +168,7 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_290431
+    @general_networking_disabled
     Scenario: nmcli - networking - status - disabled
     * Note the output of "nmcli networking" as value "1"
     * Note the output of "echo enabled" as value "2"
@@ -187,9 +180,8 @@ Feature: nmcli - general
     Then Execute "nmcli networking on"
 
 
-    @general
-    @veth
-    @testcase_290432
+    @general @veth
+    @general_networking_off
     Scenario: nmcli - networking - turn off
     * "eth0:" is visible with command "ifconfig"
     * Execute "nmcli networking off"
@@ -197,9 +189,8 @@ Feature: nmcli - general
     Then Execute "nmcli networking on"
 
 
-    @general
-    @veth
-    @testcase_290433
+    @general @veth
+    @general_networking_on
     Scenario: nmcli - networking - turn on
     * Execute "nmcli networking off"
     * "eth0:" is not visible with command "ifconfig"
@@ -208,20 +199,19 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_294542
+    @nmcli_radio_status
     Scenario: nmcli - radio - status
     Then "WIFI-HW\s+WIFI\s+WWAN-HW\s+WWAN\s+enabled|disabled\s+enabled|disabled\s+enabled|disabled\s+enabled|disabled" is visible with command "nmcli radio"
 
 
     @general
-    @testcase_294543
+    @nmcli_device_status
     Scenario: nmcli - device - status
     Then "DEVICE\s+TYPE\s+STATE.+eth0\s+ethernet" is visible with command "nmcli device"
 
 
-    @general
-    @ethernet
-    @testcase_294544
+    @general @ethernet
+    @nmcli_device_show_ip
     Scenario: nmcli - device - show - check ip
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"
@@ -235,7 +225,7 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_294545
+    @nmcli_device_show_general_params
     Scenario: nmcli - device - show - check general params
     * Note the output of "nmcli device show eth0"
     Then Check noted output contains "GENERAL.DEVICE:\s+eth0"
@@ -247,7 +237,7 @@ Feature: nmcli - general
 
 
     @general
-    @testcase_294546
+    @nmcli_device_disconnect
     Scenario: nmcli - device - disconnect
     * Bring "up" connection "testeth1"
     * "eth1\s+ethernet\s+connected" is visible with command "nmcli device"

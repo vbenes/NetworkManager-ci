@@ -114,7 +114,7 @@ Feature: nmcli: connection
 
     @connection_restricted_to_single_device
     @con
-    # verification for https://bugzilla.redhat.com/show_bug.cgi?id=997998
+    @rhbz997998
     Scenario: nmcli - connection - restriction to single device
      * Add connection type "ethernet" named "connie" for device "*"
      * Start generic connection "connie" for "eth1"
@@ -126,7 +126,7 @@ Feature: nmcli: connection
     @connection_secondaries_restricted_to_vpn
     @con
     @time
-    # verification for https://bugzilla.redhat.com/show_bug.cgi?id=1094296
+    @rhbz1094296
     Scenario: nmcli - connection - restriction to single device
      * Add connection type "ethernet" named "connie" for device "*"
      * Add connection type "ethernet" named "time" for device "time"
@@ -137,7 +137,7 @@ Feature: nmcli: connection
 
     @connection_removal_of_disapperared_device
     @BBB
-    # verification for https://bugzilla.redhat.com/show_bug.cgi?id=1108167
+    @rhbz1108167
     Scenario: nmcli - connection - remove connection of nonexisting device
      * Finish "sudo ip link add name BBB type bridge"
      * Finish "ip link set dev BBB up"
@@ -149,12 +149,9 @@ Feature: nmcli: connection
 
     @connection_down
     @con
-    #@eth
     Scenario: nmcli - connection - down
      * Add connection type "ethernet" named "connie" for device "eth1"
-     #* Add connection type "ethernet" named "ethie" for device "eth1"
      * Bring "up" connection "connie"
-     #* Bring "up" connection "ethie"
      * Bring "down" connection "connie"
      Then "connie" is not visible with command "nmcli -f NAME connection show --active"
 

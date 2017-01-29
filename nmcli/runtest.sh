@@ -11,14 +11,18 @@ logger -t $0 "Running test $1"
 # fi
 
 if [ ! -e /tmp/nm_eth_configured ]; then
-    #set the root password to 'redhat' (for overcoming polkit easily)
-    echo "Setting root password to 'redhat'"
-    echo "redhat" | passwd root --stdin
+    #set the root password to 'networkmanager' (for overcoming polkit easily)
+    echo "Setting root password to 'networkmanager'"
+    echo "networkmanager" | passwd root --stdin
+
+    echo "Setting test's password to 'networkmanager'"
+    userdel -r test
+    useradd -m test
+    echo "networkmanager" | passwd test --stdin
 
     #adding ntp and syncing time
     yum -y install ntp tcpdump NetworkManager-libreswan
     service ntpd restart
-    sleep 10
 
     #pull in debugging symbols
     cat /proc/$(pidof NetworkManager)/maps | awk '/ ..x. / {print $NF}' |
@@ -29,7 +33,6 @@ if [ ! -e /tmp/nm_eth_configured ]; then
     if [ -e /etc/systemd/system/NetworkManager-valgrind.service ]; then
         ln -s NetworkManager-valgrind.service /etc/systemd/system/NetworkManager.service
         systemctl daemon-reload
-        systemctl restart NetworkManager
     fi
 
     #removing rate limit for systemd journaling

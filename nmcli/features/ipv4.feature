@@ -11,6 +11,8 @@ Feature: nmcli: ipv4
     Then Error type "connection verification failed: ipv4.addresses:" while saving in editor
 
 
+
+    @rhbz979288
     @testcase_303648
     @ipv4
     Scenario: nmcli - ipv4 - method - manual + IP
@@ -22,7 +24,6 @@ Feature: nmcli: ipv4
     * Quit editor
     * Bring "up" connection "ethie"
     Then "192.168.122.253/32" is visible with command "ip a s eth1"
-    #VVV coverage for https://bugzilla.redhat.com/show_bug.cgi?id=979288
     Then "dhclient-eth1.pid" is not visible with command "ps aux|grep dhclient"
 
 
@@ -115,9 +116,9 @@ Feature: nmcli: ipv4
     Then Error type "failed to set 'addresses' property: invalid prefix '192.168.122.1'; <1-32> allowed" while saving in editor
 
 
+    @rhbz1073824
     @ipv4_take_manually_created_ifcfg_with_ip
     @veth @ipv4 @delete_testeth0
-    # covering https://bugzilla.redhat.com/show_bug.cgi?id=1073824
     Scenario: nmcli - ipv4 - use manually created ipv4 profile
     * Append "DEVICE='eth10'" to ifcfg file "ethie"
     * Append "ONBOOT=yes" to ifcfg file "ethie"
@@ -472,14 +473,11 @@ Feature: nmcli: ipv4
     When "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf"
     When "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
     * Execute "echo 'INVALID_DNS' > /etc/resolv.conf"
-    # When "nameserver 8.8.8.8" is not visible with command "cat /etc/resolv.conf"
-    # When "nameserver 8.8.4.4" is not visible with command "cat /etc/resolv.conf"
-    # Then Unable to ping "redhat.com"
     * Execute "sudo kill -SIGUSR1 $(pidof NetworkManager)"
     Then "nameserver 8.8.8.8" is visible with command "cat /etc/resolv.conf" in "10" seconds
     Then "nameserver 8.8.4.4" is visible with command "cat /etc/resolv.conf"
     * Execute "sleep 1"
-    Then Ping "redhat.com"
+    Then Ping "boston.com"
 
 
     @rhbz1228707
@@ -506,13 +504,13 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dns-search - add dns-search
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dns-search redhat.com" in editor
+    * Submit "set ipv4.dns-search google.com" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then "redhat.com" is visible with command "cat /etc/resolv.conf"
-    Then Ping "download.devel"
-    Then Ping "brewweb.devel.redhat.com"
+    Then "google.com" is visible with command "cat /etc/resolv.conf"
+    Then Ping "maps"
+    Then Ping "maps.google.com"
 
 
     @newveth
@@ -522,7 +520,7 @@ Feature: nmcli: ipv4
     Scenario: nmcli - ipv4 - dns-search - remove dns-search
     * Add connection type "ethernet" named "ethie" for device "eth10"
     * Open editor for connection "ethie"
-    * Submit "set ipv4.dns-search redhat.com" in editor
+    * Submit "set ipv4.dns-search google.com" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
@@ -532,9 +530,9 @@ Feature: nmcli: ipv4
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then " redhat.com" is not visible with command "cat /etc/resolv.conf"
-    Then Unable to ping "download.devel"
-    Then Ping "download.devel.redhat.com"
+    Then " google.com" is not visible with command "cat /etc/resolv.conf"
+    Then Unable to ping "maps"
+    Then Ping "maps.googlet.com"
 
 
 
@@ -730,12 +728,12 @@ Feature: nmcli: ipv4
     * Open editor for connection "ethie"
     * Submit "set ipv6.method ignore" in editor
     * Submit "set ipv6.ignore-auto-dns yes" in editor
-    * Submit "set ipv4.dns-search redhat.com" in editor
+    * Submit "set ipv4.dns-search google.com" in editor
     * Submit "set ipv4.ignore-auto-dns yes" in editor
     * Save in editor
     * Quit editor
     * Bring "up" connection "ethie"
-    Then " redhat.com" is visible with command "cat /etc/resolv.conf"
+    Then " google.com" is visible with command "cat /etc/resolv.conf"
     Then "virtual" is not visible with command "cat /etc/resolv.conf"
 
 

@@ -16,13 +16,13 @@ Feature: nmcli: adsl
     * Expect "There are .* optional"
     * Enter in editor
     * Expect "Password"
-    * Submit "redhat" in editor
+    * Submit "S3c4!t" in editor
     * Expect "ADSL encapsulation"
     * Enter in editor
     * Dismiss IP configuration in editor
     * Dismiss Proxy configuration in editor
     Then "adsl.username:\s+test" is visible with command "nmcli  connection show --show-secrets adsl-test11"
-    Then "adsl.password:\s+redhat" is visible with command "nmcli  connection show --show-secrets adsl-test11"
+    Then "adsl.password:\s+S3c4" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.protocol:\s+pppoe" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.encapsulation:\s+--" is visible with command "nmcli  connection show --show-secrets adsl-test11"
 
@@ -31,8 +31,8 @@ Feature: nmcli: adsl
     @adsl
     @add_adsl_connection
     Scenario: nmcli - adsl - create adsl connection
-    * Execute "nmcli connection add type adsl ifname adsl con-name adsl-test11 username test password redhat protocol pppoe encapsulation llc"
+    * Execute "nmcli connection add type adsl ifname adsl con-name adsl-test11 username test password S3c4!t protocol pppoe encapsulation llc"
     Then "adsl.username:\s+test" is visible with command "nmcli  connection show --show-secrets adsl-test11"
-    Then "adsl.password:\s+redhat" is visible with command "nmcli  connection show --show-secrets adsl-test11"
+    Then "adsl.password:\s+S3c4!t" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.protocol:\s+pppoe" is visible with command "nmcli  connection show --show-secrets adsl-test11"
     Then "adsl.encapsulation:\s+llc" is visible with command "nmcli  connection show --show-secrets adsl-test11"
