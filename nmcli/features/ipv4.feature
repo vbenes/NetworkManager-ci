@@ -532,7 +532,7 @@ Feature: nmcli: ipv4
     * Bring "up" connection "ethie"
     Then " google.com" is not visible with command "cat /etc/resolv.conf"
     Then Unable to ping "maps"
-    Then Ping "maps.googlet.com"
+    Then Ping "maps.google.com"
 
 
 
