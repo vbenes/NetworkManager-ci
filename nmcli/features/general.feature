@@ -785,8 +785,8 @@ Feature: nmcli - general
     Scenario: nmcli - general - profile pickup does not break network service
     * Add a new connection of type "ethernet" and options "ifname * con-name ethernet0"
     * Add a new connection of type "ethernet" and options "ifname * con-name ethernet1"
-    * "connected:ethernet0" is visible with command "nmcli -t -f STATE,CONNECTION device" in "20" seconds
-    * "connected:ethernet1" is visible with command "nmcli -t -f STATE,CONNECTION device" in "20" seconds
+    * "connected:ethernet0" is visible with command "nmcli -t -f STATE,CONNECTION device" in "50" seconds
+    * "connected:ethernet1" is visible with command "nmcli -t -f STATE,CONNECTION device" in "50" seconds
     # Finish asserts the command exited with 0, thus the network service completed properly
     Then Finish "systemctl restart NetworkManager.service && systemctl restart network.service"
 
