@@ -274,6 +274,9 @@ def teardown_hostapd():
 
 def before_scenario(context, scenario):
     try:
+        if call("nmcli -t -f STATE general  |grep ^connected", shell=True) != 0:
+            call(" nmcli connection up id  testeth0", shell=True)
+
         os.environ['TERM'] = 'dumb'
 
         # dump status before the test preparation starts
@@ -553,24 +556,33 @@ def before_scenario(context, scenario):
             call("[ -x /usr/sbin/pptpd ] || sudo yum -y install /usr/sbin/pptpd", shell=True)
             call("rpm -q NetworkManager-pptp || sudo yum -y install NetworkManager-pptp", shell=True)
 
-            cfg = Popen("sudo sh -c 'cat >/etc/pptpd.conf'", stdin=PIPE, shell=True).stdin
-            cfg.write('# pptpd configuration for client testing')
-            cfg.write("\n" + 'option /etc/ppp/options.pptpd')
-            cfg.write("\n" + 'logwtmp')
-            cfg.write("\n" + 'localip 172.31.66.6')
-            cfg.write("\n" + 'remoteip 172.31.66.60-69')
-            cfg.write("\n" + 'ms-dns 8.8.8.8')
-            cfg.write("\n" + 'ms-dns 8.8.4.4')
-            cfg.write("\n")
-            cfg.close()
+            if not os.path.isfile('/tmp/nm_pptp_configured'):
+                call("sudo systemctl restart NetworkManager", shell=True)
+                cfg = Popen("sudo sh -c 'cat >/etc/pptpd.conf'", stdin=PIPE, shell=True).stdin
+                cfg.write('# pptpd configuration for client testing')
+                cfg.write("\n" + 'option /etc/ppp/options.pptpd')
+                cfg.write("\n" + 'logwtmp')
+                cfg.write("\n" + 'localip 172.31.66.6')
+                cfg.write("\n" + 'remoteip 172.31.66.60-69')
+                cfg.write("\n" + 'ms-dns 8.8.8.8')
+                cfg.write("\n" + 'ms-dns 8.8.4.4')
+                cfg.write("\n")
+                cfg.close()
 
-            call("sudo rm -f /etc/ppp/ppp-secrets", shell=True)
-            psk = Popen("sudo sh -c 'cat >/etc/ppp/chap-secrets'", stdin=PIPE, shell=True).stdin
-            psk.write("budulinek pptpd passwd *\n")
-            psk.close()
+                call("sudo rm -f /etc/ppp/ppp-secrets", shell=True)
+                psk = Popen("sudo sh -c 'cat >/etc/ppp/chap-secrets'", stdin=PIPE, shell=True).stdin
+                psk.write("budulinek pptpd passwd *\n")
+                psk.close()
 
-            call("sudo systemctl unmask pptpd", shell=True)
-            call("sudo systemctl restart pptpd", shell=True)
+                call("sudo systemctl unmask pptpd", shell=True)
+                call("sudo systemctl restart pptpd", shell=True)
+                context.execute_steps(u'* Add a connection named "pptp" for device "\*" to "pptp" VPN')
+                context.execute_steps(u'* Use user "budulinek" with password "passwd" and MPPE set to "yes" for gateway "127.0.0.1" on PPTP connection "pptp"')
+                call("/sbin/pppd pty '/sbin/pptp 127.0.0.1' nodetach", shell=True)
+                call("nmcli con up id pptp", shell=True)
+                call("nmcli con del pptp", shell=True)
+                call("touch /tmp/nm_pptp_configured", shell=True)
+                sleep(1)
 
         if 'restore_hostname' in scenario.tags:
             print ("---------------------------")
