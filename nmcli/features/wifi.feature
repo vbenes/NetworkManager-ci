@@ -1,8 +1,13 @@
 @testplan
 Feature: nmcli - wifi
 
- # Background:
- #   * Close Evolution and cleanup data
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
 
 	@cleanwifi
     Scenario: Clean wifi
@@ -177,8 +182,8 @@ Feature: nmcli - wifi
     Then "\*\s+qe-open" is visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
-    @wifi
     @rhbz1254461
+    @wifi
     @testcase_306559
     Scenario: nmcli - wifi - different than network's band
     Given Flag "NM_802_11_DEVICE_CAP_FREQ_5GHZ" is not set in WirelessCapabilites
@@ -461,8 +466,7 @@ Feature: nmcli - wifi
     Then "\*\s+qe-open" is not visible with command "nmcli -f IN-USE,SSID device wifi list"
 
 
-    @mtu_wlan0
-    @wifi
+    @mtu_wlan0 @wifi
     @testcase_306580
     Scenario: nmcli - wifi - set mtu
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
@@ -560,6 +564,7 @@ Feature: nmcli - wifi
     Then Check "\[mtu\]" are present in describe output for object "802-11-wireless.mtu"
     Then Check "\[seen-bssids\]" are present in describe output for object "802-11-wireless.seen-bssids"
     Then Check "\[hidden\]" are present in describe output for object "802-11-wireless.hidden"
+
 
     @wifi
     @testcase_309402
@@ -659,7 +664,6 @@ Feature: nmcli - wifi
     * Bring up connection "qe-wep"
     Then "qe-wep" is visible with command "iw dev wlan0 link"
     Then "\*\s+qe-wep" is visible with command "nmcli -f IN-USE,SSID device wifi list"
-
 
 
     @wifi

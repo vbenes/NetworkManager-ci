@@ -1,7 +1,14 @@
  Feature: nmcli: alias
 
-    @alias_ifcfg_add_single_alias
+     # Please do use tags as follows:
+     # @bugzilla_link (rhbz123456)
+     # @version_control (ver+/-=1.4.1)
+     # @other_tags (see environment.py)
+     # @test_name (compiled from scenario name)
+     # Scanario:
+
     @alias
+    @alias_ifcfg_add_single_alias
     Scenario: ifcfg - alias - add single alias
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
@@ -21,8 +28,8 @@
     Then "inet 192.168.0.101" is visible with command "ip a s eth7"
     Then "inet 192.168.0.100" is visible with command "ip a s eth7"
 
-    @alias_ifcfg_add_multiple_aliases
     @alias
+    @alias_ifcfg_add_multiple_aliases
     Scenario: ifcfg - alias - add mutliple aliases
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
@@ -56,8 +63,8 @@
     Then "inet 192.168.0.103" is visible with command "ip a s eth7"
 
 
-    @alias_ifcfg_connection_restart
     @alias
+    @alias_ifcfg_connection_restart
     Scenario: ifcfg - alias - connection restart
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
@@ -93,8 +100,8 @@
     Then "inet 192.168.0.103" is visible with command "ip a s eth7"
 
 
-    @alias_ifcfg_remove_single_alias
     @alias
+    @alias_ifcfg_remove_single_alias
     Scenario: ifcfg - alias - remove single alias
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
@@ -131,8 +138,8 @@
     Then "inet 192.168.0.103" is visible with command "ip a s eth7"
 
 
-    @alias_ifcfg_remove_all_aliases
     @alias
+    @alias_ifcfg_remove_all_aliases
     Scenario: ifcfg - alias - remove all aliases
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
@@ -177,9 +184,8 @@
     Then "inet 192.168.0.103" is not visible with command "ip a s eth7"
 
 
+    @veth @alias
     @alias_ifcfg_reboot
-    @veth
-    @alias
     Scenario: ifcfg - alias - reboot
     * Add connection type "ethernet" named "eth7" for device "eth7"
     * Open editor for connection "eth7"
@@ -212,4 +218,3 @@
     Then "inet 192.168.0.101" is visible with command "ip a s eth7"
     Then "inet 192.168.0.102" is visible with command "ip a s eth7"
     Then "inet 192.168.0.103" is visible with command "ip a s eth7"
-

@@ -1,7 +1,13 @@
  Feature: nmcli: openvpn
 
-    @openvpn
-    @openvpn4
+     # Please do use tags as follows:
+     # @bugzilla_link (rhbz123456)
+     # @version_control (ver+/-=1.4.1)
+     # @other_tags (see environment.py)
+     # @test_name (compiled from scenario name)
+     # Scanario:
+
+    @openvpn @openvpn4
     @openvpn_ipv4
     Scenario: nmcli - openvpn - add and connect IPv4 connection
     * Add a connection named "openvpn" for device "\*" to "openvpn" VPN
@@ -11,10 +17,9 @@
     Then "IP4.ADDRESS.*172.31.70.*/32" is visible with command "nmcli c show openvpn"
     Then "IP6.ADDRESS" is not visible with command "nmcli c show openvpn"
 
-    
+
     @ver+=1.0.8
-    @openvpn
-    @openvpn6
+    @openvpn @openvpn6
     @openvpn_ipv6
     Scenario: nmcli - openvpn - add and connect IPv6 connection
     * Add a connection named "openvpn" for device "\*" to "openvpn" VPN
@@ -38,8 +43,7 @@
     Then "1500" is visible with command "ip a s eth0"
 
 
-    @firewall
-    @openvpn
+    @firewall @openvpn
     @openvpn_set_firewall_zone
     Scenario: nmcli - openvpn - set firewall zone
     * Add a connection named "openvpn" for device "\*" to "openvpn" VPN

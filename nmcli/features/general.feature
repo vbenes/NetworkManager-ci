@@ -1,6 +1,14 @@
 @testplan
 Feature: nmcli - general
 
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
+
     @general
     @logging
     Scenario: NM - general - setting log level and autocompletion

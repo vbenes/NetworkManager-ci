@@ -1,5 +1,13 @@
  Feature: nmcli: vpnc
 
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
+
     @vpnc
     @vpnc_add_profile
     Scenario: nmcli - vpnc - add and connect a connection
@@ -9,6 +17,7 @@
     Then "VPN.VPN-STATE:.*VPN connected" is visible with command "nmcli c show vpnc"
     Then "VPN.BANNER:.*BUG_REPORT_URL" is visible with command "nmcli c show vpnc"
     Then "IP4.ADDRESS.*172.31.60.2/24" is visible with command "nmcli c show vpnc"
+
 
     @vpnc
     @vpnc_terminate

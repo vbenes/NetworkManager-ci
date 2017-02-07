@@ -1,13 +1,20 @@
 @testplan
 Feature: nmcli - bridge
 
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
 	@cleanbridge
     Scenario: Clean bridge
     * "eth0" is visible with command "ifconfig"
 
 
     @bridge
-    @testcase_285528
+    @bridge_add_default
     Scenario: nmcli - bridge - add default bridge
     * Add a new connection of type "bridge" and options " "
     * Open editor for connection "bridge"
@@ -18,7 +25,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285529
+    @bridge_add_custom_one
     Scenario: nmcli - bridge - add custom bridge
     * Add a new connection of type "bridge" and options "con-name br88 autoconnect no ifname br88 priority 5 forward-delay 3 hello-time 3 max-age 15 ageing-time 500000"
     * Bring up connection "br88" ignoring error
@@ -28,7 +35,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285530
+    @bridge_connection_up
     Scenario: nmcli - bridge - up
     * Add a new connection of type "bridge" and options "con-name br11 ifname br11 autoconnect no"
     * Check ifcfg-name file created for connection "br11"
@@ -38,7 +45,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285531
+    @bridge_connection_down
     Scenario: nmcli - bridge - down
     * Add a new connection of type "bridge" and options "con-name br11 ifname br11 autoconnect no"
     * Check ifcfg-name file created for connection "br11"
@@ -56,7 +63,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285532
+    @bridge_disconnect_device
     Scenario: nmcli - bridge - disconnect device
     * Add a new connection of type "bridge" and options "con-name br11 ifname br11 autoconnect no"
     * Check ifcfg-name file created for connection "br11"
@@ -74,14 +81,14 @@ Feature: nmcli - bridge
 
 
     @bridge
-    @testcase_285533
+    @bridge_describe_all
     Scenario: nmcli - bridge - describe all
     * Open editor for a type "bridge"
     Then Check "mac-address|stp|priority|forward-delay|hello-time|max-age|ageing-time" are present in describe output for object "bridge"
 
 
     @bridge
-    @testcase_285534
+    @bridge_describe_separately
     Scenario: nmcli - bridge - describe separately
     * Open editor for a type "bridge"
     Then Check "\[mac-address\]" are present in describe output for object "bridge.mac-address"
@@ -94,7 +101,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285535
+    @bridge_delete_connection
     Scenario: nmcli - bridge - delete connection
     * Add a new connection of type "bridge" and options "con-name br11 ifname br11"
     * Check ifcfg-name file created for connection "br11"
@@ -104,7 +111,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285536
+    @bridge_delete_connection_while_up
     Scenario: nmcli - bridge - delete connection while up
     * Add a new connection of type "bridge" and options "con-name br12 ifname br12 autoconnect no"
     * Check ifcfg-name file created for connection "br12"
@@ -136,7 +143,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285537
+    @bridge_add_slave
     Scenario: nmcli - bridge - add slave
     #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15 autoconnect no"
@@ -147,7 +154,7 @@ Feature: nmcli - bridge
     Then "BRIDGE=br15" is visible with command "cat /etc/sysconfig/network-scripts/ifcfg-bridge-slave-eth1.80"
 
 	@bridge
-    @testcase_285538
+    @bridge_remove_slave
     Scenario: nmcli - bridge - remove slave
     #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15 autoconnect no"
@@ -161,7 +168,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285539
+    @bridge_up_with_slaves
     Scenario: nmcli - bridge - up with slaves
     #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br15 ifname br15"
@@ -185,7 +192,7 @@ Feature: nmcli - bridge
 
 
 	@bridge
-    @testcase_285540
+    @bridge_up_slave
     Scenario: nmcli - bridge - up slave
     #* Execute "nmcli dev con eth1"
     * Add a new connection of type "bridge" and options "con-name br10 ifname br10"

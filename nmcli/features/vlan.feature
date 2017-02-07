@@ -1,15 +1,21 @@
 @testplan
 Feature: nmcli - vlan
 
- # Background:
- #   * Close Evolution and cleanup data
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
 
     @cleanvlan
     Scenario: Clean vlan
     * "eth0" is visible with command "ifconfig"
 
+
     @vlan
-    @testcase_281205
+    @vlan_add_default_device
     Scenario: nmcli - vlan - add default device
      * Add a new connection of type "vlan" and options "con-name eth1.99 dev eth1 id 99"
      Then "eth1.99:" is visible with command "ifconfig"
@@ -17,8 +23,7 @@ Feature: nmcli - vlan
 
 
     @rhbz1273879
-    @restart
-    @vlan
+    @restart @vlan
     @nmcli_vlan_restart_persistence
     Scenario: nmcli - vlan - restart persistence
     * Execute "systemctl stop NetworkManager"
@@ -37,7 +42,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_281263
+    @vlan_remove_connection
     Scenario: nmcli - vlan - remove connection
     Given "inet 10.42." is not visible with command "ifconfig"
     * Add a new connection of type "vlan" and options "con-name eth1.299 autoconnect no dev eth1 id 299"
@@ -55,7 +60,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_281326
+    @vlan_connection_up
     Scenario: nmcli - vlan - connection up
     * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect no dev eth1 id 99"
     * Open editor for connection "eth1.99"
@@ -70,7 +75,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_284356
+    @vlan_reup_connection
     Scenario: nmcli - vlan - connection up while up
     * Add a new connection of type "vlan" and options "con-name eth1.99 autoconnect yes dev eth1 id 99 ip4 1.2.3.4/24"
     Then "eth1.99\s+vlan\s+connected" is visible with command "nmcli device" in "30" seconds
@@ -85,8 +90,9 @@ Feature: nmcli - vlan
     Then Bring up connection "eth1.99"
      And "1.2.3.4" is not visible with command "ip a s eth1.99"
 
+
     @vlan
-    @testcase_281271
+    @vlan_connection_down
     Scenario: nmcli - vlan - connection down
     * "inet 10.42." is not visible with command "ifconfig"
     * Add a new connection of type "vlan" and options "con-name eth1.399 autoconnect no dev eth1 id 399"
@@ -100,8 +106,9 @@ Feature: nmcli - vlan
     * Bring down connection "eth1.399"
     Then "inet 10.42." is not visible with command "ifconfig"
 
+
     @vlan
-    @testcase_281264
+    @vlan_connection_down_with_autoconnect
     Scenario: nmcli - vlan - connection down (autoconnect on)
     * "inet 10.42." is not visible with command "ifconfig"
     * Add a new connection of type "vlan" and options "con-name eth1.399 autoconnect no dev eth1 id 399"
@@ -118,8 +125,9 @@ Feature: nmcli - vlan
     * Wait for at least "10" seconds
     Then "inet 10.42." is not visible with command "ifconfig"
 
+
     @vlan
-    @testcase_281332
+    @vlan_change_id_with_no_interface_set
     Scenario: nmcli - vlan - change id without interface set
     * Add a new connection of type "vlan" and options "con-name eth1.65 autoconnect no dev eth1 id 65"
     * Open editor for connection "eth1.65"
@@ -139,7 +147,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_281394
+    @vlan_change_id
     Scenario: nmcli - vlan - change id
     * Add a new connection of type "vlan" and options "con-name eth1.165 autoconnect no dev eth1 id 165"
     * Open editor for connection "eth1.165"
@@ -164,8 +172,9 @@ Feature: nmcli - vlan
     Then "eth1.265:" is visible with command "ifconfig"
     Then "inet 10.42.0.1" is visible with command "ifconfig"
 
+
     @vlan
-    @testcase_284357
+    @vlan_describe_all
     Scenario: nmcli - vlan - describe all
     * Open editor for a type "vlan"
     Then Check "parent|id|flags|ingress-priority-map|egress-priority-map" are present in describe output for object "vlan"
@@ -182,8 +191,9 @@ Feature: nmcli - vlan
     * No error appeared in editor
     * Quit editor
 
+
     @vlan
-    @testcase_281282
+    @vlan_describe_separately
     Scenario: nmcli - vlan - describe separately
     * Open editor for a type "vlan"
     Then Check "\[parent\]" are present in describe output for object "vlan.parent"
@@ -194,7 +204,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_284358
+    @vlan_disconnect_device
     Scenario: nmcli - vlan - disconnect device
     * "inet 10.42." is not visible with command "ifconfig"
     * Add a new connection of type "vlan" and options "con-name eth1.399 autoconnect no dev eth1 id 399"
@@ -210,7 +220,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_284359
+    @vlan_disconnect_device_with_autoconnect
     Scenario: nmcli - vlan - disconnect device (with autoconnect)
     * "inet 10.42." is not visible with command "ifconfig"
     * Add a new connection of type "vlan" and options "con-name eth1.499 autoconnect no dev eth1 id 499"
@@ -228,7 +238,7 @@ Feature: nmcli - vlan
 
 
     @vlan
-    @testcase_281211
+    @vlan_device_tagging
     Scenario: nmcli - vlan - device tagging
     * Execute "yum -y install wireshark"
     * Add a new connection of type "vlan" and options "con-name eth1.80 dev eth1 id 80"

@@ -1,5 +1,12 @@
  Feature: nmcli: pptp
 
+     # Please do use tags as follows:
+     # @bugzilla_link (rhbz123456)
+     # @version_control (ver+/-=1.4.1)
+     # @other_tags (see environment.py)
+     # @test_name (compiled from scenario name)
+     # Scanario:
+
     @pptp
     @pptp_add_profile
     Scenario: nmcli - pptp - add and connect a connection

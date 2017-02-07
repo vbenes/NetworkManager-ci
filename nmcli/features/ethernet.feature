@@ -1,12 +1,20 @@
 @testplan
 Feature: nmcli - ethernet
 
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
+
     @cleanethernet
     Scenario: Clean ethernet
     * "eth0" is visible with command "ifconfig"
 
     @ethernet
-    @testcase_286577
+    @ethernet_create_with_editor
     Scenario: nmcli - ethernet - create with editor
     * Open editor for a type "ethernet"
     * Set a property named "ipv4.method" to "auto" in editor
@@ -20,7 +28,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286578
+    @ethernet_create_default_connection
     Scenario: nmcli - ethernet - create default connection
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet"
     Then Check ifcfg-name file created for connection "ethernet"
@@ -37,7 +45,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286579
+    @ethernet_connection_up
     Scenario: nmcli - ethernet - up
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Check ifcfg-name file created for connection "ethernet"
@@ -47,7 +55,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286580
+    @ethernet_disconnect_device
     Scenario: nmcli - ethernet - disconnect device
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect yes"
     * Check ifcfg-name file created for connection "ethernet"
@@ -58,14 +66,14 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286581
+    @ethernet_describe_all
     Scenario: nmcli - ethernet - describe all
     * Open editor for a type "ethernet"
     Then Check "port|speed|duplex|auto-negotiate|mac-address|cloned-mac-address|mac-address-blacklist|mtu|s390-subchannels|s390-nettype|s390-options" are present in describe output for object "802-3-ethernet"
 
 
     @ethernet
-    @testcase_286582
+    @ethernet_describe_separately
     Scenario: nmcli - ethernet - describe separately
     * Open editor for a type "ethernet"
     Then Check "\[port\]" are present in describe output for object "802-3-ethernet.port"
@@ -83,7 +91,7 @@ Feature: nmcli - ethernet
 
     @rhbz1264024
     @ethernet
-    @testcase_286583
+    @ethernet_set_matching_mac
     Scenario: nmcli - ethernet - set matching mac adress
     * Add a new connection of type "ethernet" and options "ifname * con-name ethernet autoconnect no"
     * Note the "ether" property from ifconfig output for device "eth1"
@@ -109,7 +117,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286584
+    @ethernet_set_invalid_mac
     Scenario: nmcli - ethernet - set non-existent mac adress
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"
@@ -122,7 +130,7 @@ Feature: nmcli - ethernet
 
     @rhbz1264024
     @ethernet
-    @testcase_286585
+    @ethernet_set_blacklisted_mac
     Scenario: nmcli - ethernet - set blacklisted mac adress
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Note the "ether" property from ifconfig output for device "eth1"
@@ -135,7 +143,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286586
+    @ethernet_mac_spoofing
     Scenario: nmcli - ethernet - mac spoofing
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"
@@ -148,7 +156,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286587
+    @ethernet_set_mtu
     Scenario: nmcli - ethernet - set mtu
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"
@@ -175,7 +183,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286588
+    @ethernet_set_static_configuration
     Scenario: nmcli - ethernet - static IPv4 configuration
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"
@@ -189,7 +197,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286589
+    @ethernet_set_static_ipv6_configuration
     Scenario: nmcli - ethernet - static IPv6 configuration
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"
@@ -204,7 +212,7 @@ Feature: nmcli - ethernet
 
 
     @ethernet
-    @testcase_286590
+    @ethernet_set_both_ipv4_6_configuration
     Scenario: nmcli - ethernet - static IPv4 and IPv6 combined configuration
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethernet autoconnect no"
     * Open editor for connection "ethernet"

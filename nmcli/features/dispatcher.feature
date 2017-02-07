@@ -1,8 +1,16 @@
 Feature: NM: dispatcher
 
-    @dispatcher_preup_and_up
-    @disp
+
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
     @rhbz982633
+    @disp
+    @dispatcher_preup_and_up
     Scenario: NM - dispatcher - preup and up
     * Write dispatcher "99-disp" file with params "if [ "$2" == "up" ]; then sleep 15; fi"
     * Write dispatcher "pre-up.d/98-disp" file
@@ -11,9 +19,9 @@ Feature: NM: dispatcher
     Then "pre-up.*\s+up" is not visible with command "cat /tmp/dispatcher.txt"
     Then "pre-up.*\s+up" is visible with command "cat /tmp/dispatcher.txt" in "20" seconds
 
-    @dispatcher_predown_and_down
-    @disp
     @rhbz982633
+    @disp
+    @dispatcher_predown_and_down
     Scenario: NM - dispatcher - pre-down and down
     * Bring "up" connection "testeth1"
     * Write dispatcher "99-disp" file with params "if [ "$2" == "down" ]; then sleep 15; fi"
@@ -29,9 +37,8 @@ Feature: NM: dispatcher
     @dispatcher_vpn_down
     Scenario: NM - dispatcher - vpn-down
 
+    @disp @restore_hostname
     @dispatcher_hostname
-    @disp
-    @restore_hostname
     Scenario: NM - dispatcher - hostname
     * Write dispatcher "99-disp" file
     * Execute "nmcli general hostname walderoon"
@@ -44,9 +51,9 @@ Feature: NM: dispatcher
     Scenario: NM - dispatcher - dhcp6-change
 
 
-    @dispatcher_synchronicity
-    @disp
     @rhbz1048345
+    @disp
+    @dispatcher_synchronicity
     Scenario: NM - dispatcher - synchronicity
     * Write dispatcher "98-disp" file with params "if [ "$2" == "up" ]; then sleep 30; fi"
     * Write dispatcher "99-disp" file
@@ -56,9 +63,9 @@ Feature: NM: dispatcher
     Then "up.*\s+up.*\s+down" is visible with command "cat /tmp/dispatcher.txt" in "30" seconds
 
 
-    @dispatcher_synchronicity_with_predown
-    @disp
     @rhbz1048345
+    @disp
+    @dispatcher_synchronicity_with_predown
     Scenario: NM - dispatcher - synchronicity with predown
     * Write dispatcher "98-disp" file with params "if [ "$2" == "up" ]; then sleep 30; fi"
     * Write dispatcher "99-disp" file
@@ -69,9 +76,9 @@ Feature: NM: dispatcher
     Then "up.*\s+up.*\s+pre-down.*\s+down" is visible with command "cat /tmp/dispatcher.txt" in "30" seconds
 
 
-    @dispatcher_serialization
-    @disp
     @rhbz1061212
+    @disp
+    @dispatcher_serialization
     Scenario: NM - dispatcher - serialization
     * Bring "down" connection "testeth1"
     * Bring "down" connection "testeth2"
@@ -82,6 +89,3 @@ Feature: NM: dispatcher
     #Then "eth1.*\s+up" is not visible with command "cat /tmp/dispatcher.txt"
     #Then "eth2.*\s+up" is not visible with command "cat /tmp/dispatcher.txt"
     Then "eth1.*\s+up.*\s+quicketh1.*\s+up.*\s+eth2.*\s+up.*\s+quicketh2.*\s+up" is visible with command "cat /tmp/dispatcher.txt" in "50" seconds
-
-
-

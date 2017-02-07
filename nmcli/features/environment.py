@@ -1159,7 +1159,7 @@ def after_scenario(context, scenario):
             call('sudo echo %s > /etc/hostname' % context.original_hostname, shell=True)
             call('sudo nmcli g hostname %s' % context.original_hostname, shell=True)
 
-        if 'ipv6_describe' in scenario.tags or 'testcase_304241' in scenario.tags:
+        if 'ipv6_describe' in scenario.tags or 'ipv4_describe' in scenario.tags:
             call('sh sanitize_beah.sh', shell=True)
 
         if 'nmcli_general_correct_profile_activated_after_restart' in scenario.tags:

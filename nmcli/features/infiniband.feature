@@ -1,15 +1,22 @@
 Feature: nmcli: inf
 
-    @inf_create_connection
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
     @inf
+    @inf_create_connection
     Scenario: nmcli - inf - create master connection
     * Add connection type "infiniband" named "inf" for device "inf_ib0"
     * Bring "up" connection "inf"
     Then "inet 172" is visible with command "ip a s inf_ib0"
 
 
-    @inf_create_connection_novice_mode
     @inf
+    @inf_create_connection_novice_mode
     Scenario: nmcli - inf - novice - create infiniband with default options
      * Open wizard for adding new connection
      * Expect "Connection type"
@@ -23,8 +30,8 @@ Feature: nmcli: inf
     Then "inet 172" is visible with command "ip a s inf_ib0"
 
 
-    @inf_disable_connection
     @inf
+    @inf_disable_connection
     Scenario: nmcli - inf - disable master connection
     * Add connection type "infiniband" named "inf" for device "inf_ib0"
     * Bring "up" connection "inf"
@@ -32,8 +39,8 @@ Feature: nmcli: inf
     Then "inet 172" is not visible with command "ip a s inf_ib0"
 
 
-    @inf_create_port_connection
     @inf
+    @inf_create_port_connection
     Scenario: nmcli - inf - create port connection
     * Add connection type "infiniband" named "inf" for device "inf_ib0"
     * Add infiniband port named "inf.8002" for device "inf_ib0.8002" with parent "inf_ib0" and p-key "0x8002"
@@ -42,8 +49,8 @@ Feature: nmcli: inf
     Then "inet 172" is visible with command "ip a s inf_ib0.8002"
 
 
-    @inf_create_port_novice_mode
     @inf
+    @inf_create_port_novice_mode
     Scenario: nmcli - inf - novice - create infiniband port with default options
      * Add connection type "infiniband" named "inf" for device "inf_ib0"
      * Bring "up" connection "inf"
@@ -70,8 +77,8 @@ Feature: nmcli: inf
     Then "inet 172" is visible with command "ip a s inf_ib0.8002"
 
 
-    @inf_disable_port
     @inf
+    @inf_disable_port
     Scenario: nmcli - inf - disable port connection
     * Add connection type "infiniband" named "inf" for device "inf_ib0"
     * Add infiniband port named "inf.8002" for device "inf_ib0.8002" with parent "inf_ib0" and p-key "0x8002"
@@ -82,8 +89,8 @@ Feature: nmcli: inf
     Then "inet 172" is not visible with command "ip a s inf_ib0.8002"
 
 
-    @inf_enable_after_reboot
     @inf
+    @inf_enable_after_reboot
     Scenario: nmcli - inf - enable after reboot
     * Add connection type "infiniband" named "inf" for device "inf_ib0"
     * Add infiniband port named "inf.8002" for device "inf_ib0.8002" with parent "inf_ib0" and p-key "0x8002"

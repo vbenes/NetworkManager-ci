@@ -1,10 +1,15 @@
 @testplan
 Feature: nmcli - ppp
 
-    @not_on_s390x
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
+    @not_on_s390x @pppoe @del_test1112_veths
     @connect_to_pppoe_via_pap
-    @pppoe
-    @del_test1112_veths
     Scenario: NM - ppp - connect with pap auth
     * Execute "ip link add test11 type veth peer name test12"
     * Prepare pppoe server for user "test" with "networkmanager" password and IP "192.168.111.2" authenticated via "pap"
@@ -20,10 +25,8 @@ Feature: nmcli - ppp
     Then "default via 192.168.111.254 dev ppp.*  proto static  metric" is visible with command "ip r"
 
 
-    @not_on_s390x
+    @not_on_s390x @pppoe @del_test1112_veths
     @connect_to_pppoe_via_chap
-    @pppoe
-    @del_test1112_veths
     Scenario: NM - ppp - connect with chap auth
     * Execute "ip link add test11 type veth peer name test12"
     * Prepare pppoe server for user "test" with "networkmanager" password and IP "192.168.111.2" authenticated via "chap"
@@ -39,10 +42,8 @@ Feature: nmcli - ppp
     Then "default via 192.168.111.254 dev ppp.*  proto static  metric" is visible with command "ip r"
 
 
-    @not_on_s390x
+    @not_on_s390x @pppoe @del_test1112_veths
     @disconnect_from_pppoe
-    @pppoe
-    @del_test1112_veths
     Scenario: NM - ppp - disconnect
     * Execute "ip link add test11 type veth peer name test12"
     * Prepare pppoe server for user "test" with "networkmanager" password and IP "192.168.111.2" authenticated via "chap"

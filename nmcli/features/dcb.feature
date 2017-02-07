@@ -1,7 +1,14 @@
  Feature: nmcli: dcb
 
-    @dcb_enable_connection
+    # Please do use tags as follows:
+    # @bugzilla_link (rhbz123456)
+    # @version_control (ver+/-=1.4.1)
+    # @other_tags (see environment.py)
+    # @test_name (compiled from scenario name)
+    # Scanario:
+
     @dcb
+    @dcb_enable_connection
     Scenario: nmcli - dcb - enable connection
     * Add a new connection of type "ethernet" and options "ifname ens1f0 con-name dcb ipv4.addresses 1.2.3.4/24 ipv4.method manual"
     #* Open editor for connection "dcb"
@@ -32,8 +39,8 @@
     Then "appcfg:\s+04" is visible with command "dcbtool gc ens1f0 app:fip"
 
 
-    @dcb_disable_connection
     @dcb
+    @dcb_disable_connection
     Scenario: nmcli - dcb - disable connection
     * Add a new connection of type "ethernet" and options "ifname ens1f0 con-name dcb ipv4.addresses 1.2.3.4/24 ipv4.method manual"
     #* Open editor for connection "dcb"
@@ -52,8 +59,8 @@
     Then "Enable:\s+false" is visible with command "dcbtool gc ens1f0 app:fip"
 
 
-    @dcb_enable_after_reboot
     @dcb
+    @dcb_enable_after_reboot
     Scenario: nmcli - dcb - enable after reboot
     * Add a new connection of type "ethernet" and options "ifname ens1f0 con-name dcb ipv4.addresses 1.2.3.4/24 ipv4.method manual"
     * Prepare connection
@@ -83,8 +90,8 @@
 
 
     @rhbz1080510
-    @dcb_error_shown
     @dcb
+    @dcb_error_shown
     Scenario: nmcli - dcb - error shown
     * Add connection type "ethernet" named "dcb" for device "ens1f0"
     * Open editor for connection "dcb"
