@@ -5,7 +5,7 @@ Feature: nmcli: adsl
     # @version_control (ver+/-=1.4.1)
     # @other_tags (see environment.py)
     # @test_name (compiled from scenario name)
-    # Scanario:
+    # Scenario:
 
     @rhbz1264089
     @adsl

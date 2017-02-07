@@ -6,7 +6,7 @@ Feature: nmcli - ppp
     # @version_control (ver+/-=1.4.1)
     # @other_tags (see environment.py)
     # @test_name (compiled from scenario name)
-    # Scanario:
+    # Scenario:
 
     @not_on_s390x @pppoe @del_test1112_veths
     @connect_to_pppoe_via_pap
