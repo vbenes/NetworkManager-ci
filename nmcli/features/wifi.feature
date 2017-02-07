@@ -236,7 +236,7 @@ Feature: nmcli - wifi
 
 
     @wifi
-    @nmcli_wifi_set_channel_<_7_bz_999999
+    @nmcli_wifi_set_channel_under_7
     Scenario: nmcli - wifi - set channel < 7 (bz 999999)
     * Add a new connection of type "wifi" and options "ifname wlan0 con-name qe-open autoconnect off ssid qe-open"
     * Check ifcfg-name file created for connection "qe-open"

@@ -506,7 +506,7 @@ nmcli_wifi_different_than_networks_band, ., nmcli/./runtest.sh nmcli_wifi_differ
 nmcli_wifi_setting_bogus_band, ., nmcli/./runtest.sh nmcli_wifi_setting_bogus_band , iw;pexpect
 nmcli_wifi_setting_wrong_ssid_over_32_bytes, ., nmcli/./runtest.sh nmcli_wifi_setting_wrong_ssid_over_32_bytes , iw;pexpect
 nmcli_wifi_set_channel, ., nmcli/./runtest.sh nmcli_wifi_set_channel , iw;pexpect
-nmcli_wifi_set_channel_<_7_bz_999999, ., nmcli/./runtest.sh nmcli_wifi_set_channel_<_7_bz_999999 , iw;pexpect
+nmcli_wifi_set_channel_under_7, ., nmcli/./runtest.sh nmcli_wifi_set_channel_under_7 , iw;pexpect
 nmcli_wifi_set_channel_13_and_14_bz_999999, ., nmcli/./runtest.sh nmcli_wifi_set_channel_13_and_14_bz_999999 , iw;pexpect
 nmcli_wifi_set_wrong_channel, ., nmcli/./runtest.sh nmcli_wifi_set_wrong_channel , iw;pexpect
 nmcli_wifi_set_bogus_channel, ., nmcli/./runtest.sh nmcli_wifi_set_bogus_channel , iw;pexpect
