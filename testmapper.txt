@@ -836,4 +836,4 @@ nmtui_wifi_connect_to_network_after_dismissal, ., nmtui/./runtest.sh nmtui_wifi_
 #@nmtui-wifi_end
 
 #sanitize_beah
-sanitize_beah, .,./sanitize_beah.sh,
+sanitize_beah, .,run/rh-beaker/./sanitize_beah.sh,
