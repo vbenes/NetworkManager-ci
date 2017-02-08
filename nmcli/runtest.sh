@@ -3,13 +3,6 @@ set -x
 
 logger -t $0 "Running test $1"
 
-# if [ -e /tmp/nm_newveth_configured ]; then
-#     # we must keep this device up in any case it went down
-#     nmcli con up testeth0
-#     # possible auto created duplicate profile. that we do not want
-#     nmcli con del eth0
-# fi
-
 if [ ! -e /tmp/nm_eth_configured ]; then
     #set the root password to 'networkmanager' (for overcoming polkit easily)
     echo "Setting root password to 'networkmanager'"
