@@ -1035,3 +1035,34 @@ Feature: nmcli: ipv4
     Then Check "=== \[never-default\] ===\s+\[NM property description\]\s+If TRUE, this connection will never be the default connection for this IP type, meaning it will never be assigned the default route by NetworkManager." are present in describe output for object "never-default"
 
     Then Check "=== \[may-fail\] ===\s+\[NM property description\]\s+If TRUE, allow overall network configuration to proceed even if the configuration specified by this property times out.  Note that at least one IP configuration must succeed or overall network configuration will still fail.  For example, in IPv6-only networks, setting this property to TRUE on the NMSettingIP4Config allows the overall network configuration to succeed if IPv4 configuration fails but IPv6 configuration completes successfully." are present in describe output for object "may-fail"
+
+
+    @rhbz1394500
+    @ver+=1.4.0
+    @ipv4
+    @ipv4_honor_ip_order_1
+    Scenario: NM - ipv4 - honor IP order from configuration
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth2 autoconnect no"
+    * Execute "nmcli con modify ethie ipv4.method manual ipv4.addresses 192.168.1.5/24,192.168.1.4/24,192.168.1.3/24"
+    * Bring "up" connection "ethie"
+    Then "inet 192.168.1.5/24 brd 192.168.1.255 scope global eth2" is visible with command "ip a show eth2"
+    Then "inet 192.168.1.4/24 brd 192.168.1.255 scope global secondary" is visible with command "ip a show eth2"
+    Then "inet 192.168.1.3/24 brd 192.168.1.255 scope global secondary" is visible with command "ip a show eth2"
+
+
+    @rhbz1394500
+    @ver+=1.4.0
+    @ipv4
+    @ipv4_honor_ip_order_2
+    Scenario: NM - ipv4 - honor IP order from configuration upon reapply
+    * Add a new connection of type "ethernet" and options "con-name ethie ifname eth2 autoconnect no"
+    * Execute "nmcli con modify ethie ipv4.method manual ipv4.addresses 192.168.1.3/24,192.168.1.4/24,192.168.1.5/24"
+    * Bring "up" connection "ethie"
+    When "inet 192.168.1.3/24 brd 192.168.1.255 scope global eth2" is visible with command "ip a show eth2" in "5" seconds
+    When "inet 192.168.1.4/24 brd 192.168.1.255 scope global secondary" is visible with command "ip a show eth2" in "5" seconds
+    When "inet 192.168.1.5/24 brd 192.168.1.255 scope global secondary" is visible with command "ip a show eth2" in "5" seconds
+    * Execute "nmcli con modify ethie ipv4.addresses 192.168.1.5/24,192.168.1.4/24,192.168.1.3/24"
+    * Execute "nmcli dev reapply eth2"
+    Then "inet 192.168.1.5/24 brd 192.168.1.255 scope global eth2" is visible with command "ip a show eth2"
+    Then "inet 192.168.1.4/24 brd 192.168.1.255 scope global secondary" is visible with command "ip a show eth2"
+    Then "inet 192.168.1.3/24 brd 192.168.1.255 scope global secondary" is visible with command "ip a show eth2"
