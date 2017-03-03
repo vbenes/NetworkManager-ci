@@ -591,10 +591,10 @@ def before_scenario(context, scenario):
                 call("touch /tmp/nm_pptp_configured", shell=True)
                 sleep(1)
 
-        if 'restore_hostname' in scenario.tags:
-            print ("---------------------------")
-            print ("saving original hostname")
-            context.original_hostname = check_output('cat /etc/hostname', shell=True).strip()
+        #if 'restore_hostname' in scenario.tags:
+        #    print ("---------------------------")
+        #    print ("saving original hostname")
+        #    context.original_hostname = check_output('nmcli gen hostname', shell=True).strip()
 
         if 'runonce' in scenario.tags:
             print ("---------------------------")
@@ -1166,9 +1166,12 @@ def after_scenario(context, scenario):
             print ("restoring original hostname")
             os.system('systemctl unmask systemd-hostnamed.service')
             os.system('systemctl unmask dbus-org.freedesktop.hostname1.service')
-            os.system('systemctl restart NetworkManager')
-            call('sudo echo %s > /etc/hostname' % context.original_hostname, shell=True)
-            call('sudo nmcli g hostname %s' % context.original_hostname, shell=True)
+            #call('sudo echo %s > /etc/hostname' % context.original_hostname, shell=True)
+            #call('sudo nmcli g hostname %s' % context.original_hostname, shell=True)
+            call('sudo echo "localhost.localdomain" > /etc/hostname', shell=True)
+            call('hostnamectl set-hostname localhost.localdomain', shell=True)
+            call('systemctl restart NetworkManager', shell=True)
+            call("nmcli con up testeth0", shell=True)
 
         if 'ipv6_describe' in scenario.tags or 'ipv4_describe' in scenario.tags:
             call('run/rh-beaker/./sanitize_beah.sh', shell=True)
