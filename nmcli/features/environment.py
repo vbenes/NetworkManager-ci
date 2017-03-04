@@ -487,7 +487,7 @@ def before_scenario(context, scenario):
             if arch == "s390x" or arch == 'aarch64':
                 sys.exit(0)
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
-            call("rpm -q NetworkManager-vpnc || sudo yum -y install NetworkManager-vpnc", shell=True)
+            call("rpm -q NetworkManager-vpnc || ( sudo yum -y install NetworkManager-vpnc && service NetworkManager restart )", shell=True)
             setup_racoon (mode="aggressive", dh_group=2)
 
         if 'lldp' in scenario.tags:
@@ -507,13 +507,15 @@ def before_scenario(context, scenario):
                 sys.exit(0)
             call("[ -f /etc/yum.repos.d/epel.repo ] || sudo rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm", shell=True)
             call("[ -x /usr/sbin/openvpn ] || sudo yum -y install openvpn NetworkManager-openvpn", shell=True)
-            call("rpm -q NetworkManager-openvpn || sudo yum -y install NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
+            call("rpm -q NetworkManager-openvpn || ( sudo yum -y install NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm && service NetworkManager restart )", shell=True)
 
             # This is an internal RH workaround for secondary architecures that are not present in EPEL
 
             call("[ -x /usr/sbin/openvpn ] || sudo yum -y install https://vbenes.fedorapeople.org/NM/openvpn-2.3.8-1.el7.$(uname -p).rpm\
                                                                   https://vbenes.fedorapeople.org/NM/pkcs11-helper-1.11-3.el7.$(uname -p).rpm", shell=True)
             call("rpm -q NetworkManager-openvpn || sudo yum -y install https://vbenes.fedorapeople.org/NM/NetworkManager-openvpn-1.0.8-1.el7.$(uname -p).rpm", shell=True)
+            call("service NetworkManager restart", shell=True)
+            sleep(2)
 
             samples = glob('/usr/share/doc/openvpn*/sample')[0]
             cfg = Popen("sudo sh -c 'cat >/etc/openvpn/trest-server.conf'", stdin=PIPE, shell=True).stdin
@@ -544,7 +546,7 @@ def before_scenario(context, scenario):
 
         if 'libreswan' in scenario.tags:
             print ("---------------------------")
-            call("rpm -q NetworkManager-libreswan || sudo yum -y install NetworkManager-libreswan", shell=True)
+            call("rpm -q NetworkManager-libreswan || ( sudo yum -y install NetworkManager-libreswan && service NetworkManager restart )", shell=True)
             call("/usr/sbin/ipsec --checknss", shell=True)
             setup_racoon (mode="aggressive", dh_group=5)
             if 'libreswan_add_profile' in scenario.tags:
@@ -1181,7 +1183,8 @@ def after_scenario(context, scenario):
             call("nmcli con up testeth0", shell=True)
 
         if 'ipv6_describe' in scenario.tags or 'ipv4_describe' in scenario.tags:
-            call('run/rh-beaker/./sanitize_beah.sh', shell=True)
+            if call("systemctl is-enabled beah-srv.service  |grep ^enabled", shell=True) == 0:
+                call('run/rh-beaker/./sanitize_beah.sh', shell=True)
 
         if 'nmcli_general_correct_profile_activated_after_restart' in scenario.tags:
             print ("---------------------------")
