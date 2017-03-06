@@ -1345,15 +1345,17 @@ def print_in_editor(context):
 
 @step(u'Prompt is not running')
 def prompt_is_not_running(context):
-    for x in xrange(1,10):
+    for x in xrange(1,20):
         if context.prompt.isalive() is False:
             break
         else:
             sleep(0.2)
     assert context.prompt.isalive() is False
 
+
 @step(u'Quit editor')
 def quit_editor(context):
+    sleep(0.2)
     context.prompt.sendline('quit')
     context.execute_steps(u"* Prompt is not running")
 
