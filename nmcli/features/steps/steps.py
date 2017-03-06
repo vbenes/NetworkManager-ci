@@ -1037,6 +1037,7 @@ def note_the_output_of(context, command):
 
 @step(u'Open editor for connection "{con_name}"')
 def open_editor_for_connection(context, con_name):
+    call("pkill -9 nmcli", shell=True)
     sleep(0.5)
     prompt = pexpect.spawn('nmcli connection ed %s' % con_name, logfile=context.log)
     context.prompt = prompt
