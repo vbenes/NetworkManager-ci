@@ -1037,7 +1037,7 @@ def note_the_output_of(context, command):
 
 @step(u'Open editor for connection "{con_name}"')
 def open_editor_for_connection(context, con_name):
-    sleep(0.2)
+    sleep(0.5)
     prompt = pexpect.spawn('nmcli connection ed %s' % con_name, logfile=context.log)
     context.prompt = prompt
     r = prompt.expect([con_name, 'Error'])
@@ -1347,7 +1347,7 @@ def print_in_editor(context):
 def prompt_is_not_running(context):
     for x in xrange(1,20):
         if context.prompt.isalive() is False:
-            break
+            return True
         else:
             sleep(0.5)
     assert context.prompt.isalive() is False
@@ -1355,10 +1355,8 @@ def prompt_is_not_running(context):
 
 @step(u'Quit editor')
 def quit_editor(context):
-    context.execute_steps(u"* Enter in editor")
-    sleep(0.25)
     context.prompt.sendcontrol('d')
-    context.execute_steps(u"* Prompt is not running")
+    sleep(1)
 
 @step(u'Reboot')
 def reboot(context):
