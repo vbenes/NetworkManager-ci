@@ -1357,8 +1357,9 @@ def prompt_is_not_running(context):
 @step(u'Quit editor')
 def quit_editor(context):
     context.prompt.sendcontrol('d')
-    sleep(1)
+    sleep(2)
     call("pkill -9 nmcli", shell=True)
+    sleep(1)
 
 
 @step(u'Reboot')
