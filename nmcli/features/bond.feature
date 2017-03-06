@@ -15,7 +15,6 @@
      * Enter in editor
      Then Value saved message showed in editor
      * Quit editor
-     Then Prompt is not running
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Bring "up" connection "bond0.0"
      Then Check bond "nm-bond" in proc
