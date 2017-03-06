@@ -1357,7 +1357,7 @@ def prompt_is_not_running(context):
 def quit_editor(context):
     context.execute_steps(u"* Enter in editor")
     sleep(0.25)
-    context.prompt.sendline('quit')
+    context.prompt.sendcontrol('d')
     context.execute_steps(u"* Prompt is not running")
 
 @step(u'Reboot')
