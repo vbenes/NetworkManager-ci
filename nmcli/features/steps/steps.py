@@ -6,7 +6,7 @@ import os
 import exceptions
 import re
 import subprocess
-from subprocess import Popen, check_output
+from subprocess import Popen, check_output, call
 from glob import glob
 
 # Helpers for the steps that leave the execution trace
