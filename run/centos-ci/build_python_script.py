@@ -14,7 +14,7 @@ import json, urllib, subprocess, sys, os
 def get_testmapper(testbranch):
     if not os.path.isfile('testmapper.txt'):
         testmapper_url = 'https://raw.githubusercontent.com/NetworkManager/NetworkManager-ci/\%s/testmapper.txt' % (testbranch)
-        os.system("wget -q  %s -O testmapper.txt" % testmapper_url)
+        os.system("curl -s  %s -o testmapper.txt" % testmapper_url)
 
 def get_test_cases_for_features(features, testbranch):
     get_testmapper(testbranch)
