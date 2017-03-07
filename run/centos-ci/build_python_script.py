@@ -69,6 +69,7 @@ b=json.loads(dat)
 tests=precess_raw_features("all", "master")
 
 for h in b['hosts']:
+    print h
     cmd0="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'yum install -y git \
                                                && git clone https://github.com/NetworkManager/NetworkManager-ci \
                                                && cd NetworkManager-ci \
@@ -79,7 +80,6 @@ for h in b['hosts']:
                                                && sh run/centos-ci/scripts/./runtest.sh %s'" % (h, tests)
     print cmd0
     rtn_code=subprocess.call(cmd0, shell=True)
-    print h
     # cmd="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./setup.sh'" % (h)
     # print cmd
     # rtn_code=subprocess.call(cmd, shell=True)
