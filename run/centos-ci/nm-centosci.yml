@@ -105,7 +105,7 @@
           export TEST_NAMES='ipv6_never-default_remove'
         #   export TEST_AREA='{testarea}'
         #   python -u beaker/nm_job_builder.py
-          python -u build_python_script.py
+          python -u run/centos-ci/build_python_script.py
     publishers:
       - postbuildscript:
           script-only-if-succeeded: false
