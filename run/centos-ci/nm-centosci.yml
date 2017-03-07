@@ -171,7 +171,7 @@
     name: cico-tests
     scm:
       - git:
-          url: https://semaphoreci.com/vbenes/networkmanager-ci
+          url: https://github.com/NetworkManager/NetworkManager-ci
           branches:
             - origin/vb/cico
 
