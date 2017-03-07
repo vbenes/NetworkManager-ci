@@ -171,9 +171,9 @@
     name: cico-tests
     scm:
       - git:
-          url: https://gitlab.cee.redhat.com/desktopqe/desktop-ci.git
+          url: https://semaphoreci.com/vbenes/networkmanager-ci
           branches:
-            - origin/master
+            - origin/vb/cico
 
 - project:
     name: nm-cico
