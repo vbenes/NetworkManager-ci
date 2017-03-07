@@ -99,12 +99,12 @@
 
     builders:
         #   export OS='{os}'
-        # export CODE_BRANCH='{git_branch}'
+        #   export CODE_BRANCH='{git_branch}'
         #   python -u beaker/nm_job_builder.py
         #   export TEST_AREA='{testarea}'
+        #   export TEST_BRANCH='master'
+        #   export TEST_NAMES='ipv6_never-default_remove'
       - shell: |
-          export TEST_BRANCH='master'
-          export TEST_NAMES='ipv6_never-default_remove'
           python -u run/centos-ci/build_python_script.py
     publishers:
       - postbuildscript:
