@@ -80,9 +80,14 @@ for h in b['hosts']:
                                                && sh run/centos-ci/scripts/./runtest.sh %s'" % (h, tests)
     print cmd0
     rtn_code=subprocess.call(cmd0, shell=True)
-    # cmd="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./setup.sh'" % (h)
-    # print cmd
-    # rtn_code=subprocess.call(cmd, shell=True)
+
+
+    #cmd1="scp /home/networkmanager/duffy.key root@%s:/tmp" % (h)
+    #print cmd1
+    #subprocess.call(cmd1, shell=True)
+
+    #cmd2="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s RSYNC_PASSWORD='$cat /tmp/duffy.key)' rsync -av /var/www/html/results/ networkmanager@artifacts.ci.centos.org::networkmanager/"
+
     # cmd2="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./build.sh nm-1-6'" % (h)
     # print cmd2
     # rtn_code=subprocess.call(cmd2, shell=True)
@@ -93,6 +98,9 @@ for h in b['hosts']:
     # print cmd4
     # rtn_code=subprocess.call(cmd4, shell=True)
 
+
+subprocess.call("curl --upload-file /var/www/html/results/Archives-* https://transfer.sh", shell=True)
+sleep(1)
 
 done_nodes_url="%s/Node/done?key=%s&ssid=%s" % (url_base, api, b['ssid'])
 das=urllib.urlopen(done_nodes_url).read()
