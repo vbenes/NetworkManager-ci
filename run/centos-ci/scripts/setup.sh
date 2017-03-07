@@ -21,6 +21,7 @@ sudo yum -y install \
         dbus-python \
         python-gobject \
         wireshark \
+        bash-completion \
         dnsmasq
 
 # some minor compatibility items
