@@ -9,7 +9,7 @@
 # Please note, this is a basic script, there is no error handling and there are
 # no real tests for any exceptions. Patches welcome!
 
-import json, urllib, subprocess, sys
+import json, urllib, subprocess, sys, os
 
 def get_testmapper(testbranch):
     if not os.path.isfile('testmapper.txt'):
