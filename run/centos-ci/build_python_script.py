@@ -42,7 +42,7 @@ def get_test_cases_for_features(features, testbranch):
 def precess_raw_features(features, testbranch):
     tests = ""
     if not features or features.lower() == 'all':
-        raw_features = 'adsl,alias,bond,bridge,connection,dispatcher,ethernet,general,ipv4,ipv6,libreswan,openvpn,ppp,pptp,team,tuntap,vlan,vpnc'
+        raw_features = 'adsl,alias,bond,bridge,team,vlan,connection,dispatcher,ethernet,general,ipv4,ipv6,libreswan,openvpn,ppp,pptp,tuntap,vpnc'
     else:
         raw_features = features
     features = []
@@ -81,6 +81,9 @@ for h in b['hosts']:
     print cmd0
     rtn_code=subprocess.call(cmd0, shell=True)
 
+    # Upload results to transfer.sh
+    subprocess.call("ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s \
+                            curl --upload-file /var/www/html/results/Archives-* https://transfer.sh" % (h), shell=True)
 
     #cmd1="scp /home/networkmanager/duffy.key root@%s:/tmp" % (h)
     #print cmd1
@@ -98,9 +101,6 @@ for h in b['hosts']:
     # print cmd4
     # rtn_code=subprocess.call(cmd4, shell=True)
 
-
-subprocess.call("curl --upload-file /var/www/html/results/Archives-* https://transfer.sh", shell=True)
-sleep(1)
 
 done_nodes_url="%s/Node/done?key=%s&ssid=%s" % (url_base, api, b['ssid'])
 das=urllib.urlopen(done_nodes_url).read()
