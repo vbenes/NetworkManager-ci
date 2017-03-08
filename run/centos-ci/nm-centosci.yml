@@ -35,7 +35,7 @@
       - git:
           url: https://github.com/NetworkManager/NetworkManager-ci
           branches:
-            - origin/vb/cico
+            - origin/master
 
 - project:
     name: nm-cico

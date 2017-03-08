@@ -88,7 +88,6 @@ def run_tests(features, code_branch, test_branch):
         cmd0="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'yum install -y git \
                                                    && git clone https://github.com/NetworkManager/NetworkManager-ci \
                                                    && cd NetworkManager-ci \
-                                                   && git checkout vb/cico \
                                                    && sh run/centos-ci/scripts/./setup.sh \
                                                    && sh run/centos-ci/scripts/./build.sh %s \
                                                    && sh run/centos-ci/scripts/./get_tests.sh %s \
