@@ -11,11 +11,12 @@
 
 import json, urllib, subprocess, sys, os
 
+settings = {}
+
 def get_testmapper(testbranch):
     if not os.path.isfile('testmapper.txt'):
         testmapper_url = 'https://raw.githubusercontent.com/NetworkManager/NetworkManager-ci/\%s/testmapper.txt' % (testbranch)
         os.system("curl -s  %s -o testmapper.txt" % testmapper_url)
-
 def get_test_cases_for_features(features, testbranch):
     get_testmapper(testbranch)
     testnames = []
@@ -39,7 +40,7 @@ def get_test_cases_for_features(features, testbranch):
     subprocess.call('rm -rf testmapper.txt', shell=True)
     return testnames
 
-def precess_raw_features(features, testbranch):
+def process_raw_features(features, testbranch):
     tests = ""
     if not features or features.lower() == 'all':
         raw_features = 'adsl,alias,bond,bridge,team,vlan,connection,dispatcher,ethernet,general,ipv4,ipv6,libreswan,openvpn,ppp,pptp,tuntap,vpnc'
@@ -52,57 +53,76 @@ def precess_raw_features(features, testbranch):
         tests=tests+test+" "
     return tests.strip()
 
-url_base="http://admin.ci.centos.org:8080"
+def read_env_options():
+    print('>> Reading env options')
+    # Setting defaults
+    settings['code_branch'] = "master"
+    settings['test_branch'] = "master"
+    settings['features'] = "all"
 
-# This file was generated on your slave.  See https://wiki.centos.org/QaWiki/CI/GettingStarted
-api=open('/home/networkmanager/duffy.key').read().strip()
+    if 'CODE_BRANCH' in os.environ:
+        settings['code_branch'] = os.environ['CODE_BRANCH']
+    if 'TEST_BRANCH' in os.environ:
+        settings['test_branch'] = os.environ['TEST_BRANCH']
+    if 'FEATURES' in os.environ:
+        settings['features'] = os.environ['FEATURES']
 
-ver="7"
-arch="x86_64"
-count=1
+def run_tests(features, code_branch, test_branch):
+    url_base="http://admin.ci.centos.org:8080"
+    # This file was generated on your slave.  See https://wiki.centos.org/QaWiki/CI/GettingStarted
+    api=open('/home/networkmanager/duffy.key').read().strip()
+    ver="7"
+    arch="x86_64"
+    count=1
 
-get_nodes_url="%s/Node/get?key=%s&ver=%s&arch=%s&count=%s" % (url_base,api,ver,arch,count)
+    get_nodes_url="%s/Node/get?key=%s&ver=%s&arch=%s&count=%s" % (url_base,api,ver,arch,count)
 
-dat=urllib.urlopen(get_nodes_url).read()
-b=json.loads(dat)
+    dat=urllib.urlopen(get_nodes_url).read()
+    b=json.loads(dat)
 
-tests=precess_raw_features("all", "master")
+    tests=process_raw_features(features, test_branch)
+    print (tests)
 
-for h in b['hosts']:
-    print h
-    cmd0="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'yum install -y git \
-                                               && git clone https://github.com/NetworkManager/NetworkManager-ci \
-                                               && cd NetworkManager-ci \
-                                               && git checkout vb/cico \
-                                               && sh run/centos-ci/scripts/./setup.sh \
-                                               && sh run/centos-ci/scripts/./build.sh nm-1-6 \
-                                               && sh run/centos-ci/scripts/./get_tests.sh master \
-                                               && sh run/centos-ci/scripts/./runtest.sh %s'" % (h, tests)
-    print cmd0
-    rtn_code=subprocess.call(cmd0, shell=True)
+    for h in b['hosts']:
+        print h
+        cmd0="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'yum install -y git \
+                                                   && git clone https://github.com/NetworkManager/NetworkManager-ci \
+                                                   && cd NetworkManager-ci \
+                                                   && git checkout vb/cico \
+                                                   && sh run/centos-ci/scripts/./setup.sh \
+                                                   && sh run/centos-ci/scripts/./build.sh %s \
+                                                   && sh run/centos-ci/scripts/./get_tests.sh %s \
+                                                   && sh run/centos-ci/scripts/./runtest.sh %s' \
+                                                   "% (h, code_branch, test_branch, tests)
+        print cmd0
+        rtn_code=subprocess.call(cmd0, shell=True)
 
-    # Upload results to transfer.sh
-    subprocess.call("ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s \
-                            curl --upload-file /var/www/html/results/Archives-* https://transfer.sh" % (h), shell=True)
+        # Upload results to transfer.sh
+        subprocess.call("ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s \
+                                curl --upload-file /var/www/html/results/Archives-* https://transfer.sh" % (h), shell=True)
 
-    #cmd1="scp /home/networkmanager/duffy.key root@%s:/tmp" % (h)
-    #print cmd1
-    #subprocess.call(cmd1, shell=True)
+        #cmd1="scp /home/networkmanager/duffy.key root@%s:/tmp" % (h)
+        #print cmd1
+        #subprocess.call(cmd1, shell=True)
 
-    #cmd2="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s RSYNC_PASSWORD='$cat /tmp/duffy.key)' rsync -av /var/www/html/results/ networkmanager@artifacts.ci.centos.org::networkmanager/"
+        #cmd2="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s RSYNC_PASSWORD='$cat /tmp/duffy.key)' rsync -av /var/www/html/results/ networkmanager@artifacts.ci.centos.org::networkmanager/"
 
-    # cmd2="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./build.sh nm-1-6'" % (h)
-    # print cmd2
-    # rtn_code=subprocess.call(cmd2, shell=True)
-    # cmd3="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./get_tests.sh master'" % (h)
-    # print cmd3
-    # rtn_code=subprocess.call(cmd3, shell=True)
-    # cmd4="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./runtest.sh ipv6_never-default_remove'" % (h)
-    # print cmd4
-    # rtn_code=subprocess.call(cmd4, shell=True)
+        # cmd2="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./build.sh nm-1-6'" % (h)
+        # print cmd2
+        # rtn_code=subprocess.call(cmd2, shell=True)
+        # cmd3="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./get_tests.sh master'" % (h)
+        # print cmd3
+        # rtn_code=subprocess.call(cmd3, shell=True)
+        # cmd4="ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@%s 'run/fedora-vagrant/scripts/./runtest.sh ipv6_never-default_remove'" % (h)
+        # print cmd4
+        # rtn_code=subprocess.call(cmd4, shell=True)
 
 
-done_nodes_url="%s/Node/done?key=%s&ssid=%s" % (url_base, api, b['ssid'])
-das=urllib.urlopen(done_nodes_url).read()
+    done_nodes_url="%s/Node/done?key=%s&ssid=%s" % (url_base, api, b['ssid'])
+    das=urllib.urlopen(done_nodes_url).read()
 
-sys.exit(rtn_code)
+    return(rtn_code)
+
+if __name__ == "__main__":
+    read_env_options()
+    sys.exit(run_tests(settings['features'], settings['code_branch'], settings['test_branch']))
