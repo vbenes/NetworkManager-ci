@@ -1360,7 +1360,7 @@ def reboot(context):
     sleep(2)
     context.nm_restarted = True
     assert command_code(context, "sudo service NetworkManager restart") == 0
-    sleep(1)
+    sleep(5)
 
 
 @step(u'Start NM')
