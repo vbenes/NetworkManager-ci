@@ -363,15 +363,10 @@ Feature: nmcli - general
 
 
     @rhbz1067712
-    #@general
-    #@ethernet
-    #@eth0
     @nmcli_general_correct_profile_activated_after_restart
     Scenario: nmcli - general - correct profile activated after restart
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name aaa ipv4.may-fail no ipv6.may-fail no"
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name bbb ipv4.may-fail no ipv6.may-fail no"
-    #* Set s390x options for "aaa" if possible
-    #* Set s390x options for "bbb" if possible
     * Bring up connection "aaa"
     When "100" is visible with command "nmcli  -t -f GENERAL.STATE device show eth10"
     * Restart NM
@@ -406,7 +401,7 @@ Feature: nmcli - general
     * Bring "up" connection "testeth0"
     * Execute "systemctl unmask sendmail"
     Then "nameserver 1.2.3.4" is visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10" is not visible with command "cat /etc/resolv.conf"
+    Then "nameserver 1[0-9]" is not visible with command "cat /etc/resolv.conf"
 
 
     @general
@@ -417,7 +412,7 @@ Feature: nmcli - general
     * Restart NM
     * Bring "up" connection "testeth0"
     Then "nameserver 1.2.3.4" is not visible with command "cat /etc/resolv.conf"
-    Then "nameserver 10" is visible with command "cat /etc/resolv.conf"
+    Then "nameserver 1[0-9]" is visible with command "cat /etc/resolv.conf"
 
 
     @rhbz1136836
@@ -437,7 +432,7 @@ Feature: nmcli - general
     @restore_hostname
     @nmcli_general_dhcp_hostname_over_localhost
     Scenario: NM - general - dont take localhost as configured hostname
-    * Execute "hostnamectl set-hostname foobar.test"
+    * Execute "hostnamectl set-hostname walderon"
     * Note the output of "cat /etc/hostname" as value "orig_file"
     * Execute "systemctl mask dbus-org.freedesktop.hostname1.service"
     * Execute "systemctl mask systemd-hostnamed.service"
@@ -605,17 +600,16 @@ Feature: nmcli - general
     Then vxlan device "BBB" check
 
 
-    @two_bridged_veths
     @rhbz1109426
+    @two_bridged_veths
     @veth_goes_to_unmanaged_state
     Scenario: NM - general - veth in unmanaged state
     * Execute "ip link add test1 type veth peer name test1p"
     Then "test1\s+ethernet\s+unmanaged.*test1p\s+ethernet\s+unmanaged" is visible with command "nmcli device"
 
 
-    @two_bridged_veths
     @rhbz1067299
-    @peers_ns
+    @two_bridged_veths @peers_ns
     @nat_from_shared_network
     Scenario: NM - general - NAT_dhcp from shared networks
     * Execute "ip link add test1 type veth peer name test1p"
@@ -634,11 +628,8 @@ Feature: nmcli - general
     Then Unable to ping "172.16.0.111" from "eth0" device
 
 
-    @rhbz1083683
-    @rhbz1256772
-    @rhbz1260243
-    @runonce
-    @teardown_testveth
+    @rhbz1083683 @rhbz1256772 @rhbz1260243
+    @runonce @teardown_testveth
     @run_once_new_connection
     Scenario: NM - general - run once and quit start new ipv4 and ipv6 connection
     * Prepare simulated test "testY" device
@@ -663,9 +654,8 @@ Feature: nmcli - general
     Then "inactive" is visible with command "systemctl is-active NetworkManager"
 
 
-    @rhbz1083683
-    @rhbz1256772
-    @runonce
+    @rhbz1083683 @rhbz1256772
+    @runonce @long
     @run_once_ip4_renewal
     Scenario: NM - general - run once and quit ipv4 renewal
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie"
@@ -801,6 +791,7 @@ Feature: nmcli - general
 
 
     @rhbz1182085
+    @long
     @nmcli_general_profile_pickup_doesnt_break_network
     Scenario: nmcli - general - profile pickup does not break network service
     * Add a new connection of type "ethernet" and options "ifname * con-name ethernet0"

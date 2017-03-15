@@ -141,7 +141,7 @@ Feature: nmcli: ipv4
     Then "192.168.122.253/24" is visible with command "ip a s eth1"
     Then "default via 192.168.122.96 dev eth1  proto static  metric" is visible with command "ip route"
     Then "192.168.122.0/24 dev eth1  proto kernel  scope link  src 192.168.122.253" is visible with command "ip route"
-    Then "default via 10." is visible with command "ip route"
+    Then "2" is visible with command "ip r |grep 'default via 1' |wc -l"
 
 
     @ipv4 @eth0
@@ -160,7 +160,7 @@ Feature: nmcli: ipv4
     Then "192.168.122.253/16" is visible with command "ip a s eth1"
     Then "192.168.222.253/8" is visible with command "ip a s eth1"
     Then "default via 192.168.22.96 dev eth1  proto static  metric" is visible with command "ip route"
-    Then "default via 10." is not visible with command "ip route"
+    Then "1" is visible with command "ip r |grep 'default via 1' |wc -l"
 
 
     @ipv4
@@ -869,12 +869,13 @@ Feature: nmcli: ipv4
     * Finish "nmcli connection add type ethernet con-name tc1 ifname test1 ip4 192.168.99.1/24"
     * Finish "nmcli connection add type ethernet con-name tc2 ifname test2"
     * Bring "up" connection "tc1"
+    When "test1:connected:tc1" is visible with command "nmcli -t -f DEVICE,STATE,CONNECTION device" in "10" seconds
     * Execute "/usr/sbin/dnsmasq --conf-file --no-hosts --keep-in-foreground --bind-interfaces --except-interface=lo --clear-on-reload --strict-order --listen-address=192.168.99.1 --dhcp-range=192.168.99.10,192.168.99.254,60m --dhcp-option=option:router,192.168.99.1 --dhcp-lease-max=50 --dhcp-option-force=26,1800 &"
     * Bring "up" connection "tc2"
     Then "mtu 1800" is visible with command "ip a s test2"
 
 
-    @eth @teardown_testveth
+    @eth @teardown_testveth @long
     @renewal_gw_after_dhcp_outage
     Scenario: NM - ipv4 - renewal gw after DHCP outage
     * Prepare simulated test "testX" device
@@ -891,7 +892,7 @@ Feature: nmcli: ipv4
 
     @rhbz1262922
     @ver+=1.2.0
-    @eth @teardown_testveth
+    @eth @teardown_testveth @long
     @dhcp-timeout
     Scenario: NM - ipv4 - add dhcp-timeout
     * Prepare simulated test "testX" device
@@ -905,7 +906,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1246496
-    @eth @teardown_testveth
+    @eth @teardown_testveth @long
     @renewal_gw_after_dhcp_outage_for_assumed_var0
     Scenario: NM - ipv4 - assumed address renewal after DHCP outage for on-disk assumed
     * Prepare simulated test "testX" device
@@ -925,7 +926,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1265239
-    @teardown_testveth
+    @teardown_testveth @long
     @renewal_gw_after_dhcp_outage_for_assumed_var1
     Scenario: NM - ipv4 - assumed address renewal after DHCP outage for in-memory assumed
     * Prepare simulated test "testX" device
@@ -946,7 +947,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1205405
-    @eth @teardown_testveth
+    @eth @teardown_testveth @long
     @manual_routes_preserved_when_never-default_yes
     Scenario: NM - ipv4 - don't touch manual route with never-default
     * Prepare simulated test "testX" device
@@ -961,7 +962,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1205405
-    @teardown_testveth @eth
+    @teardown_testveth @eth @long
     @manual_routes_removed_when_never-default_no
     Scenario: NM - ipv4 - rewrite manual route with dhcp renewal
     * Prepare simulated test "testX" device
@@ -1043,7 +1044,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1172780
-    @ipv4 @netaddr
+    @ipv4 @netaddr @long
     @ipv4_do_not_remove_second_ip_route
     Scenario: nmcli - ipv4 - do not remove secondary ip subnet route
     * Add a new connection of type "ethernet" and options "con-name ethie ifname eth1 autoconnect no"

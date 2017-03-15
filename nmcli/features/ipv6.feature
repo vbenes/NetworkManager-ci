@@ -252,7 +252,7 @@ Feature: nmcli: ipv6
     Then "2620:52:0:1086" is visible with command "ip -6 a s eth10 |grep 'global noprefix'" in "20" seconds
 
 
-    @ipv6 @eth0
+    @ipv6 @eth0 @long
     @ipv6_limited_router_solicitation
     Scenario: NM - ipv6 - limited router solicitation
      * Add connection type "ethernet" named "ethie" for device "eth10"
@@ -916,7 +916,7 @@ Feature: nmcli: ipv6
 
 
     @rhbz1268866
-    @eth @internal_DHCP @teardown_testveth
+    @eth @internal_DHCP @teardown_testveth @long
     @ipv6_NM_stable_with_internal_DHCPv6
     Scenario: NM - ipv6 - stable with internal DHCPv6
     * Prepare simulated test "testX" device

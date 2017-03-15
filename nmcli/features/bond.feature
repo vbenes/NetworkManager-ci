@@ -16,7 +16,7 @@
      Then Value saved message showed in editor
      * Quit editor
      When Prompt is not running
-      And "nm-bond" is visible with command "ip a s nm-bond" in "10" seconds 
+      And "nm-bond" is visible with command "ip a s nm-bond" in "10" seconds
      * Add slave connection for master "nm-bond" on device "eth1" named "bond0.0"
      * Bring "up" connection "bond0.0"
      Then Check bond "nm-bond" in proc
