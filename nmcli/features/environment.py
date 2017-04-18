@@ -1397,6 +1397,7 @@ def after_scenario(context, scenario):
                pass
         else:
             if nm_pid_after is None or nm_pid_after != context.nm_pid:
+                print ("NM crashed")
                 sys.exit(1)
 
         #

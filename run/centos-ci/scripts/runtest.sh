@@ -5,6 +5,7 @@ fi
 
 
 cd NetworkManager-ci
+git checkout vb/cico_kickout
 
 # Add failures and test counter variables
 counter=0
