@@ -136,7 +136,7 @@ function setup_veth_env ()
 
     # on s390x sometimes this extra default profile gets created in addition to custom static original one
     # let's get rid of that
-    for i in $(nmcli -f NAME -t con |grep -v testeth[0-9]); do nmcli con del $i; done
+    for i in $(nmcli -t -f NAME,UUID connection |grep -v testeth |awk -F ':' ' {print $2}'); do nmcli con del $i; done
 
     # log state of net after the setup
     ip a
