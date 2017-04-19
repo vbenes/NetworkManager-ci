@@ -45,6 +45,7 @@ function setup_veth_env ()
     else # make active device eth0 if not
         UUID=$(nmcli -t -f UUID c show --active)
         nmcli con mod $UUID connection.id testeth0
+        nmcli connection modify testeth0 ipv4.addresses "" ipv4.gateway "" ipv4.dns-priority "" ipv4.dns "" ipv4.route-metric ""
         nmcli connection modify testeth0 ipv6.method auto
         nmcli c u testeth0
     fi
@@ -134,6 +135,7 @@ function setup_veth_env ()
     systemctl restart NetworkManager; sleep 1
     echo "4"
     nmcli con up testeth0
+    systemctl restart sshd
 
     # on s390x sometimes this extra default profile gets created in addition to custom static original one
     # let's get rid of that
@@ -207,7 +209,7 @@ function teardown_veth_env ()
     done
 
     systemctl restart NetworkManager; sleep 1
-
+    systemctl restart sshd
     # log state of net after the teardown
     ip a
     nmcli con
