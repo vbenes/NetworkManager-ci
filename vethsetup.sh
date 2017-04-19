@@ -28,10 +28,12 @@ function setup_veth_env ()
     systemctl restart NetworkManager; sleep 3
 
     # making sure the active ethernet device is eth0 and profile name testeth0
+    echo "1"
     if [ ! "eth0" == $(nmcli -f TYPE,DEVICE -t c sh --active  | grep ethernet | awk '{split($0,a,":"); print a[2]}') ]; then
         DEV=$(nmcli -f TYPE,DEVICE -t c sh --active  | grep ethernet | awk '{split($0,a,":"); print a[2]}')
         UUID=$(nmcli -t -f UUID c show --active)
         sleep 0.5
+        echo "2"
         ip link set $DEV down
         ip link set $DEV name eth0
         nmcli con mod $UUID connection.interface-name eth0
@@ -45,6 +47,7 @@ function setup_veth_env ()
         nmcli connection modify testeth0 ipv6.method auto
         nmcli c u testeth0
     fi
+    echo "3"
 
     for DEV in $(nmcli -f TYPE,DEVICE -t d | grep -v eth0 | grep ethernet | awk '{split($0,a,":"); print a[2]}'); do
         ip link set $DEV down
@@ -128,7 +131,7 @@ function setup_veth_env ()
     nmcli c add type ethernet con-name testeth10 ifname eth10 autoconnect no
 
     systemctl restart NetworkManager; sleep 1
-
+    echo "4"
     nmcli con up testeth0
 
     # on s390x sometimes this extra default profile gets created in addition to custom static original one
