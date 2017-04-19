@@ -40,6 +40,7 @@ function setup_veth_env ()
         nmcli con mod $UUID connection.id testeth0
         ip link set eth0 up
         nmcli connection modify testeth0 ipv6.method auto
+        nmcli connection modify testeth0 ipv4.addresses "" ipv4.gateway "" ipv4.dns-priority "" ipv4.dns "" ipv4.route-metric ""
         nmcli c u testeth0
     else # make active device eth0 if not
         UUID=$(nmcli -t -f UUID c show --active)
