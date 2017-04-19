@@ -474,7 +474,7 @@ def before_scenario(context, scenario):
             print("---------------------------")
             print("turning on network.service")
             context.nm_restarted = True
-            call('sudo pkill -9 pkill /sbin/dhclient', shell=True)
+            call('sudo pkill -9 /sbin/dhclient', shell=True)
             call('sudo systemctl restart NetworkManager.service', shell=True)
             call('sudo systemctl restart network.service', shell=True)
             call("nmcli connection up testeth0", shell=True)
@@ -970,11 +970,6 @@ def after_scenario(context, scenario):
             call("nmcli connection delete id inf", shell=True)
             call("nmcli connection delete id inf2", shell=True)
 
-        if 'kill_dnsmasq' in scenario.tags:
-            print ("---------------------------")
-            print ("kill dnsmasq")
-            call("kill -9 $(ps aux |grep dns |grep -v grep |grep -v inbr |grep -v simbr |grep interface |awk '{print $2}')", shell=True)
-
         if 'profie' in scenario.tags:
             print ("---------------------------")
             print ("deleting profile profile")
@@ -1372,6 +1367,11 @@ def after_scenario(context, scenario):
             call("""znetconf -r $(znetconf -c |grep CTC |awk 'BEGIN { FS = "," } ; { print $1 }') -n""", shell=True)
             sleep(1)
 
+        if 'kill_dnsmasq' in scenario.tags:
+            print ("---------------------------")
+            print ("kill dnsmasq")
+            call("kill -9 $(ps aux |grep dns |grep -v grep |grep -v inbr |grep -v simbr |grep interface |awk '{print $2}')", shell=True)
+            sleep(2)
 
         if 'regenerate_veth' in scenario.tags or 'restart' in scenario.tags:
             print ("---------------------------")
