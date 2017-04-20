@@ -1,0 +1,51 @@
+- job-template:
+    name: 'NetworkManager-{branch}'
+    project-type: freestyle
+    display-name: 'NetworkManager: {branch}'
+    concurrent: true
+    node: networkmanager
+    triggers:
+        - timed: "H 18 * * *"
+    scm:
+      - cico-tests
+    wrappers:
+      - workspace-cleanup:
+          include:
+            - '*'
+      - ansicolor:
+          colormap: 'vga'
+    builders:
+      - shell: |
+          export CODE_BRANCH='{branch}'
+          python -u run/centos-ci/build_python_script.py
+    publishers:
+      - postbuildscript:
+          script-only-if-succeeded: false
+          script-only-if-failed: true
+          builders:
+            # FIXME CLEAN UP AND UPLOAD results
+            - shell: 'echo "CLEANUP"'
+      - postbuildscript:
+          builders:
+            # FIXME NEEDED?
+            - shell: 'echo "QUIT"'
+- scm:
+    name: cico-tests
+    scm:
+      - git:
+          url: https://github.com/NetworkManager/NetworkManager-ci
+          branches:
+            - origin/master
+
+- project:
+    name: nm-cico
+    jobs:
+      - 'NetworkManager-{branch}':
+          branch: 'nm-1-6'
+      - 'NetworkManager-{branch}':
+          branch: 'nm-1-4'
+      - 'NetworkManager-{branch}':
+          branch: 'master'
+    #   - 'NetworkManager-{branch}':
+    #       branch: 'nm-1-2'
+    #
