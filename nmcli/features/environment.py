@@ -886,6 +886,7 @@ def after_scenario(context, scenario):
             call('nmcli connection delete id bond0 bond', shell=True)
             call('ip link del nm-bond', shell=True)
             call('ip link del bond0', shell=True)
+            call('rm /etc/NetworkManager/conf.d/99-bond.conf')
             #sleep(TIMER)
             print (os.system('ls /proc/net/bonding'))
 
