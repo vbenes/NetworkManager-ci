@@ -6,10 +6,11 @@
 function setup_veth_env ()
 {
     # Log state of net before the setup
-    ip a
-    nmcli con
-    nmcli dev
-    nmcli gen
+    #ip a
+    #nmcli con
+    #nmcli dev
+    #nmcli gen
+    sleep 1
 
     need_veth=0
     for X in $(seq 0 10); do
