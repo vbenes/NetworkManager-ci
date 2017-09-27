@@ -1610,6 +1610,6 @@ def after_scenario(context, scenario):
 
 
 def after_all(context):
-    pass
+    call("sudo firewall-cmd --panic-off", shell=True)
     #call('sudo kill $(ps aux|grep -v grep| grep /usr/bin/beah-beaker-backend |awk \'{print $2}\')', shell=True)
     #Popen('beah-beaker-backend -H $(hostname) &', shell=True)
