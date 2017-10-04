@@ -182,28 +182,28 @@ local_setup_configure_nm_dcb () {
     touch /tmp/dcb_configured
 }
 
-local_setup_configure_nm_inf () {
-    [ -e /tmp/inf_configured ] && return
-
-    DEV_MASTER=$(nmcli -t -f DEVICE device  |grep -o .*ib0$)
-    echo $DEV_MASTER
-    for VLAN in $(nmcli -t -f DEVICE device  |grep ib0 | awk 'BEGIN {FS = "."} {print $2}'); do
-        DEV="$DEV_MASTER.$VLAN"
-        NEW_DEV="inf_ib0.$VLAN"
-        ip link set $DEV down
-        sleep 1
-        ip link set $DEV name $NEW_DEV
-        ip link set $NEW_DEV up
-        nmcli con del $DEV
-    done
-    ip link set $DEV_MASTER down
-    sleep 1
-    ip link set $DEV_MASTER name inf_ib0
-    ip link set inf_ib0 up
-    nmcli con del $DEV_MASTER
-
-    touch /tmp/inf_configured
-}
+# local_setup_configure_nm_inf () {
+#     [ -e /tmp/inf_configured ] && return
+#
+#     DEV_MASTER=$(nmcli -t -f DEVICE device  |grep -o .*ib0$)
+#     echo $DEV_MASTER
+#     for VLAN in $(nmcli -t -f DEVICE device  |grep ib0 | awk 'BEGIN {FS = "."} {print $2}'); do
+#         DEV="$DEV_MASTER.$VLAN"
+#         NEW_DEV="inf_ib0.$VLAN"
+#         ip link set $DEV down
+#         sleep 1
+#         ip link set $DEV name $NEW_DEV
+#         ip link set $NEW_DEV up
+#         nmcli con del $DEV
+#     done
+#     ip link set $DEV_MASTER down
+#     sleep 1
+#     ip link set $DEV_MASTER name inf_ib0
+#     ip link set inf_ib0 up
+#     nmcli con del $DEV_MASTER
+#
+#     touch /tmp/inf_configured
+# }
 
 local_setup_configure_nm_gsm () {
     [ -e /tmp/gsm_configured ] && return
@@ -227,9 +227,9 @@ setup_configure_environment () {
         *dcb_*)
             local_setup_configure_nm_dcb
             ;;
-        *inf_*)
-            local_setup_configure_nm_inf
-            ;;
+        # *inf_*)
+        #     local_setup_configure_nm_inf
+        #     ;;
         *gsm*)
             local_setup_configure_nm_gsm
             ;;
