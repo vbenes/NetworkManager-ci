@@ -419,11 +419,6 @@ def before_scenario(context, scenario):
             call("nmcli device disconnect mlx5_ib0", shell=True)
             call("nmcli device disconnect mlx5_ib0.8002", shell=True)
             call("nmcli connection delete mlx5_ib0.8002", shell=True)
-            call("nmcli connection delete id inf", shell=True)
-            call("nmcli connection delete id inf2", shell=True)
-            call("nmcli connection delete id infiniband-mlx5_ib0", shell=True)
-            call("nmcli connection delete id inf.8002", shell=True)
-            call("nmcli connection delete id infiniband-mlx5_ib0.8002", shell=True)
 
         if 'internal_DHCP' in scenario.tags:
             print ("---------------------------")
@@ -1058,9 +1053,11 @@ def after_scenario(context, scenario):
         if 'inf' in scenario.tags:
             print ("---------------------------")
             print ("deleting infiniband connections")
-            call("nmcli device connect mlx5_ib0.8002", shell=True)
             call("nmcli connection delete id inf", shell=True)
             call("nmcli connection delete id inf2", shell=True)
+            call("nmcli connection delete id infiniband-mlx5_ib0", shell=True)
+            call("nmcli connection delete id inf.8002", shell=True)
+            call("nmcli connection delete id infiniband-mlx5_ib0.8002", shell=True)
             call("nmcli connection up id lom_1", shell=True)
 
         if 'kill_dnsmasq' in scenario.tags:
