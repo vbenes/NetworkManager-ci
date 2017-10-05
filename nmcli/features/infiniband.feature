@@ -62,9 +62,9 @@ Feature: nmcli: inf
      * Submit "mlx5_ib0.8002" in editor
      * Expect "Do you want to provide them\? \(yes\/no\) \[yes\]"
      * Submit "yes" in editor
-     * Expect "MAC"
-     * Enter in editor
      * Expect "MTU"
+     * Enter in editor
+     * Expect "MAC"
      * Enter in editor
      * Expect "Transport mode"
      * Enter in editor
