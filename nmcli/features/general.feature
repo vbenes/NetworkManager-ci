@@ -741,7 +741,7 @@ Feature: nmcli - general
     Scenario: NM - general - show zones after firewall restart
     * Execute "yum -y remove firewalld"
     * Restart NM
-    * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie connection.zone work"
+    * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie connection.zone work"
     * Execute "yum -y install firewalld"
     * Execute "systemctl start firewalld"
     Then "work" is visible with command "firewall-cmd  --get-zone-of-interface=eth1"
