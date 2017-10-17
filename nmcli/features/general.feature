@@ -740,7 +740,7 @@ Feature: nmcli - general
     @show_zones_after_firewalld_install
     Scenario: NM - general - show zones after firewall restart
     * Execute "yum -y remove firewalld"
-    * Restart NM
+    * Reboot
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie connection.zone work"
     * Execute "yum -y install firewalld"
     * Execute "systemctl start firewalld"
