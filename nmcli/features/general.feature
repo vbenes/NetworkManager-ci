@@ -744,7 +744,7 @@ Feature: nmcli - general
     * Add a new connection of type "ethernet" and options "ifname eth10 con-name ethie connection.zone work"
     * Execute "yum -y install firewalld"
     * Execute "systemctl start firewalld"
-    Then "work" is visible with command "firewall-cmd  --get-zone-of-interface=eth1"
+    Then "work" is visible with command "firewall-cmd  --get-zone-of-interface=eth10"
 
 
     @rhbz1286576
