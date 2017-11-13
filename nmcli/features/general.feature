@@ -741,9 +741,26 @@ Feature: nmcli - general
     Scenario: NM - general - show zones after firewall restart
     * Execute "yum -y remove firewalld"
     * Restart NM
+    * Execute "printf '\n\n#### 1 ####\n\n' >> /tmp/my-debug.log"
+    * Execute "nmcli >> /tmp/my-debug.log"
+    * Execute "ip a >> /tmp/my-debug.log"
+    * Execute "ip r >> /tmp/my-debug.log"
+    * Execute "cat /etc/resolv.conf >> /tmp/my-debug.log"
     * Add a new connection of type "ethernet" and options "ifname eth1 con-name ethie connection.zone work"
-    * Execute "yum -y install firewalld"
-    * Execute "systemctl start firewalld"
+    * Execute "printf '\n\n#### 2 ####\n\n' >> /tmp/my-debug.log"
+    * Execute "nmcli >> /tmp/my-debug.log"
+    * Execute "ip a >> /tmp/my-debug.log"
+    * Execute "ip r >> /tmp/my-debug.log"
+    * Execute "cat /etc/resolv.conf >> /tmp/my-debug.log"
+    * Execute "printf '\n\n#### 3 ####\n\n' >> /tmp/my-debug.log"
+    * Execute "yum -y install firewalld >> /tmp/my-debug.log 2>&1"
+    * Execute "systemctl start firewalld >> /tmp/my-debug.log 2>&1"
+    * Execute "systemctl status firewalld >> /tmp/my-debug.log 2>&1"
+    * Execute "printf '\n\n#### 4 ####\n\n' >> /tmp/my-debug.log"
+    * Execute "nmcli >> /tmp/my-debug.log"
+    * Execute "ip a >> /tmp/my-debug.log"
+    * Execute "ip r >> /tmp/my-debug.log"
+    * Execute "cat /etc/resolv.conf >> /tmp/my-debug.log"
     Then "work" is visible with command "firewall-cmd  --get-zone-of-interface=eth1"
 
 
