@@ -1206,6 +1206,7 @@ Feature: nmcli: ipv4
 
 
     @rhbz1265239
+    @ver-=1.9.90
     @teardown_testveth @long
     @renewal_gw_after_dhcp_outage_for_assumed_var1
     Scenario: NM - ipv4 - assumed address renewal after DHCP outage for in-memory assumed
