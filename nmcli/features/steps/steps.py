@@ -1579,6 +1579,9 @@ def restart_NM(context):
     # For stability reasons 1 is not enough, please do not lower this
     sleep(2)
 
+@step(u'Reload NM')
+def restart_NM(context):
+    command_code(context, "systemctl reload NetworkManager") == 0
 
 @step(u'Stop NM')
 def stop_NM(context):

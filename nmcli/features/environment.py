@@ -316,10 +316,9 @@ def before_scenario(context, scenario):
             call("echo 'uri=https://fedoraproject.org/static/hotspot.txt' >> /etc/NetworkManager/conf.d/99-connectivity.conf", shell=True)
             call("echo 'response=OK' >> /etc/NetworkManager/conf.d/99-connectivity.conf", shell=True)
             call("echo 'interval=5' >> /etc/NetworkManager/conf.d/99-connectivity.conf", shell=True)
-            call("systemctl restart NetworkManager", shell=True)
-            sleep(3)
-            call("systemctl restart NetworkManager", shell=True)
-            sleep(3)
+            sleep(1)
+            call("systemctl reload NetworkManager", shell=True)
+            sleep(1)
 
         if 'shutdown_service_any' in scenario.tags or 'bridge_manipulation_with_1000_slaves' in scenario.tags:
             call("modprobe -r qmi_wwan", shell=True)
@@ -959,9 +958,9 @@ def after_scenario(context, scenario):
             print ("---------------------------")
             print ("remove connectivity checker")
             call("rm -rf /etc/NetworkManager/conf.d/99-connectivity.conf", shell=True)
-            call("systemctl restart NetworkManager", shell=True)
-            sleep(3)
-            call("systemctl restart NetworkManager", shell=True)
+            call("rm -rf /var/lib/NetworkManager/NetworkManager-intern.conf", shell=True)
+            sleep(1)
+            call("systemctl reload NetworkManager.service", shell=True)
             sleep(3)
 
         if 'con' in scenario.tags:

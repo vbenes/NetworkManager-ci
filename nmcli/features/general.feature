@@ -1547,17 +1547,39 @@ Feature: nmcli - general
 
     @rhbz1458399
     @ver+=1.8.0
-    @firewall @connectivity @eth @delete_testeth0 @restart
+    @firewall @connectivity @eth @delete_testeth0 @long
     @disable_connectivity_check
     Scenario: NM - general - disable connectivity check
     * Execute "sed -i 's/interval=5/interval=0/' /etc/NetworkManager/conf.d/99-connectivity.conf"
-    * Restart NM
+    * Reload NM
     * Add a new connection of type "ethernet" and options "ifname eth0 con-name ethie autoconnect no ipv6.method ignore"
     * Bring up connection "ethie"
     When "activated" is visible with command "nmcli -g GENERAL.STATE con show ethie" in "20" seconds
      And "full" is visible with command "nmcli  -g CONNECTIVITY g"
     * Execute "firewall-cmd --panic-on"
     Then "full" is visible with command "nmcli  -g CONNECTIVITY g" for full "70" seconds
+
+
+    @rhbz1534477
+    @ver+=1.10
+    @firewall @connectivity @eth @delete_testeth0 @long
+    @manipulate_connectivity_check_via_dbus
+    Scenario: dbus - general - disable connectivity check via dbus
+    * Add a new connection of type "ethernet" and options "ifname eth0 con-name ethie autoconnect no ipv6.method ignore"
+    * Bring up connection "ethie"
+    When "activated" is visible with command "nmcli -g GENERAL.STATE con show ethie" in "20" seconds
+     And "full" is visible with command "nmcli -g CONNECTIVITY g" in "70" seconds
+    # VVV Turn off connectivity check
+    * Execute "busctl set-property org.freedesktop.NetworkManager /org/freedesktop/NetworkManager org.freedesktop.NetworkManager ConnectivityCheckEnabled 'b' 0"
+    * Execute "firewall-cmd --panic-on"
+    When "false" is visible with command "busctl get-property org.freedesktop.NetworkManager /org/freedesktop/NetworkManager org.freedesktop.NetworkManager ConnectivityCheckEnabled"
+     And "full" is visible with command "nmcli  -g CONNECTIVITY g" for full "70" seconds
+    # VVV Turn on connectivity check
+    * Execute "busctl set-property org.freedesktop.NetworkManager /org/freedesktop/NetworkManager org.freedesktop.NetworkManager ConnectivityCheckEnabled 'b' 1"
+    When "true" is visible with command "busctl get-property org.freedesktop.NetworkManager /org/freedesktop/NetworkManager org.freedesktop.NetworkManager ConnectivityCheckEnabled"
+     And "limited" is visible with command "nmcli  -g CONNECTIVITY g" in "70" seconds
+    * Execute "firewall-cmd --panic-off"
+    Then "full" is visible with command "nmcli  -g CONNECTIVITY g" in "70" seconds
 
 
     @rhbz1394345
